@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+option java_package = "ex.grpc";
+option objc_class_prefix = "RTG";
+
+package kinectrgbd;
+
+service KinectRgbd {
+  rpc GetPoints(Request) returns (stream Point) {}
+}
+
+message Position {
+  float x = 1;
+  float y = 2;
+  float d = 3;
+}
+
+message Color {
+  int32 r = 1;
+  int32 g = 2;
+  int32 b = 3;
+}
+
+message Point {
+  Position position = 1;
+  Color color = 2;
+}
+
+message Request {
+  int32 header = 1;
+}
