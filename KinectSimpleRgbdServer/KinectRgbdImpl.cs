@@ -25,12 +25,12 @@ namespace Kinectrgbd
             Grpc.Core.ServerCallContext context)
         {
             respondSet = false;
-            int point_count = 0;
+            //int point_count = 0;
             foreach (Kinectrgbd.Point point in this.saved_points)
             {
                 await responseStream.WriteAsync(point);
-                ++point_count;
-                if (point_count > 20000) break;
+                //++point_count;
+                //if (point_count > 20000) break;
             }
             this.saved_points.Clear();
             respondSet = true;

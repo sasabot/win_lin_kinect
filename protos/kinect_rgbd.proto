@@ -10,8 +10,10 @@ service KinectRgbd {
 }
 
 message Point {
-  int64 position = 1;
-  int32 color = 2;
+  float x = 1;
+  float y = 2;
+  float z = 3;
+  int32 color = 4;
 }
 
 message Request {

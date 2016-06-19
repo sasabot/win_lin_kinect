@@ -23,15 +23,15 @@ namespace Kinectrgbd {
       static KinectRgbd() {
         byte[] descriptorData = global::System.Convert.FromBase64String(
             string.Concat(
-              "ChFraW5lY3RfcmdiZC5wcm90bxIKa2luZWN0cmdiZCIoCgVQb2ludBIQCghw", 
-              "b3NpdGlvbhgBIAEoAxINCgVjb2xvchgCIAEoBSIZCgdSZXF1ZXN0Eg4KBmhl", 
-              "YWRlchgBIAEoBTJFCgpLaW5lY3RSZ2JkEjcKCUdldFBvaW50cxITLmtpbmVj", 
-              "dHJnYmQuUmVxdWVzdBoRLmtpbmVjdHJnYmQuUG9pbnQiADABQg8KB2V4Lmdy", 
-              "cGOiAgNSVEdiBnByb3RvMw=="));
+              "ChFraW5lY3RfcmdiZC5wcm90bxIKa2luZWN0cmdiZCI3CgVQb2ludBIJCgF4", 
+              "GAEgASgCEgkKAXkYAiABKAISCQoBehgDIAEoAhINCgVjb2xvchgEIAEoBSIZ", 
+              "CgdSZXF1ZXN0Eg4KBmhlYWRlchgBIAEoBTJFCgpLaW5lY3RSZ2JkEjcKCUdl", 
+              "dFBvaW50cxITLmtpbmVjdHJnYmQuUmVxdWVzdBoRLmtpbmVjdHJnYmQuUG9p", 
+              "bnQiADABQg8KB2V4LmdycGOiAgNSVEdiBnByb3RvMw=="));
         descriptor = pbr::FileDescriptor.InternalBuildGeneratedFileFrom(descriptorData,
             new pbr::FileDescriptor[] { },
             new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Point), new[]{ "Position", "Color" }, null, null, null),
+              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Point), new[]{ "X", "Y", "Z", "Color" }, null, null, null),
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Request), new[]{ "Header" }, null, null, null)
             }));
       }
@@ -60,7 +60,9 @@ namespace Kinectrgbd {
     partial void OnConstruction();
 
     public Point(Point other) : this() {
-      position_ = other.position_;
+      x_ = other.x_;
+      y_ = other.y_;
+      z_ = other.z_;
       color_ = other.color_;
     }
 
@@ -68,16 +70,34 @@ namespace Kinectrgbd {
       return new Point(this);
     }
 
-    public const int PositionFieldNumber = 1;
-    private long position_;
-    public long Position {
-      get { return position_; }
+    public const int XFieldNumber = 1;
+    private float x_;
+    public float X {
+      get { return x_; }
       set {
-        position_ = value;
+        x_ = value;
       }
     }
 
-    public const int ColorFieldNumber = 2;
+    public const int YFieldNumber = 2;
+    private float y_;
+    public float Y {
+      get { return y_; }
+      set {
+        y_ = value;
+      }
+    }
+
+    public const int ZFieldNumber = 3;
+    private float z_;
+    public float Z {
+      get { return z_; }
+      set {
+        z_ = value;
+      }
+    }
+
+    public const int ColorFieldNumber = 4;
     private int color_;
     public int Color {
       get { return color_; }
@@ -97,14 +117,18 @@ namespace Kinectrgbd {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Position != other.Position) return false;
+      if (X != other.X) return false;
+      if (Y != other.Y) return false;
+      if (Z != other.Z) return false;
       if (Color != other.Color) return false;
       return true;
     }
 
     public override int GetHashCode() {
       int hash = 1;
-      if (Position != 0L) hash ^= Position.GetHashCode();
+      if (X != 0F) hash ^= X.GetHashCode();
+      if (Y != 0F) hash ^= Y.GetHashCode();
+      if (Z != 0F) hash ^= Z.GetHashCode();
       if (Color != 0) hash ^= Color.GetHashCode();
       return hash;
     }
@@ -114,20 +138,34 @@ namespace Kinectrgbd {
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
-      if (Position != 0L) {
-        output.WriteRawTag(8);
-        output.WriteInt64(Position);
+      if (X != 0F) {
+        output.WriteRawTag(13);
+        output.WriteFloat(X);
+      }
+      if (Y != 0F) {
+        output.WriteRawTag(21);
+        output.WriteFloat(Y);
+      }
+      if (Z != 0F) {
+        output.WriteRawTag(29);
+        output.WriteFloat(Z);
       }
       if (Color != 0) {
-        output.WriteRawTag(16);
+        output.WriteRawTag(32);
         output.WriteInt32(Color);
       }
     }
 
     public int CalculateSize() {
       int size = 0;
-      if (Position != 0L) {
-        size += 1 + pb::CodedOutputStream.ComputeInt64Size(Position);
+      if (X != 0F) {
+        size += 1 + 4;
+      }
+      if (Y != 0F) {
+        size += 1 + 4;
+      }
+      if (Z != 0F) {
+        size += 1 + 4;
       }
       if (Color != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(Color);
@@ -139,8 +177,14 @@ namespace Kinectrgbd {
       if (other == null) {
         return;
       }
-      if (other.Position != 0L) {
-        Position = other.Position;
+      if (other.X != 0F) {
+        X = other.X;
+      }
+      if (other.Y != 0F) {
+        Y = other.Y;
+      }
+      if (other.Z != 0F) {
+        Z = other.Z;
       }
       if (other.Color != 0) {
         Color = other.Color;
@@ -154,11 +198,19 @@ namespace Kinectrgbd {
           default:
             input.SkipLastField();
             break;
-          case 8: {
-            Position = input.ReadInt64();
+          case 13: {
+            X = input.ReadFloat();
             break;
           }
-          case 16: {
+          case 21: {
+            Y = input.ReadFloat();
+            break;
+          }
+          case 29: {
+            Z = input.ReadFloat();
+            break;
+          }
+          case 32: {
             Color = input.ReadInt32();
             break;
           }

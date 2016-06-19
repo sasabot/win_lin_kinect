@@ -46,6 +46,8 @@ namespace KinectSimpleRgbdServer
         private Kinectrgbd.KinectRgbdImpl streamer =
             new Kinectrgbd.KinectRgbdImpl();
 
+        private int skippedFrame = 0;
+
         private Grpc.Core.Server myserver;
 
         public MainWindow()
@@ -85,6 +87,14 @@ namespace KinectSimpleRgbdServer
 
         private void Reader_FrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
+            if (this.skippedFrame < 30)
+            {
+                ++skippedFrame;
+                return;
+            }
+
+            skippedFrame = 0;
+
             MultiSourceFrame frame = e.FrameReference.AcquireFrame();
 
             if (frame == null)
@@ -134,15 +144,24 @@ namespace KinectSimpleRgbdServer
                 }
                 int pixel = 4 * (img_y * colorDesc.Width + img_x);
 
-                long x = Convert.ToInt64(point.X * 10000);
-                long y = Convert.ToInt64(point.Y * 10000);
-                long z = Convert.ToInt64(point.Z * 10000);
+                if (point.X > 1.0 || point.Y > 1.0 || point.Z > 2.0 || point.X < -1.0 || point.Y < -1.0)
+                {
+                    ++pointIndex;
+                    continue;
+                }
+
+                //long x = Convert.ToInt64(Math.Abs(point.X * 10000));
+                //long y = Convert.ToInt64(Math.Abs(point.Y * 10000));
+                //long z = Convert.ToInt64(Math.Abs(point.Z * 10000));
 
                 Kinectrgbd.Point p = new Kinectrgbd.Point
                 {
                     //Color = pixels[colorIndex++] * 1000000 + pixels[colorIndex++] * 1000 + pixels[colorIndex++],
-                    Color = pixels[pixel++] * 1000000 + pixels[pixel++] * 1000 + pixels[pixel++],
-                    Position =  x * 100000 * 100000 + y * 100000 + z
+                    Color = ((pixels[pixel++] << 16) & 0xfffffff) + ((pixels[pixel++] << 8) & 0xfffffff) + pixels[pixel++],
+                    //Position = ((s << 48) & 0xfffffffffffffff) + ((x << 32) & 0xfffffffffffffff) + ((y << 16) & 0xfffffffffffffff) + z
+                    X = point.X,
+                    Y = point.Y,
+                    Z = point.Z
                 };
                 //++colorIndex;
                 ++pointIndex;
