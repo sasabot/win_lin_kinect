@@ -56,6 +56,7 @@ namespace KinectSimpleRgbdServer
 
             this.multiSourceFrameReader =
                     this.kinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color | FrameSourceTypes.Depth);
+            this.multiSourceFrameReader.MultiSourceFrameArrived += this.Reader_FrameArrived;
 
             this.kinectSensor.Open();
 
@@ -101,24 +102,61 @@ namespace KinectSimpleRgbdServer
 
             var colorDesc = colorFrame.FrameDescription;
 
-            CameraSpacePoint[] cameraPoints = new CameraSpacePoint[colorDesc.Width * colorDesc.Height];
-            this.coordinateMapper.MapColorFrameToCameraSpace(depthData, cameraPoints);
+            //CameraSpacePoint[] cameraPoints = new CameraSpacePoint[colorDesc.Width * colorDesc.Height];
+            //this.coordinateMapper.MapColorFrameToCameraSpace(depthData, cameraPoints);
 
-            byte[] pixels = new byte[colorDesc.Width * colorDesc.Height * (PixelFormats.Bgr32.BitsPerPixel + 7) / 8];
+            CameraSpacePoint[] cameraPoints = new CameraSpacePoint[depthDesc.Width * depthDesc.Height];
+            this.coordinateMapper.MapDepthFrameToCameraSpace(depthData, cameraPoints);
+
+            byte[] pixels = new byte[colorDesc.Width * colorDesc.Height * 4];
             colorFrame.CopyConvertedFrameDataToArray(pixels, ColorImageFormat.Bgra);
+            ColorSpacePoint[] colorPoints = new ColorSpacePoint[depthDesc.Width * depthDesc.Height];
+            this.coordinateMapper.MapDepthFrameToColorSpace(depthData, colorPoints);
 
             this.streamer.ClearPoints();
-            int colorIndex = 0;
+            //int colorIndex = 0;
+            int pointIndex = 0;
             foreach (CameraSpacePoint point in cameraPoints)
             {
+                if (Double.IsInfinity(point.X) || Double.IsInfinity(point.Y) || Double.IsInfinity(point.Z)
+                    || Double.IsNaN(point.X) || Double.IsNaN(point.Y) || Double.IsNaN(point.Z))
+                {
+                    //colorIndex += 4;
+                    ++pointIndex;
+                    continue;
+                }
+                int img_y = Convert.ToInt32(colorPoints[pointIndex].Y);
+                int img_x = Convert.ToInt32(colorPoints[pointIndex].X);
+                if (img_x < 0 || img_y < 0 || img_x >= 1960 || img_y >= 1080)
+                {
+                    ++pointIndex;
+                    continue;
+                }
+                int pixel = 4 * (img_y * colorDesc.Width + img_x);
+
+                long x = Convert.ToInt64(point.X * 10000);
+                long y = Convert.ToInt64(point.Y * 10000);
+                long z = Convert.ToInt64(point.Z * 10000);
+
                 Kinectrgbd.Point p = new Kinectrgbd.Point
                 {
-                    Color = new Kinectrgbd.Color { B = pixels[colorIndex++], G = pixels[colorIndex++], R = pixels[colorIndex++] },
-                    Position = new Kinectrgbd.Position {  X = point.X, Y = point.Y, D = point.Z }
+                    //Color = pixels[colorIndex++] * 1000000 + pixels[colorIndex++] * 1000 + pixels[colorIndex++],
+                    Color = pixels[pixel++] * 1000000 + pixels[pixel++] * 1000 + pixels[pixel++],
+                    Position =  x * 100000 * 100000 + y * 100000 + z
                 };
-                ++colorIndex;
+                //++colorIndex;
+                ++pointIndex;
                 this.streamer.SetPoint(p);
             }
+            this.streamer.SavePoints();
+
+            BitmapSource bitmapSource = BitmapSource.Create(colorDesc.Width, colorDesc.Height, 96, 96,
+                PixelFormats.Bgr32, null, pixels, colorDesc.Width * 4);
+
+            this.canvas.Background = new ImageBrush(bitmapSource);
+
+            colorFrame.Dispose();
+            depthFrame.Dispose();
         }
     }
 }

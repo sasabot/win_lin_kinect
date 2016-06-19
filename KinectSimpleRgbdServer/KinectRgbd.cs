@@ -23,19 +23,14 @@ namespace Kinectrgbd {
       static KinectRgbd() {
         byte[] descriptorData = global::System.Convert.FromBase64String(
             string.Concat(
-              "ChFraW5lY3RfcmdiZC5wcm90bxIKa2luZWN0cmdiZCIrCghQb3NpdGlvbhIJ", 
-              "CgF4GAEgASgCEgkKAXkYAiABKAISCQoBZBgDIAEoAiIoCgVDb2xvchIJCgFy", 
-              "GAEgASgFEgkKAWcYAiABKAUSCQoBYhgDIAEoBSJRCgVQb2ludBImCghwb3Np", 
-              "dGlvbhgBIAEoCzIULmtpbmVjdHJnYmQuUG9zaXRpb24SIAoFY29sb3IYAiAB", 
-              "KAsyES5raW5lY3RyZ2JkLkNvbG9yIhkKB1JlcXVlc3QSDgoGaGVhZGVyGAEg", 
-              "ASgFMkUKCktpbmVjdFJnYmQSNwoJR2V0UG9pbnRzEhMua2luZWN0cmdiZC5S", 
-              "ZXF1ZXN0GhEua2luZWN0cmdiZC5Qb2ludCIAMAFCDwoHZXguZ3JwY6ICA1JU", 
-              "R2IGcHJvdG8z"));
+              "ChFraW5lY3RfcmdiZC5wcm90bxIKa2luZWN0cmdiZCIoCgVQb2ludBIQCghw", 
+              "b3NpdGlvbhgBIAEoAxINCgVjb2xvchgCIAEoBSIZCgdSZXF1ZXN0Eg4KBmhl", 
+              "YWRlchgBIAEoBTJFCgpLaW5lY3RSZ2JkEjcKCUdldFBvaW50cxITLmtpbmVj", 
+              "dHJnYmQuUmVxdWVzdBoRLmtpbmVjdHJnYmQuUG9pbnQiADABQg8KB2V4Lmdy", 
+              "cGOiAgNSVEdiBnByb3RvMw=="));
         descriptor = pbr::FileDescriptor.InternalBuildGeneratedFileFrom(descriptorData,
             new pbr::FileDescriptor[] { },
             new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Position), new[]{ "X", "Y", "D" }, null, null, null),
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Color), new[]{ "R", "G", "B" }, null, null, null),
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Point), new[]{ "Position", "Color" }, null, null, null),
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Request), new[]{ "Header" }, null, null, null)
             }));
@@ -46,320 +41,12 @@ namespace Kinectrgbd {
   }
   #region Messages
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class Position : pb::IMessage<Position> {
-    private static readonly pb::MessageParser<Position> _parser = new pb::MessageParser<Position>(() => new Position());
-    public static pb::MessageParser<Position> Parser { get { return _parser; } }
-
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[0]; }
-    }
-
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    public Position() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    public Position(Position other) : this() {
-      x_ = other.x_;
-      y_ = other.y_;
-      d_ = other.d_;
-    }
-
-    public Position Clone() {
-      return new Position(this);
-    }
-
-    public const int XFieldNumber = 1;
-    private float x_;
-    public float X {
-      get { return x_; }
-      set {
-        x_ = value;
-      }
-    }
-
-    public const int YFieldNumber = 2;
-    private float y_;
-    public float Y {
-      get { return y_; }
-      set {
-        y_ = value;
-      }
-    }
-
-    public const int DFieldNumber = 3;
-    private float d_;
-    public float D {
-      get { return d_; }
-      set {
-        d_ = value;
-      }
-    }
-
-    public override bool Equals(object other) {
-      return Equals(other as Position);
-    }
-
-    public bool Equals(Position other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (X != other.X) return false;
-      if (Y != other.Y) return false;
-      if (D != other.D) return false;
-      return true;
-    }
-
-    public override int GetHashCode() {
-      int hash = 1;
-      if (X != 0F) hash ^= X.GetHashCode();
-      if (Y != 0F) hash ^= Y.GetHashCode();
-      if (D != 0F) hash ^= D.GetHashCode();
-      return hash;
-    }
-
-    public override string ToString() {
-      return pb::JsonFormatter.Default.Format(this);
-    }
-
-    public void WriteTo(pb::CodedOutputStream output) {
-      if (X != 0F) {
-        output.WriteRawTag(13);
-        output.WriteFloat(X);
-      }
-      if (Y != 0F) {
-        output.WriteRawTag(21);
-        output.WriteFloat(Y);
-      }
-      if (D != 0F) {
-        output.WriteRawTag(29);
-        output.WriteFloat(D);
-      }
-    }
-
-    public int CalculateSize() {
-      int size = 0;
-      if (X != 0F) {
-        size += 1 + 4;
-      }
-      if (Y != 0F) {
-        size += 1 + 4;
-      }
-      if (D != 0F) {
-        size += 1 + 4;
-      }
-      return size;
-    }
-
-    public void MergeFrom(Position other) {
-      if (other == null) {
-        return;
-      }
-      if (other.X != 0F) {
-        X = other.X;
-      }
-      if (other.Y != 0F) {
-        Y = other.Y;
-      }
-      if (other.D != 0F) {
-        D = other.D;
-      }
-    }
-
-    public void MergeFrom(pb::CodedInputStream input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            input.SkipLastField();
-            break;
-          case 13: {
-            X = input.ReadFloat();
-            break;
-          }
-          case 21: {
-            Y = input.ReadFloat();
-            break;
-          }
-          case 29: {
-            D = input.ReadFloat();
-            break;
-          }
-        }
-      }
-    }
-
-  }
-
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class Color : pb::IMessage<Color> {
-    private static readonly pb::MessageParser<Color> _parser = new pb::MessageParser<Color>(() => new Color());
-    public static pb::MessageParser<Color> Parser { get { return _parser; } }
-
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[1]; }
-    }
-
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    public Color() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    public Color(Color other) : this() {
-      r_ = other.r_;
-      g_ = other.g_;
-      b_ = other.b_;
-    }
-
-    public Color Clone() {
-      return new Color(this);
-    }
-
-    public const int RFieldNumber = 1;
-    private int r_;
-    public int R {
-      get { return r_; }
-      set {
-        r_ = value;
-      }
-    }
-
-    public const int GFieldNumber = 2;
-    private int g_;
-    public int G {
-      get { return g_; }
-      set {
-        g_ = value;
-      }
-    }
-
-    public const int BFieldNumber = 3;
-    private int b_;
-    public int B {
-      get { return b_; }
-      set {
-        b_ = value;
-      }
-    }
-
-    public override bool Equals(object other) {
-      return Equals(other as Color);
-    }
-
-    public bool Equals(Color other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      if (R != other.R) return false;
-      if (G != other.G) return false;
-      if (B != other.B) return false;
-      return true;
-    }
-
-    public override int GetHashCode() {
-      int hash = 1;
-      if (R != 0) hash ^= R.GetHashCode();
-      if (G != 0) hash ^= G.GetHashCode();
-      if (B != 0) hash ^= B.GetHashCode();
-      return hash;
-    }
-
-    public override string ToString() {
-      return pb::JsonFormatter.Default.Format(this);
-    }
-
-    public void WriteTo(pb::CodedOutputStream output) {
-      if (R != 0) {
-        output.WriteRawTag(8);
-        output.WriteInt32(R);
-      }
-      if (G != 0) {
-        output.WriteRawTag(16);
-        output.WriteInt32(G);
-      }
-      if (B != 0) {
-        output.WriteRawTag(24);
-        output.WriteInt32(B);
-      }
-    }
-
-    public int CalculateSize() {
-      int size = 0;
-      if (R != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(R);
-      }
-      if (G != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(G);
-      }
-      if (B != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(B);
-      }
-      return size;
-    }
-
-    public void MergeFrom(Color other) {
-      if (other == null) {
-        return;
-      }
-      if (other.R != 0) {
-        R = other.R;
-      }
-      if (other.G != 0) {
-        G = other.G;
-      }
-      if (other.B != 0) {
-        B = other.B;
-      }
-    }
-
-    public void MergeFrom(pb::CodedInputStream input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            input.SkipLastField();
-            break;
-          case 8: {
-            R = input.ReadInt32();
-            break;
-          }
-          case 16: {
-            G = input.ReadInt32();
-            break;
-          }
-          case 24: {
-            B = input.ReadInt32();
-            break;
-          }
-        }
-      }
-    }
-
-  }
-
-  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class Point : pb::IMessage<Point> {
     private static readonly pb::MessageParser<Point> _parser = new pb::MessageParser<Point>(() => new Point());
     public static pb::MessageParser<Point> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[2]; }
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[0]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -373,8 +60,8 @@ namespace Kinectrgbd {
     partial void OnConstruction();
 
     public Point(Point other) : this() {
-      Position = other.position_ != null ? other.Position.Clone() : null;
-      Color = other.color_ != null ? other.Color.Clone() : null;
+      position_ = other.position_;
+      color_ = other.color_;
     }
 
     public Point Clone() {
@@ -382,8 +69,8 @@ namespace Kinectrgbd {
     }
 
     public const int PositionFieldNumber = 1;
-    private global::Kinectrgbd.Position position_;
-    public global::Kinectrgbd.Position Position {
+    private long position_;
+    public long Position {
       get { return position_; }
       set {
         position_ = value;
@@ -391,8 +78,8 @@ namespace Kinectrgbd {
     }
 
     public const int ColorFieldNumber = 2;
-    private global::Kinectrgbd.Color color_;
-    public global::Kinectrgbd.Color Color {
+    private int color_;
+    public int Color {
       get { return color_; }
       set {
         color_ = value;
@@ -410,15 +97,15 @@ namespace Kinectrgbd {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (!object.Equals(Position, other.Position)) return false;
-      if (!object.Equals(Color, other.Color)) return false;
+      if (Position != other.Position) return false;
+      if (Color != other.Color) return false;
       return true;
     }
 
     public override int GetHashCode() {
       int hash = 1;
-      if (position_ != null) hash ^= Position.GetHashCode();
-      if (color_ != null) hash ^= Color.GetHashCode();
+      if (Position != 0L) hash ^= Position.GetHashCode();
+      if (Color != 0) hash ^= Color.GetHashCode();
       return hash;
     }
 
@@ -427,23 +114,23 @@ namespace Kinectrgbd {
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
-      if (position_ != null) {
-        output.WriteRawTag(10);
-        output.WriteMessage(Position);
+      if (Position != 0L) {
+        output.WriteRawTag(8);
+        output.WriteInt64(Position);
       }
-      if (color_ != null) {
-        output.WriteRawTag(18);
-        output.WriteMessage(Color);
+      if (Color != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(Color);
       }
     }
 
     public int CalculateSize() {
       int size = 0;
-      if (position_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Position);
+      if (Position != 0L) {
+        size += 1 + pb::CodedOutputStream.ComputeInt64Size(Position);
       }
-      if (color_ != null) {
-        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Color);
+      if (Color != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Color);
       }
       return size;
     }
@@ -452,17 +139,11 @@ namespace Kinectrgbd {
       if (other == null) {
         return;
       }
-      if (other.position_ != null) {
-        if (position_ == null) {
-          position_ = new global::Kinectrgbd.Position();
-        }
-        Position.MergeFrom(other.Position);
+      if (other.Position != 0L) {
+        Position = other.Position;
       }
-      if (other.color_ != null) {
-        if (color_ == null) {
-          color_ = new global::Kinectrgbd.Color();
-        }
-        Color.MergeFrom(other.Color);
+      if (other.Color != 0) {
+        Color = other.Color;
       }
     }
 
@@ -473,18 +154,12 @@ namespace Kinectrgbd {
           default:
             input.SkipLastField();
             break;
-          case 10: {
-            if (position_ == null) {
-              position_ = new global::Kinectrgbd.Position();
-            }
-            input.ReadMessage(position_);
+          case 8: {
+            Position = input.ReadInt64();
             break;
           }
-          case 18: {
-            if (color_ == null) {
-              color_ = new global::Kinectrgbd.Color();
-            }
-            input.ReadMessage(color_);
+          case 16: {
+            Color = input.ReadInt32();
             break;
           }
         }
@@ -499,7 +174,7 @@ namespace Kinectrgbd {
     public static pb::MessageParser<Request> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[3]; }
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[1]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
