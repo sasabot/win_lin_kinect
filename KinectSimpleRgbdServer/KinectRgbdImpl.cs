@@ -11,9 +11,8 @@ namespace Kinectrgbd
 {
     public class KinectRgbdImpl : Kinectrgbd.KinectRgbd.IKinectRgbd
     {
-        List<Kinectrgbd.Point> points = new List<Kinectrgbd.Point>();
         List<Kinectrgbd.Point> saved_points = new List<Kinectrgbd.Point>();
-        bool respondSet = true;
+        bool points_lock = false;
 
         public KinectRgbdImpl()
         {
@@ -24,8 +23,9 @@ namespace Kinectrgbd
             Grpc.Core.IServerStreamWriter<Kinectrgbd.Point> responseStream,
             Grpc.Core.ServerCallContext context)
         {
-            respondSet = false;
+            if (this.points_lock) return;
             //int point_count = 0;
+            this.points_lock = true;
             foreach (Kinectrgbd.Point point in this.saved_points)
             {
                 await responseStream.WriteAsync(point);
@@ -33,27 +33,28 @@ namespace Kinectrgbd
                 //if (point_count > 20000) break;
             }
             this.saved_points.Clear();
-            respondSet = true;
-        }
-
-        public void ClearPoints()
-        {
-            this.points.Clear();
+            this.points_lock = false;
         }
 
         public void SetPoint(Kinectrgbd.Point point)
         {
-            this.points.Add(point);
+            this.saved_points.Add(point);
         }
 
-        public void SavePoints()
+        public bool SetLockState()
         {
-            if (!respondSet) return;
-
-            foreach (Kinectrgbd.Point point in this.points)
+            if (this.points_lock == false)
             {
-                this.saved_points.Add(point);
+                this.points_lock = true;
+                return true;
             }
+
+            return false;
+        }
+
+        public void FreeLockState()
+        {
+            this.points_lock = false;
         }
     }
 }
