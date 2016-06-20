@@ -50,6 +50,16 @@ namespace KinectSimpleRgbdServer
 
         private Grpc.Core.Server myserver;
 
+        // send-point parameters
+
+        private int sendStartPointX = 95;
+
+        private int sendStartPointY = 91;
+
+        private int sendPointWidth = 320;
+
+        private int sendPointHeight = 240;
+
         public MainWindow()
         {
             this.kinectSensor = KinectSensor.GetDefault();
@@ -143,39 +153,55 @@ namespace KinectSimpleRgbdServer
 
             // set point cloud to send (iterate through depth map)
             int pointIndex = 0;
+            int sendEndPointX = this.sendStartPointX + this.sendPointWidth;
+            int sendEndPointY = this.sendStartPointY + this.sendPointHeight;
             foreach (CameraSpacePoint point in cameraPoints)
             {
-                if (Double.IsInfinity(point.X) || Double.IsInfinity(point.Y) || Double.IsInfinity(point.Z)
-                    || Double.IsNaN(point.X) || Double.IsNaN(point.Y) || Double.IsNaN(point.Z))
+                //if (Double.IsInfinity(point.X) || Double.IsInfinity(point.Y) || Double.IsInfinity(point.Z)
+                //    || Double.IsNaN(point.X) || Double.IsNaN(point.Y) || Double.IsNaN(point.Z))
+                //{
+                //    ++pointIndex;
+                //    continue;
+                //}
+
+                // get points only in region
+                int pointYonDepth = pointIndex / depthDesc.Width;
+                int pointXonDepth = pointIndex - depthDesc.Width * pointYonDepth;
+                if (pointXonDepth < this.sendStartPointX || pointYonDepth < this.sendStartPointY
+                    || pointXonDepth >= sendEndPointX || pointYonDepth >= sendEndPointY)
                 {
                     ++pointIndex;
                     continue;
                 }
 
                 // get color from corresponding color pixel
+                // set default values
+                int color = ((255 << 16) & 0xfffffff) + ((255 << 8) & 0xfffffff) + 255;
+                int img_y = -1;
+                int img_x = -1;
+                // below check required if point with infinity or nan value is not rejected beforehand
+                if (!Double.IsInfinity(colorPoints[pointIndex].X) && !Double.IsInfinity(colorPoints[pointIndex].Y)
+                    && !Double.IsNaN(colorPoints[pointIndex].X) && !Double.IsNaN(colorPoints[pointIndex].Y))
+                {
+                    img_y = Convert.ToInt32(colorPoints[pointIndex].Y);
+                    img_x = Convert.ToInt32(colorPoints[pointIndex].X);
+                }
                 // note, corresponding pixel can be out of range on color map, due to coordinate difference
-                int img_y = Convert.ToInt32(colorPoints[pointIndex].Y);
-                int img_x = Convert.ToInt32(colorPoints[pointIndex].X);
-                if (img_x < 0 || img_y < 0 || img_x >= 1960 || img_y >= 1080)
+                if (img_x >= 0 && img_y >= 0 && img_x < 1960 && img_y < 1080)
                 {
-                    ++pointIndex;
-                    continue;
+                    int pixel = 4 * (img_y * colorDesc.Width + img_x); // bgra, so skip by 4
+                    color = ((pixels[pixel++] << 16) & 0xfffffff) + ((pixels[pixel++] << 8) & 0xfffffff) + pixels[pixel++];
                 }
-                int pixel = 4 * (img_y * colorDesc.Width + img_x); // bgra, so skip be 4
-
-                if (point.X > 1.0 || point.Y > 1.0 || point.Z > 2.0 || point.X < -1.0 || point.Y < -1.0)
-                {
-                    ++pointIndex;
-                    continue;
-                }
+                //else
+                //{
+                //    ++pointIndex;
+                //    continue;
+                //}
 
                 // add point to stream
                 Kinectrgbd.Point p = new Kinectrgbd.Point
                 {
-                    Color = ((pixels[pixel++] << 16) & 0xfffffff) + ((pixels[pixel++] << 8) & 0xfffffff) + pixels[pixel++],
-                    X = point.X,
-                    Y = point.Y,
-                    Z = point.Z
+                    Color = color, X = point.X, Y = point.Y, Z = point.Z
                 };
                 ++pointIndex;
                 this.streamer.SetPoint(p);
