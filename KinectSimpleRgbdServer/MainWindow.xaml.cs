@@ -93,7 +93,7 @@ namespace KinectSimpleRgbdServer
         private void Reader_FrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
             // the code crashes with 30fps, set parameter according to computer specifications
-            if (this.skippedFrame < 30)
+            if (this.skippedFrame < 150)
             {
                 ++skippedFrame;
                 return;
@@ -111,15 +111,6 @@ namespace KinectSimpleRgbdServer
             if (colorFrame == null | depthFrame == null)
                 return;
 
-            // set point cloud to send (iterate through depth map)
-            SendPoints(depthFrame, colorFrame).Wait();
-
-            colorFrame.Dispose();
-            depthFrame.Dispose();
-        }
-
-        public async Task SendPoints(DepthFrame depthFrame, ColorFrame colorFrame)
-        {
             // get depth map from depthFrame
             var depthDesc = depthFrame.FrameDescription;
             ushort[] depthData = new ushort[depthDesc.Width * depthDesc.Height];
@@ -202,9 +193,20 @@ namespace KinectSimpleRgbdServer
                     Z = point.Z
                 };
                 ++pointIndex;
-                points.Add(p);               
+                points.Add(p);
             }
 
+            // set point cloud to send (iterate through depth map)
+            System.Threading.CancellationTokenSource source = new System.Threading.CancellationTokenSource();
+            source.CancelAfter(TimeSpan.FromSeconds(1));
+            Task task = Task.Run(() => SendPoints(points), source.Token);
+
+            colorFrame.Dispose();
+            depthFrame.Dispose();
+        }
+
+        public async Task SendPoints(List<Kinectrgbd.Point> points)
+        {
             try
             {
                 using (var call = client.SendPoints())
