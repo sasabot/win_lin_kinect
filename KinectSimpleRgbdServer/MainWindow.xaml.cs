@@ -149,68 +149,74 @@ namespace KinectSimpleRgbdServer
             int pointIndex = 0;
             int sendEndPointX = this.sendStartPointX + this.sendPointWidth;
             int sendEndPointY = this.sendStartPointY + this.sendPointHeight;
+            List<Kinectrgbd.Point> points = new List<Kinectrgbd.Point>();
+            foreach (CameraSpacePoint point in cameraPoints)
+            {
+                //if (Double.IsInfinity(point.X) || Double.IsInfinity(point.Y) || Double.IsInfinity(point.Z)
+                //    || Double.IsNaN(point.X) || Double.IsNaN(point.Y) || Double.IsNaN(point.Z))
+                //{
+                //    ++pointIndex;
+                //    continue;
+                //}
+
+                // get points only in region
+                int pointYonDepth = pointIndex / depthDesc.Width;
+                int pointXonDepth = pointIndex - depthDesc.Width * pointYonDepth;
+                if (pointXonDepth < this.sendStartPointX || pointYonDepth < this.sendStartPointY
+                    || pointXonDepth >= sendEndPointX || pointYonDepth >= sendEndPointY)
+                {
+                    ++pointIndex;
+                    continue;
+                }
+
+                // get color from corresponding color pixel
+                // set default values
+                int color = ((255 << 16) & 0xfffffff) + ((255 << 8) & 0xfffffff) + 255;
+                int img_y = -1;
+                int img_x = -1;
+                // below check required if point with infinity or nan value is not rejected beforehand
+                if (!Double.IsInfinity(colorPoints[pointIndex].X) && !Double.IsInfinity(colorPoints[pointIndex].Y)
+                    && !Double.IsNaN(colorPoints[pointIndex].X) && !Double.IsNaN(colorPoints[pointIndex].Y))
+                {
+                    img_y = Convert.ToInt32(colorPoints[pointIndex].Y);
+                    img_x = Convert.ToInt32(colorPoints[pointIndex].X);
+                }
+                // note, corresponding pixel can be out of range on color map, due to coordinate difference
+                if (img_x >= 0 && img_y >= 0 && img_x < 1960 && img_y < 1080)
+                {
+                    int pixel = 4 * (img_y * colorDesc.Width + img_x); // bgra, so skip by 4
+                    color = ((pixels[pixel++] << 16) & 0xfffffff) + ((pixels[pixel++] << 8) & 0xfffffff) + pixels[pixel++];
+                }
+                //else
+                //{
+                //    ++pointIndex;
+                //    continue;
+                //}
+
+                // add point to stream
+                Kinectrgbd.Point p = new Kinectrgbd.Point
+                {
+                    Color = color,
+                    X = point.X,
+                    Y = point.Y,
+                    Z = point.Z
+                };
+                ++pointIndex;
+                points.Add(p);               
+            }
+
             try
             {
                 using (var call = client.SendPoints())
                 {
-                    foreach (CameraSpacePoint point in cameraPoints)
+                    foreach(var point in points)
                     {
-                        //if (Double.IsInfinity(point.X) || Double.IsInfinity(point.Y) || Double.IsInfinity(point.Z)
-                        //    || Double.IsNaN(point.X) || Double.IsNaN(point.Y) || Double.IsNaN(point.Z))
-                        //{
-                        //    ++pointIndex;
-                        //    continue;
-                        //}
-
-                        // get points only in region
-                        int pointYonDepth = pointIndex / depthDesc.Width;
-                        int pointXonDepth = pointIndex - depthDesc.Width * pointYonDepth;
-                        if (pointXonDepth < this.sendStartPointX || pointYonDepth < this.sendStartPointY
-                            || pointXonDepth >= sendEndPointX || pointYonDepth >= sendEndPointY)
-                        {
-                            ++pointIndex;
-                            continue;
-                        }
-
-                        // get color from corresponding color pixel
-                        // set default values
-                        int color = ((255 << 16) & 0xfffffff) + ((255 << 8) & 0xfffffff) + 255;
-                        int img_y = -1;
-                        int img_x = -1;
-                        // below check required if point with infinity or nan value is not rejected beforehand
-                        if (!Double.IsInfinity(colorPoints[pointIndex].X) && !Double.IsInfinity(colorPoints[pointIndex].Y)
-                            && !Double.IsNaN(colorPoints[pointIndex].X) && !Double.IsNaN(colorPoints[pointIndex].Y))
-                        {
-                            img_y = Convert.ToInt32(colorPoints[pointIndex].Y);
-                            img_x = Convert.ToInt32(colorPoints[pointIndex].X);
-                        }
-                        // note, corresponding pixel can be out of range on color map, due to coordinate difference
-                        if (img_x >= 0 && img_y >= 0 && img_x < 1960 && img_y < 1080)
-                        {
-                            int pixel = 4 * (img_y * colorDesc.Width + img_x); // bgra, so skip by 4
-                            color = ((pixels[pixel++] << 16) & 0xfffffff) + ((pixels[pixel++] << 8) & 0xfffffff) + pixels[pixel++];
-                        }
-                        //else
-                        //{
-                        //    ++pointIndex;
-                        //    continue;
-                        //}
-
-                        // add point to stream
-                        Kinectrgbd.Point p = new Kinectrgbd.Point
-                        {
-                            Color = color,
-                            X = point.X,
-                            Y = point.Y,
-                            Z = point.Z
-                        };
-                        ++pointIndex;
-                        await call.RequestStream.WriteAsync(p);
-                    } // foreach
+                        await call.RequestStream.WriteAsync(point);
+                    }
                     await call.RequestStream.CompleteAsync();
 
                     Kinectrgbd.Response res = await call.ResponseAsync;
-                } // using (var call = client.SendPoints())
+                }
             }
             catch (RpcException e)
             {
