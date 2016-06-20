@@ -12,15 +12,15 @@ namespace Kinectrgbd {
   {
     static readonly string __ServiceName = "kinectrgbd.KinectRgbd";
 
-    static readonly Marshaller<global::Kinectrgbd.Request> __Marshaller_Request = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrgbd.Request.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrgbd.Point> __Marshaller_Point = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrgbd.Point.Parser.ParseFrom);
+    static readonly Marshaller<global::Kinectrgbd.Response> __Marshaller_Response = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrgbd.Response.Parser.ParseFrom);
 
-    static readonly Method<global::Kinectrgbd.Request, global::Kinectrgbd.Point> __Method_GetPoints = new Method<global::Kinectrgbd.Request, global::Kinectrgbd.Point>(
-        MethodType.ServerStreaming,
+    static readonly Method<global::Kinectrgbd.Point, global::Kinectrgbd.Response> __Method_SendPoints = new Method<global::Kinectrgbd.Point, global::Kinectrgbd.Response>(
+        MethodType.ClientStreaming,
         __ServiceName,
-        "GetPoints",
-        __Marshaller_Request,
-        __Marshaller_Point);
+        "SendPoints",
+        __Marshaller_Point,
+        __Marshaller_Response);
 
     // service descriptor
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
@@ -31,14 +31,14 @@ namespace Kinectrgbd {
     // client interface
     public interface IKinectRgbdClient
     {
-      AsyncServerStreamingCall<global::Kinectrgbd.Point> GetPoints(global::Kinectrgbd.Request request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
-      AsyncServerStreamingCall<global::Kinectrgbd.Point> GetPoints(global::Kinectrgbd.Request request, CallOptions options);
+      AsyncClientStreamingCall<global::Kinectrgbd.Point, global::Kinectrgbd.Response> SendPoints(Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
+      AsyncClientStreamingCall<global::Kinectrgbd.Point, global::Kinectrgbd.Response> SendPoints(CallOptions options);
     }
 
     // server-side interface
     public interface IKinectRgbd
     {
-      Task GetPoints(global::Kinectrgbd.Request request, IServerStreamWriter<global::Kinectrgbd.Point> responseStream, ServerCallContext context);
+      Task<global::Kinectrgbd.Response> SendPoints(IAsyncStreamReader<global::Kinectrgbd.Point> requestStream, ServerCallContext context);
     }
 
     // client stub
@@ -47,15 +47,15 @@ namespace Kinectrgbd {
       public KinectRgbdClient(Channel channel) : base(channel)
       {
       }
-      public AsyncServerStreamingCall<global::Kinectrgbd.Point> GetPoints(global::Kinectrgbd.Request request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      public AsyncClientStreamingCall<global::Kinectrgbd.Point, global::Kinectrgbd.Response> SendPoints(Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
-        var call = CreateCall(__Method_GetPoints, new CallOptions(headers, deadline, cancellationToken));
-        return Calls.AsyncServerStreamingCall(call, request);
+        var call = CreateCall(__Method_SendPoints, new CallOptions(headers, deadline, cancellationToken));
+        return Calls.AsyncClientStreamingCall(call);
       }
-      public AsyncServerStreamingCall<global::Kinectrgbd.Point> GetPoints(global::Kinectrgbd.Request request, CallOptions options)
+      public AsyncClientStreamingCall<global::Kinectrgbd.Point, global::Kinectrgbd.Response> SendPoints(CallOptions options)
       {
-        var call = CreateCall(__Method_GetPoints, options);
-        return Calls.AsyncServerStreamingCall(call, request);
+        var call = CreateCall(__Method_SendPoints, options);
+        return Calls.AsyncClientStreamingCall(call);
       }
     }
 
@@ -63,7 +63,7 @@ namespace Kinectrgbd {
     public static ServerServiceDefinition BindService(IKinectRgbd serviceImpl)
     {
       return ServerServiceDefinition.CreateBuilder(__ServiceName)
-          .AddMethod(__Method_GetPoints, serviceImpl.GetPoints).Build();
+          .AddMethod(__Method_SendPoints, serviceImpl.SendPoints).Build();
     }
 
     // creates a new client

@@ -24,15 +24,16 @@ namespace Kinectrgbd {
         byte[] descriptorData = global::System.Convert.FromBase64String(
             string.Concat(
               "ChFraW5lY3RfcmdiZC5wcm90bxIKa2luZWN0cmdiZCI3CgVQb2ludBIJCgF4", 
-              "GAEgASgCEgkKAXkYAiABKAISCQoBehgDIAEoAhINCgVjb2xvchgEIAEoBSIZ", 
-              "CgdSZXF1ZXN0Eg4KBmhlYWRlchgBIAEoBTJFCgpLaW5lY3RSZ2JkEjcKCUdl", 
-              "dFBvaW50cxITLmtpbmVjdHJnYmQuUmVxdWVzdBoRLmtpbmVjdHJnYmQuUG9p", 
-              "bnQiADABQg8KB2V4LmdycGOiAgNSVEdiBnByb3RvMw=="));
+              "GAEgASgCEgkKAXkYAiABKAISCQoBehgDIAEoAhINCgVjb2xvchgEIAEoBSI/", 
+              "CghSZXNwb25zZRIJCgF4GAEgASgFEgkKAXkYAiABKAUSDQoFd2lkdGgYAyAB", 
+              "KAUSDgoGaGVpZ2h0GAQgASgFMkcKCktpbmVjdFJnYmQSOQoKU2VuZFBvaW50", 
+              "cxIRLmtpbmVjdHJnYmQuUG9pbnQaFC5raW5lY3RyZ2JkLlJlc3BvbnNlIgAo", 
+              "AUIPCgdleC5ncnBjogIDUlRHYgZwcm90bzM="));
         descriptor = pbr::FileDescriptor.InternalBuildGeneratedFileFrom(descriptorData,
             new pbr::FileDescriptor[] { },
             new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Point), new[]{ "X", "Y", "Z", "Color" }, null, null, null),
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Request), new[]{ "Header" }, null, null, null)
+              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Response), new[]{ "X", "Y", "Width", "Height" }, null, null, null)
             }));
       }
       #endregion
@@ -221,9 +222,9 @@ namespace Kinectrgbd {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class Request : pb::IMessage<Request> {
-    private static readonly pb::MessageParser<Request> _parser = new pb::MessageParser<Request>(() => new Request());
-    public static pb::MessageParser<Request> Parser { get { return _parser; } }
+  public sealed partial class Response : pb::IMessage<Response> {
+    private static readonly pb::MessageParser<Response> _parser = new pb::MessageParser<Response>(() => new Response());
+    public static pb::MessageParser<Response> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
       get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[1]; }
@@ -233,47 +234,83 @@ namespace Kinectrgbd {
       get { return Descriptor; }
     }
 
-    public Request() {
+    public Response() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
-    public Request(Request other) : this() {
-      header_ = other.header_;
+    public Response(Response other) : this() {
+      x_ = other.x_;
+      y_ = other.y_;
+      width_ = other.width_;
+      height_ = other.height_;
     }
 
-    public Request Clone() {
-      return new Request(this);
+    public Response Clone() {
+      return new Response(this);
     }
 
-    public const int HeaderFieldNumber = 1;
-    private int header_;
-    public int Header {
-      get { return header_; }
+    public const int XFieldNumber = 1;
+    private int x_;
+    public int X {
+      get { return x_; }
       set {
-        header_ = value;
+        x_ = value;
+      }
+    }
+
+    public const int YFieldNumber = 2;
+    private int y_;
+    public int Y {
+      get { return y_; }
+      set {
+        y_ = value;
+      }
+    }
+
+    public const int WidthFieldNumber = 3;
+    private int width_;
+    public int Width {
+      get { return width_; }
+      set {
+        width_ = value;
+      }
+    }
+
+    public const int HeightFieldNumber = 4;
+    private int height_;
+    public int Height {
+      get { return height_; }
+      set {
+        height_ = value;
       }
     }
 
     public override bool Equals(object other) {
-      return Equals(other as Request);
+      return Equals(other as Response);
     }
 
-    public bool Equals(Request other) {
+    public bool Equals(Response other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Header != other.Header) return false;
+      if (X != other.X) return false;
+      if (Y != other.Y) return false;
+      if (Width != other.Width) return false;
+      if (Height != other.Height) return false;
       return true;
     }
 
     public override int GetHashCode() {
       int hash = 1;
-      if (Header != 0) hash ^= Header.GetHashCode();
+      if (X != 0) hash ^= X.GetHashCode();
+      if (Y != 0) hash ^= Y.GetHashCode();
+      if (Width != 0) hash ^= Width.GetHashCode();
+      if (Height != 0) hash ^= Height.GetHashCode();
       return hash;
     }
 
@@ -282,26 +319,56 @@ namespace Kinectrgbd {
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
-      if (Header != 0) {
+      if (X != 0) {
         output.WriteRawTag(8);
-        output.WriteInt32(Header);
+        output.WriteInt32(X);
+      }
+      if (Y != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(Y);
+      }
+      if (Width != 0) {
+        output.WriteRawTag(24);
+        output.WriteInt32(Width);
+      }
+      if (Height != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(Height);
       }
     }
 
     public int CalculateSize() {
       int size = 0;
-      if (Header != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Header);
+      if (X != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(X);
+      }
+      if (Y != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Y);
+      }
+      if (Width != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Width);
+      }
+      if (Height != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Height);
       }
       return size;
     }
 
-    public void MergeFrom(Request other) {
+    public void MergeFrom(Response other) {
       if (other == null) {
         return;
       }
-      if (other.Header != 0) {
-        Header = other.Header;
+      if (other.X != 0) {
+        X = other.X;
+      }
+      if (other.Y != 0) {
+        Y = other.Y;
+      }
+      if (other.Width != 0) {
+        Width = other.Width;
+      }
+      if (other.Height != 0) {
+        Height = other.Height;
       }
     }
 
@@ -313,7 +380,19 @@ namespace Kinectrgbd {
             input.SkipLastField();
             break;
           case 8: {
-            Header = input.ReadInt32();
+            X = input.ReadInt32();
+            break;
+          }
+          case 16: {
+            Y = input.ReadInt32();
+            break;
+          }
+          case 24: {
+            Width = input.ReadInt32();
+            break;
+          }
+          case 32: {
+            Height = input.ReadInt32();
             break;
           }
         }

@@ -81,9 +81,12 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="KinectRgbd.cs" />
-    <Compile Include="KinectRgbdGrpc.cs" />
-    <Compile Include="KinectRgbdImpl.cs" />
+    <Compile Include="KinectRgbd.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="KinectRgbdGrpc.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
