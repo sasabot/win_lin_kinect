@@ -167,7 +167,7 @@ int main(int argc, char** argv)
   KinectRgbdImpl service(nh);
 
   ServerBuilder builder;
-  builder.AddListeningPort("192.168.101.1:50052", grpc::InsecureServerCredentials());
+  builder.AddListeningPort("192.168.101.192:50052", grpc::InsecureServerCredentials());
   builder.RegisterService(&service);
   std::unique_ptr<Server> server(builder.BuildAndStart());
   server->Wait();
