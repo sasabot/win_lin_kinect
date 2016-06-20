@@ -23,9 +23,9 @@ namespace {
 const ::google::protobuf::Descriptor* Point_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Point_reflection_ = NULL;
-const ::google::protobuf::Descriptor* Request_descriptor_ = NULL;
+const ::google::protobuf::Descriptor* Response_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
-  Request_reflection_ = NULL;
+  Response_reflection_ = NULL;
 
 }  // namespace
 
@@ -54,21 +54,24 @@ void protobuf_AssignDesc_kinect_5frgbd_2eproto() {
       sizeof(Point),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Point, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Point, _is_default_instance_));
-  Request_descriptor_ = file->message_type(1);
-  static const int Request_offsets_[1] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, header_),
+  Response_descriptor_ = file->message_type(1);
+  static const int Response_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response, x_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response, y_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response, width_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response, height_),
   };
-  Request_reflection_ =
+  Response_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
-      Request_descriptor_,
-      Request::default_instance_,
-      Request_offsets_,
+      Response_descriptor_,
+      Response::default_instance_,
+      Response_offsets_,
       -1,
       -1,
       -1,
-      sizeof(Request),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, _internal_metadata_),
-      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, _is_default_instance_));
+      sizeof(Response),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response, _internal_metadata_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response, _is_default_instance_));
 }
 
 namespace {
@@ -84,7 +87,7 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       Point_descriptor_, &Point::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
-      Request_descriptor_, &Request::default_instance());
+      Response_descriptor_, &Response::default_instance());
 }
 
 }  // namespace
@@ -92,8 +95,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void protobuf_ShutdownFile_kinect_5frgbd_2eproto() {
   delete Point::default_instance_;
   delete Point_reflection_;
-  delete Request::default_instance_;
-  delete Request_reflection_;
+  delete Response::default_instance_;
+  delete Response_reflection_;
 }
 
 void protobuf_AddDesc_kinect_5frgbd_2eproto() {
@@ -105,16 +108,17 @@ void protobuf_AddDesc_kinect_5frgbd_2eproto() {
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\021kinect_rgbd.proto\022\nkinectrgbd\"7\n\005Point"
     "\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\022\r\n\005col"
-    "or\030\004 \001(\005\"\031\n\007Request\022\016\n\006header\030\001 \001(\0052E\n\nK"
-    "inectRgbd\0227\n\tGetPoints\022\023.kinectrgbd.Requ"
-    "est\032\021.kinectrgbd.Point\"\0000\001B\017\n\007ex.grpc\242\002\003"
-    "RTGb\006proto3", 211);
+    "or\030\004 \001(\005\"\?\n\010Response\022\t\n\001x\030\001 \001(\005\022\t\n\001y\030\002 \001"
+    "(\005\022\r\n\005width\030\003 \001(\005\022\016\n\006height\030\004 \001(\0052G\n\nKin"
+    "ectRgbd\0229\n\nSendPoints\022\021.kinectrgbd.Point"
+    "\032\024.kinectrgbd.Response\"\000(\001B\017\n\007ex.grpc\242\002\003"
+    "RTGb\006proto3", 251);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "kinect_rgbd.proto", &protobuf_RegisterTypes);
   Point::default_instance_ = new Point();
-  Request::default_instance_ = new Request();
+  Response::default_instance_ = new Response();
   Point::default_instance_->InitAsDefaultInstance();
-  Request::default_instance_->InitAsDefaultInstance();
+  Response::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_kinect_5frgbd_2eproto);
 }
 
@@ -526,88 +530,151 @@ void Point::clear_color() {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int Request::kHeaderFieldNumber;
+const int Response::kXFieldNumber;
+const int Response::kYFieldNumber;
+const int Response::kWidthFieldNumber;
+const int Response::kHeightFieldNumber;
 #endif  // !_MSC_VER
 
-Request::Request()
+Response::Response()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
   SharedCtor();
-  // @@protoc_insertion_point(constructor:kinectrgbd.Request)
+  // @@protoc_insertion_point(constructor:kinectrgbd.Response)
 }
 
-void Request::InitAsDefaultInstance() {
+void Response::InitAsDefaultInstance() {
   _is_default_instance_ = true;
 }
 
-Request::Request(const Request& from)
+Response::Response(const Response& from)
   : ::google::protobuf::Message(),
     _internal_metadata_(NULL) {
   SharedCtor();
   MergeFrom(from);
-  // @@protoc_insertion_point(copy_constructor:kinectrgbd.Request)
+  // @@protoc_insertion_point(copy_constructor:kinectrgbd.Response)
 }
 
-void Request::SharedCtor() {
+void Response::SharedCtor() {
     _is_default_instance_ = false;
   _cached_size_ = 0;
-  header_ = 0;
+  x_ = 0;
+  y_ = 0;
+  width_ = 0;
+  height_ = 0;
 }
 
-Request::~Request() {
-  // @@protoc_insertion_point(destructor:kinectrgbd.Request)
+Response::~Response() {
+  // @@protoc_insertion_point(destructor:kinectrgbd.Response)
   SharedDtor();
 }
 
-void Request::SharedDtor() {
+void Response::SharedDtor() {
   if (this != default_instance_) {
   }
 }
 
-void Request::SetCachedSize(int size) const {
+void Response::SetCachedSize(int size) const {
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
   _cached_size_ = size;
   GOOGLE_SAFE_CONCURRENT_WRITES_END();
 }
-const ::google::protobuf::Descriptor* Request::descriptor() {
+const ::google::protobuf::Descriptor* Response::descriptor() {
   protobuf_AssignDescriptorsOnce();
-  return Request_descriptor_;
+  return Response_descriptor_;
 }
 
-const Request& Request::default_instance() {
+const Response& Response::default_instance() {
   if (default_instance_ == NULL) protobuf_AddDesc_kinect_5frgbd_2eproto();
   return *default_instance_;
 }
 
-Request* Request::default_instance_ = NULL;
+Response* Response::default_instance_ = NULL;
 
-Request* Request::New(::google::protobuf::Arena* arena) const {
-  Request* n = new Request;
+Response* Response::New(::google::protobuf::Arena* arena) const {
+  Response* n = new Response;
   if (arena != NULL) {
     arena->Own(n);
   }
   return n;
 }
 
-void Request::Clear() {
-  header_ = 0;
+void Response::Clear() {
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<Response*>(16)->f)
+
+#define ZR_(first, last) do {\
+  ::memset(&first, 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
+
+  ZR_(x_, height_);
+
+#undef ZR_HELPER_
+#undef ZR_
+
 }
 
-bool Request::MergePartialFromCodedStream(
+bool Response::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
 #define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
-  // @@protoc_insertion_point(parse_start:kinectrgbd.Request)
+  // @@protoc_insertion_point(parse_start:kinectrgbd.Response)
   for (;;) {
     ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional int32 header = 1;
+      // optional int32 x = 1;
       case 1: {
         if (tag == 8) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &header_)));
+                 input, &x_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(16)) goto parse_y;
+        break;
+      }
+
+      // optional int32 y = 2;
+      case 2: {
+        if (tag == 16) {
+         parse_y:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &y_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(24)) goto parse_width;
+        break;
+      }
+
+      // optional int32 width = 3;
+      case 3: {
+        if (tag == 24) {
+         parse_width:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &width_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(32)) goto parse_height;
+        break;
+      }
+
+      // optional int32 height = 4;
+      case 4: {
+        if (tag == 32) {
+         parse_height:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &height_)));
 
         } else {
           goto handle_unusual;
@@ -629,45 +696,96 @@ bool Request::MergePartialFromCodedStream(
     }
   }
 success:
-  // @@protoc_insertion_point(parse_success:kinectrgbd.Request)
+  // @@protoc_insertion_point(parse_success:kinectrgbd.Response)
   return true;
 failure:
-  // @@protoc_insertion_point(parse_failure:kinectrgbd.Request)
+  // @@protoc_insertion_point(parse_failure:kinectrgbd.Response)
   return false;
 #undef DO_
 }
 
-void Request::SerializeWithCachedSizes(
+void Response::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // @@protoc_insertion_point(serialize_start:kinectrgbd.Request)
-  // optional int32 header = 1;
-  if (this->header() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->header(), output);
+  // @@protoc_insertion_point(serialize_start:kinectrgbd.Response)
+  // optional int32 x = 1;
+  if (this->x() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->x(), output);
   }
 
-  // @@protoc_insertion_point(serialize_end:kinectrgbd.Request)
+  // optional int32 y = 2;
+  if (this->y() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->y(), output);
+  }
+
+  // optional int32 width = 3;
+  if (this->width() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->width(), output);
+  }
+
+  // optional int32 height = 4;
+  if (this->height() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->height(), output);
+  }
+
+  // @@protoc_insertion_point(serialize_end:kinectrgbd.Response)
 }
 
-::google::protobuf::uint8* Request::SerializeWithCachedSizesToArray(
+::google::protobuf::uint8* Response::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // @@protoc_insertion_point(serialize_to_array_start:kinectrgbd.Request)
-  // optional int32 header = 1;
-  if (this->header() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->header(), target);
+  // @@protoc_insertion_point(serialize_to_array_start:kinectrgbd.Response)
+  // optional int32 x = 1;
+  if (this->x() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->x(), target);
   }
 
-  // @@protoc_insertion_point(serialize_to_array_end:kinectrgbd.Request)
+  // optional int32 y = 2;
+  if (this->y() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->y(), target);
+  }
+
+  // optional int32 width = 3;
+  if (this->width() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->width(), target);
+  }
+
+  // optional int32 height = 4;
+  if (this->height() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->height(), target);
+  }
+
+  // @@protoc_insertion_point(serialize_to_array_end:kinectrgbd.Response)
   return target;
 }
 
-int Request::ByteSize() const {
+int Response::ByteSize() const {
   int total_size = 0;
 
-  // optional int32 header = 1;
-  if (this->header() != 0) {
+  // optional int32 x = 1;
+  if (this->x() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->header());
+        this->x());
+  }
+
+  // optional int32 y = 2;
+  if (this->y() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->y());
+  }
+
+  // optional int32 width = 3;
+  if (this->width() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->width());
+  }
+
+  // optional int32 height = 4;
+  if (this->height() != 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::Int32Size(
+        this->height());
   }
 
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -676,10 +794,10 @@ int Request::ByteSize() const {
   return total_size;
 }
 
-void Request::MergeFrom(const ::google::protobuf::Message& from) {
+void Response::MergeFrom(const ::google::protobuf::Message& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  const Request* source = 
-      ::google::protobuf::internal::DynamicCastToGenerated<const Request>(
+  const Response* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const Response>(
           &from);
   if (source == NULL) {
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
@@ -688,63 +806,117 @@ void Request::MergeFrom(const ::google::protobuf::Message& from) {
   }
 }
 
-void Request::MergeFrom(const Request& from) {
+void Response::MergeFrom(const Response& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  if (from.header() != 0) {
-    set_header(from.header());
+  if (from.x() != 0) {
+    set_x(from.x());
+  }
+  if (from.y() != 0) {
+    set_y(from.y());
+  }
+  if (from.width() != 0) {
+    set_width(from.width());
+  }
+  if (from.height() != 0) {
+    set_height(from.height());
   }
 }
 
-void Request::CopyFrom(const ::google::protobuf::Message& from) {
+void Response::CopyFrom(const ::google::protobuf::Message& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-void Request::CopyFrom(const Request& from) {
+void Response::CopyFrom(const Response& from) {
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
-bool Request::IsInitialized() const {
+bool Response::IsInitialized() const {
 
   return true;
 }
 
-void Request::Swap(Request* other) {
+void Response::Swap(Response* other) {
   if (other == this) return;
   InternalSwap(other);
 }
-void Request::InternalSwap(Request* other) {
-  std::swap(header_, other->header_);
+void Response::InternalSwap(Response* other) {
+  std::swap(x_, other->x_);
+  std::swap(y_, other->y_);
+  std::swap(width_, other->width_);
+  std::swap(height_, other->height_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
 
-::google::protobuf::Metadata Request::GetMetadata() const {
+::google::protobuf::Metadata Response::GetMetadata() const {
   protobuf_AssignDescriptorsOnce();
   ::google::protobuf::Metadata metadata;
-  metadata.descriptor = Request_descriptor_;
-  metadata.reflection = Request_reflection_;
+  metadata.descriptor = Response_descriptor_;
+  metadata.reflection = Response_reflection_;
   return metadata;
 }
 
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
-// Request
+// Response
 
-// optional int32 header = 1;
-void Request::clear_header() {
-  header_ = 0;
+// optional int32 x = 1;
+void Response::clear_x() {
+  x_ = 0;
 }
- ::google::protobuf::int32 Request::header() const {
-  // @@protoc_insertion_point(field_get:kinectrgbd.Request.header)
-  return header_;
+ ::google::protobuf::int32 Response::x() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Response.x)
+  return x_;
 }
- void Request::set_header(::google::protobuf::int32 value) {
+ void Response::set_x(::google::protobuf::int32 value) {
   
-  header_ = value;
-  // @@protoc_insertion_point(field_set:kinectrgbd.Request.header)
+  x_ = value;
+  // @@protoc_insertion_point(field_set:kinectrgbd.Response.x)
+}
+
+// optional int32 y = 2;
+void Response::clear_y() {
+  y_ = 0;
+}
+ ::google::protobuf::int32 Response::y() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Response.y)
+  return y_;
+}
+ void Response::set_y(::google::protobuf::int32 value) {
+  
+  y_ = value;
+  // @@protoc_insertion_point(field_set:kinectrgbd.Response.y)
+}
+
+// optional int32 width = 3;
+void Response::clear_width() {
+  width_ = 0;
+}
+ ::google::protobuf::int32 Response::width() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Response.width)
+  return width_;
+}
+ void Response::set_width(::google::protobuf::int32 value) {
+  
+  width_ = value;
+  // @@protoc_insertion_point(field_set:kinectrgbd.Response.width)
+}
+
+// optional int32 height = 4;
+void Response::clear_height() {
+  height_ = 0;
+}
+ ::google::protobuf::int32 Response::height() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Response.height)
+  return height_;
+}
+ void Response::set_height(::google::protobuf::int32 value) {
+  
+  height_ = value;
+  // @@protoc_insertion_point(field_set:kinectrgbd.Response.height)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

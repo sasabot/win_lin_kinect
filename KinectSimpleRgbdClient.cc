@@ -10,27 +10,38 @@
 #include <thread>
 
 #include <grpc/grpc.h>
-#include <grpc++/channel.h>
-#include <grpc++/client_context.h>
-#include <grpc++/create_channel.h>
+// #include <grpc++/channel.h>
+// #include <grpc++/client_context.h>
+// #include <grpc++/create_channel.h>
+#include <grpc++/server.h>
+#include <grpc++/server_builder.h>
+#include <grpc++/server_context.h>
 #include <grpc++/security/credentials.h>
 #include "kinect_rgbd.grpc.pb.h"
 
-using grpc::Channel;
-using grpc::ClientContext;
-using grpc::ClientReader;
-using grpc::ClientReaderWriter;
-using grpc::ClientWriter;
+
+using grpc::Server;
+using grpc::ServerBuilder;
+using grpc::ServerContext;
+using grpc::ServerReader;
+using grpc::ServerReaderWriter;
+using grpc::ServerWriter;
+// using grpc::Channel;
+// using grpc::ClientContext;
+// using grpc::ClientReader;
+// using grpc::ClientReaderWriter;
+// using grpc::ClientWriter;
 using grpc::Status;
 
 using kinectrgbd::Point;
-using kinectrgbd::Request;
+using kinectrgbd::Response;
 using kinectrgbd::KinectRgbd;
 
-class KinectClient {
+
+class KinectRgbdImpl final : public KinectRgbd::Service
+{
 public:
-  KinectClient(std::shared_ptr<Channel> channel, ros::NodeHandle _nh)
-    : stub_(KinectRgbd::NewStub(channel)), nh_(_nh)
+  explicit KinectRgbdImpl(ros::NodeHandle nh) : nh_(nh)
   {
     pub_ = nh_.advertise<sensor_msgs::PointCloud2>("/kinect/points", 1);
 
@@ -61,28 +72,20 @@ public:
     field_[3] = rgb;
   }
 
-  void GetPoints()
+  Status SendPoints(ServerContext* context, ServerReader<Point>* reader,
+		    Response* res) override
   {
-    ClientContext context;
-    Point point;
-    Request req;
-    req.set_header(0);
-
-    std::unique_ptr<ClientReader<Point> > reader(
-	stub_->GetPoints(&context, req));
     std::vector<uint8_t> data;
     data.reserve(16 * 512 * 424); // 12
 
     int point_index = 0;
     int point_count = 0;
+    kinectrgbd::Point point;
     while (reader->Read(&point))
     {
       float d = point.z();
       float y = point.y();
       float x = point.x();
-      // float d = (point.position() & 0x00000000000ffff) * 0.00001;
-      // float y = ((point.position() >> 16) & 0x00000000000ffff) * 0.00001;
-      // float x = ((point.position() >> 32) & 0x00000000000ffff) * 0.00001;
       uint8_t r = (point.color() & 0x00000ff);
       uint8_t g = ((point.color() >> 8) & 0x00000ff);
       uint8_t b = ((point.color() >> 16) & 0x00000ff);
@@ -116,7 +119,7 @@ public:
       data.push_back(r);
       data.push_back(dummy);
 
-      ++point_count;
+      ++point_count;      
     }
     data.resize(16 * point_count); //12
 
@@ -125,21 +128,27 @@ public:
     sensor_msgs::PointCloud2 msg;
     msg.header.frame_id = "ps4eye_frame";
     msg.header.stamp = ros::Time(0);
-    msg.height = 1;
-    msg.width = point_count;
+    // msg.height = 1; // unorganized
+    // msg.width = point_count; // unorganized
+    msg.height = 240;
+    msg.width = 320;
     msg.fields.assign(field_.begin(), field_.end());
     msg.point_step = 16; //12
     msg.row_step = point_count;
-    msg.is_dense = true;
+    msg.is_dense = false;
     msg.is_bigendian = true;
     msg.data.assign(data.begin(), data.end());
     pub_.publish(msg);
+
+    res->set_x(95);
+    res->set_y(91);
+    res->set_width(320);
+    res->set_height(240);
+
+    return Status::OK;
   }
 
-
 private:
-
-  std::unique_ptr<KinectRgbd::Stub> stub_;
 
   ros::NodeHandle nh_;
 
@@ -148,20 +157,18 @@ private:
   std::vector<sensor_msgs::PointField> field_;
 };
 
-int main(int argc, char** argv) {
-  ros::init(argc, argv, "kinect_client");
+
+int main(int argc, char** argv)
+{
+  ros::init(argc, argv, "kinect_rgbd");
 
   ros::NodeHandle nh;
 
-  KinectClient client(
-      grpc::CreateChannel("192.168.101.190:50052", grpc::InsecureCredentials()),
-      nh);
+  KinectRgbdImpl service(nh);
 
-  ros::Rate loop_rate(1);
-
-  while(ros::ok)
-  {
-    client.GetPoints();
-    loop_rate.sleep();
-  }
+  ServerBuilder builder;
+  builder.AddListeningPort("192.168.101.1:50052", grpc::InsecureServerCredentials());
+  builder.RegisterService(&service);
+  std::unique_ptr<Server> server(builder.BuildAndStart());
+  server->Wait();
 }

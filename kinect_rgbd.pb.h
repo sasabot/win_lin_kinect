@@ -37,7 +37,7 @@ void protobuf_AssignDesc_kinect_5frgbd_2eproto();
 void protobuf_ShutdownFile_kinect_5frgbd_2eproto();
 
 class Point;
-class Request;
+class Response;
 
 // ===================================================================
 
@@ -140,32 +140,32 @@ class Point : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class Request : public ::google::protobuf::Message {
+class Response : public ::google::protobuf::Message {
  public:
-  Request();
-  virtual ~Request();
+  Response();
+  virtual ~Response();
 
-  Request(const Request& from);
+  Response(const Response& from);
 
-  inline Request& operator=(const Request& from) {
+  inline Response& operator=(const Response& from) {
     CopyFrom(from);
     return *this;
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const Request& default_instance();
+  static const Response& default_instance();
 
-  void Swap(Request* other);
+  void Swap(Response* other);
 
   // implements Message ----------------------------------------------
 
-  inline Request* New() const { return New(NULL); }
+  inline Response* New() const { return New(NULL); }
 
-  Request* New(::google::protobuf::Arena* arena) const;
+  Response* New(::google::protobuf::Arena* arena) const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Request& from);
-  void MergeFrom(const Request& from);
+  void CopyFrom(const Response& from);
+  void MergeFrom(const Response& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -180,7 +180,7 @@ class Request : public ::google::protobuf::Message {
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const;
-  void InternalSwap(Request* other);
+  void InternalSwap(Response* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return _internal_metadata_.arena();
@@ -196,25 +196,46 @@ class Request : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional int32 header = 1;
-  void clear_header();
-  static const int kHeaderFieldNumber = 1;
-  ::google::protobuf::int32 header() const;
-  void set_header(::google::protobuf::int32 value);
+  // optional int32 x = 1;
+  void clear_x();
+  static const int kXFieldNumber = 1;
+  ::google::protobuf::int32 x() const;
+  void set_x(::google::protobuf::int32 value);
 
-  // @@protoc_insertion_point(class_scope:kinectrgbd.Request)
+  // optional int32 y = 2;
+  void clear_y();
+  static const int kYFieldNumber = 2;
+  ::google::protobuf::int32 y() const;
+  void set_y(::google::protobuf::int32 value);
+
+  // optional int32 width = 3;
+  void clear_width();
+  static const int kWidthFieldNumber = 3;
+  ::google::protobuf::int32 width() const;
+  void set_width(::google::protobuf::int32 value);
+
+  // optional int32 height = 4;
+  void clear_height();
+  static const int kHeightFieldNumber = 4;
+  ::google::protobuf::int32 height() const;
+  void set_height(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:kinectrgbd.Response)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
-  ::google::protobuf::int32 header_;
+  ::google::protobuf::int32 x_;
+  ::google::protobuf::int32 y_;
+  ::google::protobuf::int32 width_;
+  ::google::protobuf::int32 height_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_kinect_5frgbd_2eproto();
   friend void protobuf_AssignDesc_kinect_5frgbd_2eproto();
   friend void protobuf_ShutdownFile_kinect_5frgbd_2eproto();
 
   void InitAsDefaultInstance();
-  static Request* default_instance_;
+  static Response* default_instance_;
 };
 // ===================================================================
 
@@ -282,20 +303,62 @@ inline void Point::set_color(::google::protobuf::int32 value) {
 
 // -------------------------------------------------------------------
 
-// Request
+// Response
 
-// optional int32 header = 1;
-inline void Request::clear_header() {
-  header_ = 0;
+// optional int32 x = 1;
+inline void Response::clear_x() {
+  x_ = 0;
 }
-inline ::google::protobuf::int32 Request::header() const {
-  // @@protoc_insertion_point(field_get:kinectrgbd.Request.header)
-  return header_;
+inline ::google::protobuf::int32 Response::x() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Response.x)
+  return x_;
 }
-inline void Request::set_header(::google::protobuf::int32 value) {
+inline void Response::set_x(::google::protobuf::int32 value) {
   
-  header_ = value;
-  // @@protoc_insertion_point(field_set:kinectrgbd.Request.header)
+  x_ = value;
+  // @@protoc_insertion_point(field_set:kinectrgbd.Response.x)
+}
+
+// optional int32 y = 2;
+inline void Response::clear_y() {
+  y_ = 0;
+}
+inline ::google::protobuf::int32 Response::y() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Response.y)
+  return y_;
+}
+inline void Response::set_y(::google::protobuf::int32 value) {
+  
+  y_ = value;
+  // @@protoc_insertion_point(field_set:kinectrgbd.Response.y)
+}
+
+// optional int32 width = 3;
+inline void Response::clear_width() {
+  width_ = 0;
+}
+inline ::google::protobuf::int32 Response::width() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Response.width)
+  return width_;
+}
+inline void Response::set_width(::google::protobuf::int32 value) {
+  
+  width_ = value;
+  // @@protoc_insertion_point(field_set:kinectrgbd.Response.width)
+}
+
+// optional int32 height = 4;
+inline void Response::clear_height() {
+  height_ = 0;
+}
+inline ::google::protobuf::int32 Response::height() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Response.height)
+  return height_;
+}
+inline void Response::set_height(::google::protobuf::int32 value) {
+  
+  height_ = value;
+  // @@protoc_insertion_point(field_set:kinectrgbd.Response.height)
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS

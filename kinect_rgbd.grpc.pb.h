@@ -30,31 +30,31 @@ class KinectRgbd GRPC_FINAL {
   class StubInterface {
    public:
     virtual ~StubInterface() {}
-    std::unique_ptr< ::grpc::ClientReaderInterface< ::kinectrgbd::Point>> GetPoints(::grpc::ClientContext* context, const ::kinectrgbd::Request& request) {
-      return std::unique_ptr< ::grpc::ClientReaderInterface< ::kinectrgbd::Point>>(GetPointsRaw(context, request));
+    std::unique_ptr< ::grpc::ClientWriterInterface< ::kinectrgbd::Point>> SendPoints(::grpc::ClientContext* context, ::kinectrgbd::Response* response) {
+      return std::unique_ptr< ::grpc::ClientWriterInterface< ::kinectrgbd::Point>>(SendPointsRaw(context, response));
     }
-    std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::kinectrgbd::Point>> AsyncGetPoints(::grpc::ClientContext* context, const ::kinectrgbd::Request& request, ::grpc::CompletionQueue* cq, void* tag) {
-      return std::unique_ptr< ::grpc::ClientAsyncReaderInterface< ::kinectrgbd::Point>>(AsyncGetPointsRaw(context, request, cq, tag));
+    std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::kinectrgbd::Point>> AsyncSendPoints(::grpc::ClientContext* context, ::kinectrgbd::Response* response, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::kinectrgbd::Point>>(AsyncSendPointsRaw(context, response, cq, tag));
     }
   private:
-    virtual ::grpc::ClientReaderInterface< ::kinectrgbd::Point>* GetPointsRaw(::grpc::ClientContext* context, const ::kinectrgbd::Request& request) = 0;
-    virtual ::grpc::ClientAsyncReaderInterface< ::kinectrgbd::Point>* AsyncGetPointsRaw(::grpc::ClientContext* context, const ::kinectrgbd::Request& request, ::grpc::CompletionQueue* cq, void* tag) = 0;
+    virtual ::grpc::ClientWriterInterface< ::kinectrgbd::Point>* SendPointsRaw(::grpc::ClientContext* context, ::kinectrgbd::Response* response) = 0;
+    virtual ::grpc::ClientAsyncWriterInterface< ::kinectrgbd::Point>* AsyncSendPointsRaw(::grpc::ClientContext* context, ::kinectrgbd::Response* response, ::grpc::CompletionQueue* cq, void* tag) = 0;
   };
   class Stub GRPC_FINAL : public StubInterface {
    public:
     Stub(const std::shared_ptr< ::grpc::Channel>& channel);
-    std::unique_ptr< ::grpc::ClientReader< ::kinectrgbd::Point>> GetPoints(::grpc::ClientContext* context, const ::kinectrgbd::Request& request) {
-      return std::unique_ptr< ::grpc::ClientReader< ::kinectrgbd::Point>>(GetPointsRaw(context, request));
+    std::unique_ptr< ::grpc::ClientWriter< ::kinectrgbd::Point>> SendPoints(::grpc::ClientContext* context, ::kinectrgbd::Response* response) {
+      return std::unique_ptr< ::grpc::ClientWriter< ::kinectrgbd::Point>>(SendPointsRaw(context, response));
     }
-    std::unique_ptr< ::grpc::ClientAsyncReader< ::kinectrgbd::Point>> AsyncGetPoints(::grpc::ClientContext* context, const ::kinectrgbd::Request& request, ::grpc::CompletionQueue* cq, void* tag) {
-      return std::unique_ptr< ::grpc::ClientAsyncReader< ::kinectrgbd::Point>>(AsyncGetPointsRaw(context, request, cq, tag));
+    std::unique_ptr< ::grpc::ClientAsyncWriter< ::kinectrgbd::Point>> AsyncSendPoints(::grpc::ClientContext* context, ::kinectrgbd::Response* response, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncWriter< ::kinectrgbd::Point>>(AsyncSendPointsRaw(context, response, cq, tag));
     }
 
    private:
     std::shared_ptr< ::grpc::Channel> channel_;
-    ::grpc::ClientReader< ::kinectrgbd::Point>* GetPointsRaw(::grpc::ClientContext* context, const ::kinectrgbd::Request& request) GRPC_OVERRIDE;
-    ::grpc::ClientAsyncReader< ::kinectrgbd::Point>* AsyncGetPointsRaw(::grpc::ClientContext* context, const ::kinectrgbd::Request& request, ::grpc::CompletionQueue* cq, void* tag) GRPC_OVERRIDE;
-    const ::grpc::RpcMethod rpcmethod_GetPoints_;
+    ::grpc::ClientWriter< ::kinectrgbd::Point>* SendPointsRaw(::grpc::ClientContext* context, ::kinectrgbd::Response* response) GRPC_OVERRIDE;
+    ::grpc::ClientAsyncWriter< ::kinectrgbd::Point>* AsyncSendPointsRaw(::grpc::ClientContext* context, ::kinectrgbd::Response* response, ::grpc::CompletionQueue* cq, void* tag) GRPC_OVERRIDE;
+    const ::grpc::RpcMethod rpcmethod_SendPoints_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::Channel>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -62,7 +62,7 @@ class KinectRgbd GRPC_FINAL {
    public:
     Service() : service_(nullptr) {}
     virtual ~Service();
-    virtual ::grpc::Status GetPoints(::grpc::ServerContext* context, const ::kinectrgbd::Request* request, ::grpc::ServerWriter< ::kinectrgbd::Point>* writer);
+    virtual ::grpc::Status SendPoints(::grpc::ServerContext* context, ::grpc::ServerReader< ::kinectrgbd::Point>* reader, ::kinectrgbd::Response* response);
     ::grpc::RpcService* service() GRPC_OVERRIDE GRPC_FINAL;
    private:
     ::grpc::RpcService* service_;
@@ -71,7 +71,7 @@ class KinectRgbd GRPC_FINAL {
    public:
     explicit AsyncService();
     ~AsyncService() {};
-    void RequestGetPoints(::grpc::ServerContext* context, ::kinectrgbd::Request* request, ::grpc::ServerAsyncWriter< ::kinectrgbd::Point>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
+    void RequestSendPoints(::grpc::ServerContext* context, ::grpc::ServerAsyncReader< ::kinectrgbd::Response, ::kinectrgbd::Point>* reader, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
   };
 };
 

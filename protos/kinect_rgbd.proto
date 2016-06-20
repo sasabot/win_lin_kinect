@@ -6,7 +6,7 @@ option objc_class_prefix = "RTG";
 package kinectrgbd;
 
 service KinectRgbd {
-  rpc GetPoints(Request) returns (stream Point) {}
+  rpc SendPoints(stream Point) returns (Response) {}
 }
 
 message Point {
@@ -16,6 +16,9 @@ message Point {
   int32 color = 4;
 }
 
-message Request {
-  int32 header = 1;
+message Response {
+  int32 x = 1;
+  int32 y = 2;
+  int32 width = 3;
+  int32 height = 4;
 }

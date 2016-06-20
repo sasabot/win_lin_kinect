@@ -15,7 +15,7 @@
 namespace kinectrgbd {
 
 static const char* KinectRgbd_method_names[] = {
-  "/kinectrgbd.KinectRgbd/GetPoints",
+  "/kinectrgbd.KinectRgbd/SendPoints",
 };
 
 std::unique_ptr< KinectRgbd::Stub> KinectRgbd::NewStub(const std::shared_ptr< ::grpc::Channel>& channel, const ::grpc::StubOptions& options) {
@@ -24,15 +24,15 @@ std::unique_ptr< KinectRgbd::Stub> KinectRgbd::NewStub(const std::shared_ptr< ::
 }
 
 KinectRgbd::Stub::Stub(const std::shared_ptr< ::grpc::Channel>& channel)
-  : channel_(channel), rpcmethod_GetPoints_(KinectRgbd_method_names[0], ::grpc::RpcMethod::SERVER_STREAMING, channel)
+  : channel_(channel), rpcmethod_SendPoints_(KinectRgbd_method_names[0], ::grpc::RpcMethod::CLIENT_STREAMING, channel)
   {}
 
-::grpc::ClientReader< ::kinectrgbd::Point>* KinectRgbd::Stub::GetPointsRaw(::grpc::ClientContext* context, const ::kinectrgbd::Request& request) {
-  return new ::grpc::ClientReader< ::kinectrgbd::Point>(channel_.get(), rpcmethod_GetPoints_, context, request);
+::grpc::ClientWriter< ::kinectrgbd::Point>* KinectRgbd::Stub::SendPointsRaw(::grpc::ClientContext* context, ::kinectrgbd::Response* response) {
+  return new ::grpc::ClientWriter< ::kinectrgbd::Point>(channel_.get(), rpcmethod_SendPoints_, context, response);
 }
 
-::grpc::ClientAsyncReader< ::kinectrgbd::Point>* KinectRgbd::Stub::AsyncGetPointsRaw(::grpc::ClientContext* context, const ::kinectrgbd::Request& request, ::grpc::CompletionQueue* cq, void* tag) {
-  return new ::grpc::ClientAsyncReader< ::kinectrgbd::Point>(channel_.get(), cq, rpcmethod_GetPoints_, context, request, tag);
+::grpc::ClientAsyncWriter< ::kinectrgbd::Point>* KinectRgbd::Stub::AsyncSendPointsRaw(::grpc::ClientContext* context, ::kinectrgbd::Response* response, ::grpc::CompletionQueue* cq, void* tag) {
+  return new ::grpc::ClientAsyncWriter< ::kinectrgbd::Point>(channel_.get(), cq, rpcmethod_SendPoints_, context, response, tag);
 }
 
 KinectRgbd::AsyncService::AsyncService() : ::grpc::AsynchronousService(KinectRgbd_method_names, 1) {}
@@ -41,15 +41,15 @@ KinectRgbd::Service::~Service() {
   delete service_;
 }
 
-::grpc::Status KinectRgbd::Service::GetPoints(::grpc::ServerContext* context, const ::kinectrgbd::Request* request, ::grpc::ServerWriter< ::kinectrgbd::Point>* writer) {
+::grpc::Status KinectRgbd::Service::SendPoints(::grpc::ServerContext* context, ::grpc::ServerReader< ::kinectrgbd::Point>* reader, ::kinectrgbd::Response* response) {
   (void) context;
-  (void) request;
-  (void) writer;
+  (void) reader;
+  (void) response;
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
-void KinectRgbd::AsyncService::RequestGetPoints(::grpc::ServerContext* context, ::kinectrgbd::Request* request, ::grpc::ServerAsyncWriter< ::kinectrgbd::Point>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-  AsynchronousService::RequestServerStreaming(0, context, request, writer, new_call_cq, notification_cq, tag);
+void KinectRgbd::AsyncService::RequestSendPoints(::grpc::ServerContext* context, ::grpc::ServerAsyncReader< ::kinectrgbd::Response, ::kinectrgbd::Point>* reader, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+  AsynchronousService::RequestClientStreaming(0, context, reader, new_call_cq, notification_cq, tag);
 }
 
 ::grpc::RpcService* KinectRgbd::Service::service() {
@@ -59,9 +59,9 @@ void KinectRgbd::AsyncService::RequestGetPoints(::grpc::ServerContext* context, 
   service_ = new ::grpc::RpcService();
   service_->AddMethod(new ::grpc::RpcServiceMethod(
       KinectRgbd_method_names[0],
-      ::grpc::RpcMethod::SERVER_STREAMING,
-      new ::grpc::ServerStreamingHandler< KinectRgbd::Service, ::kinectrgbd::Request, ::kinectrgbd::Point>(
-          std::mem_fn(&KinectRgbd::Service::GetPoints), this)));
+      ::grpc::RpcMethod::CLIENT_STREAMING,
+      new ::grpc::ClientStreamingHandler< KinectRgbd::Service, ::kinectrgbd::Point, ::kinectrgbd::Response>(
+          std::mem_fn(&KinectRgbd::Service::SendPoints), this)));
   return service_;
 }
 
