@@ -76,7 +76,7 @@ namespace KinectSimpleRgbdServer
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            this.channel = new Channel("192.168.101.1:50052", Credentials.Insecure);
+            this.channel = new Channel("192.168.101.192:50052", Credentials.Insecure);
             this.client = Kinectrgbd.KinectRgbd.NewClient(this.channel);
         }
 
