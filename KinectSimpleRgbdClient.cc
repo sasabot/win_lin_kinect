@@ -134,7 +134,8 @@ public:
     msg.width = 320;
     msg.fields.assign(field_.begin(), field_.end());
     msg.point_step = 16; //12
-    msg.row_step = point_count;
+    // msg.row_step = point_count;
+    msg.row_step = 5120;
     msg.is_dense = false;
     msg.is_bigendian = true;
     msg.data.assign(data.begin(), data.end());
