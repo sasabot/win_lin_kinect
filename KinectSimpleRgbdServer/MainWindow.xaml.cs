@@ -1,19 +1,4 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using System.Windows;
-//using System.Windows.Controls;
-//using System.Windows.Data;
-//using System.Windows.Documents;
-//using System.Windows.Input;
-//using System.Windows.Media;
-//using System.Windows.Media.Imaging;
-//using System.Windows.Navigation;
-//using System.Windows.Shapes;
-
-using Grpc.Core;
+﻿using Grpc.Core;
 
 namespace KinectSimpleRgbdServer
 {
@@ -225,7 +210,6 @@ namespace KinectSimpleRgbdServer
             int pointIndex = 0;
             int sendEndPointX = this.sendStartPointX + this.sendPointWidth;
             int sendEndPointY = this.sendStartPointY + this.sendPointHeight;
-            //List<Kinectrgbd.Point> points = new List<Kinectrgbd.Point>();
             Kinectrgbd.Points points = new Kinectrgbd.Points { };
             foreach (CameraSpacePoint point in cameraPoints)
             {
@@ -279,42 +263,18 @@ namespace KinectSimpleRgbdServer
                     Z = point.Z
                 };
                 ++pointIndex;
-                //points.Add(p);
                 points.Data.Add(p);
             }
 
             // because streaming is async, abort prior
             if (this.onceFlag) PrepareRequestMode();
 
-            // set point cloud to send (iterate through depth map)
-            //Task task = Task.Run(() => SendPoints(points));
+            // set point cloud to send
             Kinectrgbd.Response response = this.client.SendPoints(points);
 
             colorFrame.Dispose();
             depthFrame.Dispose();
         }
-
-        //public async Task SendPoints(List<Kinectrgbd.Point> points)
-        //{
-        //    try
-        //    {
-        //        using (var call = client.SendPoints())
-        //        {
-        //            foreach(var point in points)
-        //            {
-        //                await call.RequestStream.WriteAsync(point);
-        //            }
-        //            await call.RequestStream.CompleteAsync();
-
-        //            Kinectrgbd.Response res = await call.ResponseAsync;
-        //            if (res.Finish == true && !this.onceFlag) PrepareRequestMode();
-        //        }
-        //    }
-        //    catch (RpcException e)
-        //    {
-        //        throw;
-        //    }
-        //} // SendPoints
 
         private void SendImage(MultiSourceFrame frame)
         {
@@ -346,7 +306,6 @@ namespace KinectSimpleRgbdServer
             int sendEndPointX = this.sendStartPointX + this.sendPointWidth;
             int sendEndPointY = this.sendStartPointY + this.sendPointHeight;
             this.imageSpaceValues.Clear();
-            //List<Kinectrgbd.Pixel> imagePixels = new List<Kinectrgbd.Pixel>();
             Kinectrgbd.Pixels result = new Kinectrgbd.Pixels {};
             foreach (CameraSpacePoint spaceValue in cameraPoints)
             {
@@ -368,9 +327,7 @@ namespace KinectSimpleRgbdServer
                 this.imageSpaceValues.Add(spaceValue);
 
                 // add pixel to stream
-                //Kinectrgbd.Pixel p = new Kinectrgbd.Pixel { Color = color };
                 ++pixelIndex;
-                //imagePixels.Add(p);
                 result.Color.Add(color);
             }
 
@@ -378,34 +335,12 @@ namespace KinectSimpleRgbdServer
             if (this.onceFlag) PrepareRequestMode();
 
             // set image pixels to send (iterate through color map)
-            //Task task = Task.Run(() => SendPixels(imagePixels));
             Kinectrgbd.Response response = this.client.SendImage(result);
 
             colorFrame.Dispose();
             depthFrame.Dispose();
         }
 
-        //public async Task SendPixels(List<Kinectrgbd.Pixel> imagePixels)
-        //{
-        //    try
-        //    {
-        //        using (var call = client.SendImage())
-        //        {
-        //            foreach (var pixel in imagePixels)
-        //            {
-        //                await call.RequestStream.WriteAsync(pixel);
-        //            }
-        //            await call.RequestStream.CompleteAsync();
-
-        //            Kinectrgbd.Response res = await call.ResponseAsync;
-        //            if (res.Finish == true && !this.onceFlag) PrepareRequestMode();
-        //        }
-        //    }
-        //    catch (RpcException e)
-        //    {
-        //        throw;
-        //    }
-        //} // SendPixels
 
     }
 }
