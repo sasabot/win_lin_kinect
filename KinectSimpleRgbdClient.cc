@@ -239,7 +239,7 @@ public:
     ROS_INFO("read %d points", point_count);
 
     sensor_msgs::PointCloud2 msg;
-    msg.header.frame_id = "ps4eye_frame";
+    msg.header.frame_id = "kinect_frame";
     msg.header.stamp = ros::Time(0);
     // msg.height = 1; // unorganized
     // msg.width = point_count; // unorganized
@@ -284,7 +284,7 @@ public:
     ROS_INFO("read %d pixels", pixel_count);
 
     sensor_msgs::Image msg;
-    msg.header.frame_id = "ps4eye_frame";
+    msg.header.frame_id = "kinect_frame";
     msg.header.stamp = ros::Time(0);
     msg.height = request_.height();
     msg.width = request_.width();
