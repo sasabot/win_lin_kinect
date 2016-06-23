@@ -12,14 +12,39 @@ namespace Kinectrgbd {
   {
     static readonly string __ServiceName = "kinectrgbd.KinectRgbd";
 
-    static readonly Marshaller<global::Kinectrgbd.Point> __Marshaller_Point = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrgbd.Point.Parser.ParseFrom);
+    static readonly Marshaller<global::Kinectrgbd.Header> __Marshaller_Header = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrgbd.Header.Parser.ParseFrom);
+    static readonly Marshaller<global::Kinectrgbd.Request> __Marshaller_Request = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrgbd.Request.Parser.ParseFrom);
+    static readonly Marshaller<global::Kinectrgbd.Points> __Marshaller_Points = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrgbd.Points.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrgbd.Response> __Marshaller_Response = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrgbd.Response.Parser.ParseFrom);
+    static readonly Marshaller<global::Kinectrgbd.Pixels> __Marshaller_Pixels = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrgbd.Pixels.Parser.ParseFrom);
+    static readonly Marshaller<global::Kinectrgbd.Positions> __Marshaller_Positions = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrgbd.Positions.Parser.ParseFrom);
 
-    static readonly Method<global::Kinectrgbd.Point, global::Kinectrgbd.Response> __Method_SendPoints = new Method<global::Kinectrgbd.Point, global::Kinectrgbd.Response>(
-        MethodType.ClientStreaming,
+    static readonly Method<global::Kinectrgbd.Header, global::Kinectrgbd.Request> __Method_CheckRequest = new Method<global::Kinectrgbd.Header, global::Kinectrgbd.Request>(
+        MethodType.Unary,
+        __ServiceName,
+        "CheckRequest",
+        __Marshaller_Header,
+        __Marshaller_Request);
+
+    static readonly Method<global::Kinectrgbd.Points, global::Kinectrgbd.Response> __Method_SendPoints = new Method<global::Kinectrgbd.Points, global::Kinectrgbd.Response>(
+        MethodType.Unary,
         __ServiceName,
         "SendPoints",
-        __Marshaller_Point,
+        __Marshaller_Points,
+        __Marshaller_Response);
+
+    static readonly Method<global::Kinectrgbd.Pixels, global::Kinectrgbd.Response> __Method_SendImage = new Method<global::Kinectrgbd.Pixels, global::Kinectrgbd.Response>(
+        MethodType.Unary,
+        __ServiceName,
+        "SendImage",
+        __Marshaller_Pixels,
+        __Marshaller_Response);
+
+    static readonly Method<global::Kinectrgbd.Positions, global::Kinectrgbd.Response> __Method_SendPosition = new Method<global::Kinectrgbd.Positions, global::Kinectrgbd.Response>(
+        MethodType.Unary,
+        __ServiceName,
+        "SendPosition",
+        __Marshaller_Positions,
         __Marshaller_Response);
 
     // service descriptor
@@ -31,14 +56,31 @@ namespace Kinectrgbd {
     // client interface
     public interface IKinectRgbdClient
     {
-      AsyncClientStreamingCall<global::Kinectrgbd.Point, global::Kinectrgbd.Response> SendPoints(Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
-      AsyncClientStreamingCall<global::Kinectrgbd.Point, global::Kinectrgbd.Response> SendPoints(CallOptions options);
+      global::Kinectrgbd.Request CheckRequest(global::Kinectrgbd.Header request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
+      global::Kinectrgbd.Request CheckRequest(global::Kinectrgbd.Header request, CallOptions options);
+      AsyncUnaryCall<global::Kinectrgbd.Request> CheckRequestAsync(global::Kinectrgbd.Header request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
+      AsyncUnaryCall<global::Kinectrgbd.Request> CheckRequestAsync(global::Kinectrgbd.Header request, CallOptions options);
+      global::Kinectrgbd.Response SendPoints(global::Kinectrgbd.Points request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
+      global::Kinectrgbd.Response SendPoints(global::Kinectrgbd.Points request, CallOptions options);
+      AsyncUnaryCall<global::Kinectrgbd.Response> SendPointsAsync(global::Kinectrgbd.Points request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
+      AsyncUnaryCall<global::Kinectrgbd.Response> SendPointsAsync(global::Kinectrgbd.Points request, CallOptions options);
+      global::Kinectrgbd.Response SendImage(global::Kinectrgbd.Pixels request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
+      global::Kinectrgbd.Response SendImage(global::Kinectrgbd.Pixels request, CallOptions options);
+      AsyncUnaryCall<global::Kinectrgbd.Response> SendImageAsync(global::Kinectrgbd.Pixels request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
+      AsyncUnaryCall<global::Kinectrgbd.Response> SendImageAsync(global::Kinectrgbd.Pixels request, CallOptions options);
+      global::Kinectrgbd.Response SendPosition(global::Kinectrgbd.Positions request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
+      global::Kinectrgbd.Response SendPosition(global::Kinectrgbd.Positions request, CallOptions options);
+      AsyncUnaryCall<global::Kinectrgbd.Response> SendPositionAsync(global::Kinectrgbd.Positions request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
+      AsyncUnaryCall<global::Kinectrgbd.Response> SendPositionAsync(global::Kinectrgbd.Positions request, CallOptions options);
     }
 
     // server-side interface
     public interface IKinectRgbd
     {
-      Task<global::Kinectrgbd.Response> SendPoints(IAsyncStreamReader<global::Kinectrgbd.Point> requestStream, ServerCallContext context);
+      Task<global::Kinectrgbd.Request> CheckRequest(global::Kinectrgbd.Header request, ServerCallContext context);
+      Task<global::Kinectrgbd.Response> SendPoints(global::Kinectrgbd.Points request, ServerCallContext context);
+      Task<global::Kinectrgbd.Response> SendImage(global::Kinectrgbd.Pixels request, ServerCallContext context);
+      Task<global::Kinectrgbd.Response> SendPosition(global::Kinectrgbd.Positions request, ServerCallContext context);
     }
 
     // client stub
@@ -47,15 +89,85 @@ namespace Kinectrgbd {
       public KinectRgbdClient(Channel channel) : base(channel)
       {
       }
-      public AsyncClientStreamingCall<global::Kinectrgbd.Point, global::Kinectrgbd.Response> SendPoints(Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      public global::Kinectrgbd.Request CheckRequest(global::Kinectrgbd.Header request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        var call = CreateCall(__Method_CheckRequest, new CallOptions(headers, deadline, cancellationToken));
+        return Calls.BlockingUnaryCall(call, request);
+      }
+      public global::Kinectrgbd.Request CheckRequest(global::Kinectrgbd.Header request, CallOptions options)
+      {
+        var call = CreateCall(__Method_CheckRequest, options);
+        return Calls.BlockingUnaryCall(call, request);
+      }
+      public AsyncUnaryCall<global::Kinectrgbd.Request> CheckRequestAsync(global::Kinectrgbd.Header request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        var call = CreateCall(__Method_CheckRequest, new CallOptions(headers, deadline, cancellationToken));
+        return Calls.AsyncUnaryCall(call, request);
+      }
+      public AsyncUnaryCall<global::Kinectrgbd.Request> CheckRequestAsync(global::Kinectrgbd.Header request, CallOptions options)
+      {
+        var call = CreateCall(__Method_CheckRequest, options);
+        return Calls.AsyncUnaryCall(call, request);
+      }
+      public global::Kinectrgbd.Response SendPoints(global::Kinectrgbd.Points request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
         var call = CreateCall(__Method_SendPoints, new CallOptions(headers, deadline, cancellationToken));
-        return Calls.AsyncClientStreamingCall(call);
+        return Calls.BlockingUnaryCall(call, request);
       }
-      public AsyncClientStreamingCall<global::Kinectrgbd.Point, global::Kinectrgbd.Response> SendPoints(CallOptions options)
+      public global::Kinectrgbd.Response SendPoints(global::Kinectrgbd.Points request, CallOptions options)
       {
         var call = CreateCall(__Method_SendPoints, options);
-        return Calls.AsyncClientStreamingCall(call);
+        return Calls.BlockingUnaryCall(call, request);
+      }
+      public AsyncUnaryCall<global::Kinectrgbd.Response> SendPointsAsync(global::Kinectrgbd.Points request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        var call = CreateCall(__Method_SendPoints, new CallOptions(headers, deadline, cancellationToken));
+        return Calls.AsyncUnaryCall(call, request);
+      }
+      public AsyncUnaryCall<global::Kinectrgbd.Response> SendPointsAsync(global::Kinectrgbd.Points request, CallOptions options)
+      {
+        var call = CreateCall(__Method_SendPoints, options);
+        return Calls.AsyncUnaryCall(call, request);
+      }
+      public global::Kinectrgbd.Response SendImage(global::Kinectrgbd.Pixels request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        var call = CreateCall(__Method_SendImage, new CallOptions(headers, deadline, cancellationToken));
+        return Calls.BlockingUnaryCall(call, request);
+      }
+      public global::Kinectrgbd.Response SendImage(global::Kinectrgbd.Pixels request, CallOptions options)
+      {
+        var call = CreateCall(__Method_SendImage, options);
+        return Calls.BlockingUnaryCall(call, request);
+      }
+      public AsyncUnaryCall<global::Kinectrgbd.Response> SendImageAsync(global::Kinectrgbd.Pixels request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        var call = CreateCall(__Method_SendImage, new CallOptions(headers, deadline, cancellationToken));
+        return Calls.AsyncUnaryCall(call, request);
+      }
+      public AsyncUnaryCall<global::Kinectrgbd.Response> SendImageAsync(global::Kinectrgbd.Pixels request, CallOptions options)
+      {
+        var call = CreateCall(__Method_SendImage, options);
+        return Calls.AsyncUnaryCall(call, request);
+      }
+      public global::Kinectrgbd.Response SendPosition(global::Kinectrgbd.Positions request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        var call = CreateCall(__Method_SendPosition, new CallOptions(headers, deadline, cancellationToken));
+        return Calls.BlockingUnaryCall(call, request);
+      }
+      public global::Kinectrgbd.Response SendPosition(global::Kinectrgbd.Positions request, CallOptions options)
+      {
+        var call = CreateCall(__Method_SendPosition, options);
+        return Calls.BlockingUnaryCall(call, request);
+      }
+      public AsyncUnaryCall<global::Kinectrgbd.Response> SendPositionAsync(global::Kinectrgbd.Positions request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        var call = CreateCall(__Method_SendPosition, new CallOptions(headers, deadline, cancellationToken));
+        return Calls.AsyncUnaryCall(call, request);
+      }
+      public AsyncUnaryCall<global::Kinectrgbd.Response> SendPositionAsync(global::Kinectrgbd.Positions request, CallOptions options)
+      {
+        var call = CreateCall(__Method_SendPosition, options);
+        return Calls.AsyncUnaryCall(call, request);
       }
     }
 
@@ -63,7 +175,10 @@ namespace Kinectrgbd {
     public static ServerServiceDefinition BindService(IKinectRgbd serviceImpl)
     {
       return ServerServiceDefinition.CreateBuilder(__ServiceName)
-          .AddMethod(__Method_SendPoints, serviceImpl.SendPoints).Build();
+          .AddMethod(__Method_CheckRequest, serviceImpl.CheckRequest)
+          .AddMethod(__Method_SendPoints, serviceImpl.SendPoints)
+          .AddMethod(__Method_SendImage, serviceImpl.SendImage)
+          .AddMethod(__Method_SendPosition, serviceImpl.SendPosition).Build();
     }
 
     // creates a new client

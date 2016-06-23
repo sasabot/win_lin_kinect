@@ -23,17 +23,31 @@ namespace Kinectrgbd {
       static KinectRgbd() {
         byte[] descriptorData = global::System.Convert.FromBase64String(
             string.Concat(
-              "ChFraW5lY3RfcmdiZC5wcm90bxIKa2luZWN0cmdiZCI3CgVQb2ludBIJCgF4", 
-              "GAEgASgCEgkKAXkYAiABKAISCQoBehgDIAEoAhINCgVjb2xvchgEIAEoBSI/", 
-              "CghSZXNwb25zZRIJCgF4GAEgASgFEgkKAXkYAiABKAUSDQoFd2lkdGgYAyAB", 
-              "KAUSDgoGaGVpZ2h0GAQgASgFMkcKCktpbmVjdFJnYmQSOQoKU2VuZFBvaW50", 
-              "cxIRLmtpbmVjdHJnYmQuUG9pbnQaFC5raW5lY3RyZ2JkLlJlc3BvbnNlIgAo", 
-              "AUIPCgdleC5ncnBjogIDUlRHYgZwcm90bzM="));
+              "ChFraW5lY3RfcmdiZC5wcm90bxIKa2luZWN0cmdiZCIWCgZIZWFkZXISDAoE", 
+              "ZGF0YRgBIAEoCCJaCgdSZXF1ZXN0EgwKBG1vZGUYASABKAUSCQoBeBgCIAMo", 
+              "BRIJCgF5GAMgAygFEg0KBXdpZHRoGAQgASgFEg4KBmhlaWdodBgFIAEoBRIM", 
+              "CgRvbmNlGAYgASgIIhoKCFJlc3BvbnNlEg4KBmZpbmlzaBgBIAEoCCIXCgZQ", 
+              "aXhlbHMSDQoFY29sb3IYASADKAUiNwoFUG9pbnQSCQoBeBgBIAEoAhIJCgF5", 
+              "GAIgASgCEgkKAXoYAyABKAISDQoFY29sb3IYBCABKAUiKQoGUG9pbnRzEh8K", 
+              "BGRhdGEYASADKAsyES5raW5lY3RyZ2JkLlBvaW50IjwKCVBvc2l0aW9ucxIO", 
+              "CgZzdGF0dXMYASABKAgSCQoBeBgCIAMoAhIJCgF5GAMgAygCEgkKAXoYBCAD", 
+              "KAIy+QEKCktpbmVjdFJnYmQSOQoMQ2hlY2tSZXF1ZXN0EhIua2luZWN0cmdi", 
+              "ZC5IZWFkZXIaEy5raW5lY3RyZ2JkLlJlcXVlc3QiABI4CgpTZW5kUG9pbnRz", 
+              "EhIua2luZWN0cmdiZC5Qb2ludHMaFC5raW5lY3RyZ2JkLlJlc3BvbnNlIgAS", 
+              "NwoJU2VuZEltYWdlEhIua2luZWN0cmdiZC5QaXhlbHMaFC5raW5lY3RyZ2Jk", 
+              "LlJlc3BvbnNlIgASPQoMU2VuZFBvc2l0aW9uEhUua2luZWN0cmdiZC5Qb3Np", 
+              "dGlvbnMaFC5raW5lY3RyZ2JkLlJlc3BvbnNlIgBCDwoHZXguZ3JwY6ICA1JU", 
+              "R2IGcHJvdG8z"));
         descriptor = pbr::FileDescriptor.InternalBuildGeneratedFileFrom(descriptorData,
             new pbr::FileDescriptor[] { },
             new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
+              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Header), new[]{ "Data" }, null, null, null),
+              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Request), new[]{ "Mode", "X", "Y", "Width", "Height", "Once" }, null, null, null),
+              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Response), new[]{ "Finish" }, null, null, null),
+              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Pixels), new[]{ "Color" }, null, null, null),
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Point), new[]{ "X", "Y", "Z", "Color" }, null, null, null),
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Response), new[]{ "X", "Y", "Width", "Height" }, null, null, null)
+              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Points), new[]{ "Data" }, null, null, null),
+              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Positions), new[]{ "Status", "X", "Y", "Z" }, null, null, null)
             }));
       }
       #endregion
@@ -42,12 +56,529 @@ namespace Kinectrgbd {
   }
   #region Messages
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class Header : pb::IMessage<Header> {
+    private static readonly pb::MessageParser<Header> _parser = new pb::MessageParser<Header>(() => new Header());
+    public static pb::MessageParser<Header> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[0]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public Header() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public Header(Header other) : this() {
+      data_ = other.data_;
+    }
+
+    public Header Clone() {
+      return new Header(this);
+    }
+
+    public const int DataFieldNumber = 1;
+    private bool data_;
+    public bool Data {
+      get { return data_; }
+      set {
+        data_ = value;
+      }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as Header);
+    }
+
+    public bool Equals(Header other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Data != other.Data) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Data != false) hash ^= Data.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.Default.Format(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Data != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Data);
+      }
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (Data != false) {
+        size += 1 + 1;
+      }
+      return size;
+    }
+
+    public void MergeFrom(Header other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Data != false) {
+        Data = other.Data;
+      }
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 8: {
+            Data = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class Request : pb::IMessage<Request> {
+    private static readonly pb::MessageParser<Request> _parser = new pb::MessageParser<Request>(() => new Request());
+    public static pb::MessageParser<Request> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[1]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public Request() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public Request(Request other) : this() {
+      mode_ = other.mode_;
+      x_ = other.x_.Clone();
+      y_ = other.y_.Clone();
+      width_ = other.width_;
+      height_ = other.height_;
+      once_ = other.once_;
+    }
+
+    public Request Clone() {
+      return new Request(this);
+    }
+
+    public const int ModeFieldNumber = 1;
+    private int mode_;
+    public int Mode {
+      get { return mode_; }
+      set {
+        mode_ = value;
+      }
+    }
+
+    public const int XFieldNumber = 2;
+    private static readonly pb::FieldCodec<int> _repeated_x_codec
+        = pb::FieldCodec.ForInt32(18);
+    private readonly pbc::RepeatedField<int> x_ = new pbc::RepeatedField<int>();
+    public pbc::RepeatedField<int> X {
+      get { return x_; }
+    }
+
+    public const int YFieldNumber = 3;
+    private static readonly pb::FieldCodec<int> _repeated_y_codec
+        = pb::FieldCodec.ForInt32(26);
+    private readonly pbc::RepeatedField<int> y_ = new pbc::RepeatedField<int>();
+    public pbc::RepeatedField<int> Y {
+      get { return y_; }
+    }
+
+    public const int WidthFieldNumber = 4;
+    private int width_;
+    public int Width {
+      get { return width_; }
+      set {
+        width_ = value;
+      }
+    }
+
+    public const int HeightFieldNumber = 5;
+    private int height_;
+    public int Height {
+      get { return height_; }
+      set {
+        height_ = value;
+      }
+    }
+
+    public const int OnceFieldNumber = 6;
+    private bool once_;
+    public bool Once {
+      get { return once_; }
+      set {
+        once_ = value;
+      }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as Request);
+    }
+
+    public bool Equals(Request other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Mode != other.Mode) return false;
+      if(!x_.Equals(other.x_)) return false;
+      if(!y_.Equals(other.y_)) return false;
+      if (Width != other.Width) return false;
+      if (Height != other.Height) return false;
+      if (Once != other.Once) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Mode != 0) hash ^= Mode.GetHashCode();
+      hash ^= x_.GetHashCode();
+      hash ^= y_.GetHashCode();
+      if (Width != 0) hash ^= Width.GetHashCode();
+      if (Height != 0) hash ^= Height.GetHashCode();
+      if (Once != false) hash ^= Once.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.Default.Format(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Mode != 0) {
+        output.WriteRawTag(8);
+        output.WriteInt32(Mode);
+      }
+      x_.WriteTo(output, _repeated_x_codec);
+      y_.WriteTo(output, _repeated_y_codec);
+      if (Width != 0) {
+        output.WriteRawTag(32);
+        output.WriteInt32(Width);
+      }
+      if (Height != 0) {
+        output.WriteRawTag(40);
+        output.WriteInt32(Height);
+      }
+      if (Once != false) {
+        output.WriteRawTag(48);
+        output.WriteBool(Once);
+      }
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (Mode != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Mode);
+      }
+      size += x_.CalculateSize(_repeated_x_codec);
+      size += y_.CalculateSize(_repeated_y_codec);
+      if (Width != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Width);
+      }
+      if (Height != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Height);
+      }
+      if (Once != false) {
+        size += 1 + 1;
+      }
+      return size;
+    }
+
+    public void MergeFrom(Request other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Mode != 0) {
+        Mode = other.Mode;
+      }
+      x_.Add(other.x_);
+      y_.Add(other.y_);
+      if (other.Width != 0) {
+        Width = other.Width;
+      }
+      if (other.Height != 0) {
+        Height = other.Height;
+      }
+      if (other.Once != false) {
+        Once = other.Once;
+      }
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 8: {
+            Mode = input.ReadInt32();
+            break;
+          }
+          case 18:
+          case 16: {
+            x_.AddEntriesFrom(input, _repeated_x_codec);
+            break;
+          }
+          case 26:
+          case 24: {
+            y_.AddEntriesFrom(input, _repeated_y_codec);
+            break;
+          }
+          case 32: {
+            Width = input.ReadInt32();
+            break;
+          }
+          case 40: {
+            Height = input.ReadInt32();
+            break;
+          }
+          case 48: {
+            Once = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class Response : pb::IMessage<Response> {
+    private static readonly pb::MessageParser<Response> _parser = new pb::MessageParser<Response>(() => new Response());
+    public static pb::MessageParser<Response> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[2]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public Response() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public Response(Response other) : this() {
+      finish_ = other.finish_;
+    }
+
+    public Response Clone() {
+      return new Response(this);
+    }
+
+    public const int FinishFieldNumber = 1;
+    private bool finish_;
+    public bool Finish {
+      get { return finish_; }
+      set {
+        finish_ = value;
+      }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as Response);
+    }
+
+    public bool Equals(Response other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Finish != other.Finish) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Finish != false) hash ^= Finish.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.Default.Format(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Finish != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Finish);
+      }
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (Finish != false) {
+        size += 1 + 1;
+      }
+      return size;
+    }
+
+    public void MergeFrom(Response other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Finish != false) {
+        Finish = other.Finish;
+      }
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 8: {
+            Finish = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class Pixels : pb::IMessage<Pixels> {
+    private static readonly pb::MessageParser<Pixels> _parser = new pb::MessageParser<Pixels>(() => new Pixels());
+    public static pb::MessageParser<Pixels> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[3]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public Pixels() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public Pixels(Pixels other) : this() {
+      color_ = other.color_.Clone();
+    }
+
+    public Pixels Clone() {
+      return new Pixels(this);
+    }
+
+    public const int ColorFieldNumber = 1;
+    private static readonly pb::FieldCodec<int> _repeated_color_codec
+        = pb::FieldCodec.ForInt32(10);
+    private readonly pbc::RepeatedField<int> color_ = new pbc::RepeatedField<int>();
+    public pbc::RepeatedField<int> Color {
+      get { return color_; }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as Pixels);
+    }
+
+    public bool Equals(Pixels other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if(!color_.Equals(other.color_)) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      hash ^= color_.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.Default.Format(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      color_.WriteTo(output, _repeated_color_codec);
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      size += color_.CalculateSize(_repeated_color_codec);
+      return size;
+    }
+
+    public void MergeFrom(Pixels other) {
+      if (other == null) {
+        return;
+      }
+      color_.Add(other.color_);
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10:
+          case 8: {
+            color_.AddEntriesFrom(input, _repeated_color_codec);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class Point : pb::IMessage<Point> {
     private static readonly pb::MessageParser<Point> _parser = new pb::MessageParser<Point>(() => new Point());
     public static pb::MessageParser<Point> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[0]; }
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[4]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -222,95 +753,58 @@ namespace Kinectrgbd {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class Response : pb::IMessage<Response> {
-    private static readonly pb::MessageParser<Response> _parser = new pb::MessageParser<Response>(() => new Response());
-    public static pb::MessageParser<Response> Parser { get { return _parser; } }
+  public sealed partial class Points : pb::IMessage<Points> {
+    private static readonly pb::MessageParser<Points> _parser = new pb::MessageParser<Points>(() => new Points());
+    public static pb::MessageParser<Points> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[1]; }
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[5]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
-    public Response() {
+    public Points() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
-    public Response(Response other) : this() {
-      x_ = other.x_;
-      y_ = other.y_;
-      width_ = other.width_;
-      height_ = other.height_;
+    public Points(Points other) : this() {
+      data_ = other.data_.Clone();
     }
 
-    public Response Clone() {
-      return new Response(this);
+    public Points Clone() {
+      return new Points(this);
     }
 
-    public const int XFieldNumber = 1;
-    private int x_;
-    public int X {
-      get { return x_; }
-      set {
-        x_ = value;
-      }
-    }
-
-    public const int YFieldNumber = 2;
-    private int y_;
-    public int Y {
-      get { return y_; }
-      set {
-        y_ = value;
-      }
-    }
-
-    public const int WidthFieldNumber = 3;
-    private int width_;
-    public int Width {
-      get { return width_; }
-      set {
-        width_ = value;
-      }
-    }
-
-    public const int HeightFieldNumber = 4;
-    private int height_;
-    public int Height {
-      get { return height_; }
-      set {
-        height_ = value;
-      }
+    public const int DataFieldNumber = 1;
+    private static readonly pb::FieldCodec<global::Kinectrgbd.Point> _repeated_data_codec
+        = pb::FieldCodec.ForMessage(10, global::Kinectrgbd.Point.Parser);
+    private readonly pbc::RepeatedField<global::Kinectrgbd.Point> data_ = new pbc::RepeatedField<global::Kinectrgbd.Point>();
+    public pbc::RepeatedField<global::Kinectrgbd.Point> Data {
+      get { return data_; }
     }
 
     public override bool Equals(object other) {
-      return Equals(other as Response);
+      return Equals(other as Points);
     }
 
-    public bool Equals(Response other) {
+    public bool Equals(Points other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (X != other.X) return false;
-      if (Y != other.Y) return false;
-      if (Width != other.Width) return false;
-      if (Height != other.Height) return false;
+      if(!data_.Equals(other.data_)) return false;
       return true;
     }
 
     public override int GetHashCode() {
       int hash = 1;
-      if (X != 0) hash ^= X.GetHashCode();
-      if (Y != 0) hash ^= Y.GetHashCode();
-      if (Width != 0) hash ^= Width.GetHashCode();
-      if (Height != 0) hash ^= Height.GetHashCode();
+      hash ^= data_.GetHashCode();
       return hash;
     }
 
@@ -319,57 +813,164 @@ namespace Kinectrgbd {
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
-      if (X != 0) {
-        output.WriteRawTag(8);
-        output.WriteInt32(X);
-      }
-      if (Y != 0) {
-        output.WriteRawTag(16);
-        output.WriteInt32(Y);
-      }
-      if (Width != 0) {
-        output.WriteRawTag(24);
-        output.WriteInt32(Width);
-      }
-      if (Height != 0) {
-        output.WriteRawTag(32);
-        output.WriteInt32(Height);
-      }
+      data_.WriteTo(output, _repeated_data_codec);
     }
 
     public int CalculateSize() {
       int size = 0;
-      if (X != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(X);
-      }
-      if (Y != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Y);
-      }
-      if (Width != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Width);
-      }
-      if (Height != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Height);
-      }
+      size += data_.CalculateSize(_repeated_data_codec);
       return size;
     }
 
-    public void MergeFrom(Response other) {
+    public void MergeFrom(Points other) {
       if (other == null) {
         return;
       }
-      if (other.X != 0) {
-        X = other.X;
+      data_.Add(other.data_);
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10: {
+            data_.AddEntriesFrom(input, _repeated_data_codec);
+            break;
+          }
+        }
       }
-      if (other.Y != 0) {
-        Y = other.Y;
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class Positions : pb::IMessage<Positions> {
+    private static readonly pb::MessageParser<Positions> _parser = new pb::MessageParser<Positions>(() => new Positions());
+    public static pb::MessageParser<Positions> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[6]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public Positions() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public Positions(Positions other) : this() {
+      status_ = other.status_;
+      x_ = other.x_.Clone();
+      y_ = other.y_.Clone();
+      z_ = other.z_.Clone();
+    }
+
+    public Positions Clone() {
+      return new Positions(this);
+    }
+
+    public const int StatusFieldNumber = 1;
+    private bool status_;
+    public bool Status {
+      get { return status_; }
+      set {
+        status_ = value;
       }
-      if (other.Width != 0) {
-        Width = other.Width;
+    }
+
+    public const int XFieldNumber = 2;
+    private static readonly pb::FieldCodec<float> _repeated_x_codec
+        = pb::FieldCodec.ForFloat(18);
+    private readonly pbc::RepeatedField<float> x_ = new pbc::RepeatedField<float>();
+    public pbc::RepeatedField<float> X {
+      get { return x_; }
+    }
+
+    public const int YFieldNumber = 3;
+    private static readonly pb::FieldCodec<float> _repeated_y_codec
+        = pb::FieldCodec.ForFloat(26);
+    private readonly pbc::RepeatedField<float> y_ = new pbc::RepeatedField<float>();
+    public pbc::RepeatedField<float> Y {
+      get { return y_; }
+    }
+
+    public const int ZFieldNumber = 4;
+    private static readonly pb::FieldCodec<float> _repeated_z_codec
+        = pb::FieldCodec.ForFloat(34);
+    private readonly pbc::RepeatedField<float> z_ = new pbc::RepeatedField<float>();
+    public pbc::RepeatedField<float> Z {
+      get { return z_; }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as Positions);
+    }
+
+    public bool Equals(Positions other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
       }
-      if (other.Height != 0) {
-        Height = other.Height;
+      if (ReferenceEquals(other, this)) {
+        return true;
       }
+      if (Status != other.Status) return false;
+      if(!x_.Equals(other.x_)) return false;
+      if(!y_.Equals(other.y_)) return false;
+      if(!z_.Equals(other.z_)) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Status != false) hash ^= Status.GetHashCode();
+      hash ^= x_.GetHashCode();
+      hash ^= y_.GetHashCode();
+      hash ^= z_.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.Default.Format(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Status != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Status);
+      }
+      x_.WriteTo(output, _repeated_x_codec);
+      y_.WriteTo(output, _repeated_y_codec);
+      z_.WriteTo(output, _repeated_z_codec);
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (Status != false) {
+        size += 1 + 1;
+      }
+      size += x_.CalculateSize(_repeated_x_codec);
+      size += y_.CalculateSize(_repeated_y_codec);
+      size += z_.CalculateSize(_repeated_z_codec);
+      return size;
+    }
+
+    public void MergeFrom(Positions other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Status != false) {
+        Status = other.Status;
+      }
+      x_.Add(other.x_);
+      y_.Add(other.y_);
+      z_.Add(other.z_);
     }
 
     public void MergeFrom(pb::CodedInputStream input) {
@@ -380,19 +981,22 @@ namespace Kinectrgbd {
             input.SkipLastField();
             break;
           case 8: {
-            X = input.ReadInt32();
+            Status = input.ReadBool();
             break;
           }
-          case 16: {
-            Y = input.ReadInt32();
+          case 18:
+          case 21: {
+            x_.AddEntriesFrom(input, _repeated_x_codec);
             break;
           }
-          case 24: {
-            Width = input.ReadInt32();
+          case 26:
+          case 29: {
+            y_.AddEntriesFrom(input, _repeated_y_codec);
             break;
           }
-          case 32: {
-            Height = input.ReadInt32();
+          case 34:
+          case 37: {
+            z_.AddEntriesFrom(input, _repeated_z_codec);
             break;
           }
         }

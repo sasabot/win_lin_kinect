@@ -7,8 +7,8 @@ package kinectrgbd;
 
 service KinectRgbd {
   rpc CheckRequest(Header) returns (Request) {}
-  rpc SendPoints(stream Point) returns (Response) {}
-  rpc SendImage(stream Pixel) returns (Response) {}
+  rpc SendPoints(Points) returns (Response) {}
+  rpc SendImage(Pixels) returns (Response) {}
   rpc SendPosition(Positions) returns (Response) {}
 }
 
@@ -29,8 +29,8 @@ message Response {
   bool finish = 1;
 }
 
-message Pixel {
-  int32 color = 1;
+message Pixels {
+  repeated int32 color = 1;
 }
 
 message Point {
@@ -38,6 +38,10 @@ message Point {
   float y = 2;
   float z = 3;
   int32 color = 4;
+}
+
+message Points {
+  repeated Point data = 1;
 }
 
 message Positions {
