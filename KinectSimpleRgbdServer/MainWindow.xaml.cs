@@ -266,11 +266,11 @@ namespace KinectSimpleRgbdServer
                 points.Data.Add(p);
             }
 
-            // because streaming is async, abort prior
-            if (this.onceFlag) PrepareRequestMode();
-
             // set point cloud to send
             Kinectrgbd.Response response = this.client.SendPoints(points);
+
+            // stop streaming if once or stop is requested
+            if (this.onceFlag || response.Finish) PrepareRequestMode();
 
             colorFrame.Dispose();
             depthFrame.Dispose();
@@ -331,11 +331,11 @@ namespace KinectSimpleRgbdServer
                 result.Color.Add(color);
             }
 
-            // because streaming is async, abort prior
-            if (this.onceFlag) PrepareRequestMode();
-
             // set image pixels to send (iterate through color map)
             Kinectrgbd.Response response = this.client.SendImage(result);
+
+            // stop streaming if once or stop is requested
+            if (this.onceFlag || response.Finish) PrepareRequestMode();
 
             colorFrame.Dispose();
             depthFrame.Dispose();
