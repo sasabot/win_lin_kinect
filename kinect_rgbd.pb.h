@@ -36,10 +36,383 @@ void protobuf_AddDesc_kinect_5frgbd_2eproto();
 void protobuf_AssignDesc_kinect_5frgbd_2eproto();
 void protobuf_ShutdownFile_kinect_5frgbd_2eproto();
 
+class Header;
+class Pixels;
 class Point;
+class Points;
+class Positions;
+class Request;
 class Response;
 
 // ===================================================================
+
+class Header : public ::google::protobuf::Message {
+ public:
+  Header();
+  virtual ~Header();
+
+  Header(const Header& from);
+
+  inline Header& operator=(const Header& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Header& default_instance();
+
+  void Swap(Header* other);
+
+  // implements Message ----------------------------------------------
+
+  inline Header* New() const { return New(NULL); }
+
+  Header* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Header& from);
+  void MergeFrom(const Header& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(Header* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bool data = 1;
+  void clear_data();
+  static const int kDataFieldNumber = 1;
+  bool data() const;
+  void set_data(bool value);
+
+  // @@protoc_insertion_point(class_scope:kinectrgbd.Header)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  bool data_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_kinect_5frgbd_2eproto();
+  friend void protobuf_AssignDesc_kinect_5frgbd_2eproto();
+  friend void protobuf_ShutdownFile_kinect_5frgbd_2eproto();
+
+  void InitAsDefaultInstance();
+  static Header* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Request : public ::google::protobuf::Message {
+ public:
+  Request();
+  virtual ~Request();
+
+  Request(const Request& from);
+
+  inline Request& operator=(const Request& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Request& default_instance();
+
+  void Swap(Request* other);
+
+  // implements Message ----------------------------------------------
+
+  inline Request* New() const { return New(NULL); }
+
+  Request* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Request& from);
+  void MergeFrom(const Request& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(Request* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional int32 mode = 1;
+  void clear_mode();
+  static const int kModeFieldNumber = 1;
+  ::google::protobuf::int32 mode() const;
+  void set_mode(::google::protobuf::int32 value);
+
+  // repeated int32 x = 2;
+  int x_size() const;
+  void clear_x();
+  static const int kXFieldNumber = 2;
+  ::google::protobuf::int32 x(int index) const;
+  void set_x(int index, ::google::protobuf::int32 value);
+  void add_x(::google::protobuf::int32 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+      x() const;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+      mutable_x();
+
+  // repeated int32 y = 3;
+  int y_size() const;
+  void clear_y();
+  static const int kYFieldNumber = 3;
+  ::google::protobuf::int32 y(int index) const;
+  void set_y(int index, ::google::protobuf::int32 value);
+  void add_y(::google::protobuf::int32 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+      y() const;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+      mutable_y();
+
+  // optional int32 width = 4;
+  void clear_width();
+  static const int kWidthFieldNumber = 4;
+  ::google::protobuf::int32 width() const;
+  void set_width(::google::protobuf::int32 value);
+
+  // optional int32 height = 5;
+  void clear_height();
+  static const int kHeightFieldNumber = 5;
+  ::google::protobuf::int32 height() const;
+  void set_height(::google::protobuf::int32 value);
+
+  // optional bool once = 6;
+  void clear_once();
+  static const int kOnceFieldNumber = 6;
+  bool once() const;
+  void set_once(bool value);
+
+  // @@protoc_insertion_point(class_scope:kinectrgbd.Request)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > x_;
+  mutable int _x_cached_byte_size_;
+  ::google::protobuf::int32 mode_;
+  ::google::protobuf::int32 width_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > y_;
+  mutable int _y_cached_byte_size_;
+  ::google::protobuf::int32 height_;
+  bool once_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_kinect_5frgbd_2eproto();
+  friend void protobuf_AssignDesc_kinect_5frgbd_2eproto();
+  friend void protobuf_ShutdownFile_kinect_5frgbd_2eproto();
+
+  void InitAsDefaultInstance();
+  static Request* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Response : public ::google::protobuf::Message {
+ public:
+  Response();
+  virtual ~Response();
+
+  Response(const Response& from);
+
+  inline Response& operator=(const Response& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Response& default_instance();
+
+  void Swap(Response* other);
+
+  // implements Message ----------------------------------------------
+
+  inline Response* New() const { return New(NULL); }
+
+  Response* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Response& from);
+  void MergeFrom(const Response& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(Response* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bool finish = 1;
+  void clear_finish();
+  static const int kFinishFieldNumber = 1;
+  bool finish() const;
+  void set_finish(bool value);
+
+  // @@protoc_insertion_point(class_scope:kinectrgbd.Response)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  bool finish_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_kinect_5frgbd_2eproto();
+  friend void protobuf_AssignDesc_kinect_5frgbd_2eproto();
+  friend void protobuf_ShutdownFile_kinect_5frgbd_2eproto();
+
+  void InitAsDefaultInstance();
+  static Response* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Pixels : public ::google::protobuf::Message {
+ public:
+  Pixels();
+  virtual ~Pixels();
+
+  Pixels(const Pixels& from);
+
+  inline Pixels& operator=(const Pixels& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Pixels& default_instance();
+
+  void Swap(Pixels* other);
+
+  // implements Message ----------------------------------------------
+
+  inline Pixels* New() const { return New(NULL); }
+
+  Pixels* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Pixels& from);
+  void MergeFrom(const Pixels& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(Pixels* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated int32 color = 1;
+  int color_size() const;
+  void clear_color();
+  static const int kColorFieldNumber = 1;
+  ::google::protobuf::int32 color(int index) const;
+  void set_color(int index, ::google::protobuf::int32 value);
+  void add_color(::google::protobuf::int32 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+      color() const;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+      mutable_color();
+
+  // @@protoc_insertion_point(class_scope:kinectrgbd.Pixels)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > color_;
+  mutable int _color_cached_byte_size_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_kinect_5frgbd_2eproto();
+  friend void protobuf_AssignDesc_kinect_5frgbd_2eproto();
+  friend void protobuf_ShutdownFile_kinect_5frgbd_2eproto();
+
+  void InitAsDefaultInstance();
+  static Pixels* default_instance_;
+};
+// -------------------------------------------------------------------
 
 class Point : public ::google::protobuf::Message {
  public:
@@ -140,32 +513,32 @@ class Point : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
-class Response : public ::google::protobuf::Message {
+class Points : public ::google::protobuf::Message {
  public:
-  Response();
-  virtual ~Response();
+  Points();
+  virtual ~Points();
 
-  Response(const Response& from);
+  Points(const Points& from);
 
-  inline Response& operator=(const Response& from) {
+  inline Points& operator=(const Points& from) {
     CopyFrom(from);
     return *this;
   }
 
   static const ::google::protobuf::Descriptor* descriptor();
-  static const Response& default_instance();
+  static const Points& default_instance();
 
-  void Swap(Response* other);
+  void Swap(Points* other);
 
   // implements Message ----------------------------------------------
 
-  inline Response* New() const { return New(NULL); }
+  inline Points* New() const { return New(NULL); }
 
-  Response* New(::google::protobuf::Arena* arena) const;
+  Points* New(::google::protobuf::Arena* arena) const;
   void CopyFrom(const ::google::protobuf::Message& from);
   void MergeFrom(const ::google::protobuf::Message& from);
-  void CopyFrom(const Response& from);
-  void MergeFrom(const Response& from);
+  void CopyFrom(const Points& from);
+  void MergeFrom(const Points& from);
   void Clear();
   bool IsInitialized() const;
 
@@ -180,7 +553,7 @@ class Response : public ::google::protobuf::Message {
   void SharedCtor();
   void SharedDtor();
   void SetCachedSize(int size) const;
-  void InternalSwap(Response* other);
+  void InternalSwap(Points* other);
   private:
   inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
     return _internal_metadata_.arena();
@@ -196,46 +569,151 @@ class Response : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional int32 x = 1;
-  void clear_x();
-  static const int kXFieldNumber = 1;
-  ::google::protobuf::int32 x() const;
-  void set_x(::google::protobuf::int32 value);
+  // repeated .kinectrgbd.Point data = 1;
+  int data_size() const;
+  void clear_data();
+  static const int kDataFieldNumber = 1;
+  const ::kinectrgbd::Point& data(int index) const;
+  ::kinectrgbd::Point* mutable_data(int index);
+  ::kinectrgbd::Point* add_data();
+  ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Point >*
+      mutable_data();
+  const ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Point >&
+      data() const;
 
-  // optional int32 y = 2;
-  void clear_y();
-  static const int kYFieldNumber = 2;
-  ::google::protobuf::int32 y() const;
-  void set_y(::google::protobuf::int32 value);
-
-  // optional int32 width = 3;
-  void clear_width();
-  static const int kWidthFieldNumber = 3;
-  ::google::protobuf::int32 width() const;
-  void set_width(::google::protobuf::int32 value);
-
-  // optional int32 height = 4;
-  void clear_height();
-  static const int kHeightFieldNumber = 4;
-  ::google::protobuf::int32 height() const;
-  void set_height(::google::protobuf::int32 value);
-
-  // @@protoc_insertion_point(class_scope:kinectrgbd.Response)
+  // @@protoc_insertion_point(class_scope:kinectrgbd.Points)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
-  ::google::protobuf::int32 x_;
-  ::google::protobuf::int32 y_;
-  ::google::protobuf::int32 width_;
-  ::google::protobuf::int32 height_;
+  ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Point > data_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_kinect_5frgbd_2eproto();
   friend void protobuf_AssignDesc_kinect_5frgbd_2eproto();
   friend void protobuf_ShutdownFile_kinect_5frgbd_2eproto();
 
   void InitAsDefaultInstance();
-  static Response* default_instance_;
+  static Points* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Positions : public ::google::protobuf::Message {
+ public:
+  Positions();
+  virtual ~Positions();
+
+  Positions(const Positions& from);
+
+  inline Positions& operator=(const Positions& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Positions& default_instance();
+
+  void Swap(Positions* other);
+
+  // implements Message ----------------------------------------------
+
+  inline Positions* New() const { return New(NULL); }
+
+  Positions* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Positions& from);
+  void MergeFrom(const Positions& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(Positions* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bool status = 1;
+  void clear_status();
+  static const int kStatusFieldNumber = 1;
+  bool status() const;
+  void set_status(bool value);
+
+  // repeated float x = 2;
+  int x_size() const;
+  void clear_x();
+  static const int kXFieldNumber = 2;
+  float x(int index) const;
+  void set_x(int index, float value);
+  void add_x(float value);
+  const ::google::protobuf::RepeatedField< float >&
+      x() const;
+  ::google::protobuf::RepeatedField< float >*
+      mutable_x();
+
+  // repeated float y = 3;
+  int y_size() const;
+  void clear_y();
+  static const int kYFieldNumber = 3;
+  float y(int index) const;
+  void set_y(int index, float value);
+  void add_y(float value);
+  const ::google::protobuf::RepeatedField< float >&
+      y() const;
+  ::google::protobuf::RepeatedField< float >*
+      mutable_y();
+
+  // repeated float z = 4;
+  int z_size() const;
+  void clear_z();
+  static const int kZFieldNumber = 4;
+  float z(int index) const;
+  void set_z(int index, float value);
+  void add_z(float value);
+  const ::google::protobuf::RepeatedField< float >&
+      z() const;
+  ::google::protobuf::RepeatedField< float >*
+      mutable_z();
+
+  // @@protoc_insertion_point(class_scope:kinectrgbd.Positions)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::RepeatedField< float > x_;
+  mutable int _x_cached_byte_size_;
+  ::google::protobuf::RepeatedField< float > y_;
+  mutable int _y_cached_byte_size_;
+  ::google::protobuf::RepeatedField< float > z_;
+  mutable int _z_cached_byte_size_;
+  bool status_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_kinect_5frgbd_2eproto();
+  friend void protobuf_AssignDesc_kinect_5frgbd_2eproto();
+  friend void protobuf_ShutdownFile_kinect_5frgbd_2eproto();
+
+  void InitAsDefaultInstance();
+  static Positions* default_instance_;
 };
 // ===================================================================
 
@@ -243,6 +721,196 @@ class Response : public ::google::protobuf::Message {
 // ===================================================================
 
 #if !PROTOBUF_INLINE_NOT_IN_HEADERS
+// Header
+
+// optional bool data = 1;
+inline void Header::clear_data() {
+  data_ = false;
+}
+inline bool Header::data() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Header.data)
+  return data_;
+}
+inline void Header::set_data(bool value) {
+  
+  data_ = value;
+  // @@protoc_insertion_point(field_set:kinectrgbd.Header.data)
+}
+
+// -------------------------------------------------------------------
+
+// Request
+
+// optional int32 mode = 1;
+inline void Request::clear_mode() {
+  mode_ = 0;
+}
+inline ::google::protobuf::int32 Request::mode() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Request.mode)
+  return mode_;
+}
+inline void Request::set_mode(::google::protobuf::int32 value) {
+  
+  mode_ = value;
+  // @@protoc_insertion_point(field_set:kinectrgbd.Request.mode)
+}
+
+// repeated int32 x = 2;
+inline int Request::x_size() const {
+  return x_.size();
+}
+inline void Request::clear_x() {
+  x_.Clear();
+}
+inline ::google::protobuf::int32 Request::x(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Request.x)
+  return x_.Get(index);
+}
+inline void Request::set_x(int index, ::google::protobuf::int32 value) {
+  x_.Set(index, value);
+  // @@protoc_insertion_point(field_set:kinectrgbd.Request.x)
+}
+inline void Request::add_x(::google::protobuf::int32 value) {
+  x_.Add(value);
+  // @@protoc_insertion_point(field_add:kinectrgbd.Request.x)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+Request::x() const {
+  // @@protoc_insertion_point(field_list:kinectrgbd.Request.x)
+  return x_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+Request::mutable_x() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrgbd.Request.x)
+  return &x_;
+}
+
+// repeated int32 y = 3;
+inline int Request::y_size() const {
+  return y_.size();
+}
+inline void Request::clear_y() {
+  y_.Clear();
+}
+inline ::google::protobuf::int32 Request::y(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Request.y)
+  return y_.Get(index);
+}
+inline void Request::set_y(int index, ::google::protobuf::int32 value) {
+  y_.Set(index, value);
+  // @@protoc_insertion_point(field_set:kinectrgbd.Request.y)
+}
+inline void Request::add_y(::google::protobuf::int32 value) {
+  y_.Add(value);
+  // @@protoc_insertion_point(field_add:kinectrgbd.Request.y)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+Request::y() const {
+  // @@protoc_insertion_point(field_list:kinectrgbd.Request.y)
+  return y_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+Request::mutable_y() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrgbd.Request.y)
+  return &y_;
+}
+
+// optional int32 width = 4;
+inline void Request::clear_width() {
+  width_ = 0;
+}
+inline ::google::protobuf::int32 Request::width() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Request.width)
+  return width_;
+}
+inline void Request::set_width(::google::protobuf::int32 value) {
+  
+  width_ = value;
+  // @@protoc_insertion_point(field_set:kinectrgbd.Request.width)
+}
+
+// optional int32 height = 5;
+inline void Request::clear_height() {
+  height_ = 0;
+}
+inline ::google::protobuf::int32 Request::height() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Request.height)
+  return height_;
+}
+inline void Request::set_height(::google::protobuf::int32 value) {
+  
+  height_ = value;
+  // @@protoc_insertion_point(field_set:kinectrgbd.Request.height)
+}
+
+// optional bool once = 6;
+inline void Request::clear_once() {
+  once_ = false;
+}
+inline bool Request::once() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Request.once)
+  return once_;
+}
+inline void Request::set_once(bool value) {
+  
+  once_ = value;
+  // @@protoc_insertion_point(field_set:kinectrgbd.Request.once)
+}
+
+// -------------------------------------------------------------------
+
+// Response
+
+// optional bool finish = 1;
+inline void Response::clear_finish() {
+  finish_ = false;
+}
+inline bool Response::finish() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Response.finish)
+  return finish_;
+}
+inline void Response::set_finish(bool value) {
+  
+  finish_ = value;
+  // @@protoc_insertion_point(field_set:kinectrgbd.Response.finish)
+}
+
+// -------------------------------------------------------------------
+
+// Pixels
+
+// repeated int32 color = 1;
+inline int Pixels::color_size() const {
+  return color_.size();
+}
+inline void Pixels::clear_color() {
+  color_.Clear();
+}
+inline ::google::protobuf::int32 Pixels::color(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Pixels.color)
+  return color_.Get(index);
+}
+inline void Pixels::set_color(int index, ::google::protobuf::int32 value) {
+  color_.Set(index, value);
+  // @@protoc_insertion_point(field_set:kinectrgbd.Pixels.color)
+}
+inline void Pixels::add_color(::google::protobuf::int32 value) {
+  color_.Add(value);
+  // @@protoc_insertion_point(field_add:kinectrgbd.Pixels.color)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+Pixels::color() const {
+  // @@protoc_insertion_point(field_list:kinectrgbd.Pixels.color)
+  return color_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+Pixels::mutable_color() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrgbd.Pixels.color)
+  return &color_;
+}
+
+// -------------------------------------------------------------------
+
 // Point
 
 // optional float x = 1;
@@ -303,65 +971,157 @@ inline void Point::set_color(::google::protobuf::int32 value) {
 
 // -------------------------------------------------------------------
 
-// Response
+// Points
 
-// optional int32 x = 1;
-inline void Response::clear_x() {
-  x_ = 0;
+// repeated .kinectrgbd.Point data = 1;
+inline int Points::data_size() const {
+  return data_.size();
 }
-inline ::google::protobuf::int32 Response::x() const {
-  // @@protoc_insertion_point(field_get:kinectrgbd.Response.x)
+inline void Points::clear_data() {
+  data_.Clear();
+}
+inline const ::kinectrgbd::Point& Points::data(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Points.data)
+  return data_.Get(index);
+}
+inline ::kinectrgbd::Point* Points::mutable_data(int index) {
+  // @@protoc_insertion_point(field_mutable:kinectrgbd.Points.data)
+  return data_.Mutable(index);
+}
+inline ::kinectrgbd::Point* Points::add_data() {
+  // @@protoc_insertion_point(field_add:kinectrgbd.Points.data)
+  return data_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Point >*
+Points::mutable_data() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrgbd.Points.data)
+  return &data_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Point >&
+Points::data() const {
+  // @@protoc_insertion_point(field_list:kinectrgbd.Points.data)
+  return data_;
+}
+
+// -------------------------------------------------------------------
+
+// Positions
+
+// optional bool status = 1;
+inline void Positions::clear_status() {
+  status_ = false;
+}
+inline bool Positions::status() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Positions.status)
+  return status_;
+}
+inline void Positions::set_status(bool value) {
+  
+  status_ = value;
+  // @@protoc_insertion_point(field_set:kinectrgbd.Positions.status)
+}
+
+// repeated float x = 2;
+inline int Positions::x_size() const {
+  return x_.size();
+}
+inline void Positions::clear_x() {
+  x_.Clear();
+}
+inline float Positions::x(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Positions.x)
+  return x_.Get(index);
+}
+inline void Positions::set_x(int index, float value) {
+  x_.Set(index, value);
+  // @@protoc_insertion_point(field_set:kinectrgbd.Positions.x)
+}
+inline void Positions::add_x(float value) {
+  x_.Add(value);
+  // @@protoc_insertion_point(field_add:kinectrgbd.Positions.x)
+}
+inline const ::google::protobuf::RepeatedField< float >&
+Positions::x() const {
+  // @@protoc_insertion_point(field_list:kinectrgbd.Positions.x)
   return x_;
 }
-inline void Response::set_x(::google::protobuf::int32 value) {
-  
-  x_ = value;
-  // @@protoc_insertion_point(field_set:kinectrgbd.Response.x)
+inline ::google::protobuf::RepeatedField< float >*
+Positions::mutable_x() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrgbd.Positions.x)
+  return &x_;
 }
 
-// optional int32 y = 2;
-inline void Response::clear_y() {
-  y_ = 0;
+// repeated float y = 3;
+inline int Positions::y_size() const {
+  return y_.size();
 }
-inline ::google::protobuf::int32 Response::y() const {
-  // @@protoc_insertion_point(field_get:kinectrgbd.Response.y)
+inline void Positions::clear_y() {
+  y_.Clear();
+}
+inline float Positions::y(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Positions.y)
+  return y_.Get(index);
+}
+inline void Positions::set_y(int index, float value) {
+  y_.Set(index, value);
+  // @@protoc_insertion_point(field_set:kinectrgbd.Positions.y)
+}
+inline void Positions::add_y(float value) {
+  y_.Add(value);
+  // @@protoc_insertion_point(field_add:kinectrgbd.Positions.y)
+}
+inline const ::google::protobuf::RepeatedField< float >&
+Positions::y() const {
+  // @@protoc_insertion_point(field_list:kinectrgbd.Positions.y)
   return y_;
 }
-inline void Response::set_y(::google::protobuf::int32 value) {
-  
-  y_ = value;
-  // @@protoc_insertion_point(field_set:kinectrgbd.Response.y)
+inline ::google::protobuf::RepeatedField< float >*
+Positions::mutable_y() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrgbd.Positions.y)
+  return &y_;
 }
 
-// optional int32 width = 3;
-inline void Response::clear_width() {
-  width_ = 0;
+// repeated float z = 4;
+inline int Positions::z_size() const {
+  return z_.size();
 }
-inline ::google::protobuf::int32 Response::width() const {
-  // @@protoc_insertion_point(field_get:kinectrgbd.Response.width)
-  return width_;
+inline void Positions::clear_z() {
+  z_.Clear();
 }
-inline void Response::set_width(::google::protobuf::int32 value) {
-  
-  width_ = value;
-  // @@protoc_insertion_point(field_set:kinectrgbd.Response.width)
+inline float Positions::z(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Positions.z)
+  return z_.Get(index);
 }
-
-// optional int32 height = 4;
-inline void Response::clear_height() {
-  height_ = 0;
+inline void Positions::set_z(int index, float value) {
+  z_.Set(index, value);
+  // @@protoc_insertion_point(field_set:kinectrgbd.Positions.z)
 }
-inline ::google::protobuf::int32 Response::height() const {
-  // @@protoc_insertion_point(field_get:kinectrgbd.Response.height)
-  return height_;
+inline void Positions::add_z(float value) {
+  z_.Add(value);
+  // @@protoc_insertion_point(field_add:kinectrgbd.Positions.z)
 }
-inline void Response::set_height(::google::protobuf::int32 value) {
-  
-  height_ = value;
-  // @@protoc_insertion_point(field_set:kinectrgbd.Response.height)
+inline const ::google::protobuf::RepeatedField< float >&
+Positions::z() const {
+  // @@protoc_insertion_point(field_list:kinectrgbd.Positions.z)
+  return z_;
+}
+inline ::google::protobuf::RepeatedField< float >*
+Positions::mutable_z() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrgbd.Positions.z)
+  return &z_;
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 
