@@ -46,7 +46,8 @@ using kinectrgbd::KinectRgbd;
   int32 height
   bool once
   ---
-  bool finish
+  geometry_msgs/Point[] data
+  int32[] rgb
 */
 
 enum KinectModes
@@ -100,7 +101,8 @@ public:
     request_.set_height(240);
     request_.set_once(true);
 
-    // request_status_finished_.resize(static_cast<int>(KinectModes::MODES));
+    request_status_finished_.resize(static_cast<int>(KinectModes::MODES));
+    finish_stream_ = true;
   }
 
   bool KinectRequest(aero_application::KinectRequest::Request &req,
@@ -120,6 +122,21 @@ public:
     // width = 1920
     // height = 1080
 
+    // stop stream / set stream
+    if (!req.once)
+      finish_stream_ = false;
+    else
+      if (!finish_stream_)
+      {
+	finish_stream_ = true;
+	request_status_finished_[static_cast<int>(KinectModes::WAIT)] = false;
+	// wait till streaming has finished
+	while (!request_status_finished_[static_cast<int>(KinectModes::WAIT)])
+	{
+	}
+      }
+
+    // setup request
     request_.clear_x();
     request_.clear_y();
     for (unsigned int i = 0; i < req.x.size(); ++i)
@@ -130,22 +147,29 @@ public:
     request_.set_height(req.height);
     request_.set_once(req.once);
     request_.set_mode(req.mode);
-
-    // request_status_finished_[req.mode] = false;
+    request_status_finished_[req.mode] = false;
     
-    // while (!request_status_finished_[req.mode])
-    // {
-    // }
+    // wait till windows response
+    while (!request_status_finished_[req.mode])
+    {
+    }
 
-    res.finish = true;
+    ROS_WARN("finished request");
+
+    // handle type request
+    if (req.mode == static_cast<int>(KinectModes::IMAGE_SPACE_POSITIONS))
+    {
+      res.data.reserve(image_space_values_.size());
+      for (unsigned int i = 0; i < image_space_values_.size(); ++i)
+	res.data.push_back(image_space_values_[i]);
+    }
+
     return true;
   }
 
   Status CheckRequest(ServerContext* context, const Header* header,
 		      Request* request) override
   {
-    ros::spinOnce();
-
     request->set_mode(request_.mode());
     for (unsigned int i = 0; i < request_.x_size(); ++i)
       request->add_x(request_.x(i));
@@ -156,6 +180,7 @@ public:
     request->set_once(request_.once());
 
     request_.set_mode(static_cast<int>(KinectModes::WAIT));
+    request_status_finished_[static_cast<int>(KinectModes::WAIT)] = true;
 
     ROS_INFO("communicated once");
 
@@ -228,9 +253,9 @@ public:
     msg.data.assign(data.begin(), data.end());
     pub_points_.publish(msg);
 
-    // request_status_finished_[static_cast<int>(KinectModes::RGBD)] = true;
+    request_status_finished_[static_cast<int>(KinectModes::RGBD)] = true;
 
-    res->set_finish(1);
+    res->set_finish(finish_stream_);
     return Status::OK;
   }
 
@@ -269,9 +294,9 @@ public:
     msg.data.assign(data.begin(), data.end());
     pub_pixels_.publish(msg);
 
-    // request_status_finished_[static_cast<int>(KinectModes::IMAGE)] = true;
+    request_status_finished_[static_cast<int>(KinectModes::IMAGE)] = true;
 
-    res->set_finish(1);
+    res->set_finish(finish_stream_);
     return Status::OK;
   }
 
@@ -295,10 +320,10 @@ public:
       }
     }
 
-    // request_status_finished_[static_cast<int>(
-    //     KinectModes::IMAGE_SPACE_POSITIONS)] = true;
+    request_status_finished_[static_cast<int>(
+        KinectModes::IMAGE_SPACE_POSITIONS)] = true;
 
-    res->set_finish(1);
+    res->set_finish(finish_stream_);
     return Status::OK;
   }
 
@@ -316,9 +341,11 @@ private:
 
   std::vector<geometry_msgs::Point> image_space_values_;
 
-  // std::vector<bool> request_status_finished_;
+  std::vector<bool> request_status_finished_;
 
   Request request_;
+
+  bool finish_stream_;
 };
 
 
@@ -329,6 +356,9 @@ int main(int argc, char** argv)
   ros::NodeHandle nh;
 
   KinectRgbdImpl service(nh);
+
+  ros::AsyncSpinner spinner(1);
+  spinner.start();
 
   ServerBuilder builder;
   builder.AddListeningPort("192.168.101.192:50052", grpc::InsecureServerCredentials());
