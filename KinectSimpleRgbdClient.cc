@@ -288,7 +288,7 @@ public:
     msg.header.stamp = ros::Time(0);
     msg.height = request_.height();
     msg.width = request_.width();
-    msg.step = 3;
+    msg.step = 3 * request_.width();
     msg.encoding = "bgr8";
     msg.is_bigendian = true;
     msg.data.assign(data.begin(), data.end());
