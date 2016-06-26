@@ -24,30 +24,42 @@ namespace Kinectrgbd {
         byte[] descriptorData = global::System.Convert.FromBase64String(
             string.Concat(
               "ChFraW5lY3RfcmdiZC5wcm90bxIKa2luZWN0cmdiZCIWCgZIZWFkZXISDAoE", 
-              "ZGF0YRgBIAEoCCJaCgdSZXF1ZXN0EgwKBG1vZGUYASABKAUSCQoBeBgCIAMo", 
-              "BRIJCgF5GAMgAygFEg0KBXdpZHRoGAQgASgFEg4KBmhlaWdodBgFIAEoBRIM", 
-              "CgRvbmNlGAYgASgIIhoKCFJlc3BvbnNlEg4KBmZpbmlzaBgBIAEoCCIXCgZQ", 
-              "aXhlbHMSDQoFY29sb3IYASADKAUiNwoFUG9pbnQSCQoBeBgBIAEoAhIJCgF5", 
-              "GAIgASgCEgkKAXoYAyABKAISDQoFY29sb3IYBCABKAUiKQoGUG9pbnRzEh8K", 
-              "BGRhdGEYASADKAsyES5raW5lY3RyZ2JkLlBvaW50IjwKCVBvc2l0aW9ucxIO", 
-              "CgZzdGF0dXMYASABKAgSCQoBeBgCIAMoAhIJCgF5GAMgAygCEgkKAXoYBCAD", 
-              "KAIy+QEKCktpbmVjdFJnYmQSOQoMQ2hlY2tSZXF1ZXN0EhIua2luZWN0cmdi", 
-              "ZC5IZWFkZXIaEy5raW5lY3RyZ2JkLlJlcXVlc3QiABI4CgpTZW5kUG9pbnRz", 
-              "EhIua2luZWN0cmdiZC5Qb2ludHMaFC5raW5lY3RyZ2JkLlJlc3BvbnNlIgAS", 
-              "NwoJU2VuZEltYWdlEhIua2luZWN0cmdiZC5QaXhlbHMaFC5raW5lY3RyZ2Jk", 
-              "LlJlc3BvbnNlIgASPQoMU2VuZFBvc2l0aW9uEhUua2luZWN0cmdiZC5Qb3Np", 
-              "dGlvbnMaFC5raW5lY3RyZ2JkLlJlc3BvbnNlIgBCDwoHZXguZ3JwY6ICA1JU", 
-              "R2IGcHJvdG8z"));
+              "ZGF0YRgBIAEoCCI6CgNCaXQSCQoBeBgBIAEoAhIJCgF5GAIgASgCEg0KBXdp", 
+              "ZHRoGAMgASgCEg4KBmhlaWdodBgEIAEoAiJSCgdSZXF1ZXN0EgwKBG1vZGUY", 
+              "ASABKAUSHQoEZGF0YRgCIAMoCzIPLmtpbmVjdHJnYmQuQml0EgwKBG9uY2UY", 
+              "AyABKAgSDAoEYXJncxgEIAEoCSIaCghSZXNwb25zZRIOCgZmaW5pc2gYASAB", 
+              "KAgiFwoGUGl4ZWxzEg0KBWNvbG9yGAEgAygFIjcKBVBvaW50EgkKAXgYASAB", 
+              "KAISCQoBeRgCIAEoAhIJCgF6GAMgASgCEg0KBWNvbG9yGAQgASgFIikKBlBv", 
+              "aW50cxIfCgRkYXRhGAEgAygLMhEua2luZWN0cmdiZC5Qb2ludCJpCgREYXRh", 
+              "EgkKAXgYASABKAISCQoBeRgCIAEoAhIJCgF6GAMgASgCEg8KB2NhcHRpb24Y", 
+              "BCABKAkSDAoEdGFncxgFIAMoCRINCgV0ZXh0cxgGIAMoCRISCgpjb25maWRl", 
+              "bmNlGAcgASgCIjwKCkRhdGFTdHJlYW0SDgoGc3RhdHVzGAEgASgIEh4KBGRh", 
+              "dGEYAiADKAsyEC5raW5lY3RyZ2JkLkRhdGEiWwoJQml0U3RyZWFtEg4KBnN0", 
+              "YXR1cxgBIAEoCBIeCgVjb2xvchgCIAMoCzIPLmtpbmVjdHJnYmQuQml0Eh4K", 
+              "BWRlcHRoGAMgAygLMg8ua2luZWN0cmdiZC5CaXQymwMKCktpbmVjdFJnYmQS", 
+              "OQoMQ2hlY2tSZXF1ZXN0EhIua2luZWN0cmdiZC5IZWFkZXIaEy5raW5lY3Ry", 
+              "Z2JkLlJlcXVlc3QiABI4CgpTZW5kUG9pbnRzEhIua2luZWN0cmdiZC5Qb2lu", 
+              "dHMaFC5raW5lY3RyZ2JkLlJlc3BvbnNlIgASNwoJU2VuZEltYWdlEhIua2lu", 
+              "ZWN0cmdiZC5QaXhlbHMaFC5raW5lY3RyZ2JkLlJlc3BvbnNlIgASSwoZUmV0", 
+              "dXJuUG9zaXRpb25zRnJvbVBpeGVscxIWLmtpbmVjdHJnYmQuRGF0YVN0cmVh", 
+              "bRoULmtpbmVjdHJnYmQuUmVzcG9uc2UiABJRCiBSZXR1cm5QaXhlbEJvdW5k", 
+              "c0Zyb21TcGFjZUJvdW5kcxIVLmtpbmVjdHJnYmQuQml0U3RyZWFtGhQua2lu", 
+              "ZWN0cmdiZC5SZXNwb25zZSIAEj8KDVNlbmRDb2duaXRpb24SFi5raW5lY3Ry", 
+              "Z2JkLkRhdGFTdHJlYW0aFC5raW5lY3RyZ2JkLlJlc3BvbnNlIgBCDwoHZXgu", 
+              "Z3JwY6ICA1JUR2IGcHJvdG8z"));
         descriptor = pbr::FileDescriptor.InternalBuildGeneratedFileFrom(descriptorData,
             new pbr::FileDescriptor[] { },
             new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Header), new[]{ "Data" }, null, null, null),
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Request), new[]{ "Mode", "X", "Y", "Width", "Height", "Once" }, null, null, null),
+              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Bit), new[]{ "X", "Y", "Width", "Height" }, null, null, null),
+              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Request), new[]{ "Mode", "Data", "Once", "Args" }, null, null, null),
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Response), new[]{ "Finish" }, null, null, null),
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Pixels), new[]{ "Color" }, null, null, null),
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Point), new[]{ "X", "Y", "Z", "Color" }, null, null, null),
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Points), new[]{ "Data" }, null, null, null),
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Positions), new[]{ "Status", "X", "Y", "Z" }, null, null, null)
+              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Data), new[]{ "X", "Y", "Z", "Caption", "Tags", "Texts", "Confidence" }, null, null, null),
+              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.DataStream), new[]{ "Status", "Data" }, null, null, null),
+              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.BitStream), new[]{ "Status", "Color", "Depth" }, null, null, null)
             }));
       }
       #endregion
@@ -158,12 +170,192 @@ namespace Kinectrgbd {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class Bit : pb::IMessage<Bit> {
+    private static readonly pb::MessageParser<Bit> _parser = new pb::MessageParser<Bit>(() => new Bit());
+    public static pb::MessageParser<Bit> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[1]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public Bit() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public Bit(Bit other) : this() {
+      x_ = other.x_;
+      y_ = other.y_;
+      width_ = other.width_;
+      height_ = other.height_;
+    }
+
+    public Bit Clone() {
+      return new Bit(this);
+    }
+
+    public const int XFieldNumber = 1;
+    private float x_;
+    public float X {
+      get { return x_; }
+      set {
+        x_ = value;
+      }
+    }
+
+    public const int YFieldNumber = 2;
+    private float y_;
+    public float Y {
+      get { return y_; }
+      set {
+        y_ = value;
+      }
+    }
+
+    public const int WidthFieldNumber = 3;
+    private float width_;
+    public float Width {
+      get { return width_; }
+      set {
+        width_ = value;
+      }
+    }
+
+    public const int HeightFieldNumber = 4;
+    private float height_;
+    public float Height {
+      get { return height_; }
+      set {
+        height_ = value;
+      }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as Bit);
+    }
+
+    public bool Equals(Bit other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (X != other.X) return false;
+      if (Y != other.Y) return false;
+      if (Width != other.Width) return false;
+      if (Height != other.Height) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (X != 0F) hash ^= X.GetHashCode();
+      if (Y != 0F) hash ^= Y.GetHashCode();
+      if (Width != 0F) hash ^= Width.GetHashCode();
+      if (Height != 0F) hash ^= Height.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.Default.Format(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (X != 0F) {
+        output.WriteRawTag(13);
+        output.WriteFloat(X);
+      }
+      if (Y != 0F) {
+        output.WriteRawTag(21);
+        output.WriteFloat(Y);
+      }
+      if (Width != 0F) {
+        output.WriteRawTag(29);
+        output.WriteFloat(Width);
+      }
+      if (Height != 0F) {
+        output.WriteRawTag(37);
+        output.WriteFloat(Height);
+      }
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (X != 0F) {
+        size += 1 + 4;
+      }
+      if (Y != 0F) {
+        size += 1 + 4;
+      }
+      if (Width != 0F) {
+        size += 1 + 4;
+      }
+      if (Height != 0F) {
+        size += 1 + 4;
+      }
+      return size;
+    }
+
+    public void MergeFrom(Bit other) {
+      if (other == null) {
+        return;
+      }
+      if (other.X != 0F) {
+        X = other.X;
+      }
+      if (other.Y != 0F) {
+        Y = other.Y;
+      }
+      if (other.Width != 0F) {
+        Width = other.Width;
+      }
+      if (other.Height != 0F) {
+        Height = other.Height;
+      }
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 13: {
+            X = input.ReadFloat();
+            break;
+          }
+          case 21: {
+            Y = input.ReadFloat();
+            break;
+          }
+          case 29: {
+            Width = input.ReadFloat();
+            break;
+          }
+          case 37: {
+            Height = input.ReadFloat();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class Request : pb::IMessage<Request> {
     private static readonly pb::MessageParser<Request> _parser = new pb::MessageParser<Request>(() => new Request());
     public static pb::MessageParser<Request> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[1]; }
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[2]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -178,11 +370,9 @@ namespace Kinectrgbd {
 
     public Request(Request other) : this() {
       mode_ = other.mode_;
-      x_ = other.x_.Clone();
-      y_ = other.y_.Clone();
-      width_ = other.width_;
-      height_ = other.height_;
+      data_ = other.data_.Clone();
       once_ = other.once_;
+      args_ = other.args_;
     }
 
     public Request Clone() {
@@ -198,46 +388,29 @@ namespace Kinectrgbd {
       }
     }
 
-    public const int XFieldNumber = 2;
-    private static readonly pb::FieldCodec<int> _repeated_x_codec
-        = pb::FieldCodec.ForInt32(18);
-    private readonly pbc::RepeatedField<int> x_ = new pbc::RepeatedField<int>();
-    public pbc::RepeatedField<int> X {
-      get { return x_; }
+    public const int DataFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::Kinectrgbd.Bit> _repeated_data_codec
+        = pb::FieldCodec.ForMessage(18, global::Kinectrgbd.Bit.Parser);
+    private readonly pbc::RepeatedField<global::Kinectrgbd.Bit> data_ = new pbc::RepeatedField<global::Kinectrgbd.Bit>();
+    public pbc::RepeatedField<global::Kinectrgbd.Bit> Data {
+      get { return data_; }
     }
 
-    public const int YFieldNumber = 3;
-    private static readonly pb::FieldCodec<int> _repeated_y_codec
-        = pb::FieldCodec.ForInt32(26);
-    private readonly pbc::RepeatedField<int> y_ = new pbc::RepeatedField<int>();
-    public pbc::RepeatedField<int> Y {
-      get { return y_; }
-    }
-
-    public const int WidthFieldNumber = 4;
-    private int width_;
-    public int Width {
-      get { return width_; }
-      set {
-        width_ = value;
-      }
-    }
-
-    public const int HeightFieldNumber = 5;
-    private int height_;
-    public int Height {
-      get { return height_; }
-      set {
-        height_ = value;
-      }
-    }
-
-    public const int OnceFieldNumber = 6;
+    public const int OnceFieldNumber = 3;
     private bool once_;
     public bool Once {
       get { return once_; }
       set {
         once_ = value;
+      }
+    }
+
+    public const int ArgsFieldNumber = 4;
+    private string args_ = "";
+    public string Args {
+      get { return args_; }
+      set {
+        args_ = pb::Preconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -253,22 +426,18 @@ namespace Kinectrgbd {
         return true;
       }
       if (Mode != other.Mode) return false;
-      if(!x_.Equals(other.x_)) return false;
-      if(!y_.Equals(other.y_)) return false;
-      if (Width != other.Width) return false;
-      if (Height != other.Height) return false;
+      if(!data_.Equals(other.data_)) return false;
       if (Once != other.Once) return false;
+      if (Args != other.Args) return false;
       return true;
     }
 
     public override int GetHashCode() {
       int hash = 1;
       if (Mode != 0) hash ^= Mode.GetHashCode();
-      hash ^= x_.GetHashCode();
-      hash ^= y_.GetHashCode();
-      if (Width != 0) hash ^= Width.GetHashCode();
-      if (Height != 0) hash ^= Height.GetHashCode();
+      hash ^= data_.GetHashCode();
       if (Once != false) hash ^= Once.GetHashCode();
+      if (Args.Length != 0) hash ^= Args.GetHashCode();
       return hash;
     }
 
@@ -281,19 +450,14 @@ namespace Kinectrgbd {
         output.WriteRawTag(8);
         output.WriteInt32(Mode);
       }
-      x_.WriteTo(output, _repeated_x_codec);
-      y_.WriteTo(output, _repeated_y_codec);
-      if (Width != 0) {
-        output.WriteRawTag(32);
-        output.WriteInt32(Width);
-      }
-      if (Height != 0) {
-        output.WriteRawTag(40);
-        output.WriteInt32(Height);
-      }
+      data_.WriteTo(output, _repeated_data_codec);
       if (Once != false) {
-        output.WriteRawTag(48);
+        output.WriteRawTag(24);
         output.WriteBool(Once);
+      }
+      if (Args.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(Args);
       }
     }
 
@@ -302,16 +466,12 @@ namespace Kinectrgbd {
       if (Mode != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(Mode);
       }
-      size += x_.CalculateSize(_repeated_x_codec);
-      size += y_.CalculateSize(_repeated_y_codec);
-      if (Width != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Width);
-      }
-      if (Height != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Height);
-      }
+      size += data_.CalculateSize(_repeated_data_codec);
       if (Once != false) {
         size += 1 + 1;
+      }
+      if (Args.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Args);
       }
       return size;
     }
@@ -323,16 +483,12 @@ namespace Kinectrgbd {
       if (other.Mode != 0) {
         Mode = other.Mode;
       }
-      x_.Add(other.x_);
-      y_.Add(other.y_);
-      if (other.Width != 0) {
-        Width = other.Width;
-      }
-      if (other.Height != 0) {
-        Height = other.Height;
-      }
+      data_.Add(other.data_);
       if (other.Once != false) {
         Once = other.Once;
+      }
+      if (other.Args.Length != 0) {
+        Args = other.Args;
       }
     }
 
@@ -347,26 +503,16 @@ namespace Kinectrgbd {
             Mode = input.ReadInt32();
             break;
           }
-          case 18:
-          case 16: {
-            x_.AddEntriesFrom(input, _repeated_x_codec);
+          case 18: {
+            data_.AddEntriesFrom(input, _repeated_data_codec);
             break;
           }
-          case 26:
           case 24: {
-            y_.AddEntriesFrom(input, _repeated_y_codec);
-            break;
-          }
-          case 32: {
-            Width = input.ReadInt32();
-            break;
-          }
-          case 40: {
-            Height = input.ReadInt32();
-            break;
-          }
-          case 48: {
             Once = input.ReadBool();
+            break;
+          }
+          case 34: {
+            Args = input.ReadString();
             break;
           }
         }
@@ -381,7 +527,7 @@ namespace Kinectrgbd {
     public static pb::MessageParser<Response> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[2]; }
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[3]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -483,7 +629,7 @@ namespace Kinectrgbd {
     public static pb::MessageParser<Pixels> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[3]; }
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[4]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -578,7 +724,7 @@ namespace Kinectrgbd {
     public static pb::MessageParser<Point> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[4]; }
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[5]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -758,7 +904,7 @@ namespace Kinectrgbd {
     public static pb::MessageParser<Points> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[5]; }
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[6]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -847,33 +993,273 @@ namespace Kinectrgbd {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-  public sealed partial class Positions : pb::IMessage<Positions> {
-    private static readonly pb::MessageParser<Positions> _parser = new pb::MessageParser<Positions>(() => new Positions());
-    public static pb::MessageParser<Positions> Parser { get { return _parser; } }
+  public sealed partial class Data : pb::IMessage<Data> {
+    private static readonly pb::MessageParser<Data> _parser = new pb::MessageParser<Data>(() => new Data());
+    public static pb::MessageParser<Data> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[6]; }
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[7]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
       get { return Descriptor; }
     }
 
-    public Positions() {
+    public Data() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
-    public Positions(Positions other) : this() {
-      status_ = other.status_;
-      x_ = other.x_.Clone();
-      y_ = other.y_.Clone();
-      z_ = other.z_.Clone();
+    public Data(Data other) : this() {
+      x_ = other.x_;
+      y_ = other.y_;
+      z_ = other.z_;
+      caption_ = other.caption_;
+      tags_ = other.tags_.Clone();
+      texts_ = other.texts_.Clone();
+      confidence_ = other.confidence_;
     }
 
-    public Positions Clone() {
-      return new Positions(this);
+    public Data Clone() {
+      return new Data(this);
+    }
+
+    public const int XFieldNumber = 1;
+    private float x_;
+    public float X {
+      get { return x_; }
+      set {
+        x_ = value;
+      }
+    }
+
+    public const int YFieldNumber = 2;
+    private float y_;
+    public float Y {
+      get { return y_; }
+      set {
+        y_ = value;
+      }
+    }
+
+    public const int ZFieldNumber = 3;
+    private float z_;
+    public float Z {
+      get { return z_; }
+      set {
+        z_ = value;
+      }
+    }
+
+    public const int CaptionFieldNumber = 4;
+    private string caption_ = "";
+    public string Caption {
+      get { return caption_; }
+      set {
+        caption_ = pb::Preconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    public const int TagsFieldNumber = 5;
+    private static readonly pb::FieldCodec<string> _repeated_tags_codec
+        = pb::FieldCodec.ForString(42);
+    private readonly pbc::RepeatedField<string> tags_ = new pbc::RepeatedField<string>();
+    public pbc::RepeatedField<string> Tags {
+      get { return tags_; }
+    }
+
+    public const int TextsFieldNumber = 6;
+    private static readonly pb::FieldCodec<string> _repeated_texts_codec
+        = pb::FieldCodec.ForString(50);
+    private readonly pbc::RepeatedField<string> texts_ = new pbc::RepeatedField<string>();
+    public pbc::RepeatedField<string> Texts {
+      get { return texts_; }
+    }
+
+    public const int ConfidenceFieldNumber = 7;
+    private float confidence_;
+    public float Confidence {
+      get { return confidence_; }
+      set {
+        confidence_ = value;
+      }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as Data);
+    }
+
+    public bool Equals(Data other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (X != other.X) return false;
+      if (Y != other.Y) return false;
+      if (Z != other.Z) return false;
+      if (Caption != other.Caption) return false;
+      if(!tags_.Equals(other.tags_)) return false;
+      if(!texts_.Equals(other.texts_)) return false;
+      if (Confidence != other.Confidence) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (X != 0F) hash ^= X.GetHashCode();
+      if (Y != 0F) hash ^= Y.GetHashCode();
+      if (Z != 0F) hash ^= Z.GetHashCode();
+      if (Caption.Length != 0) hash ^= Caption.GetHashCode();
+      hash ^= tags_.GetHashCode();
+      hash ^= texts_.GetHashCode();
+      if (Confidence != 0F) hash ^= Confidence.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.Default.Format(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (X != 0F) {
+        output.WriteRawTag(13);
+        output.WriteFloat(X);
+      }
+      if (Y != 0F) {
+        output.WriteRawTag(21);
+        output.WriteFloat(Y);
+      }
+      if (Z != 0F) {
+        output.WriteRawTag(29);
+        output.WriteFloat(Z);
+      }
+      if (Caption.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(Caption);
+      }
+      tags_.WriteTo(output, _repeated_tags_codec);
+      texts_.WriteTo(output, _repeated_texts_codec);
+      if (Confidence != 0F) {
+        output.WriteRawTag(61);
+        output.WriteFloat(Confidence);
+      }
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (X != 0F) {
+        size += 1 + 4;
+      }
+      if (Y != 0F) {
+        size += 1 + 4;
+      }
+      if (Z != 0F) {
+        size += 1 + 4;
+      }
+      if (Caption.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Caption);
+      }
+      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += texts_.CalculateSize(_repeated_texts_codec);
+      if (Confidence != 0F) {
+        size += 1 + 4;
+      }
+      return size;
+    }
+
+    public void MergeFrom(Data other) {
+      if (other == null) {
+        return;
+      }
+      if (other.X != 0F) {
+        X = other.X;
+      }
+      if (other.Y != 0F) {
+        Y = other.Y;
+      }
+      if (other.Z != 0F) {
+        Z = other.Z;
+      }
+      if (other.Caption.Length != 0) {
+        Caption = other.Caption;
+      }
+      tags_.Add(other.tags_);
+      texts_.Add(other.texts_);
+      if (other.Confidence != 0F) {
+        Confidence = other.Confidence;
+      }
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 13: {
+            X = input.ReadFloat();
+            break;
+          }
+          case 21: {
+            Y = input.ReadFloat();
+            break;
+          }
+          case 29: {
+            Z = input.ReadFloat();
+            break;
+          }
+          case 34: {
+            Caption = input.ReadString();
+            break;
+          }
+          case 42: {
+            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+            break;
+          }
+          case 50: {
+            texts_.AddEntriesFrom(input, _repeated_texts_codec);
+            break;
+          }
+          case 61: {
+            Confidence = input.ReadFloat();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class DataStream : pb::IMessage<DataStream> {
+    private static readonly pb::MessageParser<DataStream> _parser = new pb::MessageParser<DataStream>(() => new DataStream());
+    public static pb::MessageParser<DataStream> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[8]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public DataStream() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public DataStream(DataStream other) : this() {
+      status_ = other.status_;
+      data_ = other.data_.Clone();
+    }
+
+    public DataStream Clone() {
+      return new DataStream(this);
     }
 
     public const int StatusFieldNumber = 1;
@@ -885,35 +1271,19 @@ namespace Kinectrgbd {
       }
     }
 
-    public const int XFieldNumber = 2;
-    private static readonly pb::FieldCodec<float> _repeated_x_codec
-        = pb::FieldCodec.ForFloat(18);
-    private readonly pbc::RepeatedField<float> x_ = new pbc::RepeatedField<float>();
-    public pbc::RepeatedField<float> X {
-      get { return x_; }
-    }
-
-    public const int YFieldNumber = 3;
-    private static readonly pb::FieldCodec<float> _repeated_y_codec
-        = pb::FieldCodec.ForFloat(26);
-    private readonly pbc::RepeatedField<float> y_ = new pbc::RepeatedField<float>();
-    public pbc::RepeatedField<float> Y {
-      get { return y_; }
-    }
-
-    public const int ZFieldNumber = 4;
-    private static readonly pb::FieldCodec<float> _repeated_z_codec
-        = pb::FieldCodec.ForFloat(34);
-    private readonly pbc::RepeatedField<float> z_ = new pbc::RepeatedField<float>();
-    public pbc::RepeatedField<float> Z {
-      get { return z_; }
+    public const int DataFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::Kinectrgbd.Data> _repeated_data_codec
+        = pb::FieldCodec.ForMessage(18, global::Kinectrgbd.Data.Parser);
+    private readonly pbc::RepeatedField<global::Kinectrgbd.Data> data_ = new pbc::RepeatedField<global::Kinectrgbd.Data>();
+    public pbc::RepeatedField<global::Kinectrgbd.Data> Data {
+      get { return data_; }
     }
 
     public override bool Equals(object other) {
-      return Equals(other as Positions);
+      return Equals(other as DataStream);
     }
 
-    public bool Equals(Positions other) {
+    public bool Equals(DataStream other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -921,18 +1291,14 @@ namespace Kinectrgbd {
         return true;
       }
       if (Status != other.Status) return false;
-      if(!x_.Equals(other.x_)) return false;
-      if(!y_.Equals(other.y_)) return false;
-      if(!z_.Equals(other.z_)) return false;
+      if(!data_.Equals(other.data_)) return false;
       return true;
     }
 
     public override int GetHashCode() {
       int hash = 1;
       if (Status != false) hash ^= Status.GetHashCode();
-      hash ^= x_.GetHashCode();
-      hash ^= y_.GetHashCode();
-      hash ^= z_.GetHashCode();
+      hash ^= data_.GetHashCode();
       return hash;
     }
 
@@ -945,9 +1311,7 @@ namespace Kinectrgbd {
         output.WriteRawTag(8);
         output.WriteBool(Status);
       }
-      x_.WriteTo(output, _repeated_x_codec);
-      y_.WriteTo(output, _repeated_y_codec);
-      z_.WriteTo(output, _repeated_z_codec);
+      data_.WriteTo(output, _repeated_data_codec);
     }
 
     public int CalculateSize() {
@@ -955,22 +1319,18 @@ namespace Kinectrgbd {
       if (Status != false) {
         size += 1 + 1;
       }
-      size += x_.CalculateSize(_repeated_x_codec);
-      size += y_.CalculateSize(_repeated_y_codec);
-      size += z_.CalculateSize(_repeated_z_codec);
+      size += data_.CalculateSize(_repeated_data_codec);
       return size;
     }
 
-    public void MergeFrom(Positions other) {
+    public void MergeFrom(DataStream other) {
       if (other == null) {
         return;
       }
       if (other.Status != false) {
         Status = other.Status;
       }
-      x_.Add(other.x_);
-      y_.Add(other.y_);
-      z_.Add(other.z_);
+      data_.Add(other.data_);
     }
 
     public void MergeFrom(pb::CodedInputStream input) {
@@ -984,19 +1344,146 @@ namespace Kinectrgbd {
             Status = input.ReadBool();
             break;
           }
-          case 18:
-          case 21: {
-            x_.AddEntriesFrom(input, _repeated_x_codec);
+          case 18: {
+            data_.AddEntriesFrom(input, _repeated_data_codec);
             break;
           }
-          case 26:
-          case 29: {
-            y_.AddEntriesFrom(input, _repeated_y_codec);
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class BitStream : pb::IMessage<BitStream> {
+    private static readonly pb::MessageParser<BitStream> _parser = new pb::MessageParser<BitStream>(() => new BitStream());
+    public static pb::MessageParser<BitStream> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[9]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public BitStream() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public BitStream(BitStream other) : this() {
+      status_ = other.status_;
+      color_ = other.color_.Clone();
+      depth_ = other.depth_.Clone();
+    }
+
+    public BitStream Clone() {
+      return new BitStream(this);
+    }
+
+    public const int StatusFieldNumber = 1;
+    private bool status_;
+    public bool Status {
+      get { return status_; }
+      set {
+        status_ = value;
+      }
+    }
+
+    public const int ColorFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::Kinectrgbd.Bit> _repeated_color_codec
+        = pb::FieldCodec.ForMessage(18, global::Kinectrgbd.Bit.Parser);
+    private readonly pbc::RepeatedField<global::Kinectrgbd.Bit> color_ = new pbc::RepeatedField<global::Kinectrgbd.Bit>();
+    public pbc::RepeatedField<global::Kinectrgbd.Bit> Color {
+      get { return color_; }
+    }
+
+    public const int DepthFieldNumber = 3;
+    private static readonly pb::FieldCodec<global::Kinectrgbd.Bit> _repeated_depth_codec
+        = pb::FieldCodec.ForMessage(26, global::Kinectrgbd.Bit.Parser);
+    private readonly pbc::RepeatedField<global::Kinectrgbd.Bit> depth_ = new pbc::RepeatedField<global::Kinectrgbd.Bit>();
+    public pbc::RepeatedField<global::Kinectrgbd.Bit> Depth {
+      get { return depth_; }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as BitStream);
+    }
+
+    public bool Equals(BitStream other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Status != other.Status) return false;
+      if(!color_.Equals(other.color_)) return false;
+      if(!depth_.Equals(other.depth_)) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Status != false) hash ^= Status.GetHashCode();
+      hash ^= color_.GetHashCode();
+      hash ^= depth_.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.Default.Format(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Status != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Status);
+      }
+      color_.WriteTo(output, _repeated_color_codec);
+      depth_.WriteTo(output, _repeated_depth_codec);
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (Status != false) {
+        size += 1 + 1;
+      }
+      size += color_.CalculateSize(_repeated_color_codec);
+      size += depth_.CalculateSize(_repeated_depth_codec);
+      return size;
+    }
+
+    public void MergeFrom(BitStream other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Status != false) {
+        Status = other.Status;
+      }
+      color_.Add(other.color_);
+      depth_.Add(other.depth_);
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 8: {
+            Status = input.ReadBool();
             break;
           }
-          case 34:
-          case 37: {
-            z_.AddEntriesFrom(input, _repeated_z_codec);
+          case 18: {
+            color_.AddEntriesFrom(input, _repeated_color_codec);
+            break;
+          }
+          case 26: {
+            depth_.AddEntriesFrom(input, _repeated_depth_codec);
             break;
           }
         }

@@ -132,10 +132,10 @@ namespace KinectSimpleRgbdServer
 
         private void PrepareRgbdMode(Kinectrgbd.Request request)
         {
-            this.sendStartPointX = request.X[0];
-            this.sendStartPointY = request.Y[0];
-            this.sendPointWidth = request.Width;
-            this.sendPointHeight = request.Height;
+            this.sendStartPointX = Convert.ToInt32(request.Data[0].X);
+            this.sendStartPointY = Convert.ToInt32(request.Data[0].Y);
+            this.sendPointWidth = Convert.ToInt32(request.Data[0].Width);
+            this.sendPointHeight = Convert.ToInt32(request.Data[0].Height);
             this.onceFlag = request.Once;
             this.mode = 1;
             this.fps = 2;
@@ -144,10 +144,10 @@ namespace KinectSimpleRgbdServer
 
         private void PrepareImageMode(Kinectrgbd.Request request)
         {
-            this.sendStartPointX = request.X[0];
-            this.sendStartPointY = request.Y[0];
-            this.sendPointWidth = request.Width;
-            this.sendPointHeight = request.Height;
+            this.sendStartPointX = Convert.ToInt32(request.Data[0].X);
+            this.sendStartPointY = Convert.ToInt32(request.Data[0].Y);
+            this.sendPointWidth = Convert.ToInt32(request.Data[0].Width);
+            this.sendPointHeight = Convert.ToInt32(request.Data[0].Height);
             this.onceFlag = request.Once;
             this.mode = 2;
             this.fps = 3;
@@ -156,25 +156,27 @@ namespace KinectSimpleRgbdServer
 
         private void HandlePositionRequest(Kinectrgbd.Request request)
         {
-            if ((request.Width * request.Height != this.imageSpaceValues.Count) // invalid image reference
-                || (request.X.Count != request.Y.Count)) // invalid request
-            {
-                Kinectrgbd.Positions badResult = new Kinectrgbd.Positions { Status = false };
-                Kinectrgbd.Response badResponse = this.client.SendPosition(badResult);
-                return;
-            }
+            Kinectrgbd.DataStream result = new Kinectrgbd.DataStream { Status = true };
 
-            Kinectrgbd.Positions result = new Kinectrgbd.Positions { Status = true };
-
-            for (int i = 0; i < request.X.Count; ++i)
+            for (int i = 0; i < request.Data.Count; ++i)
             {
-                int pixelIndex = request.Y[i] * request.Width + request.X[i];
-                result.X.Add(this.imageSpaceValues[pixelIndex].X);
-                result.Y.Add(this.imageSpaceValues[pixelIndex].Y);
-                result.Z.Add(this.imageSpaceValues[pixelIndex].Z);
+                int pixelIndex = Convert.ToInt32(request.Data[i].Y) * Convert.ToInt32(request.Data[i].Width)
+                    + Convert.ToInt32(request.Data[i].X);
+                if (pixelIndex >= this.imageSpaceValues.Count)
+                {
+                    result.Status = false;
+                    continue;
+                }
+                Kinectrgbd.Data data = new Kinectrgbd.Data
+                { 
+                    X = this.imageSpaceValues[pixelIndex].X,
+                    Y = this.imageSpaceValues[pixelIndex].Y,
+                    Z = this.imageSpaceValues[pixelIndex].Z
+                };
+                result.Data.Add(data);
             }
             
-            Kinectrgbd.Response response = this.client.SendPosition(result);
+            Kinectrgbd.Response response = this.client.ReturnPositionsFromPixels(result);
         }
 
         private void SendDepthCloud(MultiSourceFrame frame)
