@@ -106,6 +106,11 @@ namespace KinectSimpleRgbdServer
                 else if (request.Mode == 1) PrepareRgbdMode(request);
                 else if (request.Mode == 2) PrepareImageMode(request);
                 else if (request.Mode == 3) HandlePositionRequest(request); // send physical position of pixel from saved info
+                else if (request.Mode == 4) // send bounding box in depth / pixel coords from space coords
+                {
+                    HandleBoundingRequest(request, e.FrameReference.AcquireFrame());
+                    return;
+                }
             }
 
             MultiSourceFrame frame = e.FrameReference.AcquireFrame();
@@ -139,7 +144,7 @@ namespace KinectSimpleRgbdServer
             this.onceFlag = request.Once;
             this.mode = 1;
             this.fps = 2;
-            this.skippedFrame = KinectSimpleRgbdServer.MainWindow.frameUnit * this.fps;
+            //this.skippedFrame = KinectSimpleRgbdServer.MainWindow.frameUnit * this.fps;
         }
 
         private void PrepareImageMode(Kinectrgbd.Request request)
@@ -151,7 +156,7 @@ namespace KinectSimpleRgbdServer
             this.onceFlag = request.Once;
             this.mode = 2;
             this.fps = 3;
-            this.skippedFrame = KinectSimpleRgbdServer.MainWindow.frameUnit * this.fps;
+            //this.skippedFrame = KinectSimpleRgbdServer.MainWindow.frameUnit * this.fps;
         }
 
         private void HandlePositionRequest(Kinectrgbd.Request request)
@@ -177,6 +182,133 @@ namespace KinectSimpleRgbdServer
             }
             
             Kinectrgbd.Response response = this.client.ReturnPositionsFromPixels(result);
+        }
+
+        private void HandleBoundingRequest(Kinectrgbd.Request request, MultiSourceFrame frame)
+        {
+            Kinectrgbd.BitStream result = new Kinectrgbd.BitStream { Status = false };
+
+            ColorFrame colorFrame = frame.ColorFrameReference.AcquireFrame();
+            DepthFrame depthFrame = frame.DepthFrameReference.AcquireFrame();
+            if (colorFrame == null | depthFrame == null)
+            {
+                Kinectrgbd.Response badresponse = this.client.ReturnPixelBoundsFromSpaceBounds(result);
+                return;
+            }
+
+            // get depth map from depthFrame
+            var depthDesc = depthFrame.FrameDescription;
+            ushort[] depthData = new ushort[depthDesc.Width * depthDesc.Height];
+            depthFrame.CopyFrameDataToArray(depthData);
+
+            // get color pixels from colorFrame
+            var colorDesc = colorFrame.FrameDescription;
+            byte[] pixels = new byte[colorDesc.Width * colorDesc.Height * 4];
+            colorFrame.CopyConvertedFrameDataToArray(pixels, ColorImageFormat.Bgra);
+
+            // get physical xyz position for each point on depth map
+            CameraSpacePoint[] cameraPoints = new CameraSpacePoint[depthDesc.Width * depthDesc.Height];
+            this.coordinateMapper.MapDepthFrameToCameraSpace(depthData, cameraPoints);
+
+            // get corresponding color pixel for each point on depth map
+            ColorSpacePoint[] colorPoints = new ColorSpacePoint[depthDesc.Width * depthDesc.Height];
+            this.coordinateMapper.MapDepthFrameToColorSpace(depthData, colorPoints);
+
+            // draw camera image
+            BitmapSource bitmapSource = BitmapSource.Create(colorDesc.Width, colorDesc.Height, 96, 96,
+                PixelFormats.Bgr32, null, pixels, colorDesc.Width * 4);
+            this.canvas.Background = new ImageBrush(bitmapSource);
+
+            float referenceXMin = request.Data[0].X;
+            float referenceYMin = request.Data[0].Y;
+            float minimumMinDist = 100;
+            int depthPixelMin = -1;
+            float referenceXMax = request.Data[0].X + request.Data[0].Width;
+            float referenceYMax = request.Data[0].Y + request.Data[0].Height;
+            float minimumMaxDist = 100;
+            int depthPixelMax = -1;
+            int pointIndex = 0;
+            foreach (var point in cameraPoints)
+            {
+                // reject invalid points
+                if (Double.IsInfinity(point.X) || Double.IsInfinity(point.Y) || Double.IsInfinity(point.Z)
+                    || Double.IsNaN(point.X) || Double.IsNaN(point.Y) || Double.IsNaN(point.Z))
+                {
+                    ++pointIndex;
+                    continue;
+                }
+
+                // reject points without color correspondent
+                int img_y = -1;
+                int img_x = -1;
+                if (!Double.IsInfinity(colorPoints[pointIndex].X) && !Double.IsInfinity(colorPoints[pointIndex].Y)
+                    && !Double.IsNaN(colorPoints[pointIndex].X) && !Double.IsNaN(colorPoints[pointIndex].Y))
+                {
+                    img_y = Convert.ToInt32(colorPoints[pointIndex].Y);
+                    img_x = Convert.ToInt32(colorPoints[pointIndex].X);
+                }
+                if (img_x < 0 || img_y < 0 || img_x >= colorDesc.Width || img_y >= colorDesc.Height)
+                {
+                    ++pointIndex;
+                    continue;
+                }
+
+                float distanceMin =
+                    (point.X - referenceXMin) * (point.X - referenceXMin) + (point.Y - referenceYMin) * (point.Y - referenceYMin);
+                if (distanceMin < minimumMinDist)
+                {
+                    minimumMinDist = distanceMin;
+                    depthPixelMin = pointIndex;
+                }
+                float distanceMax =
+                    (point.X - referenceXMax) * (point.X - referenceXMax) + (point.Y - referenceYMax) * (point.Y - referenceYMax);
+                if (distanceMax < minimumMaxDist)
+                {
+                    minimumMaxDist = distanceMax;
+                    depthPixelMax = pointIndex;
+                }
+
+                ++pointIndex;
+            }
+
+            if (depthPixelMin < 0 || depthPixelMax < 0)
+            {
+                Kinectrgbd.Response badresponse = this.client.ReturnPixelBoundsFromSpaceBounds(result);
+                return;
+            }
+
+            int depthMinY = depthPixelMin / depthDesc.Width;
+            int depthMinX = depthPixelMin - depthMinY * depthDesc.Width;
+            int depthMaxY = depthPixelMax / depthDesc.Width;
+            int depthMaxX = depthPixelMax - depthMaxY * depthDesc.Width;
+            Kinectrgbd.Bit depth = new Kinectrgbd.Bit
+            {
+                Name = "depth",
+                X = depthMinX,
+                Y = depthMinY,
+                Width = depthMaxX - depthMinX,
+                Height = depthMaxY - depthMinY
+            };
+            int colorMinX = Convert.ToInt32(colorPoints[depthPixelMin].Y);
+            int colorMinY = Convert.ToInt32(colorPoints[depthPixelMin].X);
+            int colorMaxX = Convert.ToInt32(colorPoints[depthPixelMax].X);
+            int colorMaxY = Convert.ToInt32(colorPoints[depthPixelMax].Y);
+            Kinectrgbd.Bit color = new Kinectrgbd.Bit
+            { 
+                Name = "color",
+                X = colorMinX,
+                Y = colorMinY,
+                Width = colorMaxX - colorMinX,
+                Height = colorMaxY - colorMaxY
+            };
+
+            result.Status = true;
+            result.Data.Add(depth);
+            result.Data.Add(color);
+            Kinectrgbd.Response response = this.client.ReturnPixelBoundsFromSpaceBounds(result);
+
+            colorFrame.Dispose();
+            depthFrame.Dispose();
         }
 
         private void SendDepthCloud(MultiSourceFrame frame)
@@ -245,7 +377,7 @@ namespace KinectSimpleRgbdServer
                     img_x = Convert.ToInt32(colorPoints[pointIndex].X);
                 }
                 // note, corresponding pixel can be out of range on color map, due to coordinate difference
-                if (img_x >= 0 && img_y >= 0 && img_x < 1960 && img_y < 1080)
+                if (img_x >= 0 && img_y >= 0 && img_x < colorDesc.Width && img_y < colorDesc.Height)
                 {
                     int pixel = 4 * (img_y * colorDesc.Width + img_x); // bgra, so skip by 4
                     color = ((pixels[pixel++] << 16) & 0xfffffff) + ((pixels[pixel++] << 8) & 0xfffffff) + pixels[pixel++];

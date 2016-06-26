@@ -55,10 +55,10 @@ namespace Kinectrgbd {
         __Marshaller_BitStream,
         __Marshaller_Response);
 
-    static readonly Method<global::Kinectrgbd.DataStream, global::Kinectrgbd.Response> __Method_SendCognition = new Method<global::Kinectrgbd.DataStream, global::Kinectrgbd.Response>(
+    static readonly Method<global::Kinectrgbd.DataStream, global::Kinectrgbd.Response> __Method_ReturnCognition = new Method<global::Kinectrgbd.DataStream, global::Kinectrgbd.Response>(
         MethodType.Unary,
         __ServiceName,
-        "SendCognition",
+        "ReturnCognition",
         __Marshaller_DataStream,
         __Marshaller_Response);
 
@@ -91,10 +91,10 @@ namespace Kinectrgbd {
       global::Kinectrgbd.Response ReturnPixelBoundsFromSpaceBounds(global::Kinectrgbd.BitStream request, CallOptions options);
       AsyncUnaryCall<global::Kinectrgbd.Response> ReturnPixelBoundsFromSpaceBoundsAsync(global::Kinectrgbd.BitStream request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
       AsyncUnaryCall<global::Kinectrgbd.Response> ReturnPixelBoundsFromSpaceBoundsAsync(global::Kinectrgbd.BitStream request, CallOptions options);
-      global::Kinectrgbd.Response SendCognition(global::Kinectrgbd.DataStream request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
-      global::Kinectrgbd.Response SendCognition(global::Kinectrgbd.DataStream request, CallOptions options);
-      AsyncUnaryCall<global::Kinectrgbd.Response> SendCognitionAsync(global::Kinectrgbd.DataStream request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
-      AsyncUnaryCall<global::Kinectrgbd.Response> SendCognitionAsync(global::Kinectrgbd.DataStream request, CallOptions options);
+      global::Kinectrgbd.Response ReturnCognition(global::Kinectrgbd.DataStream request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
+      global::Kinectrgbd.Response ReturnCognition(global::Kinectrgbd.DataStream request, CallOptions options);
+      AsyncUnaryCall<global::Kinectrgbd.Response> ReturnCognitionAsync(global::Kinectrgbd.DataStream request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken));
+      AsyncUnaryCall<global::Kinectrgbd.Response> ReturnCognitionAsync(global::Kinectrgbd.DataStream request, CallOptions options);
     }
 
     // server-side interface
@@ -105,7 +105,7 @@ namespace Kinectrgbd {
       Task<global::Kinectrgbd.Response> SendImage(global::Kinectrgbd.Pixels request, ServerCallContext context);
       Task<global::Kinectrgbd.Response> ReturnPositionsFromPixels(global::Kinectrgbd.DataStream request, ServerCallContext context);
       Task<global::Kinectrgbd.Response> ReturnPixelBoundsFromSpaceBounds(global::Kinectrgbd.BitStream request, ServerCallContext context);
-      Task<global::Kinectrgbd.Response> SendCognition(global::Kinectrgbd.DataStream request, ServerCallContext context);
+      Task<global::Kinectrgbd.Response> ReturnCognition(global::Kinectrgbd.DataStream request, ServerCallContext context);
     }
 
     // client stub
@@ -214,24 +214,24 @@ namespace Kinectrgbd {
         var call = CreateCall(__Method_ReturnPixelBoundsFromSpaceBounds, options);
         return Calls.AsyncUnaryCall(call, request);
       }
-      public global::Kinectrgbd.Response SendCognition(global::Kinectrgbd.DataStream request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      public global::Kinectrgbd.Response ReturnCognition(global::Kinectrgbd.DataStream request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
-        var call = CreateCall(__Method_SendCognition, new CallOptions(headers, deadline, cancellationToken));
+        var call = CreateCall(__Method_ReturnCognition, new CallOptions(headers, deadline, cancellationToken));
         return Calls.BlockingUnaryCall(call, request);
       }
-      public global::Kinectrgbd.Response SendCognition(global::Kinectrgbd.DataStream request, CallOptions options)
+      public global::Kinectrgbd.Response ReturnCognition(global::Kinectrgbd.DataStream request, CallOptions options)
       {
-        var call = CreateCall(__Method_SendCognition, options);
+        var call = CreateCall(__Method_ReturnCognition, options);
         return Calls.BlockingUnaryCall(call, request);
       }
-      public AsyncUnaryCall<global::Kinectrgbd.Response> SendCognitionAsync(global::Kinectrgbd.DataStream request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      public AsyncUnaryCall<global::Kinectrgbd.Response> ReturnCognitionAsync(global::Kinectrgbd.DataStream request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
-        var call = CreateCall(__Method_SendCognition, new CallOptions(headers, deadline, cancellationToken));
+        var call = CreateCall(__Method_ReturnCognition, new CallOptions(headers, deadline, cancellationToken));
         return Calls.AsyncUnaryCall(call, request);
       }
-      public AsyncUnaryCall<global::Kinectrgbd.Response> SendCognitionAsync(global::Kinectrgbd.DataStream request, CallOptions options)
+      public AsyncUnaryCall<global::Kinectrgbd.Response> ReturnCognitionAsync(global::Kinectrgbd.DataStream request, CallOptions options)
       {
-        var call = CreateCall(__Method_SendCognition, options);
+        var call = CreateCall(__Method_ReturnCognition, options);
         return Calls.AsyncUnaryCall(call, request);
       }
     }
@@ -245,7 +245,7 @@ namespace Kinectrgbd {
           .AddMethod(__Method_SendImage, serviceImpl.SendImage)
           .AddMethod(__Method_ReturnPositionsFromPixels, serviceImpl.ReturnPositionsFromPixels)
           .AddMethod(__Method_ReturnPixelBoundsFromSpaceBounds, serviceImpl.ReturnPixelBoundsFromSpaceBounds)
-          .AddMethod(__Method_SendCognition, serviceImpl.SendCognition).Build();
+          .AddMethod(__Method_ReturnCognition, serviceImpl.ReturnCognition).Build();
     }
 
     // creates a new client

@@ -24,34 +24,34 @@ namespace Kinectrgbd {
         byte[] descriptorData = global::System.Convert.FromBase64String(
             string.Concat(
               "ChFraW5lY3RfcmdiZC5wcm90bxIKa2luZWN0cmdiZCIWCgZIZWFkZXISDAoE", 
-              "ZGF0YRgBIAEoCCI6CgNCaXQSCQoBeBgBIAEoAhIJCgF5GAIgASgCEg0KBXdp", 
-              "ZHRoGAMgASgCEg4KBmhlaWdodBgEIAEoAiJSCgdSZXF1ZXN0EgwKBG1vZGUY", 
-              "ASABKAUSHQoEZGF0YRgCIAMoCzIPLmtpbmVjdHJnYmQuQml0EgwKBG9uY2UY", 
-              "AyABKAgSDAoEYXJncxgEIAEoCSIaCghSZXNwb25zZRIOCgZmaW5pc2gYASAB", 
-              "KAgiFwoGUGl4ZWxzEg0KBWNvbG9yGAEgAygFIjcKBVBvaW50EgkKAXgYASAB", 
-              "KAISCQoBeRgCIAEoAhIJCgF6GAMgASgCEg0KBWNvbG9yGAQgASgFIikKBlBv", 
-              "aW50cxIfCgRkYXRhGAEgAygLMhEua2luZWN0cmdiZC5Qb2ludCJpCgREYXRh", 
-              "EgkKAXgYASABKAISCQoBeRgCIAEoAhIJCgF6GAMgASgCEg8KB2NhcHRpb24Y", 
-              "BCABKAkSDAoEdGFncxgFIAMoCRINCgV0ZXh0cxgGIAMoCRISCgpjb25maWRl", 
-              "bmNlGAcgASgCIjwKCkRhdGFTdHJlYW0SDgoGc3RhdHVzGAEgASgIEh4KBGRh", 
-              "dGEYAiADKAsyEC5raW5lY3RyZ2JkLkRhdGEiWwoJQml0U3RyZWFtEg4KBnN0", 
-              "YXR1cxgBIAEoCBIeCgVjb2xvchgCIAMoCzIPLmtpbmVjdHJnYmQuQml0Eh4K", 
-              "BWRlcHRoGAMgAygLMg8ua2luZWN0cmdiZC5CaXQymwMKCktpbmVjdFJnYmQS", 
-              "OQoMQ2hlY2tSZXF1ZXN0EhIua2luZWN0cmdiZC5IZWFkZXIaEy5raW5lY3Ry", 
-              "Z2JkLlJlcXVlc3QiABI4CgpTZW5kUG9pbnRzEhIua2luZWN0cmdiZC5Qb2lu", 
-              "dHMaFC5raW5lY3RyZ2JkLlJlc3BvbnNlIgASNwoJU2VuZEltYWdlEhIua2lu", 
-              "ZWN0cmdiZC5QaXhlbHMaFC5raW5lY3RyZ2JkLlJlc3BvbnNlIgASSwoZUmV0", 
-              "dXJuUG9zaXRpb25zRnJvbVBpeGVscxIWLmtpbmVjdHJnYmQuRGF0YVN0cmVh", 
-              "bRoULmtpbmVjdHJnYmQuUmVzcG9uc2UiABJRCiBSZXR1cm5QaXhlbEJvdW5k", 
-              "c0Zyb21TcGFjZUJvdW5kcxIVLmtpbmVjdHJnYmQuQml0U3RyZWFtGhQua2lu", 
-              "ZWN0cmdiZC5SZXNwb25zZSIAEj8KDVNlbmRDb2duaXRpb24SFi5raW5lY3Ry", 
-              "Z2JkLkRhdGFTdHJlYW0aFC5raW5lY3RyZ2JkLlJlc3BvbnNlIgBCDwoHZXgu", 
-              "Z3JwY6ICA1JUR2IGcHJvdG8z"));
+              "ZGF0YRgBIAEoCCJICgNCaXQSCQoBeBgBIAEoAhIJCgF5GAIgASgCEg0KBXdp", 
+              "ZHRoGAMgASgCEg4KBmhlaWdodBgEIAEoAhIMCgRuYW1lGAUgASgJIlIKB1Jl", 
+              "cXVlc3QSDAoEbW9kZRgBIAEoBRIdCgRkYXRhGAIgAygLMg8ua2luZWN0cmdi", 
+              "ZC5CaXQSDAoEb25jZRgDIAEoCBIMCgRhcmdzGAQgASgJIhoKCFJlc3BvbnNl", 
+              "Eg4KBmZpbmlzaBgBIAEoCCIXCgZQaXhlbHMSDQoFY29sb3IYASADKAUiNwoF", 
+              "UG9pbnQSCQoBeBgBIAEoAhIJCgF5GAIgASgCEgkKAXoYAyABKAISDQoFY29s", 
+              "b3IYBCABKAUiKQoGUG9pbnRzEh8KBGRhdGEYASADKAsyES5raW5lY3RyZ2Jk", 
+              "LlBvaW50ImkKBERhdGESCQoBeBgBIAEoAhIJCgF5GAIgASgCEgkKAXoYAyAB", 
+              "KAISDwoHY2FwdGlvbhgEIAEoCRIMCgR0YWdzGAUgAygJEg0KBXRleHRzGAYg", 
+              "AygJEhIKCmNvbmZpZGVuY2UYByABKAIiPAoKRGF0YVN0cmVhbRIOCgZzdGF0", 
+              "dXMYASABKAgSHgoEZGF0YRgCIAMoCzIQLmtpbmVjdHJnYmQuRGF0YSI6CglC", 
+              "aXRTdHJlYW0SDgoGc3RhdHVzGAEgASgIEh0KBGRhdGEYAiADKAsyDy5raW5l", 
+              "Y3RyZ2JkLkJpdDKdAwoKS2luZWN0UmdiZBI5CgxDaGVja1JlcXVlc3QSEi5r", 
+              "aW5lY3RyZ2JkLkhlYWRlchoTLmtpbmVjdHJnYmQuUmVxdWVzdCIAEjgKClNl", 
+              "bmRQb2ludHMSEi5raW5lY3RyZ2JkLlBvaW50cxoULmtpbmVjdHJnYmQuUmVz", 
+              "cG9uc2UiABI3CglTZW5kSW1hZ2USEi5raW5lY3RyZ2JkLlBpeGVscxoULmtp", 
+              "bmVjdHJnYmQuUmVzcG9uc2UiABJLChlSZXR1cm5Qb3NpdGlvbnNGcm9tUGl4", 
+              "ZWxzEhYua2luZWN0cmdiZC5EYXRhU3RyZWFtGhQua2luZWN0cmdiZC5SZXNw", 
+              "b25zZSIAElEKIFJldHVyblBpeGVsQm91bmRzRnJvbVNwYWNlQm91bmRzEhUu", 
+              "a2luZWN0cmdiZC5CaXRTdHJlYW0aFC5raW5lY3RyZ2JkLlJlc3BvbnNlIgAS", 
+              "QQoPUmV0dXJuQ29nbml0aW9uEhYua2luZWN0cmdiZC5EYXRhU3RyZWFtGhQu", 
+              "a2luZWN0cmdiZC5SZXNwb25zZSIAQg8KB2V4LmdycGOiAgNSVEdiBnByb3Rv", 
+              "Mw=="));
         descriptor = pbr::FileDescriptor.InternalBuildGeneratedFileFrom(descriptorData,
             new pbr::FileDescriptor[] { },
             new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Header), new[]{ "Data" }, null, null, null),
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Bit), new[]{ "X", "Y", "Width", "Height" }, null, null, null),
+              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Bit), new[]{ "X", "Y", "Width", "Height", "Name" }, null, null, null),
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Request), new[]{ "Mode", "Data", "Once", "Args" }, null, null, null),
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Response), new[]{ "Finish" }, null, null, null),
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Pixels), new[]{ "Color" }, null, null, null),
@@ -59,7 +59,7 @@ namespace Kinectrgbd {
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Points), new[]{ "Data" }, null, null, null),
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Data), new[]{ "X", "Y", "Z", "Caption", "Tags", "Texts", "Confidence" }, null, null, null),
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.DataStream), new[]{ "Status", "Data" }, null, null, null),
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.BitStream), new[]{ "Status", "Color", "Depth" }, null, null, null)
+              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.BitStream), new[]{ "Status", "Data" }, null, null, null)
             }));
       }
       #endregion
@@ -193,6 +193,7 @@ namespace Kinectrgbd {
       y_ = other.y_;
       width_ = other.width_;
       height_ = other.height_;
+      name_ = other.name_;
     }
 
     public Bit Clone() {
@@ -235,6 +236,15 @@ namespace Kinectrgbd {
       }
     }
 
+    public const int NameFieldNumber = 5;
+    private string name_ = "";
+    public string Name {
+      get { return name_; }
+      set {
+        name_ = pb::Preconditions.CheckNotNull(value, "value");
+      }
+    }
+
     public override bool Equals(object other) {
       return Equals(other as Bit);
     }
@@ -250,6 +260,7 @@ namespace Kinectrgbd {
       if (Y != other.Y) return false;
       if (Width != other.Width) return false;
       if (Height != other.Height) return false;
+      if (Name != other.Name) return false;
       return true;
     }
 
@@ -259,6 +270,7 @@ namespace Kinectrgbd {
       if (Y != 0F) hash ^= Y.GetHashCode();
       if (Width != 0F) hash ^= Width.GetHashCode();
       if (Height != 0F) hash ^= Height.GetHashCode();
+      if (Name.Length != 0) hash ^= Name.GetHashCode();
       return hash;
     }
 
@@ -283,6 +295,10 @@ namespace Kinectrgbd {
         output.WriteRawTag(37);
         output.WriteFloat(Height);
       }
+      if (Name.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(Name);
+      }
     }
 
     public int CalculateSize() {
@@ -298,6 +314,9 @@ namespace Kinectrgbd {
       }
       if (Height != 0F) {
         size += 1 + 4;
+      }
+      if (Name.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Name);
       }
       return size;
     }
@@ -317,6 +336,9 @@ namespace Kinectrgbd {
       }
       if (other.Height != 0F) {
         Height = other.Height;
+      }
+      if (other.Name.Length != 0) {
+        Name = other.Name;
       }
     }
 
@@ -341,6 +363,10 @@ namespace Kinectrgbd {
           }
           case 37: {
             Height = input.ReadFloat();
+            break;
+          }
+          case 42: {
+            Name = input.ReadString();
             break;
           }
         }
@@ -1375,8 +1401,7 @@ namespace Kinectrgbd {
 
     public BitStream(BitStream other) : this() {
       status_ = other.status_;
-      color_ = other.color_.Clone();
-      depth_ = other.depth_.Clone();
+      data_ = other.data_.Clone();
     }
 
     public BitStream Clone() {
@@ -1392,20 +1417,12 @@ namespace Kinectrgbd {
       }
     }
 
-    public const int ColorFieldNumber = 2;
-    private static readonly pb::FieldCodec<global::Kinectrgbd.Bit> _repeated_color_codec
+    public const int DataFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::Kinectrgbd.Bit> _repeated_data_codec
         = pb::FieldCodec.ForMessage(18, global::Kinectrgbd.Bit.Parser);
-    private readonly pbc::RepeatedField<global::Kinectrgbd.Bit> color_ = new pbc::RepeatedField<global::Kinectrgbd.Bit>();
-    public pbc::RepeatedField<global::Kinectrgbd.Bit> Color {
-      get { return color_; }
-    }
-
-    public const int DepthFieldNumber = 3;
-    private static readonly pb::FieldCodec<global::Kinectrgbd.Bit> _repeated_depth_codec
-        = pb::FieldCodec.ForMessage(26, global::Kinectrgbd.Bit.Parser);
-    private readonly pbc::RepeatedField<global::Kinectrgbd.Bit> depth_ = new pbc::RepeatedField<global::Kinectrgbd.Bit>();
-    public pbc::RepeatedField<global::Kinectrgbd.Bit> Depth {
-      get { return depth_; }
+    private readonly pbc::RepeatedField<global::Kinectrgbd.Bit> data_ = new pbc::RepeatedField<global::Kinectrgbd.Bit>();
+    public pbc::RepeatedField<global::Kinectrgbd.Bit> Data {
+      get { return data_; }
     }
 
     public override bool Equals(object other) {
@@ -1420,16 +1437,14 @@ namespace Kinectrgbd {
         return true;
       }
       if (Status != other.Status) return false;
-      if(!color_.Equals(other.color_)) return false;
-      if(!depth_.Equals(other.depth_)) return false;
+      if(!data_.Equals(other.data_)) return false;
       return true;
     }
 
     public override int GetHashCode() {
       int hash = 1;
       if (Status != false) hash ^= Status.GetHashCode();
-      hash ^= color_.GetHashCode();
-      hash ^= depth_.GetHashCode();
+      hash ^= data_.GetHashCode();
       return hash;
     }
 
@@ -1442,8 +1457,7 @@ namespace Kinectrgbd {
         output.WriteRawTag(8);
         output.WriteBool(Status);
       }
-      color_.WriteTo(output, _repeated_color_codec);
-      depth_.WriteTo(output, _repeated_depth_codec);
+      data_.WriteTo(output, _repeated_data_codec);
     }
 
     public int CalculateSize() {
@@ -1451,8 +1465,7 @@ namespace Kinectrgbd {
       if (Status != false) {
         size += 1 + 1;
       }
-      size += color_.CalculateSize(_repeated_color_codec);
-      size += depth_.CalculateSize(_repeated_depth_codec);
+      size += data_.CalculateSize(_repeated_data_codec);
       return size;
     }
 
@@ -1463,8 +1476,7 @@ namespace Kinectrgbd {
       if (other.Status != false) {
         Status = other.Status;
       }
-      color_.Add(other.color_);
-      depth_.Add(other.depth_);
+      data_.Add(other.data_);
     }
 
     public void MergeFrom(pb::CodedInputStream input) {
@@ -1479,11 +1491,7 @@ namespace Kinectrgbd {
             break;
           }
           case 18: {
-            color_.AddEntriesFrom(input, _repeated_color_codec);
-            break;
-          }
-          case 26: {
-            depth_.AddEntriesFrom(input, _repeated_depth_codec);
+            data_.AddEntriesFrom(input, _repeated_data_codec);
             break;
           }
         }
