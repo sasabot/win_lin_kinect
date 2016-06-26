@@ -11,7 +11,7 @@ service KinectRgbd {
   rpc SendImage(Pixels) returns (Response) {}
   rpc ReturnPositionsFromPixels(DataStream) returns (Response) {}
   rpc ReturnPixelBoundsFromSpaceBounds(BitStream) returns (Response) {}
-  rpc SendCognition(DataStream) returns (Response) {}
+  rpc ReturnCognition(DataStream) returns (Response) {}
 }
 
 message Header {
@@ -23,6 +23,7 @@ message Bit {
   float y = 2;
   float width = 3;
   float height = 4;
+  string name = 5;
 }
 
 message Request {
@@ -68,6 +69,5 @@ message DataStream {
 
 message BitStream {
   bool status = 1;
-  repeated Bit color = 2;
-  repeated Bit depth = 3;
+  repeated Bit data = 2;
 }

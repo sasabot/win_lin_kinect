@@ -207,6 +207,17 @@ class Bit : public ::google::protobuf::Message {
   float height() const;
   void set_height(float value);
 
+  // optional string name = 5;
+  void clear_name();
+  static const int kNameFieldNumber = 5;
+  const ::std::string& name() const;
+  void set_name(const ::std::string& value);
+  void set_name(const char* value);
+  void set_name(const char* value, size_t size);
+  ::std::string* mutable_name();
+  ::std::string* release_name();
+  void set_allocated_name(::std::string* name);
+
   // @@protoc_insertion_point(class_scope:kinectrgbd.Bit)
  private:
 
@@ -216,6 +227,7 @@ class Bit : public ::google::protobuf::Message {
   float y_;
   float width_;
   float height_;
+  ::google::protobuf::internal::ArenaStringPtr name_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_kinect_5frgbd_2eproto();
   friend void protobuf_AssignDesc_kinect_5frgbd_2eproto();
@@ -980,37 +992,24 @@ class BitStream : public ::google::protobuf::Message {
   bool status() const;
   void set_status(bool value);
 
-  // repeated .kinectrgbd.Bit color = 2;
-  int color_size() const;
-  void clear_color();
-  static const int kColorFieldNumber = 2;
-  const ::kinectrgbd::Bit& color(int index) const;
-  ::kinectrgbd::Bit* mutable_color(int index);
-  ::kinectrgbd::Bit* add_color();
+  // repeated .kinectrgbd.Bit data = 2;
+  int data_size() const;
+  void clear_data();
+  static const int kDataFieldNumber = 2;
+  const ::kinectrgbd::Bit& data(int index) const;
+  ::kinectrgbd::Bit* mutable_data(int index);
+  ::kinectrgbd::Bit* add_data();
   ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Bit >*
-      mutable_color();
+      mutable_data();
   const ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Bit >&
-      color() const;
-
-  // repeated .kinectrgbd.Bit depth = 3;
-  int depth_size() const;
-  void clear_depth();
-  static const int kDepthFieldNumber = 3;
-  const ::kinectrgbd::Bit& depth(int index) const;
-  ::kinectrgbd::Bit* mutable_depth(int index);
-  ::kinectrgbd::Bit* add_depth();
-  ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Bit >*
-      mutable_depth();
-  const ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Bit >&
-      depth() const;
+      data() const;
 
   // @@protoc_insertion_point(class_scope:kinectrgbd.BitStream)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
-  ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Bit > color_;
-  ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Bit > depth_;
+  ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Bit > data_;
   bool status_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_kinect_5frgbd_2eproto();
@@ -1100,6 +1099,49 @@ inline void Bit::set_height(float value) {
   
   height_ = value;
   // @@protoc_insertion_point(field_set:kinectrgbd.Bit.height)
+}
+
+// optional string name = 5;
+inline void Bit::clear_name() {
+  name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Bit::name() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Bit.name)
+  return name_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Bit::set_name(const ::std::string& value) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:kinectrgbd.Bit.name)
+}
+inline void Bit::set_name(const char* value) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:kinectrgbd.Bit.name)
+}
+inline void Bit::set_name(const char* value, size_t size) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:kinectrgbd.Bit.name)
+}
+inline ::std::string* Bit::mutable_name() {
+  
+  // @@protoc_insertion_point(field_mutable:kinectrgbd.Bit.name)
+  return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Bit::release_name() {
+  
+  return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Bit::set_allocated_name(::std::string* name) {
+  if (name != NULL) {
+    
+  } else {
+    
+  }
+  name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
+  // @@protoc_insertion_point(field_set_allocated:kinectrgbd.Bit.name)
 }
 
 // -------------------------------------------------------------------
@@ -1630,64 +1672,34 @@ inline void BitStream::set_status(bool value) {
   // @@protoc_insertion_point(field_set:kinectrgbd.BitStream.status)
 }
 
-// repeated .kinectrgbd.Bit color = 2;
-inline int BitStream::color_size() const {
-  return color_.size();
+// repeated .kinectrgbd.Bit data = 2;
+inline int BitStream::data_size() const {
+  return data_.size();
 }
-inline void BitStream::clear_color() {
-  color_.Clear();
+inline void BitStream::clear_data() {
+  data_.Clear();
 }
-inline const ::kinectrgbd::Bit& BitStream::color(int index) const {
-  // @@protoc_insertion_point(field_get:kinectrgbd.BitStream.color)
-  return color_.Get(index);
+inline const ::kinectrgbd::Bit& BitStream::data(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.BitStream.data)
+  return data_.Get(index);
 }
-inline ::kinectrgbd::Bit* BitStream::mutable_color(int index) {
-  // @@protoc_insertion_point(field_mutable:kinectrgbd.BitStream.color)
-  return color_.Mutable(index);
+inline ::kinectrgbd::Bit* BitStream::mutable_data(int index) {
+  // @@protoc_insertion_point(field_mutable:kinectrgbd.BitStream.data)
+  return data_.Mutable(index);
 }
-inline ::kinectrgbd::Bit* BitStream::add_color() {
-  // @@protoc_insertion_point(field_add:kinectrgbd.BitStream.color)
-  return color_.Add();
-}
-inline ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Bit >*
-BitStream::mutable_color() {
-  // @@protoc_insertion_point(field_mutable_list:kinectrgbd.BitStream.color)
-  return &color_;
-}
-inline const ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Bit >&
-BitStream::color() const {
-  // @@protoc_insertion_point(field_list:kinectrgbd.BitStream.color)
-  return color_;
-}
-
-// repeated .kinectrgbd.Bit depth = 3;
-inline int BitStream::depth_size() const {
-  return depth_.size();
-}
-inline void BitStream::clear_depth() {
-  depth_.Clear();
-}
-inline const ::kinectrgbd::Bit& BitStream::depth(int index) const {
-  // @@protoc_insertion_point(field_get:kinectrgbd.BitStream.depth)
-  return depth_.Get(index);
-}
-inline ::kinectrgbd::Bit* BitStream::mutable_depth(int index) {
-  // @@protoc_insertion_point(field_mutable:kinectrgbd.BitStream.depth)
-  return depth_.Mutable(index);
-}
-inline ::kinectrgbd::Bit* BitStream::add_depth() {
-  // @@protoc_insertion_point(field_add:kinectrgbd.BitStream.depth)
-  return depth_.Add();
+inline ::kinectrgbd::Bit* BitStream::add_data() {
+  // @@protoc_insertion_point(field_add:kinectrgbd.BitStream.data)
+  return data_.Add();
 }
 inline ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Bit >*
-BitStream::mutable_depth() {
-  // @@protoc_insertion_point(field_mutable_list:kinectrgbd.BitStream.depth)
-  return &depth_;
+BitStream::mutable_data() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrgbd.BitStream.data)
+  return &data_;
 }
 inline const ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Bit >&
-BitStream::depth() const {
-  // @@protoc_insertion_point(field_list:kinectrgbd.BitStream.depth)
-  return depth_;
+BitStream::data() const {
+  // @@protoc_insertion_point(field_list:kinectrgbd.BitStream.data)
+  return data_;
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS

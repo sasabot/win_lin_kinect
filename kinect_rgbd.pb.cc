@@ -76,11 +76,12 @@ void protobuf_AssignDesc_kinect_5frgbd_2eproto() {
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Header, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Header, _is_default_instance_));
   Bit_descriptor_ = file->message_type(1);
-  static const int Bit_offsets_[4] = {
+  static const int Bit_offsets_[5] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bit, x_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bit, y_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bit, width_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bit, height_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bit, name_),
   };
   Bit_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -212,10 +213,9 @@ void protobuf_AssignDesc_kinect_5frgbd_2eproto() {
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataStream, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataStream, _is_default_instance_));
   BitStream_descriptor_ = file->message_type(9);
-  static const int BitStream_offsets_[3] = {
+  static const int BitStream_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BitStream, status_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BitStream, color_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BitStream, depth_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BitStream, data_),
   };
   BitStream_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -295,32 +295,31 @@ void protobuf_AddDesc_kinect_5frgbd_2eproto() {
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\021kinect_rgbd.proto\022\nkinectrgbd\"\026\n\006Heade"
-    "r\022\014\n\004data\030\001 \001(\010\":\n\003Bit\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002"
-    " \001(\002\022\r\n\005width\030\003 \001(\002\022\016\n\006height\030\004 \001(\002\"R\n\007R"
-    "equest\022\014\n\004mode\030\001 \001(\005\022\035\n\004data\030\002 \003(\0132\017.kin"
-    "ectrgbd.Bit\022\014\n\004once\030\003 \001(\010\022\014\n\004args\030\004 \001(\t\""
-    "\032\n\010Response\022\016\n\006finish\030\001 \001(\010\"\027\n\006Pixels\022\r\n"
-    "\005color\030\001 \003(\005\"7\n\005Point\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 "
-    "\001(\002\022\t\n\001z\030\003 \001(\002\022\r\n\005color\030\004 \001(\005\")\n\006Points\022"
-    "\037\n\004data\030\001 \003(\0132\021.kinectrgbd.Point\"i\n\004Data"
-    "\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\022\017\n\007cap"
-    "tion\030\004 \001(\t\022\014\n\004tags\030\005 \003(\t\022\r\n\005texts\030\006 \003(\t\022"
-    "\022\n\nconfidence\030\007 \001(\002\"<\n\nDataStream\022\016\n\006sta"
-    "tus\030\001 \001(\010\022\036\n\004data\030\002 \003(\0132\020.kinectrgbd.Dat"
-    "a\"[\n\tBitStream\022\016\n\006status\030\001 \001(\010\022\036\n\005color\030"
-    "\002 \003(\0132\017.kinectrgbd.Bit\022\036\n\005depth\030\003 \003(\0132\017."
-    "kinectrgbd.Bit2\233\003\n\nKinectRgbd\0229\n\014CheckRe"
-    "quest\022\022.kinectrgbd.Header\032\023.kinectrgbd.R"
-    "equest\"\000\0228\n\nSendPoints\022\022.kinectrgbd.Poin"
-    "ts\032\024.kinectrgbd.Response\"\000\0227\n\tSendImage\022"
-    "\022.kinectrgbd.Pixels\032\024.kinectrgbd.Respons"
-    "e\"\000\022K\n\031ReturnPositionsFromPixels\022\026.kinec"
-    "trgbd.DataStream\032\024.kinectrgbd.Response\"\000"
-    "\022Q\n ReturnPixelBoundsFromSpaceBounds\022\025.k"
-    "inectrgbd.BitStream\032\024.kinectrgbd.Respons"
-    "e\"\000\022\?\n\rSendCognition\022\026.kinectrgbd.DataSt"
-    "ream\032\024.kinectrgbd.Response\"\000B\017\n\007ex.grpc\242"
-    "\002\003RTGb\006proto3", 1053);
+    "r\022\014\n\004data\030\001 \001(\010\"H\n\003Bit\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002"
+    " \001(\002\022\r\n\005width\030\003 \001(\002\022\016\n\006height\030\004 \001(\002\022\014\n\004n"
+    "ame\030\005 \001(\t\"R\n\007Request\022\014\n\004mode\030\001 \001(\005\022\035\n\004da"
+    "ta\030\002 \003(\0132\017.kinectrgbd.Bit\022\014\n\004once\030\003 \001(\010\022"
+    "\014\n\004args\030\004 \001(\t\"\032\n\010Response\022\016\n\006finish\030\001 \001("
+    "\010\"\027\n\006Pixels\022\r\n\005color\030\001 \003(\005\"7\n\005Point\022\t\n\001x"
+    "\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\022\r\n\005color\030\004 "
+    "\001(\005\")\n\006Points\022\037\n\004data\030\001 \003(\0132\021.kinectrgbd"
+    ".Point\"i\n\004Data\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\t\n\001"
+    "z\030\003 \001(\002\022\017\n\007caption\030\004 \001(\t\022\014\n\004tags\030\005 \003(\t\022\r"
+    "\n\005texts\030\006 \003(\t\022\022\n\nconfidence\030\007 \001(\002\"<\n\nDat"
+    "aStream\022\016\n\006status\030\001 \001(\010\022\036\n\004data\030\002 \003(\0132\020."
+    "kinectrgbd.Data\":\n\tBitStream\022\016\n\006status\030\001"
+    " \001(\010\022\035\n\004data\030\002 \003(\0132\017.kinectrgbd.Bit2\235\003\n\n"
+    "KinectRgbd\0229\n\014CheckRequest\022\022.kinectrgbd."
+    "Header\032\023.kinectrgbd.Request\"\000\0228\n\nSendPoi"
+    "nts\022\022.kinectrgbd.Points\032\024.kinectrgbd.Res"
+    "ponse\"\000\0227\n\tSendImage\022\022.kinectrgbd.Pixels"
+    "\032\024.kinectrgbd.Response\"\000\022K\n\031ReturnPositi"
+    "onsFromPixels\022\026.kinectrgbd.DataStream\032\024."
+    "kinectrgbd.Response\"\000\022Q\n ReturnPixelBoun"
+    "dsFromSpaceBounds\022\025.kinectrgbd.BitStream"
+    "\032\024.kinectrgbd.Response\"\000\022A\n\017ReturnCognit"
+    "ion\022\026.kinectrgbd.DataStream\032\024.kinectrgbd"
+    ".Response\"\000B\017\n\007ex.grpc\242\002\003RTGb\006proto3", 1036);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "kinect_rgbd.proto", &protobuf_RegisterTypes);
   Header::default_instance_ = new Header();
@@ -594,6 +593,7 @@ const int Bit::kXFieldNumber;
 const int Bit::kYFieldNumber;
 const int Bit::kWidthFieldNumber;
 const int Bit::kHeightFieldNumber;
+const int Bit::kNameFieldNumber;
 #endif  // !_MSC_VER
 
 Bit::Bit()
@@ -616,11 +616,13 @@ Bit::Bit(const Bit& from)
 
 void Bit::SharedCtor() {
     _is_default_instance_ = false;
+  ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
   x_ = 0;
   y_ = 0;
   width_ = 0;
   height_ = 0;
+  name_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 Bit::~Bit() {
@@ -629,6 +631,7 @@ Bit::~Bit() {
 }
 
 void Bit::SharedDtor() {
+  name_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != default_instance_) {
   }
 }
@@ -668,6 +671,7 @@ void Bit::Clear() {
 } while (0)
 
   ZR_(x_, height_);
+  name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 
 #undef ZR_HELPER_
 #undef ZR_
@@ -739,6 +743,23 @@ bool Bit::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
+        if (input->ExpectTag(42)) goto parse_name;
+        break;
+      }
+
+      // optional string name = 5;
+      case 5: {
+        if (tag == 42) {
+         parse_name:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_name()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->name().data(), this->name().length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "kinectrgbd.Bit.name"));
+        } else {
+          goto handle_unusual;
+        }
         if (input->ExpectAtEnd()) goto success;
         break;
       }
@@ -787,6 +808,16 @@ void Bit::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteFloat(4, this->height(), output);
   }
 
+  // optional string name = 5;
+  if (this->name().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "kinectrgbd.Bit.name");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      5, this->name(), output);
+  }
+
   // @@protoc_insertion_point(serialize_end:kinectrgbd.Bit)
 }
 
@@ -811,6 +842,17 @@ void Bit::SerializeWithCachedSizes(
   // optional float height = 4;
   if (this->height() != 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(4, this->height(), target);
+  }
+
+  // optional string name = 5;
+  if (this->name().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->name().data(), this->name().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "kinectrgbd.Bit.name");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        5, this->name(), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:kinectrgbd.Bit)
@@ -838,6 +880,13 @@ int Bit::ByteSize() const {
   // optional float height = 4;
   if (this->height() != 0) {
     total_size += 1 + 4;
+  }
+
+  // optional string name = 5;
+  if (this->name().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->name());
   }
 
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -872,6 +921,10 @@ void Bit::MergeFrom(const Bit& from) {
   if (from.height() != 0) {
     set_height(from.height());
   }
+  if (from.name().size() > 0) {
+
+    name_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.name_);
+  }
 }
 
 void Bit::CopyFrom(const ::google::protobuf::Message& from) {
@@ -900,6 +953,7 @@ void Bit::InternalSwap(Bit* other) {
   std::swap(y_, other->y_);
   std::swap(width_, other->width_);
   std::swap(height_, other->height_);
+  name_.Swap(&other->name_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -969,6 +1023,49 @@ void Bit::clear_height() {
   
   height_ = value;
   // @@protoc_insertion_point(field_set:kinectrgbd.Bit.height)
+}
+
+// optional string name = 5;
+void Bit::clear_name() {
+  name_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ const ::std::string& Bit::name() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Bit.name)
+  return name_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void Bit::set_name(const ::std::string& value) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:kinectrgbd.Bit.name)
+}
+ void Bit::set_name(const char* value) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:kinectrgbd.Bit.name)
+}
+ void Bit::set_name(const char* value, size_t size) {
+  
+  name_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:kinectrgbd.Bit.name)
+}
+ ::std::string* Bit::mutable_name() {
+  
+  // @@protoc_insertion_point(field_mutable:kinectrgbd.Bit.name)
+  return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* Bit::release_name() {
+  
+  return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void Bit::set_allocated_name(::std::string* name) {
+  if (name != NULL) {
+    
+  } else {
+    
+  }
+  name_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), name);
+  // @@protoc_insertion_point(field_set_allocated:kinectrgbd.Bit.name)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
@@ -3547,8 +3644,7 @@ DataStream::data() const {
 
 #ifndef _MSC_VER
 const int BitStream::kStatusFieldNumber;
-const int BitStream::kColorFieldNumber;
-const int BitStream::kDepthFieldNumber;
+const int BitStream::kDataFieldNumber;
 #endif  // !_MSC_VER
 
 BitStream::BitStream()
@@ -3612,8 +3708,7 @@ BitStream* BitStream::New(::google::protobuf::Arena* arena) const {
 
 void BitStream::Clear() {
   status_ = false;
-  color_.Clear();
-  depth_.Clear();
+  data_.Clear();
 }
 
 bool BitStream::MergePartialFromCodedStream(
@@ -3636,38 +3731,22 @@ bool BitStream::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(18)) goto parse_color;
+        if (input->ExpectTag(18)) goto parse_data;
         break;
       }
 
-      // repeated .kinectrgbd.Bit color = 2;
+      // repeated .kinectrgbd.Bit data = 2;
       case 2: {
         if (tag == 18) {
-         parse_color:
+         parse_data:
           DO_(input->IncrementRecursionDepth());
-         parse_loop_color:
+         parse_loop_data:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
-                input, add_color()));
+                input, add_data()));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(18)) goto parse_loop_color;
-        if (input->ExpectTag(26)) goto parse_loop_depth;
-        input->UnsafeDecrementRecursionDepth();
-        break;
-      }
-
-      // repeated .kinectrgbd.Bit depth = 3;
-      case 3: {
-        if (tag == 26) {
-          DO_(input->IncrementRecursionDepth());
-         parse_loop_depth:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
-                input, add_depth()));
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(26)) goto parse_loop_depth;
+        if (input->ExpectTag(18)) goto parse_loop_data;
         input->UnsafeDecrementRecursionDepth();
         if (input->ExpectAtEnd()) goto success;
         break;
@@ -3702,16 +3781,10 @@ void BitStream::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->status(), output);
   }
 
-  // repeated .kinectrgbd.Bit color = 2;
-  for (unsigned int i = 0, n = this->color_size(); i < n; i++) {
+  // repeated .kinectrgbd.Bit data = 2;
+  for (unsigned int i = 0, n = this->data_size(); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->color(i), output);
-  }
-
-  // repeated .kinectrgbd.Bit depth = 3;
-  for (unsigned int i = 0, n = this->depth_size(); i < n; i++) {
-    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      3, this->depth(i), output);
+      2, this->data(i), output);
   }
 
   // @@protoc_insertion_point(serialize_end:kinectrgbd.BitStream)
@@ -3725,18 +3798,11 @@ void BitStream::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->status(), target);
   }
 
-  // repeated .kinectrgbd.Bit color = 2;
-  for (unsigned int i = 0, n = this->color_size(); i < n; i++) {
+  // repeated .kinectrgbd.Bit data = 2;
+  for (unsigned int i = 0, n = this->data_size(); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        2, this->color(i), target);
-  }
-
-  // repeated .kinectrgbd.Bit depth = 3;
-  for (unsigned int i = 0, n = this->depth_size(); i < n; i++) {
-    target = ::google::protobuf::internal::WireFormatLite::
-      WriteMessageNoVirtualToArray(
-        3, this->depth(i), target);
+        2, this->data(i), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:kinectrgbd.BitStream)
@@ -3751,20 +3817,12 @@ int BitStream::ByteSize() const {
     total_size += 1 + 1;
   }
 
-  // repeated .kinectrgbd.Bit color = 2;
-  total_size += 1 * this->color_size();
-  for (int i = 0; i < this->color_size(); i++) {
+  // repeated .kinectrgbd.Bit data = 2;
+  total_size += 1 * this->data_size();
+  for (int i = 0; i < this->data_size(); i++) {
     total_size +=
       ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->color(i));
-  }
-
-  // repeated .kinectrgbd.Bit depth = 3;
-  total_size += 1 * this->depth_size();
-  for (int i = 0; i < this->depth_size(); i++) {
-    total_size +=
-      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
-        this->depth(i));
+        this->data(i));
   }
 
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -3787,8 +3845,7 @@ void BitStream::MergeFrom(const ::google::protobuf::Message& from) {
 
 void BitStream::MergeFrom(const BitStream& from) {
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  color_.MergeFrom(from.color_);
-  depth_.MergeFrom(from.depth_);
+  data_.MergeFrom(from.data_);
   if (from.status() != 0) {
     set_status(from.status());
   }
@@ -3817,8 +3874,7 @@ void BitStream::Swap(BitStream* other) {
 }
 void BitStream::InternalSwap(BitStream* other) {
   std::swap(status_, other->status_);
-  color_.UnsafeArenaSwap(&other->color_);
-  depth_.UnsafeArenaSwap(&other->depth_);
+  data_.UnsafeArenaSwap(&other->data_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -3848,64 +3904,34 @@ void BitStream::clear_status() {
   // @@protoc_insertion_point(field_set:kinectrgbd.BitStream.status)
 }
 
-// repeated .kinectrgbd.Bit color = 2;
-int BitStream::color_size() const {
-  return color_.size();
+// repeated .kinectrgbd.Bit data = 2;
+int BitStream::data_size() const {
+  return data_.size();
 }
-void BitStream::clear_color() {
-  color_.Clear();
+void BitStream::clear_data() {
+  data_.Clear();
 }
-const ::kinectrgbd::Bit& BitStream::color(int index) const {
-  // @@protoc_insertion_point(field_get:kinectrgbd.BitStream.color)
-  return color_.Get(index);
+const ::kinectrgbd::Bit& BitStream::data(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.BitStream.data)
+  return data_.Get(index);
 }
-::kinectrgbd::Bit* BitStream::mutable_color(int index) {
-  // @@protoc_insertion_point(field_mutable:kinectrgbd.BitStream.color)
-  return color_.Mutable(index);
+::kinectrgbd::Bit* BitStream::mutable_data(int index) {
+  // @@protoc_insertion_point(field_mutable:kinectrgbd.BitStream.data)
+  return data_.Mutable(index);
 }
-::kinectrgbd::Bit* BitStream::add_color() {
-  // @@protoc_insertion_point(field_add:kinectrgbd.BitStream.color)
-  return color_.Add();
-}
-::google::protobuf::RepeatedPtrField< ::kinectrgbd::Bit >*
-BitStream::mutable_color() {
-  // @@protoc_insertion_point(field_mutable_list:kinectrgbd.BitStream.color)
-  return &color_;
-}
-const ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Bit >&
-BitStream::color() const {
-  // @@protoc_insertion_point(field_list:kinectrgbd.BitStream.color)
-  return color_;
-}
-
-// repeated .kinectrgbd.Bit depth = 3;
-int BitStream::depth_size() const {
-  return depth_.size();
-}
-void BitStream::clear_depth() {
-  depth_.Clear();
-}
-const ::kinectrgbd::Bit& BitStream::depth(int index) const {
-  // @@protoc_insertion_point(field_get:kinectrgbd.BitStream.depth)
-  return depth_.Get(index);
-}
-::kinectrgbd::Bit* BitStream::mutable_depth(int index) {
-  // @@protoc_insertion_point(field_mutable:kinectrgbd.BitStream.depth)
-  return depth_.Mutable(index);
-}
-::kinectrgbd::Bit* BitStream::add_depth() {
-  // @@protoc_insertion_point(field_add:kinectrgbd.BitStream.depth)
-  return depth_.Add();
+::kinectrgbd::Bit* BitStream::add_data() {
+  // @@protoc_insertion_point(field_add:kinectrgbd.BitStream.data)
+  return data_.Add();
 }
 ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Bit >*
-BitStream::mutable_depth() {
-  // @@protoc_insertion_point(field_mutable_list:kinectrgbd.BitStream.depth)
-  return &depth_;
+BitStream::mutable_data() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrgbd.BitStream.data)
+  return &data_;
 }
 const ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Bit >&
-BitStream::depth() const {
-  // @@protoc_insertion_point(field_list:kinectrgbd.BitStream.depth)
-  return depth_;
+BitStream::data() const {
+  // @@protoc_insertion_point(field_list:kinectrgbd.BitStream.data)
+  return data_;
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

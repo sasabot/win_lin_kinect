@@ -50,9 +50,9 @@ class KinectRgbd GRPC_FINAL {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>> AsyncReturnPixelBoundsFromSpaceBounds(::grpc::ClientContext* context, const ::kinectrgbd::BitStream& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>>(AsyncReturnPixelBoundsFromSpaceBoundsRaw(context, request, cq));
     }
-    virtual ::grpc::Status SendCognition(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::kinectrgbd::Response* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>> AsyncSendCognition(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>>(AsyncSendCognitionRaw(context, request, cq));
+    virtual ::grpc::Status ReturnCognition(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::kinectrgbd::Response* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>> AsyncReturnCognition(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>>(AsyncReturnCognitionRaw(context, request, cq));
     }
   private:
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Request>* AsyncCheckRequestRaw(::grpc::ClientContext* context, const ::kinectrgbd::Header& request, ::grpc::CompletionQueue* cq) = 0;
@@ -60,7 +60,7 @@ class KinectRgbd GRPC_FINAL {
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>* AsyncSendImageRaw(::grpc::ClientContext* context, const ::kinectrgbd::Pixels& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>* AsyncReturnPositionsFromPixelsRaw(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>* AsyncReturnPixelBoundsFromSpaceBoundsRaw(::grpc::ClientContext* context, const ::kinectrgbd::BitStream& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>* AsyncSendCognitionRaw(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>* AsyncReturnCognitionRaw(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::grpc::CompletionQueue* cq) = 0;
   };
   class Stub GRPC_FINAL : public StubInterface {
    public:
@@ -85,9 +85,9 @@ class KinectRgbd GRPC_FINAL {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>> AsyncReturnPixelBoundsFromSpaceBounds(::grpc::ClientContext* context, const ::kinectrgbd::BitStream& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>>(AsyncReturnPixelBoundsFromSpaceBoundsRaw(context, request, cq));
     }
-    ::grpc::Status SendCognition(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::kinectrgbd::Response* response) GRPC_OVERRIDE;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>> AsyncSendCognition(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>>(AsyncSendCognitionRaw(context, request, cq));
+    ::grpc::Status ReturnCognition(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::kinectrgbd::Response* response) GRPC_OVERRIDE;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>> AsyncReturnCognition(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>>(AsyncReturnCognitionRaw(context, request, cq));
     }
 
    private:
@@ -97,13 +97,13 @@ class KinectRgbd GRPC_FINAL {
     ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>* AsyncSendImageRaw(::grpc::ClientContext* context, const ::kinectrgbd::Pixels& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
     ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>* AsyncReturnPositionsFromPixelsRaw(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
     ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>* AsyncReturnPixelBoundsFromSpaceBoundsRaw(::grpc::ClientContext* context, const ::kinectrgbd::BitStream& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
-    ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>* AsyncSendCognitionRaw(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
+    ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>* AsyncReturnCognitionRaw(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
     const ::grpc::RpcMethod rpcmethod_CheckRequest_;
     const ::grpc::RpcMethod rpcmethod_SendPoints_;
     const ::grpc::RpcMethod rpcmethod_SendImage_;
     const ::grpc::RpcMethod rpcmethod_ReturnPositionsFromPixels_;
     const ::grpc::RpcMethod rpcmethod_ReturnPixelBoundsFromSpaceBounds_;
-    const ::grpc::RpcMethod rpcmethod_SendCognition_;
+    const ::grpc::RpcMethod rpcmethod_ReturnCognition_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::Channel>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -116,7 +116,7 @@ class KinectRgbd GRPC_FINAL {
     virtual ::grpc::Status SendImage(::grpc::ServerContext* context, const ::kinectrgbd::Pixels* request, ::kinectrgbd::Response* response);
     virtual ::grpc::Status ReturnPositionsFromPixels(::grpc::ServerContext* context, const ::kinectrgbd::DataStream* request, ::kinectrgbd::Response* response);
     virtual ::grpc::Status ReturnPixelBoundsFromSpaceBounds(::grpc::ServerContext* context, const ::kinectrgbd::BitStream* request, ::kinectrgbd::Response* response);
-    virtual ::grpc::Status SendCognition(::grpc::ServerContext* context, const ::kinectrgbd::DataStream* request, ::kinectrgbd::Response* response);
+    virtual ::grpc::Status ReturnCognition(::grpc::ServerContext* context, const ::kinectrgbd::DataStream* request, ::kinectrgbd::Response* response);
     ::grpc::RpcService* service() GRPC_OVERRIDE GRPC_FINAL;
    private:
     ::grpc::RpcService* service_;
@@ -130,7 +130,7 @@ class KinectRgbd GRPC_FINAL {
     void RequestSendImage(::grpc::ServerContext* context, ::kinectrgbd::Pixels* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
     void RequestReturnPositionsFromPixels(::grpc::ServerContext* context, ::kinectrgbd::DataStream* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
     void RequestReturnPixelBoundsFromSpaceBounds(::grpc::ServerContext* context, ::kinectrgbd::BitStream* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
-    void RequestSendCognition(::grpc::ServerContext* context, ::kinectrgbd::DataStream* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
+    void RequestReturnCognition(::grpc::ServerContext* context, ::kinectrgbd::DataStream* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
   };
 };
 

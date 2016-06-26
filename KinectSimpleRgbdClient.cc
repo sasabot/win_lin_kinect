@@ -45,6 +45,7 @@ using kinectrgbd::KinectRgbd;
 
 /*
   @define msg Bit
+  string name
   float32 x
   float32 y
   float32 width
@@ -61,11 +62,12 @@ using kinectrgbd::KinectRgbd;
 
 enum KinectModes
 {
-  MODES = 4,
+  MODES = 5,
   WAIT = 0,
   RGBD = 1,
   IMAGE = 2,
-  IMAGE_SPACE_POSITIONS = 3
+  IMAGE_SPACE_POSITIONS = 3,
+  SPACE2PIXEL_BOUNDINGS = 4
 };
 
 
@@ -166,6 +168,12 @@ public:
       res.points.reserve(image_space_values_.size());
       for (unsigned int i = 0; i < image_space_values_.size(); ++i)
 	res.points.push_back(image_space_values_[i]);
+    }
+    else if (req.mode == static_cast<int>(KinectModes::SPACE2PIXEL_BOUNDINGS))
+    {
+      res.bits.reserve(boundings_.size());
+      for (unsigned int i = 0; i < boundings_.size(); ++i)
+	res.bits.push_back(boundings_[i]);
     }
 
     return true;
@@ -335,6 +343,37 @@ public:
     return Status::OK;
   }
 
+  // Return bounding box of image pixel.
+  Status ReturnPixelBoundsFromSpaceBounds(
+      ServerContext* context, const kinectrgbd::BitStream* boundings,
+      kinectrgbd::Response* res) override
+  {
+    boundings_.clear();
+
+    if (boundings->status())
+    {
+      boundings_.reserve(boundings->data().size());
+      for (unsigned int i = 0; i < boundings->data().size(); ++i)
+      {
+	aero_application::Bit bit;
+	bit.name = boundings->data(i).name();
+	bit.x = boundings->data(i).x();
+	bit.y = boundings->data(i).y();
+	bit.width = boundings->data(i).width();
+	bit.height = boundings->data(i).height();
+	boundings_.push_back(bit);
+	ROS_INFO("got bounding [%d, %d], width: %d, height: %d",
+		 bit.x, bit.y, bit.width, bit.height);
+      }
+    }
+
+    request_status_finished_[static_cast<int>(
+        KinectModes::SPACE2PIXEL_BOUNDINGS)] = true;
+
+    res->set_finish(finish_stream_);
+    return Status::OK;
+  }
+
 private:
 
   ros::NodeHandle nh_;
@@ -348,6 +387,8 @@ private:
   std::vector<sensor_msgs::PointField> field_;
 
   std::vector<geometry_msgs::Point> image_space_values_;
+
+  std::vector<aero_application::Bit> boundings_;
 
   std::vector<bool> request_status_finished_;
 
