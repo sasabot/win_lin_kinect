@@ -285,9 +285,9 @@ namespace KinectSimpleRgbdServer
             {
                 Name = "depth",
                 X = depthMinX,
-                Y = depthMinY,
+                Y = depthMaxY,
                 Width = depthMaxX - depthMinX,
-                Height = depthMaxY - depthMinY
+                Height = depthMinY - depthMaxY
             };
             int colorMinX = Convert.ToInt32(colorPoints[depthPixelMin].Y);
             int colorMinY = Convert.ToInt32(colorPoints[depthPixelMin].X);
@@ -297,9 +297,9 @@ namespace KinectSimpleRgbdServer
             { 
                 Name = "color",
                 X = colorMinX,
-                Y = colorMinY,
+                Y = colorMaxY,
                 Width = colorMaxX - colorMinX,
-                Height = colorMaxY - colorMaxY
+                Height = colorMinY - colorMaxY
             };
 
             result.Status = true;
