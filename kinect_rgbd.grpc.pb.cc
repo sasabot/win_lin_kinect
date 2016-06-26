@@ -18,7 +18,9 @@ static const char* KinectRgbd_method_names[] = {
   "/kinectrgbd.KinectRgbd/CheckRequest",
   "/kinectrgbd.KinectRgbd/SendPoints",
   "/kinectrgbd.KinectRgbd/SendImage",
-  "/kinectrgbd.KinectRgbd/SendPosition",
+  "/kinectrgbd.KinectRgbd/ReturnPositionsFromPixels",
+  "/kinectrgbd.KinectRgbd/ReturnPixelBoundsFromSpaceBounds",
+  "/kinectrgbd.KinectRgbd/SendCognition",
 };
 
 std::unique_ptr< KinectRgbd::Stub> KinectRgbd::NewStub(const std::shared_ptr< ::grpc::Channel>& channel, const ::grpc::StubOptions& options) {
@@ -30,7 +32,9 @@ KinectRgbd::Stub::Stub(const std::shared_ptr< ::grpc::Channel>& channel)
   : channel_(channel), rpcmethod_CheckRequest_(KinectRgbd_method_names[0], ::grpc::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_SendPoints_(KinectRgbd_method_names[1], ::grpc::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_SendImage_(KinectRgbd_method_names[2], ::grpc::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_SendPosition_(KinectRgbd_method_names[3], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_ReturnPositionsFromPixels_(KinectRgbd_method_names[3], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_ReturnPixelBoundsFromSpaceBounds_(KinectRgbd_method_names[4], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SendCognition_(KinectRgbd_method_names[5], ::grpc::RpcMethod::NORMAL_RPC, channel)
   {}
 
 ::grpc::Status KinectRgbd::Stub::CheckRequest(::grpc::ClientContext* context, const ::kinectrgbd::Header& request, ::kinectrgbd::Request* response) {
@@ -57,15 +61,31 @@ KinectRgbd::Stub::Stub(const std::shared_ptr< ::grpc::Channel>& channel)
   return new ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>(channel_.get(), cq, rpcmethod_SendImage_, context, request);
 }
 
-::grpc::Status KinectRgbd::Stub::SendPosition(::grpc::ClientContext* context, const ::kinectrgbd::Positions& request, ::kinectrgbd::Response* response) {
-  return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_SendPosition_, context, request, response);
+::grpc::Status KinectRgbd::Stub::ReturnPositionsFromPixels(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::kinectrgbd::Response* response) {
+  return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_ReturnPositionsFromPixels_, context, request, response);
 }
 
-::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>* KinectRgbd::Stub::AsyncSendPositionRaw(::grpc::ClientContext* context, const ::kinectrgbd::Positions& request, ::grpc::CompletionQueue* cq) {
-  return new ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>(channel_.get(), cq, rpcmethod_SendPosition_, context, request);
+::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>* KinectRgbd::Stub::AsyncReturnPositionsFromPixelsRaw(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::grpc::CompletionQueue* cq) {
+  return new ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>(channel_.get(), cq, rpcmethod_ReturnPositionsFromPixels_, context, request);
 }
 
-KinectRgbd::AsyncService::AsyncService() : ::grpc::AsynchronousService(KinectRgbd_method_names, 4) {}
+::grpc::Status KinectRgbd::Stub::ReturnPixelBoundsFromSpaceBounds(::grpc::ClientContext* context, const ::kinectrgbd::BitStream& request, ::kinectrgbd::Response* response) {
+  return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_ReturnPixelBoundsFromSpaceBounds_, context, request, response);
+}
+
+::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>* KinectRgbd::Stub::AsyncReturnPixelBoundsFromSpaceBoundsRaw(::grpc::ClientContext* context, const ::kinectrgbd::BitStream& request, ::grpc::CompletionQueue* cq) {
+  return new ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>(channel_.get(), cq, rpcmethod_ReturnPixelBoundsFromSpaceBounds_, context, request);
+}
+
+::grpc::Status KinectRgbd::Stub::SendCognition(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::kinectrgbd::Response* response) {
+  return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_SendCognition_, context, request, response);
+}
+
+::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>* KinectRgbd::Stub::AsyncSendCognitionRaw(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::grpc::CompletionQueue* cq) {
+  return new ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>(channel_.get(), cq, rpcmethod_SendCognition_, context, request);
+}
+
+KinectRgbd::AsyncService::AsyncService() : ::grpc::AsynchronousService(KinectRgbd_method_names, 6) {}
 
 KinectRgbd::Service::~Service() {
   delete service_;
@@ -104,15 +124,37 @@ void KinectRgbd::AsyncService::RequestSendImage(::grpc::ServerContext* context, 
   AsynchronousService::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
 }
 
-::grpc::Status KinectRgbd::Service::SendPosition(::grpc::ServerContext* context, const ::kinectrgbd::Positions* request, ::kinectrgbd::Response* response) {
+::grpc::Status KinectRgbd::Service::ReturnPositionsFromPixels(::grpc::ServerContext* context, const ::kinectrgbd::DataStream* request, ::kinectrgbd::Response* response) {
   (void) context;
   (void) request;
   (void) response;
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
-void KinectRgbd::AsyncService::RequestSendPosition(::grpc::ServerContext* context, ::kinectrgbd::Positions* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+void KinectRgbd::AsyncService::RequestReturnPositionsFromPixels(::grpc::ServerContext* context, ::kinectrgbd::DataStream* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
   AsynchronousService::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
+}
+
+::grpc::Status KinectRgbd::Service::ReturnPixelBoundsFromSpaceBounds(::grpc::ServerContext* context, const ::kinectrgbd::BitStream* request, ::kinectrgbd::Response* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+void KinectRgbd::AsyncService::RequestReturnPixelBoundsFromSpaceBounds(::grpc::ServerContext* context, ::kinectrgbd::BitStream* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+  AsynchronousService::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
+}
+
+::grpc::Status KinectRgbd::Service::SendCognition(::grpc::ServerContext* context, const ::kinectrgbd::DataStream* request, ::kinectrgbd::Response* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+void KinectRgbd::AsyncService::RequestSendCognition(::grpc::ServerContext* context, ::kinectrgbd::DataStream* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+  AsynchronousService::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
 }
 
 ::grpc::RpcService* KinectRgbd::Service::service() {
@@ -138,8 +180,18 @@ void KinectRgbd::AsyncService::RequestSendPosition(::grpc::ServerContext* contex
   service_->AddMethod(new ::grpc::RpcServiceMethod(
       KinectRgbd_method_names[3],
       ::grpc::RpcMethod::NORMAL_RPC,
-      new ::grpc::RpcMethodHandler< KinectRgbd::Service, ::kinectrgbd::Positions, ::kinectrgbd::Response>(
-          std::mem_fn(&KinectRgbd::Service::SendPosition), this)));
+      new ::grpc::RpcMethodHandler< KinectRgbd::Service, ::kinectrgbd::DataStream, ::kinectrgbd::Response>(
+          std::mem_fn(&KinectRgbd::Service::ReturnPositionsFromPixels), this)));
+  service_->AddMethod(new ::grpc::RpcServiceMethod(
+      KinectRgbd_method_names[4],
+      ::grpc::RpcMethod::NORMAL_RPC,
+      new ::grpc::RpcMethodHandler< KinectRgbd::Service, ::kinectrgbd::BitStream, ::kinectrgbd::Response>(
+          std::mem_fn(&KinectRgbd::Service::ReturnPixelBoundsFromSpaceBounds), this)));
+  service_->AddMethod(new ::grpc::RpcServiceMethod(
+      KinectRgbd_method_names[5],
+      ::grpc::RpcMethod::NORMAL_RPC,
+      new ::grpc::RpcMethodHandler< KinectRgbd::Service, ::kinectrgbd::DataStream, ::kinectrgbd::Response>(
+          std::mem_fn(&KinectRgbd::Service::SendCognition), this)));
   return service_;
 }
 

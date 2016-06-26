@@ -4,6 +4,8 @@
 #include "sensor_msgs/Image.h"
 #include "geometry_msgs/Point.h"
 #include <aero_application/KinectRequest.h>
+#include <aero_application/Bit.h>
+#include <aero_application/Cognition.h>
 
 #include <chrono>
 #include <iostream>
@@ -19,7 +21,6 @@
 #include <grpc++/security/credentials.h>
 #include "kinect_rgbd.grpc.pb.h"
 
-
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;
@@ -28,26 +29,34 @@ using grpc::ServerReaderWriter;
 using grpc::ServerWriter;
 using grpc::Status;
 
-using kinectrgbd::Pixels;
-using kinectrgbd::Point;
-using kinectrgbd::Points;
-using kinectrgbd::Positions;
-using kinectrgbd::Header;
-using kinectrgbd::Response;
-using kinectrgbd::Request;
 using kinectrgbd::KinectRgbd;
 
 /*
-  @define srv
+  @define srv KinectRequest
   int32 mode
-  float32[] x
-  float32[] y
-  int32 width
-  int32 height
+  aero_application/Bit[] data
   bool once
+  string args
   ---
-  geometry_msgs/Point[] data
-  int32[] rgb
+  geometry_msgs/Point[] points
+  aero_application/Cognition[] cognitions
+  aero_application/Bit[] bits
+*/
+
+/*
+  @define msg Bit
+  float32 x
+  float32 y
+  float32 width
+  float32 height
+*/
+
+/*
+  @define msg Cognition
+  string caption
+  string[] tags
+  string[] texts
+  float32 confidence
 */
 
 enum KinectModes
@@ -97,8 +106,6 @@ public:
     field_[3] = rgb;
 
     request_.set_mode(static_cast<int>(KinectModes::WAIT));
-    request_.set_width(320);
-    request_.set_height(240);
     request_.set_once(true);
 
     request_status_finished_.resize(static_cast<int>(KinectModes::MODES));
@@ -110,15 +117,11 @@ public:
   {
     ROS_WARN("received request from ROS");
 
-    // RGBD desired params
-    // x[0] = 95
-    // y[0] = 91
-    // width = 320
-    // height = 240
+    // RGBD params
+    // width = 512
+    // height = 414
 
-    // IMAGE desired params
-    // x[0] = 0
-    // y[0] = 0
+    // IMAGE params
     // width = 1920
     // height = 1080
 
@@ -137,14 +140,15 @@ public:
       }
 
     // setup request
-    request_.clear_x();
-    request_.clear_y();
-    for (unsigned int i = 0; i < req.x.size(); ++i)
-      request_.add_x(req.x[i]);
-    for (unsigned int i = 0; i < req.y.size(); ++i)
-      request_.add_y(req.y[i]);
-    request_.set_width(req.width);
-    request_.set_height(req.height);
+    request_.clear_data();
+    for (unsigned int i = 0; i < req.data.size(); ++i)
+    {
+      auto bit = request_.add_data();
+      bit->set_x(req.data[i].x);
+      bit->set_y(req.data[i].y);
+      bit->set_width(req.data[i].width);
+      bit->set_height(req.data[i].height);
+    }
     request_.set_once(req.once);
     request_.set_mode(req.mode);
     request_status_finished_[req.mode] = false;
@@ -159,25 +163,28 @@ public:
     // handle type request
     if (req.mode == static_cast<int>(KinectModes::IMAGE_SPACE_POSITIONS))
     {
-      res.data.reserve(image_space_values_.size());
+      res.points.reserve(image_space_values_.size());
       for (unsigned int i = 0; i < image_space_values_.size(); ++i)
-	res.data.push_back(image_space_values_[i]);
+	res.points.push_back(image_space_values_[i]);
     }
 
     return true;
   }
 
-  Status CheckRequest(ServerContext* context, const Header* header,
-		      Request* request) override
+  Status CheckRequest(ServerContext* context, const kinectrgbd::Header* header,
+		      kinectrgbd::Request* request) override
   {
     request->set_mode(request_.mode());
-    for (unsigned int i = 0; i < request_.x_size(); ++i)
-      request->add_x(request_.x(i));
-    for (unsigned int i = 0; i < request_.y_size(); ++i)
-      request->add_y(request_.y(i));
-    request->set_width(request_.width());
-    request->set_height(request_.height());
+    for (unsigned int i = 0; i < request_.data_size(); ++i)
+    {
+      auto bit = request->add_data();
+      bit->set_x(request_.data(i).x());
+      bit->set_y(request_.data(i).y());
+      bit->set_width(request_.data(i).width());
+      bit->set_height(request_.data(i).height());
+    }
     request->set_once(request_.once());
+    request->set_args(request_.args());
 
     request_.set_mode(static_cast<int>(KinectModes::WAIT));
     request_status_finished_[static_cast<int>(KinectModes::WAIT)] = true;
@@ -188,8 +195,8 @@ public:
   }
 
   // Publish point cloud XYZRGB.
-  Status SendPoints(ServerContext* context, const Points* points,
-		    Response* res) override
+  Status SendPoints(ServerContext* context, const kinectrgbd::Points* points,
+		    kinectrgbd::Response* res) override
   {
     std::vector<uint8_t> data;
     data.reserve(16 * 512 * 424);
@@ -243,8 +250,8 @@ public:
     msg.header.stamp = ros::Time(0);
     // msg.height = 1; // unorganized
     // msg.width = point_count; // unorganized
-    msg.height = request_.height();
-    msg.width = request_.width();
+    msg.height = request_.data(0).height();
+    msg.width = request_.data(0).width();
     msg.fields.assign(field_.begin(), field_.end());
     msg.point_step = 16;
     msg.row_step = msg.point_step * msg.width;
@@ -260,8 +267,8 @@ public:
   }
 
   // Publish image rgb.
-  Status SendImage(ServerContext* context, const Pixels* pixels,
-		   Response* res) override
+  Status SendImage(ServerContext* context, const kinectrgbd::Pixels* pixels,
+		   kinectrgbd::Response* res) override
   {
     std::vector<uint8_t> data;
     data.reserve(3 * 1920 * 1080);
@@ -286,9 +293,9 @@ public:
     sensor_msgs::Image msg;
     msg.header.frame_id = "kinect_frame";
     msg.header.stamp = ros::Time(0);
-    msg.height = request_.height();
-    msg.width = request_.width();
-    msg.step = 3 * request_.width();
+    msg.height = request_.data(0).height();
+    msg.width = request_.data(0).width();
+    msg.step = 3 * msg.width;
     msg.encoding = "bgr8";
     msg.is_bigendian = true;
     msg.data.assign(data.begin(), data.end());
@@ -301,20 +308,21 @@ public:
   }
 
   // Return physical position of image pixel.
-  Status SendPosition(ServerContext* context, const Positions* positions,
-		      Response* res) override
+  Status ReturnPositionsFromPixels(
+      ServerContext* context, const kinectrgbd::DataStream* positions,
+      kinectrgbd::Response* res) override
   {
     image_space_values_.clear();
 
     if (positions->status())
     {
-      image_space_values_.reserve(positions->x().size());
-      for (unsigned int i = 0; i < positions->x().size(); ++i)
+      image_space_values_.reserve(positions->data().size());
+      for (unsigned int i = 0; i < positions->data().size(); ++i)
       {
 	geometry_msgs::Point space_val;
-	space_val.x = positions->x(i);
-	space_val.y = positions->y(i);
-	space_val.z = positions->z(i);
+	space_val.x = positions->data(i).x();
+	space_val.y = positions->data(i).y();
+	space_val.z = positions->data(i).z();
 	image_space_values_.push_back(space_val);
 	ROS_INFO("got value %f %f %f", space_val.x, space_val.y, space_val.z);
       }
@@ -343,7 +351,7 @@ private:
 
   std::vector<bool> request_status_finished_;
 
-  Request request_;
+  kinectrgbd::Request request_;
 
   bool finish_stream_;
 };

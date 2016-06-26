@@ -9,20 +9,27 @@ service KinectRgbd {
   rpc CheckRequest(Header) returns (Request) {}
   rpc SendPoints(Points) returns (Response) {}
   rpc SendImage(Pixels) returns (Response) {}
-  rpc SendPosition(Positions) returns (Response) {}
+  rpc ReturnPositionsFromPixels(DataStream) returns (Response) {}
+  rpc ReturnPixelBoundsFromSpaceBounds(BitStream) returns (Response) {}
+  rpc SendCognition(DataStream) returns (Response) {}
 }
 
 message Header {
   bool data = 1;
 }
 
+message Bit {
+  float x = 1;
+  float y = 2;
+  float width = 3;
+  float height = 4;
+}
+
 message Request {
   int32 mode = 1;
-  repeated int32 x = 2;
-  repeated int32 y = 3;
-  int32 width = 4;
-  int32 height = 5;
-  bool once = 6;
+  repeated Bit data = 2;
+  bool once = 3;
+  string args = 4;
 }
 
 message Response {
@@ -44,9 +51,23 @@ message Points {
   repeated Point data = 1;
 }
 
-message Positions {
+message Data {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+  string caption = 4;
+  repeated string tags = 5;
+  repeated string texts = 6;
+  float confidence = 7;
+}
+
+message DataStream {
   bool status = 1;
-  repeated float x = 2;
-  repeated float y = 3;
-  repeated float z = 4;
+  repeated Data data = 2;
+}
+
+message BitStream {
+  bool status = 1;
+  repeated Bit color = 2;
+  repeated Bit depth = 3;
 }
