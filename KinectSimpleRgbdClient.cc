@@ -5,6 +5,7 @@
 #include "geometry_msgs/Point.h"
 #include <aero_application/KinectRequest.h>
 #include <aero_application/Bit.h>
+#include <aero_application/Tag.h>
 #include <aero_application/Cognition.h>
 
 #include <chrono>
@@ -53,21 +54,28 @@ using kinectrgbd::KinectRgbd;
 */
 
 /*
-  @define msg Cognition
-  string caption
-  string[] tags
-  string[] texts
+  @define msg Tag
+  string tag
   float32 confidence
+*/
+
+/*
+  @define msg Cognition
+  aero_application/Tag[] captions
+  aero_application/Tag[] tags
+  string[] texts
+  bool status
 */
 
 enum KinectModes
 {
-  MODES = 5,
+  MODES = 6,
   WAIT = 0,
   RGBD = 1,
   IMAGE = 2,
   IMAGE_SPACE_POSITIONS = 3,
-  SPACE2PIXEL_BOUNDINGS = 4
+  SPACE2PIXEL_BOUNDINGS = 4,
+  COGNITION = 5
 };
 
 
@@ -120,12 +128,15 @@ public:
     ROS_WARN("received request from ROS");
 
     // RGBD params
-    // width = 512
-    // height = 414
+    // width <= 512
+    // height <= 414
 
     // IMAGE params
-    // width = 1920
-    // height = 1080
+    // width <= 1920
+    // height <= 1080
+
+    // COGNITION args
+    // args = subscription key
 
     // stop stream / set stream
     if (!req.once)
@@ -143,6 +154,7 @@ public:
 
     // setup request
     request_.clear_data();
+    request_.set_mode(req.mode);
     for (unsigned int i = 0; i < req.data.size(); ++i)
     {
       auto bit = request_.add_data();
@@ -150,9 +162,11 @@ public:
       bit->set_y(req.data[i].y);
       bit->set_width(req.data[i].width);
       bit->set_height(req.data[i].height);
+      if (req.data[i].name == "")
+	bit->set_name("image" + std::to_string(i));
     }
     request_.set_once(req.once);
-    request_.set_mode(req.mode);
+    request_.set_args(req.args);
     request_status_finished_[req.mode] = false;
     
     // wait till windows response
@@ -174,6 +188,15 @@ public:
       res.bits.reserve(boundings_.size());
       for (unsigned int i = 0; i < boundings_.size(); ++i)
 	res.bits.push_back(boundings_[i]);
+    }
+    else if (req.mode == static_cast<int>(KinectModes::COGNITION))
+    {
+      res.cognitions.reserve(cognitions_.size());
+      for (unsigned int i = 0; i < cognitions_.size(); ++i)
+	res.cognitions.push_back(cognitions_[i]);
+      res.points.reserve(image_space_values_.size());
+      for (unsigned int i = 0; i < image_space_values_.size(); ++i)
+	res.points.push_back(image_space_values_[i]);
     }
 
     return true;
@@ -374,6 +397,53 @@ public:
     return Status::OK;
   }
 
+  // Return physical position and cognition results of images.
+  Status ReturnCognition(
+      ServerContext* context, const kinectrgbd::DataStream* stream,
+      kinectrgbd::Response* res) override
+  {
+    cognitions_.clear();
+    image_space_values_.clear();
+
+    cognitions_.reserve(stream->data_size());
+    image_space_values_.reserve(stream->data_size());
+    for (unsigned int i = 0; i < stream->data_size(); ++i)
+    {
+      geometry_msgs::Point image_i_pos;
+      image_i_pos.x = stream->data(i).x();
+      image_i_pos.y = stream->data(i).y();
+      image_i_pos.z = stream->data(i).z();
+      image_space_values_.push_back(image_i_pos);
+      aero_application::Cognition image_i;
+      image_i.status = stream->data(i).status();
+      if (stream->data(i).captions_size() > 0)
+      {
+	aero_application::Tag image_i_cap;
+	image_i_cap.tag = stream->data(i).captions(0).tag();
+	image_i_cap.confidence = stream->data(i).captions(0).confidence();
+	image_i.captions.push_back(image_i_cap);
+      }
+      image_i.tags.reserve(stream->data(i).tags_size());
+      for (unsigned int j = 0; j < stream->data(i).tags_size(); ++j)
+      {
+	aero_application::Tag image_i_tag_j;
+	image_i_tag_j.tag = stream->data(i).tags(j).tag();
+	image_i_tag_j.confidence = stream->data(i).tags(j).confidence();
+	image_i.tags.push_back(image_i_tag_j);
+      }
+      image_i.texts.reserve(stream->data(i).texts_size());
+      for (unsigned int j = 0; j < stream->data(i).texts_size(); ++j)
+	image_i.texts.push_back(stream->data(i).texts(j));
+      cognitions_.push_back(image_i);
+    }
+
+    request_status_finished_[static_cast<int>(
+        KinectModes::COGNITION)] = true;
+
+    res->set_finish(finish_stream_);
+    return Status::OK;    
+  }
+
 private:
 
   ros::NodeHandle nh_;
@@ -393,6 +463,8 @@ private:
   std::vector<bool> request_status_finished_;
 
   kinectrgbd::Request request_;
+
+  std::vector<aero_application::Cognition> cognitions_;
 
   bool finish_stream_;
 };

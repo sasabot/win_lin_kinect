@@ -46,6 +46,7 @@ class Point;
 class Points;
 class Request;
 class Response;
+class Tag;
 
 // ===================================================================
 
@@ -694,6 +695,96 @@ class Points : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class Tag : public ::google::protobuf::Message {
+ public:
+  Tag();
+  virtual ~Tag();
+
+  Tag(const Tag& from);
+
+  inline Tag& operator=(const Tag& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Tag& default_instance();
+
+  void Swap(Tag* other);
+
+  // implements Message ----------------------------------------------
+
+  inline Tag* New() const { return New(NULL); }
+
+  Tag* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Tag& from);
+  void MergeFrom(const Tag& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(Tag* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string tag = 1;
+  void clear_tag();
+  static const int kTagFieldNumber = 1;
+  const ::std::string& tag() const;
+  void set_tag(const ::std::string& value);
+  void set_tag(const char* value);
+  void set_tag(const char* value, size_t size);
+  ::std::string* mutable_tag();
+  ::std::string* release_tag();
+  void set_allocated_tag(::std::string* tag);
+
+  // optional float confidence = 2;
+  void clear_confidence();
+  static const int kConfidenceFieldNumber = 2;
+  float confidence() const;
+  void set_confidence(float value);
+
+  // @@protoc_insertion_point(class_scope:kinectrgbd.Tag)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::internal::ArenaStringPtr tag_;
+  float confidence_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_kinect_5frgbd_2eproto();
+  friend void protobuf_AssignDesc_kinect_5frgbd_2eproto();
+  friend void protobuf_ShutdownFile_kinect_5frgbd_2eproto();
+
+  void InitAsDefaultInstance();
+  static Tag* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class Data : public ::google::protobuf::Message {
  public:
   Data();
@@ -768,32 +859,29 @@ class Data : public ::google::protobuf::Message {
   float z() const;
   void set_z(float value);
 
-  // optional string caption = 4;
-  void clear_caption();
-  static const int kCaptionFieldNumber = 4;
-  const ::std::string& caption() const;
-  void set_caption(const ::std::string& value);
-  void set_caption(const char* value);
-  void set_caption(const char* value, size_t size);
-  ::std::string* mutable_caption();
-  ::std::string* release_caption();
-  void set_allocated_caption(::std::string* caption);
+  // repeated .kinectrgbd.Tag captions = 4;
+  int captions_size() const;
+  void clear_captions();
+  static const int kCaptionsFieldNumber = 4;
+  const ::kinectrgbd::Tag& captions(int index) const;
+  ::kinectrgbd::Tag* mutable_captions(int index);
+  ::kinectrgbd::Tag* add_captions();
+  ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Tag >*
+      mutable_captions();
+  const ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Tag >&
+      captions() const;
 
-  // repeated string tags = 5;
+  // repeated .kinectrgbd.Tag tags = 5;
   int tags_size() const;
   void clear_tags();
   static const int kTagsFieldNumber = 5;
-  const ::std::string& tags(int index) const;
-  ::std::string* mutable_tags(int index);
-  void set_tags(int index, const ::std::string& value);
-  void set_tags(int index, const char* value);
-  void set_tags(int index, const char* value, size_t size);
-  ::std::string* add_tags();
-  void add_tags(const ::std::string& value);
-  void add_tags(const char* value);
-  void add_tags(const char* value, size_t size);
-  const ::google::protobuf::RepeatedPtrField< ::std::string>& tags() const;
-  ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_tags();
+  const ::kinectrgbd::Tag& tags(int index) const;
+  ::kinectrgbd::Tag* mutable_tags(int index);
+  ::kinectrgbd::Tag* add_tags();
+  ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Tag >*
+      mutable_tags();
+  const ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Tag >&
+      tags() const;
 
   // repeated string texts = 6;
   int texts_size() const;
@@ -811,11 +899,11 @@ class Data : public ::google::protobuf::Message {
   const ::google::protobuf::RepeatedPtrField< ::std::string>& texts() const;
   ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_texts();
 
-  // optional float confidence = 7;
-  void clear_confidence();
-  static const int kConfidenceFieldNumber = 7;
-  float confidence() const;
-  void set_confidence(float value);
+  // optional bool status = 7;
+  void clear_status();
+  static const int kStatusFieldNumber = 7;
+  bool status() const;
+  void set_status(bool value);
 
   // @@protoc_insertion_point(class_scope:kinectrgbd.Data)
  private:
@@ -824,10 +912,10 @@ class Data : public ::google::protobuf::Message {
   bool _is_default_instance_;
   float x_;
   float y_;
-  ::google::protobuf::internal::ArenaStringPtr caption_;
-  ::google::protobuf::RepeatedPtrField< ::std::string> tags_;
+  ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Tag > captions_;
+  ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Tag > tags_;
   float z_;
-  float confidence_;
+  bool status_;
   ::google::protobuf::RepeatedPtrField< ::std::string> texts_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_kinect_5frgbd_2eproto();
@@ -1397,6 +1485,67 @@ Points::data() const {
 
 // -------------------------------------------------------------------
 
+// Tag
+
+// optional string tag = 1;
+inline void Tag::clear_tag() {
+  tag_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Tag::tag() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Tag.tag)
+  return tag_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Tag::set_tag(const ::std::string& value) {
+  
+  tag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:kinectrgbd.Tag.tag)
+}
+inline void Tag::set_tag(const char* value) {
+  
+  tag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:kinectrgbd.Tag.tag)
+}
+inline void Tag::set_tag(const char* value, size_t size) {
+  
+  tag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:kinectrgbd.Tag.tag)
+}
+inline ::std::string* Tag::mutable_tag() {
+  
+  // @@protoc_insertion_point(field_mutable:kinectrgbd.Tag.tag)
+  return tag_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Tag::release_tag() {
+  
+  return tag_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Tag::set_allocated_tag(::std::string* tag) {
+  if (tag != NULL) {
+    
+  } else {
+    
+  }
+  tag_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), tag);
+  // @@protoc_insertion_point(field_set_allocated:kinectrgbd.Tag.tag)
+}
+
+// optional float confidence = 2;
+inline void Tag::clear_confidence() {
+  confidence_ = 0;
+}
+inline float Tag::confidence() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Tag.confidence)
+  return confidence_;
+}
+inline void Tag::set_confidence(float value) {
+  
+  confidence_ = value;
+  // @@protoc_insertion_point(field_set:kinectrgbd.Tag.confidence)
+}
+
+// -------------------------------------------------------------------
+
 // Data
 
 // optional float x = 1;
@@ -1441,101 +1590,64 @@ inline void Data::set_z(float value) {
   // @@protoc_insertion_point(field_set:kinectrgbd.Data.z)
 }
 
-// optional string caption = 4;
-inline void Data::clear_caption() {
-  caption_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+// repeated .kinectrgbd.Tag captions = 4;
+inline int Data::captions_size() const {
+  return captions_.size();
 }
-inline const ::std::string& Data::caption() const {
-  // @@protoc_insertion_point(field_get:kinectrgbd.Data.caption)
-  return caption_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+inline void Data::clear_captions() {
+  captions_.Clear();
 }
-inline void Data::set_caption(const ::std::string& value) {
-  
-  caption_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:kinectrgbd.Data.caption)
+inline const ::kinectrgbd::Tag& Data::captions(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Data.captions)
+  return captions_.Get(index);
 }
-inline void Data::set_caption(const char* value) {
-  
-  caption_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:kinectrgbd.Data.caption)
+inline ::kinectrgbd::Tag* Data::mutable_captions(int index) {
+  // @@protoc_insertion_point(field_mutable:kinectrgbd.Data.captions)
+  return captions_.Mutable(index);
 }
-inline void Data::set_caption(const char* value, size_t size) {
-  
-  caption_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:kinectrgbd.Data.caption)
+inline ::kinectrgbd::Tag* Data::add_captions() {
+  // @@protoc_insertion_point(field_add:kinectrgbd.Data.captions)
+  return captions_.Add();
 }
-inline ::std::string* Data::mutable_caption() {
-  
-  // @@protoc_insertion_point(field_mutable:kinectrgbd.Data.caption)
-  return caption_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+inline ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Tag >*
+Data::mutable_captions() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrgbd.Data.captions)
+  return &captions_;
 }
-inline ::std::string* Data::release_caption() {
-  
-  return caption_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void Data::set_allocated_caption(::std::string* caption) {
-  if (caption != NULL) {
-    
-  } else {
-    
-  }
-  caption_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), caption);
-  // @@protoc_insertion_point(field_set_allocated:kinectrgbd.Data.caption)
+inline const ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Tag >&
+Data::captions() const {
+  // @@protoc_insertion_point(field_list:kinectrgbd.Data.captions)
+  return captions_;
 }
 
-// repeated string tags = 5;
+// repeated .kinectrgbd.Tag tags = 5;
 inline int Data::tags_size() const {
   return tags_.size();
 }
 inline void Data::clear_tags() {
   tags_.Clear();
 }
-inline const ::std::string& Data::tags(int index) const {
+inline const ::kinectrgbd::Tag& Data::tags(int index) const {
   // @@protoc_insertion_point(field_get:kinectrgbd.Data.tags)
   return tags_.Get(index);
 }
-inline ::std::string* Data::mutable_tags(int index) {
+inline ::kinectrgbd::Tag* Data::mutable_tags(int index) {
   // @@protoc_insertion_point(field_mutable:kinectrgbd.Data.tags)
   return tags_.Mutable(index);
 }
-inline void Data::set_tags(int index, const ::std::string& value) {
-  // @@protoc_insertion_point(field_set:kinectrgbd.Data.tags)
-  tags_.Mutable(index)->assign(value);
-}
-inline void Data::set_tags(int index, const char* value) {
-  tags_.Mutable(index)->assign(value);
-  // @@protoc_insertion_point(field_set_char:kinectrgbd.Data.tags)
-}
-inline void Data::set_tags(int index, const char* value, size_t size) {
-  tags_.Mutable(index)->assign(
-    reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_set_pointer:kinectrgbd.Data.tags)
-}
-inline ::std::string* Data::add_tags() {
+inline ::kinectrgbd::Tag* Data::add_tags() {
+  // @@protoc_insertion_point(field_add:kinectrgbd.Data.tags)
   return tags_.Add();
 }
-inline void Data::add_tags(const ::std::string& value) {
-  tags_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add:kinectrgbd.Data.tags)
-}
-inline void Data::add_tags(const char* value) {
-  tags_.Add()->assign(value);
-  // @@protoc_insertion_point(field_add_char:kinectrgbd.Data.tags)
-}
-inline void Data::add_tags(const char* value, size_t size) {
-  tags_.Add()->assign(reinterpret_cast<const char*>(value), size);
-  // @@protoc_insertion_point(field_add_pointer:kinectrgbd.Data.tags)
-}
-inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
-Data::tags() const {
-  // @@protoc_insertion_point(field_list:kinectrgbd.Data.tags)
-  return tags_;
-}
-inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+inline ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Tag >*
 Data::mutable_tags() {
   // @@protoc_insertion_point(field_mutable_list:kinectrgbd.Data.tags)
   return &tags_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::kinectrgbd::Tag >&
+Data::tags() const {
+  // @@protoc_insertion_point(field_list:kinectrgbd.Data.tags)
+  return tags_;
 }
 
 // repeated string texts = 6;
@@ -1592,18 +1704,18 @@ Data::mutable_texts() {
   return &texts_;
 }
 
-// optional float confidence = 7;
-inline void Data::clear_confidence() {
-  confidence_ = 0;
+// optional bool status = 7;
+inline void Data::clear_status() {
+  status_ = false;
 }
-inline float Data::confidence() const {
-  // @@protoc_insertion_point(field_get:kinectrgbd.Data.confidence)
-  return confidence_;
+inline bool Data::status() const {
+  // @@protoc_insertion_point(field_get:kinectrgbd.Data.status)
+  return status_;
 }
-inline void Data::set_confidence(float value) {
+inline void Data::set_status(bool value) {
   
-  confidence_ = value;
-  // @@protoc_insertion_point(field_set:kinectrgbd.Data.confidence)
+  status_ = value;
+  // @@protoc_insertion_point(field_set:kinectrgbd.Data.status)
 }
 
 // -------------------------------------------------------------------
@@ -1703,6 +1815,8 @@ BitStream::data() const {
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

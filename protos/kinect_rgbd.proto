@@ -52,14 +52,19 @@ message Points {
   repeated Point data = 1;
 }
 
+message Tag {
+  string tag = 1;
+  float confidence = 2;
+}
+
 message Data {
   float x = 1;
   float y = 2;
   float z = 3;
-  string caption = 4;
-  repeated string tags = 5;
+  repeated Tag captions = 4;
+  repeated Tag tags = 5;
   repeated string texts = 6;
-  float confidence = 7;
+  bool status = 7;
 }
 
 message DataStream {
