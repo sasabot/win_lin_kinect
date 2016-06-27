@@ -42,6 +42,7 @@ using kinectrgbd::KinectRgbd;
   geometry_msgs/Point[] points
   aero_application/Cognition[] cognitions
   aero_application/Bit[] bits
+  bool status
 */
 
 /*
@@ -120,6 +121,7 @@ public:
 
     request_status_finished_.resize(static_cast<int>(KinectModes::MODES));
     finish_stream_ = true;
+    status_ = false;
   }
 
   bool KinectRequest(aero_application::KinectRequest::Request &req,
@@ -182,12 +184,14 @@ public:
       res.points.reserve(image_space_values_.size());
       for (unsigned int i = 0; i < image_space_values_.size(); ++i)
 	res.points.push_back(image_space_values_[i]);
+      res.status = status_;
     }
     else if (req.mode == static_cast<int>(KinectModes::SPACE2PIXEL_BOUNDINGS))
     {
       res.bits.reserve(boundings_.size());
       for (unsigned int i = 0; i < boundings_.size(); ++i)
 	res.bits.push_back(boundings_[i]);
+      res.status = status_;
     }
     else if (req.mode == static_cast<int>(KinectModes::COGNITION))
     {
@@ -197,6 +201,7 @@ public:
       res.points.reserve(image_space_values_.size());
       for (unsigned int i = 0; i < image_space_values_.size(); ++i)
 	res.points.push_back(image_space_values_[i]);
+      res.status = status_;
     }
 
     return true;
@@ -213,6 +218,7 @@ public:
       bit->set_y(request_.data(i).y());
       bit->set_width(request_.data(i).width());
       bit->set_height(request_.data(i).height());
+      bit->set_name(request_.data(i).name());
     }
     request->set_once(request_.once());
     request->set_args(request_.args());
@@ -359,6 +365,7 @@ public:
       }
     }
 
+    status_ = positions->status();
     request_status_finished_[static_cast<int>(
         KinectModes::IMAGE_SPACE_POSITIONS)] = true;
 
@@ -390,6 +397,7 @@ public:
       }
     }
 
+    status_ = boundings->status();
     request_status_finished_[static_cast<int>(
         KinectModes::SPACE2PIXEL_BOUNDINGS)] = true;
 
@@ -437,6 +445,7 @@ public:
       cognitions_.push_back(image_i);
     }
 
+    status_ = stream->status();
     request_status_finished_[static_cast<int>(
         KinectModes::COGNITION)] = true;
 
@@ -467,6 +476,8 @@ private:
   std::vector<aero_application::Cognition> cognitions_;
 
   bool finish_stream_;
+
+  bool status_;
 };
 
 
