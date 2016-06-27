@@ -195,7 +195,7 @@ namespace KinectSimpleRgbdServer
 
             ColorFrame colorFrame = frame.ColorFrameReference.AcquireFrame();
             DepthFrame depthFrame = frame.DepthFrameReference.AcquireFrame();
-            if (colorFrame == null | depthFrame == null)
+            if (colorFrame == null || depthFrame == null)
             {
                 Kinectrgbd.Response badresponse = this.client.ReturnPixelBoundsFromSpaceBounds(result);
                 return;
@@ -323,7 +323,7 @@ namespace KinectSimpleRgbdServer
             ColorFrame colorFrame = frame.ColorFrameReference.AcquireFrame();
             DepthFrame depthFrame = frame.DepthFrameReference.AcquireFrame();
 
-            if (colorFrame == null | depthFrame == null)
+            if (colorFrame == null || depthFrame == null)
             {
                 Kinectrgbd.Response badresponse = this.client.ReturnCognition(result);
                 return;
@@ -350,28 +350,45 @@ namespace KinectSimpleRgbdServer
 
             // setup async cloud tasks and create mask image for position detection
             float maskRatio = 0.3f; // parameter
-            List<CameraSpacePoint> imageInSpace = new List<CameraSpacePoint>(request.Data.Count);
-            List<bool> valids = new List<bool>(request.Data.Count);
+            List<CameraSpacePoint> imageInSpace = new List<CameraSpacePoint>();
+            List<bool> valids = new List<bool>();
             List<Task<Tuple<string, HttpResponseMessage>>> tasks = new List<Task<Tuple<string, HttpResponseMessage>>>();
             List<Kinectrgbd.Bit> maskedImage = new List<Kinectrgbd.Bit>();
-            int imageIndex = 0;
             foreach (var image in request.Data)
             {
+                // initiate imageInSpace
+                CameraSpacePoint initP = new CameraSpacePoint { X = 0.0f, Y = 0.0f, Z = 100.0f };
+                imageInSpace.Add(initP);
+
+                // initiate valid
+                valids.Add(true);
+
                 // get partial image
                 byte[] partial = new byte[Convert.ToInt32(image.Width) * Convert.ToInt32(image.Height) * 4];
                 int atPixel = 0;
                 for (int i = Convert.ToInt32(image.Y); i < (image.Y + image.Height); ++i)
-                    //for (int j = Convert.ToInt32(image.X); j < (image.X + image.Width); ++j)
                     for (int j = Convert.ToInt32(image.X + image.Width) - 1; j >= Convert.ToInt32(image.X); --j) // flip image
                     {
-                        partial[atPixel] = pixels[(j * colorDesc.Width + i) * 4];
-                        ++atPixel;
+                        int idx = (i * colorDesc.Width + j) * 4;
+                        partial[atPixel++] = pixels[idx++];
+                        partial[atPixel++] = pixels[idx++];
+                        partial[atPixel++] = pixels[idx++];
+                        partial[atPixel++] = pixels[idx++];
                     }
 
                 // save to image
-                string file = @"C:\" + image.Name + ".jpg";
-                using (Image resized = ResizeImage(Image.FromStream(new MemoryStream(partial)),
-                    Convert.ToInt32(image.Width * 2), Convert.ToInt32(image.Height * 2)))
+                string file = System.Environment.GetFolderPath(Environment.SpecialFolder.Personal) + image.Name + ".jpg";
+                BitmapSource partialBitmapSource = BitmapSource.Create(Convert.ToInt32(image.Width), Convert.ToInt32(image.Height), 96, 96,
+                    PixelFormats.Bgr32, null, partial, Convert.ToInt32(image.Width) * 4);
+                System.Drawing.Bitmap partialBitmap;
+                using (var ms = new MemoryStream())
+                {
+                    BitmapEncoder enc = new BmpBitmapEncoder();
+                    enc.Frames.Add(BitmapFrame.Create(partialBitmapSource));
+                    enc.Save(ms);
+                    partialBitmap = new System.Drawing.Bitmap(ms);
+                }
+                using (Image resized = ResizeImage(partialBitmap, Convert.ToInt32(image.Width * 2), Convert.ToInt32(image.Height * 2)))
                 {
                     SaveJpeg(file, resized, 100);
                 }
@@ -389,14 +406,6 @@ namespace KinectSimpleRgbdServer
                     Height = maskRatio * image.Height
                 };
                 maskedImage.Add(bit);
-
-                // initiate imageInSpace
-                CameraSpacePoint initP = new CameraSpacePoint { X = 0.0f, Y = 0.0f, Z = 100.0f };
-                imageInSpace[imageIndex] = initP;
-                ++imageIndex;
-
-                // initiate valid
-                valids[imageIndex] = true;
             }
 
             // get 3D position of image
@@ -438,8 +447,8 @@ namespace KinectSimpleRgbdServer
             }
 
             // get cloud result
-            List<Tuple<string, float>> descriptions = new List<Tuple<string, float>>(request.Data.Count);
-            List<List<Tuple<string, float>>> tags = new List<List<Tuple<string, float>>>(request.Data.Count);
+            List<Tuple<string, float>> descriptions = new List<Tuple<string, float>>();
+            List<List<Tuple<string, float>>> tags = new List<List<Tuple<string, float>>>();
             List<List<string>> texts = new List<List<string>>(request.Data.Count);
             int dataIndex = 0;
             foreach (var task in await Task.WhenAll(tasks))
@@ -449,12 +458,12 @@ namespace KinectSimpleRgbdServer
                     valids[dataIndex] = false;
                     if (task.Item1 == "analyze")
                     {
-                        descriptions[dataIndex] = Tuple.Create("", 0.0f);
-                        tags[dataIndex] = new List<Tuple<string, float>> { Tuple.Create("", 0.0f) };
+                        descriptions.Add(Tuple.Create("", 0.0f));
+                        tags.Add(new List<Tuple<string, float>> { Tuple.Create("", 0.0f) });
                     }
                     else if (task.Item1 == "ocr")
                     {
-                        texts[dataIndex] = new List<string> { "" };
+                        texts.Add(new List<string> { "" });
                         ++dataIndex;
                     }
                     continue;
@@ -467,29 +476,44 @@ namespace KinectSimpleRgbdServer
 
                     // add description
                     var descriptionModel = JObject.Parse(analysisModel["description"].ToString());
-                    List<Tuple<string, float>> parsedCaptions = descriptionModel["captions"].Value<List<Tuple<string, float>>>();
-                    descriptions[dataIndex] = parsedCaptions[0]; // only use first caption
+                    List<JToken> parsedCaptions = descriptionModel["captions"].ToObject<List<JToken>>();
+                    foreach (var caption in parsedCaptions)
+                    {
+                        var captionModel = JObject.Parse(caption.ToString());
+                        descriptions.Add(new Tuple<string, float>(captionModel["text"].ToObject<String>(), caption["confidence"].ToObject<float>()));
+                        break; // only use first caption
+                    }
 
                     // add tags
-                    List<Tuple<string, float>> parsedTags = analysisModel["tags"].Value<List<Tuple<string, float>>>();
-                    tags[dataIndex] = parsedTags;
+                    List<JToken> parsedTags = analysisModel["tags"].ToObject<List<JToken>>();
+                    tags.Add(new List<Tuple<string, float>>());
+                    foreach (var tag in parsedTags)
+                    {
+                        var tagModel = JObject.Parse(tag.ToString());
+                        tags[dataIndex].Add(new Tuple<string, float>(tagModel["name"].ToObject<String>(), tagModel["confidence"].ToObject<float>()));
+                    }
                 }
                 else if (task.Item1 == "ocr")
                 {
                     var ocrModel = JObject.Parse(cloudResult);
 
                     // add texts
-                    List<string> parsedRegions = ocrModel["regions"].Value<List<string>>();
+                    List<JToken> parsedRegions = ocrModel["regions"].ToObject<List<JToken>>();
+                    texts.Add(new List<string>());
                     foreach (var region in parsedRegions)
                     {
-                        var regionModel = JObject.Parse(region);
-                        var lineModel = JObject.Parse(regionModel["lines"].ToString());
-                        List<Tuple<string, string>> parsedWords = lineModel["words"].Value<List<Tuple<string, string>>>();
-                        List<string> parsedText = new List<string>();
-
-                        foreach (var word in parsedWords)
-                            parsedText.Add(word.Item2);
-                        texts[dataIndex].AddRange(parsedText);
+                        var regionModel = JObject.Parse(region.ToString());
+                        List<JToken> parsedLines = regionModel["lines"].ToObject<List<JToken>>();
+                        foreach (var line in parsedLines)
+                        {
+                            var lineModel = JObject.Parse(line.ToString());
+                            List<JToken> parsedWords = lineModel["words"].ToObject<List<JToken>>();
+                            foreach (var word in parsedWords)
+                            {
+                                var parsedWord = JObject.Parse(word.ToString());
+                                texts[dataIndex].Add(parsedWord["text"].ToObject<String>());
+                            }
+                        }
                     }
 
                     ++dataIndex;
@@ -531,6 +555,7 @@ namespace KinectSimpleRgbdServer
                 result.Data.Add(data);
             }
 
+            result.Status = true;
             Kinectrgbd.Response response = this.client.ReturnCognition(result);
         }
 
@@ -553,7 +578,7 @@ namespace KinectSimpleRgbdServer
 
             using (var content = new ByteArrayContent(byteData))
             {
-                content.Headers.ContentType = new MediaTypeHeaderValue("<application/octet-stream>");
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
                 response = await client.PostAsync(uri, content);
             }
 
@@ -580,7 +605,7 @@ namespace KinectSimpleRgbdServer
 
             using (var content = new ByteArrayContent(byteData))
             {
-                content.Headers.ContentType = new MediaTypeHeaderValue("<application/octet-stream>");
+                content.Headers.ContentType = new MediaTypeHeaderValue("application/octet-stream");
                 response = await client.PostAsync(uri, content);
             }
 
@@ -648,7 +673,7 @@ namespace KinectSimpleRgbdServer
         {
             ColorFrame colorFrame = frame.ColorFrameReference.AcquireFrame();
             DepthFrame depthFrame = frame.DepthFrameReference.AcquireFrame();
-            if (colorFrame == null | depthFrame == null)
+            if (colorFrame == null || depthFrame == null)
                 return;
 
             // get depth map from depthFrame
@@ -747,7 +772,7 @@ namespace KinectSimpleRgbdServer
         {
             ColorFrame colorFrame = frame.ColorFrameReference.AcquireFrame();
             DepthFrame depthFrame = frame.DepthFrameReference.AcquireFrame();
-            if (colorFrame == null | depthFrame == null)
+            if (colorFrame == null || depthFrame == null)
                 return;
 
             // get depth map from depthFrame
