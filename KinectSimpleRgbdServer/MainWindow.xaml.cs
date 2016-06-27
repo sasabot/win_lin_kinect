@@ -3,20 +3,20 @@
 namespace KinectSimpleRgbdServer
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics;
-    using System.Globalization;
-    using System.IO;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using System.Windows;
     using System.Windows.Media;
     using System.Windows.Media.Imaging;
     using Microsoft.Kinect;
-
+    using System.Net.Http;
+    using System.Net.Http.Headers;
+    using System.Web;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.IO;
+    using System.Threading.Tasks;
+    using Newtonsoft.Json.Linq;
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -109,6 +109,11 @@ namespace KinectSimpleRgbdServer
                 else if (request.Mode == 4) // send bounding box in depth / pixel coords from space coords
                 {
                     HandleBoundingRequest(request, e.FrameReference.AcquireFrame());
+                    return;
+                }
+                else if (request.Mode == 5) // call Microsoft cognitive services from partial image streams
+                {
+                    HandleCognitiveRequest(request, e.FrameReference.AcquireFrame());
                     return;
                 }
             }
@@ -309,6 +314,334 @@ namespace KinectSimpleRgbdServer
 
             colorFrame.Dispose();
             depthFrame.Dispose();
+        }
+
+        private async void HandleCognitiveRequest(Kinectrgbd.Request request, MultiSourceFrame frame)
+        {
+            Kinectrgbd.DataStream result = new Kinectrgbd.DataStream { Status = false };
+
+            ColorFrame colorFrame = frame.ColorFrameReference.AcquireFrame();
+            DepthFrame depthFrame = frame.DepthFrameReference.AcquireFrame();
+
+            if (colorFrame == null | depthFrame == null)
+            {
+                Kinectrgbd.Response badresponse = this.client.ReturnCognition(result);
+                return;
+            }
+
+            // get depth map from depthFrame
+            var depthDesc = depthFrame.FrameDescription;
+            ushort[] depthData = new ushort[depthDesc.Width * depthDesc.Height];
+            depthFrame.CopyFrameDataToArray(depthData);
+
+            // get color pixels from colorFrame
+            var colorDesc = colorFrame.FrameDescription;
+            byte[] pixels = new byte[colorDesc.Width * colorDesc.Height * 4];
+            colorFrame.CopyConvertedFrameDataToArray(pixels, ColorImageFormat.Bgra);
+
+            // get physical xyz position for each point on depth map
+            CameraSpacePoint[] cameraPoints = new CameraSpacePoint[colorDesc.Width * colorDesc.Height];
+            this.coordinateMapper.MapColorFrameToCameraSpace(depthData, cameraPoints);
+
+            // draw camera image
+            BitmapSource bitmapSource = BitmapSource.Create(colorDesc.Width, colorDesc.Height, 96, 96,
+                PixelFormats.Bgr32, null, pixels, colorDesc.Width * 4);
+            this.canvas.Background = new ImageBrush(bitmapSource);
+
+            // setup async cloud tasks and create mask image for position detection
+            float maskRatio = 0.3f; // parameter
+            List<CameraSpacePoint> imageInSpace = new List<CameraSpacePoint>(request.Data.Count);
+            List<bool> valids = new List<bool>(request.Data.Count);
+            List<Task<Tuple<string, HttpResponseMessage>>> tasks = new List<Task<Tuple<string, HttpResponseMessage>>>();
+            List<Kinectrgbd.Bit> maskedImage = new List<Kinectrgbd.Bit>();
+            int imageIndex = 0;
+            foreach (var image in request.Data)
+            {
+                // get partial image
+                byte[] partial = new byte[Convert.ToInt32(image.Width) * Convert.ToInt32(image.Height) * 4];
+                int atPixel = 0;
+                for (int i = Convert.ToInt32(image.Y); i < (image.Y + image.Height); ++i)
+                    //for (int j = Convert.ToInt32(image.X); j < (image.X + image.Width); ++j)
+                    for (int j = Convert.ToInt32(image.X + image.Width) - 1; j >= Convert.ToInt32(image.X); --j) // flip image
+                    {
+                        partial[atPixel] = pixels[(j * colorDesc.Width + i) * 4];
+                        ++atPixel;
+                    }
+
+                // save to image
+                string file = @"C:\" + image.Name + ".jpg";
+                using (Image resized = ResizeImage(Image.FromStream(new MemoryStream(partial)),
+                    Convert.ToInt32(image.Width * 2), Convert.ToInt32(image.Height * 2)))
+                {
+                    SaveJpeg(file, resized, 100);
+                }
+
+                // add call cloud task
+                tasks.Add(AnalyzeImage(request.Args, file));
+                tasks.Add(OCR(request.Args, file));
+
+                // create mask filter
+                Kinectrgbd.Bit bit = new Kinectrgbd.Bit
+                {
+                    X = Convert.ToInt32(image.X + 0.5 * (1 - maskRatio) * image.Width),
+                    Y = Convert.ToInt32(image.Y + 0.5 * (1 - maskRatio) * image.Height),
+                    Width = maskRatio * image.Width,
+                    Height = maskRatio * image.Height
+                };
+                maskedImage.Add(bit);
+
+                // initiate imageInSpace
+                CameraSpacePoint initP = new CameraSpacePoint { X = 0.0f, Y = 0.0f, Z = 100.0f };
+                imageInSpace[imageIndex] = initP;
+                ++imageIndex;
+
+                // initiate valid
+                valids[imageIndex] = true;
+            }
+
+            // get 3D position of image
+            int pointIndex = 0;
+            foreach (var point in cameraPoints)
+            {
+                // reject invalid points
+                if (Double.IsInfinity(point.X) || Double.IsInfinity(point.Y) || Double.IsInfinity(point.Z)
+                    || Double.IsNaN(point.X) || Double.IsNaN(point.Y) || Double.IsNaN(point.Z))
+                {
+                    ++pointIndex;
+                    continue;
+                }
+
+                int maskIndex = 0;
+                foreach (var image in maskedImage)
+                {
+                    int y = pointIndex / colorDesc.Width;
+                    int x = pointIndex - y * colorDesc.Width;
+                    // find point with closest depth && near image center
+                    if (x >= image.X && y >= image.Y && x <= (image.X + image.Width) && y <= (image.Y + image.Height))
+                        if (point.Z < imageInSpace[maskIndex].Z)
+                        {
+                            CameraSpacePoint p = new CameraSpacePoint { X = point.X, Y = point.Y, Z = point.Z };
+                            imageInSpace[maskIndex] = p;
+                        }
+                    ++maskIndex;
+                }
+
+                ++pointIndex;
+            }
+
+            // check validity of 3D position
+            int inSpaceIndex = 0;
+            foreach (var image in imageInSpace)
+            {
+                if (image.Z > 99.0f || image.Z < 0) valids[inSpaceIndex] = false;
+                ++inSpaceIndex;
+            }
+
+            // get cloud result
+            List<Tuple<string, float>> descriptions = new List<Tuple<string, float>>(request.Data.Count);
+            List<List<Tuple<string, float>>> tags = new List<List<Tuple<string, float>>>(request.Data.Count);
+            List<List<string>> texts = new List<List<string>>(request.Data.Count);
+            int dataIndex = 0;
+            foreach (var task in await Task.WhenAll(tasks))
+            {
+                if (!task.Item2.IsSuccessStatusCode)
+                {
+                    valids[dataIndex] = false;
+                    if (task.Item1 == "analyze")
+                    {
+                        descriptions[dataIndex] = Tuple.Create("", 0.0f);
+                        tags[dataIndex] = new List<Tuple<string, float>> { Tuple.Create("", 0.0f) };
+                    }
+                    else if (task.Item1 == "ocr")
+                    {
+                        texts[dataIndex] = new List<string> { "" };
+                        ++dataIndex;
+                    }
+                    continue;
+                }
+                var cloudResult = await task.Item2.Content.ReadAsStringAsync();
+
+                if (task.Item1 == "analyze")
+                {
+                    var analysisModel = JObject.Parse(cloudResult);
+
+                    // add description
+                    var descriptionModel = JObject.Parse(analysisModel["description"].ToString());
+                    List<Tuple<string, float>> parsedCaptions = descriptionModel["captions"].Value<List<Tuple<string, float>>>();
+                    descriptions[dataIndex] = parsedCaptions[0]; // only use first caption
+
+                    // add tags
+                    List<Tuple<string, float>> parsedTags = analysisModel["tags"].Value<List<Tuple<string, float>>>();
+                    tags[dataIndex] = parsedTags;
+                }
+                else if (task.Item1 == "ocr")
+                {
+                    var ocrModel = JObject.Parse(cloudResult);
+
+                    // add texts
+                    List<string> parsedRegions = ocrModel["regions"].Value<List<string>>();
+                    foreach (var region in parsedRegions)
+                    {
+                        var regionModel = JObject.Parse(region);
+                        var lineModel = JObject.Parse(regionModel["lines"].ToString());
+                        List<Tuple<string, string>> parsedWords = lineModel["words"].Value<List<Tuple<string, string>>>();
+                        List<string> parsedText = new List<string>();
+
+                        foreach (var word in parsedWords)
+                            parsedText.Add(word.Item2);
+                        texts[dataIndex].AddRange(parsedText);
+                    }
+
+                    ++dataIndex;
+                }
+            }
+
+            for (int i = 0; i < request.Data.Count; ++i)
+            {
+                Kinectrgbd.Data data = new Kinectrgbd.Data
+                {
+                    Status = valids[i],
+                    X = imageInSpace[i].X,
+                    Y = imageInSpace[i].Y,
+                    Z = imageInSpace[i].Z
+                };
+
+                Kinectrgbd.Tag caption = new Kinectrgbd.Tag
+                {
+                    Tag_ = descriptions[i].Item1,
+                    Confidence = descriptions[i].Item2
+                };
+                data.Captions.Add(caption);
+
+                foreach (var tag in tags[i])
+                {
+                    Kinectrgbd.Tag sendTag = new Kinectrgbd.Tag
+                    {
+                        Tag_ = tag.Item1,
+                        Confidence = tag.Item2
+                    };
+                    data.Tags.Add(sendTag);
+                }
+
+                foreach (var text in texts[i])
+                {
+                    data.Texts.Add(text);
+                }
+
+                result.Data.Add(data);
+            }
+
+            Kinectrgbd.Response response = this.client.ReturnCognition(result);
+        }
+
+        private async Task<Tuple<string, HttpResponseMessage>> AnalyzeImage(string key, string fileName)
+        {
+            var client = new HttpClient();
+            var queryString = HttpUtility.ParseQueryString(string.Empty);
+
+            // Request headers
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", key);
+
+            // Request parameters
+            queryString["visualFeatures"] = "Tags,Description";
+            var uri = "https://api.projectoxford.ai/vision/v1.0/analyze?" + queryString;
+
+            HttpResponseMessage response;
+
+            // Request body
+            byte[] byteData = File.ReadAllBytes(fileName);
+
+            using (var content = new ByteArrayContent(byteData))
+            {
+                content.Headers.ContentType = new MediaTypeHeaderValue("<application/octet-stream>");
+                response = await client.PostAsync(uri, content);
+            }
+
+            return Tuple.Create("analyze", response);
+        }
+
+        private async Task<Tuple<string, HttpResponseMessage>> OCR(string key, string fileName)
+        {
+            var client = new HttpClient();
+            var queryString = HttpUtility.ParseQueryString(string.Empty);
+
+            // Request headers
+            client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", key);
+
+            // Request parameters
+            queryString["language"] = "en";
+            queryString["detectOrientation "] = "true";
+            var uri = "https://api.projectoxford.ai/vision/v1.0/ocr?" + queryString;
+
+            HttpResponseMessage response;
+
+            // Request body
+            byte[] byteData = File.ReadAllBytes(fileName);
+
+            using (var content = new ByteArrayContent(byteData))
+            {
+                content.Headers.ContentType = new MediaTypeHeaderValue("<application/octet-stream>");
+                response = await client.PostAsync(uri, content);
+            }
+
+            return Tuple.Create("ocr", response);
+        }
+
+        private static System.Drawing.Bitmap ResizeImage(System.Drawing.Image image, int width, int height)
+        {
+            Bitmap result = new Bitmap(width, height);
+            // set the resolutions the same to avoid cropping due to resolution differences
+            //result.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+
+            // use a graphics object to draw the resized image into the bitmap
+            using (Graphics graphics = Graphics.FromImage(result))
+            {
+                // set the resize quality modes to high quality
+                graphics.CompositingQuality = System.Drawing.Drawing2D.CompositingQuality.HighQuality;
+                graphics.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.HighQualityBicubic;
+                graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+                // draw the image into the target bitmap
+                graphics.DrawImage(image, 0, 0, result.Width, result.Height);
+            }
+
+            //return the resulting bitmap
+            return result;
+        }
+
+        private static void SaveJpeg(string path, Image image, int quality)
+        {
+            //ensure the quality is within the correct range
+            if ((quality < 0) || (quality > 100))
+            {
+                //create the error message
+                string error = string.Format("Expected quality between 0 and 100, with 100 highest quality. {0} was specified.", quality);
+                //throw a helpful exception
+                throw new ArgumentOutOfRangeException(error);
+            }
+
+            //create an encoder parameter for the image quality
+            EncoderParameter qualityParam = new EncoderParameter(System.Drawing.Imaging.Encoder.Quality, quality);
+
+            //get the jpeg codec
+            string mimeType = "image/jpeg";
+            //do a case insensitive search for the mime type
+            string lookupKey = mimeType.ToLower();
+            //the codec to return, default to null
+            ImageCodecInfo jpegCodec = null;
+            //if we have the encoder, get it to return
+            foreach (ImageCodecInfo codec in ImageCodecInfo.GetImageEncoders())
+                if (lookupKey == codec.MimeType.ToLower())
+                {
+                    jpegCodec = codec;
+                    break;
+                }
+
+            //create a collection of all parameters that we will pass to the encoder
+            EncoderParameters encoderParams = new EncoderParameters(1);
+            //set the quality parameter for the codec
+            encoderParams.Param[0] = qualityParam;
+            //save the image using the codec and the parameters
+            image.Save(path, jpegCodec, encoderParams);
         }
 
         private void SendDepthCloud(MultiSourceFrame frame)

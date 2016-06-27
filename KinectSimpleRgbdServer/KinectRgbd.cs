@@ -31,22 +31,23 @@ namespace Kinectrgbd {
               "Eg4KBmZpbmlzaBgBIAEoCCIXCgZQaXhlbHMSDQoFY29sb3IYASADKAUiNwoF", 
               "UG9pbnQSCQoBeBgBIAEoAhIJCgF5GAIgASgCEgkKAXoYAyABKAISDQoFY29s", 
               "b3IYBCABKAUiKQoGUG9pbnRzEh8KBGRhdGEYASADKAsyES5raW5lY3RyZ2Jk", 
-              "LlBvaW50ImkKBERhdGESCQoBeBgBIAEoAhIJCgF5GAIgASgCEgkKAXoYAyAB", 
-              "KAISDwoHY2FwdGlvbhgEIAEoCRIMCgR0YWdzGAUgAygJEg0KBXRleHRzGAYg", 
-              "AygJEhIKCmNvbmZpZGVuY2UYByABKAIiPAoKRGF0YVN0cmVhbRIOCgZzdGF0", 
-              "dXMYASABKAgSHgoEZGF0YRgCIAMoCzIQLmtpbmVjdHJnYmQuRGF0YSI6CglC", 
-              "aXRTdHJlYW0SDgoGc3RhdHVzGAEgASgIEh0KBGRhdGEYAiADKAsyDy5raW5l", 
-              "Y3RyZ2JkLkJpdDKdAwoKS2luZWN0UmdiZBI5CgxDaGVja1JlcXVlc3QSEi5r", 
-              "aW5lY3RyZ2JkLkhlYWRlchoTLmtpbmVjdHJnYmQuUmVxdWVzdCIAEjgKClNl", 
-              "bmRQb2ludHMSEi5raW5lY3RyZ2JkLlBvaW50cxoULmtpbmVjdHJnYmQuUmVz", 
-              "cG9uc2UiABI3CglTZW5kSW1hZ2USEi5raW5lY3RyZ2JkLlBpeGVscxoULmtp", 
-              "bmVjdHJnYmQuUmVzcG9uc2UiABJLChlSZXR1cm5Qb3NpdGlvbnNGcm9tUGl4", 
-              "ZWxzEhYua2luZWN0cmdiZC5EYXRhU3RyZWFtGhQua2luZWN0cmdiZC5SZXNw", 
-              "b25zZSIAElEKIFJldHVyblBpeGVsQm91bmRzRnJvbVNwYWNlQm91bmRzEhUu", 
-              "a2luZWN0cmdiZC5CaXRTdHJlYW0aFC5raW5lY3RyZ2JkLlJlc3BvbnNlIgAS", 
-              "QQoPUmV0dXJuQ29nbml0aW9uEhYua2luZWN0cmdiZC5EYXRhU3RyZWFtGhQu", 
-              "a2luZWN0cmdiZC5SZXNwb25zZSIAQg8KB2V4LmdycGOiAgNSVEdiBnByb3Rv", 
-              "Mw=="));
+              "LlBvaW50IiYKA1RhZxILCgN0YWcYASABKAkSEgoKY29uZmlkZW5jZRgCIAEo", 
+              "AiKIAQoERGF0YRIJCgF4GAEgASgCEgkKAXkYAiABKAISCQoBehgDIAEoAhIh", 
+              "CghjYXB0aW9ucxgEIAMoCzIPLmtpbmVjdHJnYmQuVGFnEh0KBHRhZ3MYBSAD", 
+              "KAsyDy5raW5lY3RyZ2JkLlRhZxINCgV0ZXh0cxgGIAMoCRIOCgZzdGF0dXMY", 
+              "ByABKAgiPAoKRGF0YVN0cmVhbRIOCgZzdGF0dXMYASABKAgSHgoEZGF0YRgC", 
+              "IAMoCzIQLmtpbmVjdHJnYmQuRGF0YSI6CglCaXRTdHJlYW0SDgoGc3RhdHVz", 
+              "GAEgASgIEh0KBGRhdGEYAiADKAsyDy5raW5lY3RyZ2JkLkJpdDKdAwoKS2lu", 
+              "ZWN0UmdiZBI5CgxDaGVja1JlcXVlc3QSEi5raW5lY3RyZ2JkLkhlYWRlchoT", 
+              "LmtpbmVjdHJnYmQuUmVxdWVzdCIAEjgKClNlbmRQb2ludHMSEi5raW5lY3Ry", 
+              "Z2JkLlBvaW50cxoULmtpbmVjdHJnYmQuUmVzcG9uc2UiABI3CglTZW5kSW1h", 
+              "Z2USEi5raW5lY3RyZ2JkLlBpeGVscxoULmtpbmVjdHJnYmQuUmVzcG9uc2Ui", 
+              "ABJLChlSZXR1cm5Qb3NpdGlvbnNGcm9tUGl4ZWxzEhYua2luZWN0cmdiZC5E", 
+              "YXRhU3RyZWFtGhQua2luZWN0cmdiZC5SZXNwb25zZSIAElEKIFJldHVyblBp", 
+              "eGVsQm91bmRzRnJvbVNwYWNlQm91bmRzEhUua2luZWN0cmdiZC5CaXRTdHJl", 
+              "YW0aFC5raW5lY3RyZ2JkLlJlc3BvbnNlIgASQQoPUmV0dXJuQ29nbml0aW9u", 
+              "EhYua2luZWN0cmdiZC5EYXRhU3RyZWFtGhQua2luZWN0cmdiZC5SZXNwb25z", 
+              "ZSIAQg8KB2V4LmdycGOiAgNSVEdiBnByb3RvMw=="));
         descriptor = pbr::FileDescriptor.InternalBuildGeneratedFileFrom(descriptorData,
             new pbr::FileDescriptor[] { },
             new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
@@ -57,7 +58,8 @@ namespace Kinectrgbd {
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Pixels), new[]{ "Color" }, null, null, null),
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Point), new[]{ "X", "Y", "Z", "Color" }, null, null, null),
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Points), new[]{ "Data" }, null, null, null),
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Data), new[]{ "X", "Y", "Z", "Caption", "Tags", "Texts", "Confidence" }, null, null, null),
+              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Tag), new[]{ "Tag_", "Confidence" }, null, null, null),
+              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Data), new[]{ "X", "Y", "Z", "Captions", "Tags", "Texts", "Status" }, null, null, null),
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.DataStream), new[]{ "Status", "Data" }, null, null, null),
               new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.BitStream), new[]{ "Status", "Data" }, null, null, null)
             }));
@@ -1019,12 +1021,140 @@ namespace Kinectrgbd {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class Tag : pb::IMessage<Tag> {
+    private static readonly pb::MessageParser<Tag> _parser = new pb::MessageParser<Tag>(() => new Tag());
+    public static pb::MessageParser<Tag> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[7]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public Tag() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public Tag(Tag other) : this() {
+      tag_ = other.tag_;
+      confidence_ = other.confidence_;
+    }
+
+    public Tag Clone() {
+      return new Tag(this);
+    }
+
+    public const int Tag_FieldNumber = 1;
+    private string tag_ = "";
+    public string Tag_ {
+      get { return tag_; }
+      set {
+        tag_ = pb::Preconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    public const int ConfidenceFieldNumber = 2;
+    private float confidence_;
+    public float Confidence {
+      get { return confidence_; }
+      set {
+        confidence_ = value;
+      }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as Tag);
+    }
+
+    public bool Equals(Tag other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Tag_ != other.Tag_) return false;
+      if (Confidence != other.Confidence) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Tag_.Length != 0) hash ^= Tag_.GetHashCode();
+      if (Confidence != 0F) hash ^= Confidence.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.Default.Format(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Tag_.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Tag_);
+      }
+      if (Confidence != 0F) {
+        output.WriteRawTag(21);
+        output.WriteFloat(Confidence);
+      }
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (Tag_.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Tag_);
+      }
+      if (Confidence != 0F) {
+        size += 1 + 4;
+      }
+      return size;
+    }
+
+    public void MergeFrom(Tag other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Tag_.Length != 0) {
+        Tag_ = other.Tag_;
+      }
+      if (other.Confidence != 0F) {
+        Confidence = other.Confidence;
+      }
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10: {
+            Tag_ = input.ReadString();
+            break;
+          }
+          case 21: {
+            Confidence = input.ReadFloat();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class Data : pb::IMessage<Data> {
     private static readonly pb::MessageParser<Data> _parser = new pb::MessageParser<Data>(() => new Data());
     public static pb::MessageParser<Data> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[7]; }
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[8]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1041,10 +1171,10 @@ namespace Kinectrgbd {
       x_ = other.x_;
       y_ = other.y_;
       z_ = other.z_;
-      caption_ = other.caption_;
+      captions_ = other.captions_.Clone();
       tags_ = other.tags_.Clone();
       texts_ = other.texts_.Clone();
-      confidence_ = other.confidence_;
+      status_ = other.status_;
     }
 
     public Data Clone() {
@@ -1078,20 +1208,19 @@ namespace Kinectrgbd {
       }
     }
 
-    public const int CaptionFieldNumber = 4;
-    private string caption_ = "";
-    public string Caption {
-      get { return caption_; }
-      set {
-        caption_ = pb::Preconditions.CheckNotNull(value, "value");
-      }
+    public const int CaptionsFieldNumber = 4;
+    private static readonly pb::FieldCodec<global::Kinectrgbd.Tag> _repeated_captions_codec
+        = pb::FieldCodec.ForMessage(34, global::Kinectrgbd.Tag.Parser);
+    private readonly pbc::RepeatedField<global::Kinectrgbd.Tag> captions_ = new pbc::RepeatedField<global::Kinectrgbd.Tag>();
+    public pbc::RepeatedField<global::Kinectrgbd.Tag> Captions {
+      get { return captions_; }
     }
 
     public const int TagsFieldNumber = 5;
-    private static readonly pb::FieldCodec<string> _repeated_tags_codec
-        = pb::FieldCodec.ForString(42);
-    private readonly pbc::RepeatedField<string> tags_ = new pbc::RepeatedField<string>();
-    public pbc::RepeatedField<string> Tags {
+    private static readonly pb::FieldCodec<global::Kinectrgbd.Tag> _repeated_tags_codec
+        = pb::FieldCodec.ForMessage(42, global::Kinectrgbd.Tag.Parser);
+    private readonly pbc::RepeatedField<global::Kinectrgbd.Tag> tags_ = new pbc::RepeatedField<global::Kinectrgbd.Tag>();
+    public pbc::RepeatedField<global::Kinectrgbd.Tag> Tags {
       get { return tags_; }
     }
 
@@ -1103,12 +1232,12 @@ namespace Kinectrgbd {
       get { return texts_; }
     }
 
-    public const int ConfidenceFieldNumber = 7;
-    private float confidence_;
-    public float Confidence {
-      get { return confidence_; }
+    public const int StatusFieldNumber = 7;
+    private bool status_;
+    public bool Status {
+      get { return status_; }
       set {
-        confidence_ = value;
+        status_ = value;
       }
     }
 
@@ -1126,10 +1255,10 @@ namespace Kinectrgbd {
       if (X != other.X) return false;
       if (Y != other.Y) return false;
       if (Z != other.Z) return false;
-      if (Caption != other.Caption) return false;
+      if(!captions_.Equals(other.captions_)) return false;
       if(!tags_.Equals(other.tags_)) return false;
       if(!texts_.Equals(other.texts_)) return false;
-      if (Confidence != other.Confidence) return false;
+      if (Status != other.Status) return false;
       return true;
     }
 
@@ -1138,10 +1267,10 @@ namespace Kinectrgbd {
       if (X != 0F) hash ^= X.GetHashCode();
       if (Y != 0F) hash ^= Y.GetHashCode();
       if (Z != 0F) hash ^= Z.GetHashCode();
-      if (Caption.Length != 0) hash ^= Caption.GetHashCode();
+      hash ^= captions_.GetHashCode();
       hash ^= tags_.GetHashCode();
       hash ^= texts_.GetHashCode();
-      if (Confidence != 0F) hash ^= Confidence.GetHashCode();
+      if (Status != false) hash ^= Status.GetHashCode();
       return hash;
     }
 
@@ -1162,15 +1291,12 @@ namespace Kinectrgbd {
         output.WriteRawTag(29);
         output.WriteFloat(Z);
       }
-      if (Caption.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(Caption);
-      }
+      captions_.WriteTo(output, _repeated_captions_codec);
       tags_.WriteTo(output, _repeated_tags_codec);
       texts_.WriteTo(output, _repeated_texts_codec);
-      if (Confidence != 0F) {
-        output.WriteRawTag(61);
-        output.WriteFloat(Confidence);
+      if (Status != false) {
+        output.WriteRawTag(56);
+        output.WriteBool(Status);
       }
     }
 
@@ -1185,13 +1311,11 @@ namespace Kinectrgbd {
       if (Z != 0F) {
         size += 1 + 4;
       }
-      if (Caption.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Caption);
-      }
+      size += captions_.CalculateSize(_repeated_captions_codec);
       size += tags_.CalculateSize(_repeated_tags_codec);
       size += texts_.CalculateSize(_repeated_texts_codec);
-      if (Confidence != 0F) {
-        size += 1 + 4;
+      if (Status != false) {
+        size += 1 + 1;
       }
       return size;
     }
@@ -1209,13 +1333,11 @@ namespace Kinectrgbd {
       if (other.Z != 0F) {
         Z = other.Z;
       }
-      if (other.Caption.Length != 0) {
-        Caption = other.Caption;
-      }
+      captions_.Add(other.captions_);
       tags_.Add(other.tags_);
       texts_.Add(other.texts_);
-      if (other.Confidence != 0F) {
-        Confidence = other.Confidence;
+      if (other.Status != false) {
+        Status = other.Status;
       }
     }
 
@@ -1239,7 +1361,7 @@ namespace Kinectrgbd {
             break;
           }
           case 34: {
-            Caption = input.ReadString();
+            captions_.AddEntriesFrom(input, _repeated_captions_codec);
             break;
           }
           case 42: {
@@ -1250,8 +1372,8 @@ namespace Kinectrgbd {
             texts_.AddEntriesFrom(input, _repeated_texts_codec);
             break;
           }
-          case 61: {
-            Confidence = input.ReadFloat();
+          case 56: {
+            Status = input.ReadBool();
             break;
           }
         }
@@ -1266,7 +1388,7 @@ namespace Kinectrgbd {
     public static pb::MessageParser<DataStream> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[8]; }
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[9]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1386,7 +1508,7 @@ namespace Kinectrgbd {
     public static pb::MessageParser<BitStream> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[9]; }
+      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[10]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
