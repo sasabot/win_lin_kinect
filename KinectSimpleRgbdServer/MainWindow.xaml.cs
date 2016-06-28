@@ -294,8 +294,8 @@ namespace KinectSimpleRgbdServer
                 Width = depthMaxX - depthMinX,
                 Height = depthMinY - depthMaxY
             };
-            int colorMinX = Convert.ToInt32(colorPoints[depthPixelMin].Y);
-            int colorMinY = Convert.ToInt32(colorPoints[depthPixelMin].X);
+            int colorMinX = Convert.ToInt32(colorPoints[depthPixelMin].X);
+            int colorMinY = Convert.ToInt32(colorPoints[depthPixelMin].Y);
             int colorMaxX = Convert.ToInt32(colorPoints[depthPixelMax].X);
             int colorMaxY = Convert.ToInt32(colorPoints[depthPixelMax].Y);
             Kinectrgbd.Bit color = new Kinectrgbd.Bit
