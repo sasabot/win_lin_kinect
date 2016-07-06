@@ -17,9 +17,9 @@ namespace KinectSimpleRgbdServer
     using System.IO;
     using System.Threading.Tasks;
     using Newtonsoft.Json.Linq;
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    using System.Linq;
+    
+
     public partial class MainWindow : Window
     {
         private KinectSensor kinectSensor = null;
@@ -109,11 +109,13 @@ namespace KinectSimpleRgbdServer
                 else if (request.Mode == 4) // send bounding box in depth / pixel coords from space coords
                 {
                     HandleBoundingRequest(request, e.FrameReference.AcquireFrame());
+                    PrepareRequestMode();
                     return;
                 }
                 else if (request.Mode == 5) // call Microsoft cognitive services from partial image streams
                 {
                     HandleCognitiveRequest(request, e.FrameReference.AcquireFrame());
+                    PrepareRequestMode();
                     return;
                 }
             }
@@ -279,6 +281,8 @@ namespace KinectSimpleRgbdServer
             if (depthPixelMin < 0 || depthPixelMax < 0)
             {
                 Kinectrgbd.Response badresponse = this.client.ReturnPixelBoundsFromSpaceBounds(result);
+                colorFrame.Dispose();
+                depthFrame.Dispose();
                 return;
             }
 
@@ -348,6 +352,17 @@ namespace KinectSimpleRgbdServer
                 PixelFormats.Bgr32, null, pixels, colorDesc.Width * 4);
             this.canvas.Background = new ImageBrush(bitmapSource);
 
+            colorFrame.Dispose();
+            depthFrame.Dispose();
+
+            // cognition task must run on different thread or will laten kinect frames
+            Task.Run(() => HandleCognitionRequestAsync(request, pixels, cameraPoints, depthDesc, colorDesc, result));
+        }
+
+        private async Task HandleCognitionRequestAsync(Kinectrgbd.Request request, byte[] pixels, CameraSpacePoint[] cameraPoints,
+            FrameDescription depthDesc, FrameDescription colorDesc, Kinectrgbd.DataStream result)
+        {
+
             // setup async cloud tasks and create mask image for position detection
             float maskRatio = 0.3f; // parameter
             List<CameraSpacePoint> imageInSpace = new List<CameraSpacePoint>();
@@ -366,8 +381,8 @@ namespace KinectSimpleRgbdServer
                 // get partial image
                 byte[] partial = new byte[Convert.ToInt32(image.Width) * Convert.ToInt32(image.Height) * 4];
                 int atPixel = 0;
-                for (int i = Convert.ToInt32(image.Y); i < (image.Y + image.Height); ++i)
-                    for (int j = Convert.ToInt32(image.X + image.Width) - 1; j >= Convert.ToInt32(image.X); --j) // flip image
+                for (int i = Convert.ToInt32(image.Y); i < Convert.ToInt32(image.Y) + Convert.ToInt32(image.Height); ++i)
+                    for (int j = Convert.ToInt32(image.X) + Convert.ToInt32(image.Width) - 1; j >= Convert.ToInt32(image.X); --j) // flip image
                     {
                         int idx = (i * colorDesc.Width + j) * 4;
                         partial[atPixel++] = pixels[idx++];
@@ -446,13 +461,50 @@ namespace KinectSimpleRgbdServer
                 ++inSpaceIndex;
             }
 
+#if true
             // get cloud result
             List<Tuple<string, float>> descriptions = new List<Tuple<string, float>>();
             List<List<Tuple<string, float>>> tags = new List<List<Tuple<string, float>>>();
-            List<List<string>> texts = new List<List<string>>(request.Data.Count);
+            List<List<string>> texts = new List<List<string>>();
             int dataIndex = 0;
-            foreach (var task in await Task.WhenAll(tasks))
+
+            //await Task.WhenAny(Task.WhenAll(tasks), Task.Delay(3000));
+            await Task.WhenAny(Task.WhenAll(tasks), Task.Delay(120000));
+            var completedTasks = tasks.Where(t => t.Status == TaskStatus.RanToCompletion).Select(t => t.Result).ToList();
+
+            List<int> succeededTasks = new List<int>();
+            int taskIndex = -1;
+            foreach (var task in tasks)
             {
+                ++taskIndex;
+                if (task.Status == TaskStatus.RanToCompletion)
+                    succeededTasks.Add(taskIndex);
+            }
+
+            //foreach (var task in await Task.WhenAll(tasks))
+            int completedTaskIndex = -1;
+            taskIndex = 0;
+            foreach (var task in completedTasks)
+            {
+                ++completedTaskIndex;
+
+                while (taskIndex != succeededTasks[completedTaskIndex])
+                {
+                    if (taskIndex % 2 == 0)
+                    {
+                        descriptions.Add(Tuple.Create("", 0.0f));
+                        tags.Add(new List<Tuple<string, float>> { Tuple.Create("", 0.0f) });
+                    }
+                    else
+                    {
+                        texts.Add(new List<string> { "" });
+                        ++dataIndex;
+                    }
+                    ++taskIndex;
+                }
+
+                ++taskIndex;
+
                 if (!task.Item2.IsSuccessStatusCode)
                 {
                     valids[dataIndex] = false;
@@ -485,13 +537,19 @@ namespace KinectSimpleRgbdServer
                     }
 
                     // add tags
-                    List<JToken> parsedTags = analysisModel["tags"].ToObject<List<JToken>>();
+                    List<string> parsedTags = descriptionModel["tags"].ToObject<List<string>>();
                     tags.Add(new List<Tuple<string, float>>());
                     foreach (var tag in parsedTags)
                     {
-                        var tagModel = JObject.Parse(tag.ToString());
-                        tags[dataIndex].Add(new Tuple<string, float>(tagModel["name"].ToObject<String>(), tagModel["confidence"].ToObject<float>()));
+                        tags[dataIndex].Add(new Tuple<string, float>(tag, 0.0f));
                     }
+                    //List<JToken> parsedTags = analysisModel["tags"].ToObject<List<JToken>>();
+                    //tags.Add(new List<Tuple<string, float>>());
+                    //foreach (var tag in parsedTags)
+                    //{
+                    //    var tagModel = JObject.Parse(tag.ToString());
+                    //    tags[dataIndex].Add(new Tuple<string, float>(tagModel["name"].ToObject<String>(), tagModel["confidence"].ToObject<float>()));
+                    //}
                 }
                 else if (task.Item1 == "ocr")
                 {
@@ -520,6 +578,44 @@ namespace KinectSimpleRgbdServer
                 }
             }
 
+
+            while (taskIndex < tasks.Count)
+            {
+                if (taskIndex % 2 == 0)
+                {
+                    descriptions.Add(Tuple.Create("", 0.0f));
+                    tags.Add(new List<Tuple<string, float>> { Tuple.Create("", 0.0f) });
+                }
+                else
+                {
+                    texts.Add(new List<string> { "" });
+                    ++dataIndex;
+                }
+                ++taskIndex;
+            }
+
+
+            if (completedTasks.Count == 0)
+            {
+                Kinectrgbd.Response badresponse = this.client.ReturnCognition(result);
+                return;
+            }
+#else
+            for (int i = 0; i < request.Data.Count; ++i)
+            {
+                Kinectrgbd.Data data = new Kinectrgbd.Data
+                {
+                    Status = valids[i],
+                    X = imageInSpace[i].X,
+                    Y = imageInSpace[i].Y,
+                    Z = imageInSpace[i].Z
+                };
+
+                result.Data.Add(data);
+            }
+#endif
+
+#if true
             for (int i = 0; i < request.Data.Count; ++i)
             {
                 Kinectrgbd.Data data = new Kinectrgbd.Data
@@ -554,13 +650,19 @@ namespace KinectSimpleRgbdServer
 
                 result.Data.Add(data);
             }
+#endif
 
             result.Status = true;
             Kinectrgbd.Response response = this.client.ReturnCognition(result);
+
+            //colorFrame.Dispose();
+            //depthFrame.Dispose();
         }
 
         private async Task<Tuple<string, HttpResponseMessage>> AnalyzeImage(string key, string fileName)
         {
+            //System.Threading.Thread.Sleep(80000); //sleep debug to simulate bad network
+
             var client = new HttpClient();
             var queryString = HttpUtility.ParseQueryString(string.Empty);
 
@@ -568,7 +670,8 @@ namespace KinectSimpleRgbdServer
             client.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", key);
 
             // Request parameters
-            queryString["visualFeatures"] = "Tags,Description";
+            //queryString["visualFeatures"] = "Tags,Description";
+            queryString["visualFeatures"] = "Description";
             var uri = "https://api.projectoxford.ai/vision/v1.0/analyze?" + queryString;
 
             HttpResponseMessage response;
