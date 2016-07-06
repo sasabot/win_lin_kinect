@@ -392,7 +392,7 @@ public:
 	bit.width = boundings->data(i).width();
 	bit.height = boundings->data(i).height();
 	boundings_.push_back(bit);
-	ROS_INFO("got bounding [%d, %d], width: %d, height: %d",
+	ROS_INFO("got bounding [%f, %f], width: %f, height: %f",
 		 bit.x, bit.y, bit.width, bit.height);
       }
     }
