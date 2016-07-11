@@ -73,7 +73,15 @@ namespace KinectSimpleRgbdServer
 
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            this.channel = new Channel("192.168.101.192:50052", Credentials.Insecure);
+            Console.WriteLine("Enter IP [example] 192.168.101.192:50052");
+            string x = Console.ReadLine().ToString();
+            if (x != "")
+            {
+                Properties.Settings.Default.Ip = x;
+                Properties.Settings.Default.Save();
+            }       
+            var ip = Properties.Settings.Default.Ip;
+            this.channel = new Channel(ip, Credentials.Insecure);
             this.client = Kinectrgbd.KinectRgbd.NewClient(this.channel);
         }
 
