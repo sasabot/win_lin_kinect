@@ -81,8 +81,8 @@ namespace KinectSimpleRgbdServer
                 Properties.Settings.Default.Save();
             }       
             var ip = Properties.Settings.Default.Ip;
-            this.channel = new Channel(ip, Credentials.Insecure);
-            this.client = Kinectrgbd.KinectRgbd.NewClient(this.channel);
+            this.channel = new Channel(ip, ChannelCredentials.Insecure);
+            this.client = new Kinectrgbd.KinectRgbd.KinectRgbdClient(this.channel);
         }
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)

@@ -9,64 +9,63 @@ using pbr = global::Google.Protobuf.Reflection;
 using scg = global::System.Collections.Generic;
 namespace Kinectrgbd {
 
-  namespace Proto {
+  /// <summary>Holder for reflection information generated from kinect_rgbd.proto</summary>
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public static partial class KinectRgbdReflection {
 
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-    public static partial class KinectRgbd {
-
-      #region Descriptor
-      public static pbr::FileDescriptor Descriptor {
-        get { return descriptor; }
-      }
-      private static pbr::FileDescriptor descriptor;
-
-      static KinectRgbd() {
-        byte[] descriptorData = global::System.Convert.FromBase64String(
-            string.Concat(
-              "ChFraW5lY3RfcmdiZC5wcm90bxIKa2luZWN0cmdiZCIWCgZIZWFkZXISDAoE", 
-              "ZGF0YRgBIAEoCCJICgNCaXQSCQoBeBgBIAEoAhIJCgF5GAIgASgCEg0KBXdp", 
-              "ZHRoGAMgASgCEg4KBmhlaWdodBgEIAEoAhIMCgRuYW1lGAUgASgJIlIKB1Jl", 
-              "cXVlc3QSDAoEbW9kZRgBIAEoBRIdCgRkYXRhGAIgAygLMg8ua2luZWN0cmdi", 
-              "ZC5CaXQSDAoEb25jZRgDIAEoCBIMCgRhcmdzGAQgASgJIhoKCFJlc3BvbnNl", 
-              "Eg4KBmZpbmlzaBgBIAEoCCIXCgZQaXhlbHMSDQoFY29sb3IYASADKAUiNwoF", 
-              "UG9pbnQSCQoBeBgBIAEoAhIJCgF5GAIgASgCEgkKAXoYAyABKAISDQoFY29s", 
-              "b3IYBCABKAUiKQoGUG9pbnRzEh8KBGRhdGEYASADKAsyES5raW5lY3RyZ2Jk", 
-              "LlBvaW50IiYKA1RhZxILCgN0YWcYASABKAkSEgoKY29uZmlkZW5jZRgCIAEo", 
-              "AiKIAQoERGF0YRIJCgF4GAEgASgCEgkKAXkYAiABKAISCQoBehgDIAEoAhIh", 
-              "CghjYXB0aW9ucxgEIAMoCzIPLmtpbmVjdHJnYmQuVGFnEh0KBHRhZ3MYBSAD", 
-              "KAsyDy5raW5lY3RyZ2JkLlRhZxINCgV0ZXh0cxgGIAMoCRIOCgZzdGF0dXMY", 
-              "ByABKAgiPAoKRGF0YVN0cmVhbRIOCgZzdGF0dXMYASABKAgSHgoEZGF0YRgC", 
-              "IAMoCzIQLmtpbmVjdHJnYmQuRGF0YSI6CglCaXRTdHJlYW0SDgoGc3RhdHVz", 
-              "GAEgASgIEh0KBGRhdGEYAiADKAsyDy5raW5lY3RyZ2JkLkJpdDKdAwoKS2lu", 
-              "ZWN0UmdiZBI5CgxDaGVja1JlcXVlc3QSEi5raW5lY3RyZ2JkLkhlYWRlchoT", 
-              "LmtpbmVjdHJnYmQuUmVxdWVzdCIAEjgKClNlbmRQb2ludHMSEi5raW5lY3Ry", 
-              "Z2JkLlBvaW50cxoULmtpbmVjdHJnYmQuUmVzcG9uc2UiABI3CglTZW5kSW1h", 
-              "Z2USEi5raW5lY3RyZ2JkLlBpeGVscxoULmtpbmVjdHJnYmQuUmVzcG9uc2Ui", 
-              "ABJLChlSZXR1cm5Qb3NpdGlvbnNGcm9tUGl4ZWxzEhYua2luZWN0cmdiZC5E", 
-              "YXRhU3RyZWFtGhQua2luZWN0cmdiZC5SZXNwb25zZSIAElEKIFJldHVyblBp", 
-              "eGVsQm91bmRzRnJvbVNwYWNlQm91bmRzEhUua2luZWN0cmdiZC5CaXRTdHJl", 
-              "YW0aFC5raW5lY3RyZ2JkLlJlc3BvbnNlIgASQQoPUmV0dXJuQ29nbml0aW9u", 
-              "EhYua2luZWN0cmdiZC5EYXRhU3RyZWFtGhQua2luZWN0cmdiZC5SZXNwb25z", 
-              "ZSIAQg8KB2V4LmdycGOiAgNSVEdiBnByb3RvMw=="));
-        descriptor = pbr::FileDescriptor.InternalBuildGeneratedFileFrom(descriptorData,
-            new pbr::FileDescriptor[] { },
-            new pbr::GeneratedCodeInfo(null, new pbr::GeneratedCodeInfo[] {
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Header), new[]{ "Data" }, null, null, null),
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Bit), new[]{ "X", "Y", "Width", "Height", "Name" }, null, null, null),
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Request), new[]{ "Mode", "Data", "Once", "Args" }, null, null, null),
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Response), new[]{ "Finish" }, null, null, null),
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Pixels), new[]{ "Color" }, null, null, null),
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Point), new[]{ "X", "Y", "Z", "Color" }, null, null, null),
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Points), new[]{ "Data" }, null, null, null),
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Tag), new[]{ "Tag_", "Confidence" }, null, null, null),
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.Data), new[]{ "X", "Y", "Z", "Captions", "Tags", "Texts", "Status" }, null, null, null),
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.DataStream), new[]{ "Status", "Data" }, null, null, null),
-              new pbr::GeneratedCodeInfo(typeof(global::Kinectrgbd.BitStream), new[]{ "Status", "Data" }, null, null, null)
-            }));
-      }
-      #endregion
-
+    #region Descriptor
+    /// <summary>File descriptor for kinect_rgbd.proto</summary>
+    public static pbr::FileDescriptor Descriptor {
+      get { return descriptor; }
     }
+    private static pbr::FileDescriptor descriptor;
+
+    static KinectRgbdReflection() {
+      byte[] descriptorData = global::System.Convert.FromBase64String(
+          string.Concat(
+            "ChFraW5lY3RfcmdiZC5wcm90bxIKa2luZWN0cmdiZCIWCgZIZWFkZXISDAoE",
+            "ZGF0YRgBIAEoCCJICgNCaXQSCQoBeBgBIAEoAhIJCgF5GAIgASgCEg0KBXdp",
+            "ZHRoGAMgASgCEg4KBmhlaWdodBgEIAEoAhIMCgRuYW1lGAUgASgJIlIKB1Jl",
+            "cXVlc3QSDAoEbW9kZRgBIAEoBRIdCgRkYXRhGAIgAygLMg8ua2luZWN0cmdi",
+            "ZC5CaXQSDAoEb25jZRgDIAEoCBIMCgRhcmdzGAQgASgJIhoKCFJlc3BvbnNl",
+            "Eg4KBmZpbmlzaBgBIAEoCCIXCgZQaXhlbHMSDQoFY29sb3IYASADKAUiNwoF",
+            "UG9pbnQSCQoBeBgBIAEoAhIJCgF5GAIgASgCEgkKAXoYAyABKAISDQoFY29s",
+            "b3IYBCABKAUiKQoGUG9pbnRzEh8KBGRhdGEYASADKAsyES5raW5lY3RyZ2Jk",
+            "LlBvaW50IiYKA1RhZxILCgN0YWcYASABKAkSEgoKY29uZmlkZW5jZRgCIAEo",
+            "AiKIAQoERGF0YRIJCgF4GAEgASgCEgkKAXkYAiABKAISCQoBehgDIAEoAhIh",
+            "CghjYXB0aW9ucxgEIAMoCzIPLmtpbmVjdHJnYmQuVGFnEh0KBHRhZ3MYBSAD",
+            "KAsyDy5raW5lY3RyZ2JkLlRhZxINCgV0ZXh0cxgGIAMoCRIOCgZzdGF0dXMY",
+            "ByABKAgiPAoKRGF0YVN0cmVhbRIOCgZzdGF0dXMYASABKAgSHgoEZGF0YRgC",
+            "IAMoCzIQLmtpbmVjdHJnYmQuRGF0YSI6CglCaXRTdHJlYW0SDgoGc3RhdHVz",
+            "GAEgASgIEh0KBGRhdGEYAiADKAsyDy5raW5lY3RyZ2JkLkJpdDKdAwoKS2lu",
+            "ZWN0UmdiZBI5CgxDaGVja1JlcXVlc3QSEi5raW5lY3RyZ2JkLkhlYWRlchoT",
+            "LmtpbmVjdHJnYmQuUmVxdWVzdCIAEjgKClNlbmRQb2ludHMSEi5raW5lY3Ry",
+            "Z2JkLlBvaW50cxoULmtpbmVjdHJnYmQuUmVzcG9uc2UiABI3CglTZW5kSW1h",
+            "Z2USEi5raW5lY3RyZ2JkLlBpeGVscxoULmtpbmVjdHJnYmQuUmVzcG9uc2Ui",
+            "ABJLChlSZXR1cm5Qb3NpdGlvbnNGcm9tUGl4ZWxzEhYua2luZWN0cmdiZC5E",
+            "YXRhU3RyZWFtGhQua2luZWN0cmdiZC5SZXNwb25zZSIAElEKIFJldHVyblBp",
+            "eGVsQm91bmRzRnJvbVNwYWNlQm91bmRzEhUua2luZWN0cmdiZC5CaXRTdHJl",
+            "YW0aFC5raW5lY3RyZ2JkLlJlc3BvbnNlIgASQQoPUmV0dXJuQ29nbml0aW9u",
+            "EhYua2luZWN0cmdiZC5EYXRhU3RyZWFtGhQua2luZWN0cmdiZC5SZXNwb25z",
+            "ZSIAQg8KB2V4LmdycGOiAgNSVEdiBnByb3RvMw=="));
+      descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
+          new pbr::FileDescriptor[] { },
+          new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrgbd.Header), global::Kinectrgbd.Header.Parser, new[]{ "Data" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrgbd.Bit), global::Kinectrgbd.Bit.Parser, new[]{ "X", "Y", "Width", "Height", "Name" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrgbd.Request), global::Kinectrgbd.Request.Parser, new[]{ "Mode", "Data", "Once", "Args" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrgbd.Response), global::Kinectrgbd.Response.Parser, new[]{ "Finish" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrgbd.Pixels), global::Kinectrgbd.Pixels.Parser, new[]{ "Color" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrgbd.Point), global::Kinectrgbd.Point.Parser, new[]{ "X", "Y", "Z", "Color" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrgbd.Points), global::Kinectrgbd.Points.Parser, new[]{ "Data" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrgbd.Tag), global::Kinectrgbd.Tag.Parser, new[]{ "Tag_", "Confidence" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrgbd.Data), global::Kinectrgbd.Data.Parser, new[]{ "X", "Y", "Z", "Captions", "Tags", "Texts", "Status" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrgbd.DataStream), global::Kinectrgbd.DataStream.Parser, new[]{ "Status", "Data" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrgbd.BitStream), global::Kinectrgbd.BitStream.Parser, new[]{ "Status", "Data" }, null, null, null)
+          }));
+    }
+    #endregion
+
   }
   #region Messages
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
@@ -75,7 +74,7 @@ namespace Kinectrgbd {
     public static pb::MessageParser<Header> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[0]; }
+      get { return global::Kinectrgbd.KinectRgbdReflection.Descriptor.MessageTypes[0]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -96,6 +95,7 @@ namespace Kinectrgbd {
       return new Header(this);
     }
 
+    /// <summary>Field number for the "data" field.</summary>
     public const int DataFieldNumber = 1;
     private bool data_;
     public bool Data {
@@ -127,7 +127,7 @@ namespace Kinectrgbd {
     }
 
     public override string ToString() {
-      return pb::JsonFormatter.Default.Format(this);
+      return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
@@ -177,7 +177,7 @@ namespace Kinectrgbd {
     public static pb::MessageParser<Bit> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[1]; }
+      get { return global::Kinectrgbd.KinectRgbdReflection.Descriptor.MessageTypes[1]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -202,6 +202,7 @@ namespace Kinectrgbd {
       return new Bit(this);
     }
 
+    /// <summary>Field number for the "x" field.</summary>
     public const int XFieldNumber = 1;
     private float x_;
     public float X {
@@ -211,6 +212,7 @@ namespace Kinectrgbd {
       }
     }
 
+    /// <summary>Field number for the "y" field.</summary>
     public const int YFieldNumber = 2;
     private float y_;
     public float Y {
@@ -220,6 +222,7 @@ namespace Kinectrgbd {
       }
     }
 
+    /// <summary>Field number for the "width" field.</summary>
     public const int WidthFieldNumber = 3;
     private float width_;
     public float Width {
@@ -229,6 +232,7 @@ namespace Kinectrgbd {
       }
     }
 
+    /// <summary>Field number for the "height" field.</summary>
     public const int HeightFieldNumber = 4;
     private float height_;
     public float Height {
@@ -238,12 +242,13 @@ namespace Kinectrgbd {
       }
     }
 
+    /// <summary>Field number for the "name" field.</summary>
     public const int NameFieldNumber = 5;
     private string name_ = "";
     public string Name {
       get { return name_; }
       set {
-        name_ = pb::Preconditions.CheckNotNull(value, "value");
+        name_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -277,7 +282,7 @@ namespace Kinectrgbd {
     }
 
     public override string ToString() {
-      return pb::JsonFormatter.Default.Format(this);
+      return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
@@ -383,7 +388,7 @@ namespace Kinectrgbd {
     public static pb::MessageParser<Request> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[2]; }
+      get { return global::Kinectrgbd.KinectRgbdReflection.Descriptor.MessageTypes[2]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -407,6 +412,7 @@ namespace Kinectrgbd {
       return new Request(this);
     }
 
+    /// <summary>Field number for the "mode" field.</summary>
     public const int ModeFieldNumber = 1;
     private int mode_;
     public int Mode {
@@ -416,6 +422,7 @@ namespace Kinectrgbd {
       }
     }
 
+    /// <summary>Field number for the "data" field.</summary>
     public const int DataFieldNumber = 2;
     private static readonly pb::FieldCodec<global::Kinectrgbd.Bit> _repeated_data_codec
         = pb::FieldCodec.ForMessage(18, global::Kinectrgbd.Bit.Parser);
@@ -424,6 +431,7 @@ namespace Kinectrgbd {
       get { return data_; }
     }
 
+    /// <summary>Field number for the "once" field.</summary>
     public const int OnceFieldNumber = 3;
     private bool once_;
     public bool Once {
@@ -433,12 +441,13 @@ namespace Kinectrgbd {
       }
     }
 
+    /// <summary>Field number for the "args" field.</summary>
     public const int ArgsFieldNumber = 4;
     private string args_ = "";
     public string Args {
       get { return args_; }
       set {
-        args_ = pb::Preconditions.CheckNotNull(value, "value");
+        args_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -470,7 +479,7 @@ namespace Kinectrgbd {
     }
 
     public override string ToString() {
-      return pb::JsonFormatter.Default.Format(this);
+      return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
@@ -555,7 +564,7 @@ namespace Kinectrgbd {
     public static pb::MessageParser<Response> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[3]; }
+      get { return global::Kinectrgbd.KinectRgbdReflection.Descriptor.MessageTypes[3]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -576,6 +585,7 @@ namespace Kinectrgbd {
       return new Response(this);
     }
 
+    /// <summary>Field number for the "finish" field.</summary>
     public const int FinishFieldNumber = 1;
     private bool finish_;
     public bool Finish {
@@ -607,7 +617,7 @@ namespace Kinectrgbd {
     }
 
     public override string ToString() {
-      return pb::JsonFormatter.Default.Format(this);
+      return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
@@ -657,7 +667,7 @@ namespace Kinectrgbd {
     public static pb::MessageParser<Pixels> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[4]; }
+      get { return global::Kinectrgbd.KinectRgbdReflection.Descriptor.MessageTypes[4]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -678,6 +688,7 @@ namespace Kinectrgbd {
       return new Pixels(this);
     }
 
+    /// <summary>Field number for the "color" field.</summary>
     public const int ColorFieldNumber = 1;
     private static readonly pb::FieldCodec<int> _repeated_color_codec
         = pb::FieldCodec.ForInt32(10);
@@ -708,7 +719,7 @@ namespace Kinectrgbd {
     }
 
     public override string ToString() {
-      return pb::JsonFormatter.Default.Format(this);
+      return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
@@ -752,7 +763,7 @@ namespace Kinectrgbd {
     public static pb::MessageParser<Point> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[5]; }
+      get { return global::Kinectrgbd.KinectRgbdReflection.Descriptor.MessageTypes[5]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -776,6 +787,7 @@ namespace Kinectrgbd {
       return new Point(this);
     }
 
+    /// <summary>Field number for the "x" field.</summary>
     public const int XFieldNumber = 1;
     private float x_;
     public float X {
@@ -785,6 +797,7 @@ namespace Kinectrgbd {
       }
     }
 
+    /// <summary>Field number for the "y" field.</summary>
     public const int YFieldNumber = 2;
     private float y_;
     public float Y {
@@ -794,6 +807,7 @@ namespace Kinectrgbd {
       }
     }
 
+    /// <summary>Field number for the "z" field.</summary>
     public const int ZFieldNumber = 3;
     private float z_;
     public float Z {
@@ -803,6 +817,7 @@ namespace Kinectrgbd {
       }
     }
 
+    /// <summary>Field number for the "color" field.</summary>
     public const int ColorFieldNumber = 4;
     private int color_;
     public int Color {
@@ -840,7 +855,7 @@ namespace Kinectrgbd {
     }
 
     public override string ToString() {
-      return pb::JsonFormatter.Default.Format(this);
+      return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
@@ -932,7 +947,7 @@ namespace Kinectrgbd {
     public static pb::MessageParser<Points> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[6]; }
+      get { return global::Kinectrgbd.KinectRgbdReflection.Descriptor.MessageTypes[6]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -953,6 +968,7 @@ namespace Kinectrgbd {
       return new Points(this);
     }
 
+    /// <summary>Field number for the "data" field.</summary>
     public const int DataFieldNumber = 1;
     private static readonly pb::FieldCodec<global::Kinectrgbd.Point> _repeated_data_codec
         = pb::FieldCodec.ForMessage(10, global::Kinectrgbd.Point.Parser);
@@ -983,7 +999,7 @@ namespace Kinectrgbd {
     }
 
     public override string ToString() {
-      return pb::JsonFormatter.Default.Format(this);
+      return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
@@ -1026,7 +1042,7 @@ namespace Kinectrgbd {
     public static pb::MessageParser<Tag> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[7]; }
+      get { return global::Kinectrgbd.KinectRgbdReflection.Descriptor.MessageTypes[7]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1048,15 +1064,17 @@ namespace Kinectrgbd {
       return new Tag(this);
     }
 
+    /// <summary>Field number for the "tag" field.</summary>
     public const int Tag_FieldNumber = 1;
     private string tag_ = "";
     public string Tag_ {
       get { return tag_; }
       set {
-        tag_ = pb::Preconditions.CheckNotNull(value, "value");
+        tag_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
+    /// <summary>Field number for the "confidence" field.</summary>
     public const int ConfidenceFieldNumber = 2;
     private float confidence_;
     public float Confidence {
@@ -1090,7 +1108,7 @@ namespace Kinectrgbd {
     }
 
     public override string ToString() {
-      return pb::JsonFormatter.Default.Format(this);
+      return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
@@ -1154,7 +1172,7 @@ namespace Kinectrgbd {
     public static pb::MessageParser<Data> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[8]; }
+      get { return global::Kinectrgbd.KinectRgbdReflection.Descriptor.MessageTypes[8]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1181,6 +1199,7 @@ namespace Kinectrgbd {
       return new Data(this);
     }
 
+    /// <summary>Field number for the "x" field.</summary>
     public const int XFieldNumber = 1;
     private float x_;
     public float X {
@@ -1190,6 +1209,7 @@ namespace Kinectrgbd {
       }
     }
 
+    /// <summary>Field number for the "y" field.</summary>
     public const int YFieldNumber = 2;
     private float y_;
     public float Y {
@@ -1199,6 +1219,7 @@ namespace Kinectrgbd {
       }
     }
 
+    /// <summary>Field number for the "z" field.</summary>
     public const int ZFieldNumber = 3;
     private float z_;
     public float Z {
@@ -1208,6 +1229,7 @@ namespace Kinectrgbd {
       }
     }
 
+    /// <summary>Field number for the "captions" field.</summary>
     public const int CaptionsFieldNumber = 4;
     private static readonly pb::FieldCodec<global::Kinectrgbd.Tag> _repeated_captions_codec
         = pb::FieldCodec.ForMessage(34, global::Kinectrgbd.Tag.Parser);
@@ -1216,6 +1238,7 @@ namespace Kinectrgbd {
       get { return captions_; }
     }
 
+    /// <summary>Field number for the "tags" field.</summary>
     public const int TagsFieldNumber = 5;
     private static readonly pb::FieldCodec<global::Kinectrgbd.Tag> _repeated_tags_codec
         = pb::FieldCodec.ForMessage(42, global::Kinectrgbd.Tag.Parser);
@@ -1224,6 +1247,7 @@ namespace Kinectrgbd {
       get { return tags_; }
     }
 
+    /// <summary>Field number for the "texts" field.</summary>
     public const int TextsFieldNumber = 6;
     private static readonly pb::FieldCodec<string> _repeated_texts_codec
         = pb::FieldCodec.ForString(50);
@@ -1232,6 +1256,7 @@ namespace Kinectrgbd {
       get { return texts_; }
     }
 
+    /// <summary>Field number for the "status" field.</summary>
     public const int StatusFieldNumber = 7;
     private bool status_;
     public bool Status {
@@ -1275,7 +1300,7 @@ namespace Kinectrgbd {
     }
 
     public override string ToString() {
-      return pb::JsonFormatter.Default.Format(this);
+      return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
@@ -1388,7 +1413,7 @@ namespace Kinectrgbd {
     public static pb::MessageParser<DataStream> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[9]; }
+      get { return global::Kinectrgbd.KinectRgbdReflection.Descriptor.MessageTypes[9]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1410,6 +1435,7 @@ namespace Kinectrgbd {
       return new DataStream(this);
     }
 
+    /// <summary>Field number for the "status" field.</summary>
     public const int StatusFieldNumber = 1;
     private bool status_;
     public bool Status {
@@ -1419,6 +1445,7 @@ namespace Kinectrgbd {
       }
     }
 
+    /// <summary>Field number for the "data" field.</summary>
     public const int DataFieldNumber = 2;
     private static readonly pb::FieldCodec<global::Kinectrgbd.Data> _repeated_data_codec
         = pb::FieldCodec.ForMessage(18, global::Kinectrgbd.Data.Parser);
@@ -1451,7 +1478,7 @@ namespace Kinectrgbd {
     }
 
     public override string ToString() {
-      return pb::JsonFormatter.Default.Format(this);
+      return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
@@ -1508,7 +1535,7 @@ namespace Kinectrgbd {
     public static pb::MessageParser<BitStream> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrgbd.Proto.KinectRgbd.Descriptor.MessageTypes[10]; }
+      get { return global::Kinectrgbd.KinectRgbdReflection.Descriptor.MessageTypes[10]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1530,6 +1557,7 @@ namespace Kinectrgbd {
       return new BitStream(this);
     }
 
+    /// <summary>Field number for the "status" field.</summary>
     public const int StatusFieldNumber = 1;
     private bool status_;
     public bool Status {
@@ -1539,6 +1567,7 @@ namespace Kinectrgbd {
       }
     }
 
+    /// <summary>Field number for the "data" field.</summary>
     public const int DataFieldNumber = 2;
     private static readonly pb::FieldCodec<global::Kinectrgbd.Bit> _repeated_data_codec
         = pb::FieldCodec.ForMessage(18, global::Kinectrgbd.Bit.Parser);
@@ -1571,7 +1600,7 @@ namespace Kinectrgbd {
     }
 
     public override string ToString() {
-      return pb::JsonFormatter.Default.Format(this);
+      return pb::JsonFormatter.ToDiagnosticString(this);
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
