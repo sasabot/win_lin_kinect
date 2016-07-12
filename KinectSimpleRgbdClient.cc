@@ -493,7 +493,7 @@ int main(int argc, char** argv)
   spinner.start();
 
   ServerBuilder builder;
-  builder.AddListeningPort("192.168.101.192:50052", grpc::InsecureServerCredentials());
+  builder.AddListeningPort("0.0.0.0:50052", grpc::InsecureServerCredentials());
   builder.RegisterService(&service);
   std::unique_ptr<Server> server(builder.BuildAndStart());
   server->Wait();
