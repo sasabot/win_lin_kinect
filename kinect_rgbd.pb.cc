@@ -7,6 +7,7 @@
 #include <algorithm>
 
 #include <google/protobuf/stubs/common.h>
+#include <google/protobuf/stubs/port.h>
 #include <google/protobuf/stubs/once.h>
 #include <google/protobuf/io/coded_stream.h>
 #include <google/protobuf/wire_format_lite_inl.h>
@@ -391,9 +392,9 @@ static void MergeFromFail(int line) {
 
 // ===================================================================
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int Header::kDataFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 Header::Header()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
@@ -455,12 +456,13 @@ Header* Header::New(::google::protobuf::Arena* arena) const {
 }
 
 void Header::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectrgbd.Header)
   data_ = false;
 }
 
 bool Header::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:kinectrgbd.Header)
   for (;;) {
@@ -527,6 +529,7 @@ void Header::SerializeWithCachedSizes(
 }
 
 int Header::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectrgbd.Header)
   int total_size = 0;
 
   // optional bool data = 1;
@@ -541,18 +544,22 @@ int Header::ByteSize() const {
 }
 
 void Header::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectrgbd.Header)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   const Header* source = 
       ::google::protobuf::internal::DynamicCastToGenerated<const Header>(
           &from);
   if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectrgbd.Header)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectrgbd.Header)
     MergeFrom(*source);
   }
 }
 
 void Header::MergeFrom(const Header& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectrgbd.Header)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   if (from.data() != 0) {
     set_data(from.data());
@@ -560,12 +567,14 @@ void Header::MergeFrom(const Header& from) {
 }
 
 void Header::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectrgbd.Header)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void Header::CopyFrom(const Header& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectrgbd.Header)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -615,13 +624,13 @@ void Header::clear_data() {
 
 // ===================================================================
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int Bit::kXFieldNumber;
 const int Bit::kYFieldNumber;
 const int Bit::kWidthFieldNumber;
 const int Bit::kHeightFieldNumber;
 const int Bit::kNameFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 Bit::Bit()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
@@ -689,8 +698,17 @@ Bit* Bit::New(::google::protobuf::Arena* arena) const {
 }
 
 void Bit::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectrgbd.Bit)
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(Bit, f) \
+  _Pragma("clang diagnostic pop")
+#else
 #define ZR_HELPER_(f) reinterpret_cast<char*>(\
   &reinterpret_cast<Bit*>(16)->f)
+#endif
 
 #define ZR_(first, last) do {\
   ::memset(&first, 0,\
@@ -707,7 +725,7 @@ void Bit::Clear() {
 
 bool Bit::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:kinectrgbd.Bit)
   for (;;) {
@@ -887,6 +905,7 @@ void Bit::SerializeWithCachedSizes(
 }
 
 int Bit::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectrgbd.Bit)
   int total_size = 0;
 
   // optional float x = 1;
@@ -923,18 +942,22 @@ int Bit::ByteSize() const {
 }
 
 void Bit::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectrgbd.Bit)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   const Bit* source = 
       ::google::protobuf::internal::DynamicCastToGenerated<const Bit>(
           &from);
   if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectrgbd.Bit)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectrgbd.Bit)
     MergeFrom(*source);
   }
 }
 
 void Bit::MergeFrom(const Bit& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectrgbd.Bit)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   if (from.x() != 0) {
     set_x(from.x());
@@ -955,12 +978,14 @@ void Bit::MergeFrom(const Bit& from) {
 }
 
 void Bit::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectrgbd.Bit)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void Bit::CopyFrom(const Bit& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectrgbd.Bit)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -1082,6 +1107,7 @@ void Bit::clear_name() {
   return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
  ::std::string* Bit::release_name() {
+  // @@protoc_insertion_point(field_release:kinectrgbd.Bit.name)
   
   return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1099,12 +1125,12 @@ void Bit::clear_name() {
 
 // ===================================================================
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int Request::kModeFieldNumber;
 const int Request::kDataFieldNumber;
 const int Request::kOnceFieldNumber;
 const int Request::kArgsFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 Request::Request()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
@@ -1170,8 +1196,17 @@ Request* Request::New(::google::protobuf::Arena* arena) const {
 }
 
 void Request::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectrgbd.Request)
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(Request, f) \
+  _Pragma("clang diagnostic pop")
+#else
 #define ZR_HELPER_(f) reinterpret_cast<char*>(\
   &reinterpret_cast<Request*>(16)->f)
+#endif
 
 #define ZR_(first, last) do {\
   ::memset(&first, 0,\
@@ -1189,7 +1224,7 @@ void Request::Clear() {
 
 bool Request::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:kinectrgbd.Request)
   for (;;) {
@@ -1349,6 +1384,7 @@ void Request::SerializeWithCachedSizes(
 }
 
 int Request::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectrgbd.Request)
   int total_size = 0;
 
   // optional int32 mode = 1;
@@ -1385,18 +1421,22 @@ int Request::ByteSize() const {
 }
 
 void Request::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectrgbd.Request)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   const Request* source = 
       ::google::protobuf::internal::DynamicCastToGenerated<const Request>(
           &from);
   if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectrgbd.Request)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectrgbd.Request)
     MergeFrom(*source);
   }
 }
 
 void Request::MergeFrom(const Request& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectrgbd.Request)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   data_.MergeFrom(from.data_);
   if (from.mode() != 0) {
@@ -1412,12 +1452,14 @@ void Request::MergeFrom(const Request& from) {
 }
 
 void Request::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectrgbd.Request)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void Request::CopyFrom(const Request& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectrgbd.Request)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -1540,6 +1582,7 @@ void Request::clear_args() {
   return args_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
  ::std::string* Request::release_args() {
+  // @@protoc_insertion_point(field_release:kinectrgbd.Request.args)
   
   return args_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1557,9 +1600,9 @@ void Request::clear_args() {
 
 // ===================================================================
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int Response::kFinishFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 Response::Response()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
@@ -1621,12 +1664,13 @@ Response* Response::New(::google::protobuf::Arena* arena) const {
 }
 
 void Response::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectrgbd.Response)
   finish_ = false;
 }
 
 bool Response::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:kinectrgbd.Response)
   for (;;) {
@@ -1693,6 +1737,7 @@ void Response::SerializeWithCachedSizes(
 }
 
 int Response::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectrgbd.Response)
   int total_size = 0;
 
   // optional bool finish = 1;
@@ -1707,18 +1752,22 @@ int Response::ByteSize() const {
 }
 
 void Response::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectrgbd.Response)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   const Response* source = 
       ::google::protobuf::internal::DynamicCastToGenerated<const Response>(
           &from);
   if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectrgbd.Response)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectrgbd.Response)
     MergeFrom(*source);
   }
 }
 
 void Response::MergeFrom(const Response& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectrgbd.Response)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   if (from.finish() != 0) {
     set_finish(from.finish());
@@ -1726,12 +1775,14 @@ void Response::MergeFrom(const Response& from) {
 }
 
 void Response::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectrgbd.Response)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void Response::CopyFrom(const Response& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectrgbd.Response)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -1781,9 +1832,9 @@ void Response::clear_finish() {
 
 // ===================================================================
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int Pixels::kColorFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 Pixels::Pixels()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
@@ -1844,12 +1895,13 @@ Pixels* Pixels::New(::google::protobuf::Arena* arena) const {
 }
 
 void Pixels::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectrgbd.Pixels)
   color_.Clear();
 }
 
 bool Pixels::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:kinectrgbd.Pixels)
   for (;;) {
@@ -1933,6 +1985,7 @@ void Pixels::SerializeWithCachedSizes(
 }
 
 int Pixels::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectrgbd.Pixels)
   int total_size = 0;
 
   // repeated int32 color = 1;
@@ -1959,29 +2012,35 @@ int Pixels::ByteSize() const {
 }
 
 void Pixels::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectrgbd.Pixels)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   const Pixels* source = 
       ::google::protobuf::internal::DynamicCastToGenerated<const Pixels>(
           &from);
   if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectrgbd.Pixels)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectrgbd.Pixels)
     MergeFrom(*source);
   }
 }
 
 void Pixels::MergeFrom(const Pixels& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectrgbd.Pixels)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   color_.MergeFrom(from.color_);
 }
 
 void Pixels::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectrgbd.Pixels)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void Pixels::CopyFrom(const Pixels& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectrgbd.Pixels)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -2047,12 +2106,12 @@ Pixels::mutable_color() {
 
 // ===================================================================
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int Point::kXFieldNumber;
 const int Point::kYFieldNumber;
 const int Point::kZFieldNumber;
 const int Point::kColorFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 Point::Point()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
@@ -2117,8 +2176,17 @@ Point* Point::New(::google::protobuf::Arena* arena) const {
 }
 
 void Point::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectrgbd.Point)
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(Point, f) \
+  _Pragma("clang diagnostic pop")
+#else
 #define ZR_HELPER_(f) reinterpret_cast<char*>(\
   &reinterpret_cast<Point*>(16)->f)
+#endif
 
 #define ZR_(first, last) do {\
   ::memset(&first, 0,\
@@ -2134,7 +2202,7 @@ void Point::Clear() {
 
 bool Point::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:kinectrgbd.Point)
   for (;;) {
@@ -2276,6 +2344,7 @@ void Point::SerializeWithCachedSizes(
 }
 
 int Point::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectrgbd.Point)
   int total_size = 0;
 
   // optional float x = 1;
@@ -2307,18 +2376,22 @@ int Point::ByteSize() const {
 }
 
 void Point::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectrgbd.Point)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   const Point* source = 
       ::google::protobuf::internal::DynamicCastToGenerated<const Point>(
           &from);
   if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectrgbd.Point)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectrgbd.Point)
     MergeFrom(*source);
   }
 }
 
 void Point::MergeFrom(const Point& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectrgbd.Point)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   if (from.x() != 0) {
     set_x(from.x());
@@ -2335,12 +2408,14 @@ void Point::MergeFrom(const Point& from) {
 }
 
 void Point::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectrgbd.Point)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void Point::CopyFrom(const Point& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectrgbd.Point)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -2435,9 +2510,9 @@ void Point::clear_color() {
 
 // ===================================================================
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int Points::kDataFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 Points::Points()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
@@ -2498,12 +2573,13 @@ Points* Points::New(::google::protobuf::Arena* arena) const {
 }
 
 void Points::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectrgbd.Points)
   data_.Clear();
 }
 
 bool Points::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:kinectrgbd.Points)
   for (;;) {
@@ -2575,6 +2651,7 @@ void Points::SerializeWithCachedSizes(
 }
 
 int Points::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectrgbd.Points)
   int total_size = 0;
 
   // repeated .kinectrgbd.Point data = 1;
@@ -2592,29 +2669,35 @@ int Points::ByteSize() const {
 }
 
 void Points::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectrgbd.Points)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   const Points* source = 
       ::google::protobuf::internal::DynamicCastToGenerated<const Points>(
           &from);
   if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectrgbd.Points)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectrgbd.Points)
     MergeFrom(*source);
   }
 }
 
 void Points::MergeFrom(const Points& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectrgbd.Points)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   data_.MergeFrom(from.data_);
 }
 
 void Points::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectrgbd.Points)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void Points::CopyFrom(const Points& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectrgbd.Points)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -2680,10 +2763,10 @@ Points::data() const {
 
 // ===================================================================
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int Tag::kTagFieldNumber;
 const int Tag::kConfidenceFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 Tag::Tag()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
@@ -2748,13 +2831,14 @@ Tag* Tag::New(::google::protobuf::Arena* arena) const {
 }
 
 void Tag::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectrgbd.Tag)
   tag_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   confidence_ = 0;
 }
 
 bool Tag::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:kinectrgbd.Tag)
   for (;;) {
@@ -2859,6 +2943,7 @@ void Tag::SerializeWithCachedSizes(
 }
 
 int Tag::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectrgbd.Tag)
   int total_size = 0;
 
   // optional string tag = 1;
@@ -2880,18 +2965,22 @@ int Tag::ByteSize() const {
 }
 
 void Tag::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectrgbd.Tag)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   const Tag* source = 
       ::google::protobuf::internal::DynamicCastToGenerated<const Tag>(
           &from);
   if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectrgbd.Tag)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectrgbd.Tag)
     MergeFrom(*source);
   }
 }
 
 void Tag::MergeFrom(const Tag& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectrgbd.Tag)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   if (from.tag().size() > 0) {
 
@@ -2903,12 +2992,14 @@ void Tag::MergeFrom(const Tag& from) {
 }
 
 void Tag::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectrgbd.Tag)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void Tag::CopyFrom(const Tag& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectrgbd.Tag)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -2971,6 +3062,7 @@ void Tag::clear_tag() {
   return tag_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
  ::std::string* Tag::release_tag() {
+  // @@protoc_insertion_point(field_release:kinectrgbd.Tag.tag)
   
   return tag_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -3002,7 +3094,7 @@ void Tag::clear_confidence() {
 
 // ===================================================================
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int Data::kXFieldNumber;
 const int Data::kYFieldNumber;
 const int Data::kZFieldNumber;
@@ -3010,7 +3102,7 @@ const int Data::kCaptionsFieldNumber;
 const int Data::kTagsFieldNumber;
 const int Data::kTextsFieldNumber;
 const int Data::kStatusFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 Data::Data()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
@@ -3076,8 +3168,17 @@ Data* Data::New(::google::protobuf::Arena* arena) const {
 }
 
 void Data::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectrgbd.Data)
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(Data, f) \
+  _Pragma("clang diagnostic pop")
+#else
 #define ZR_HELPER_(f) reinterpret_cast<char*>(\
   &reinterpret_cast<Data*>(16)->f)
+#endif
 
 #define ZR_(first, last) do {\
   ::memset(&first, 0,\
@@ -3097,7 +3198,7 @@ void Data::Clear() {
 
 bool Data::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:kinectrgbd.Data)
   for (;;) {
@@ -3337,6 +3438,7 @@ void Data::SerializeWithCachedSizes(
 }
 
 int Data::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectrgbd.Data)
   int total_size = 0;
 
   // optional float x = 1;
@@ -3389,18 +3491,22 @@ int Data::ByteSize() const {
 }
 
 void Data::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectrgbd.Data)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   const Data* source = 
       ::google::protobuf::internal::DynamicCastToGenerated<const Data>(
           &from);
   if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectrgbd.Data)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectrgbd.Data)
     MergeFrom(*source);
   }
 }
 
 void Data::MergeFrom(const Data& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectrgbd.Data)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   captions_.MergeFrom(from.captions_);
   tags_.MergeFrom(from.tags_);
@@ -3420,12 +3526,14 @@ void Data::MergeFrom(const Data& from) {
 }
 
 void Data::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectrgbd.Data)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void Data::CopyFrom(const Data& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectrgbd.Data)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -3594,6 +3702,7 @@ void Data::clear_texts() {
   // @@protoc_insertion_point(field_set_pointer:kinectrgbd.Data.texts)
 }
  ::std::string* Data::add_texts() {
+  // @@protoc_insertion_point(field_add_mutable:kinectrgbd.Data.texts)
   return texts_.Add();
 }
  void Data::add_texts(const ::std::string& value) {
@@ -3637,10 +3746,10 @@ void Data::clear_status() {
 
 // ===================================================================
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int DataStream::kStatusFieldNumber;
 const int DataStream::kDataFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 DataStream::DataStream()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
@@ -3702,13 +3811,14 @@ DataStream* DataStream::New(::google::protobuf::Arena* arena) const {
 }
 
 void DataStream::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectrgbd.DataStream)
   status_ = false;
   data_.Clear();
 }
 
 bool DataStream::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:kinectrgbd.DataStream)
   for (;;) {
@@ -3805,6 +3915,7 @@ void DataStream::SerializeWithCachedSizes(
 }
 
 int DataStream::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectrgbd.DataStream)
   int total_size = 0;
 
   // optional bool status = 1;
@@ -3827,18 +3938,22 @@ int DataStream::ByteSize() const {
 }
 
 void DataStream::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectrgbd.DataStream)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   const DataStream* source = 
       ::google::protobuf::internal::DynamicCastToGenerated<const DataStream>(
           &from);
   if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectrgbd.DataStream)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectrgbd.DataStream)
     MergeFrom(*source);
   }
 }
 
 void DataStream::MergeFrom(const DataStream& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectrgbd.DataStream)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   data_.MergeFrom(from.data_);
   if (from.status() != 0) {
@@ -3847,12 +3962,14 @@ void DataStream::MergeFrom(const DataStream& from) {
 }
 
 void DataStream::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectrgbd.DataStream)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void DataStream::CopyFrom(const DataStream& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectrgbd.DataStream)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
@@ -3933,10 +4050,10 @@ DataStream::data() const {
 
 // ===================================================================
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int BitStream::kStatusFieldNumber;
 const int BitStream::kDataFieldNumber;
-#endif  // !_MSC_VER
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 BitStream::BitStream()
   : ::google::protobuf::Message(), _internal_metadata_(NULL) {
@@ -3998,13 +4115,14 @@ BitStream* BitStream::New(::google::protobuf::Arena* arena) const {
 }
 
 void BitStream::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectrgbd.BitStream)
   status_ = false;
   data_.Clear();
 }
 
 bool BitStream::MergePartialFromCodedStream(
     ::google::protobuf::io::CodedInputStream* input) {
-#define DO_(EXPRESSION) if (!(EXPRESSION)) goto failure
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
   ::google::protobuf::uint32 tag;
   // @@protoc_insertion_point(parse_start:kinectrgbd.BitStream)
   for (;;) {
@@ -4101,6 +4219,7 @@ void BitStream::SerializeWithCachedSizes(
 }
 
 int BitStream::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectrgbd.BitStream)
   int total_size = 0;
 
   // optional bool status = 1;
@@ -4123,18 +4242,22 @@ int BitStream::ByteSize() const {
 }
 
 void BitStream::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectrgbd.BitStream)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   const BitStream* source = 
       ::google::protobuf::internal::DynamicCastToGenerated<const BitStream>(
           &from);
   if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectrgbd.BitStream)
     ::google::protobuf::internal::ReflectionOps::Merge(from, this);
   } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectrgbd.BitStream)
     MergeFrom(*source);
   }
 }
 
 void BitStream::MergeFrom(const BitStream& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectrgbd.BitStream)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   data_.MergeFrom(from.data_);
   if (from.status() != 0) {
@@ -4143,12 +4266,14 @@ void BitStream::MergeFrom(const BitStream& from) {
 }
 
 void BitStream::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectrgbd.BitStream)
   if (&from == this) return;
   Clear();
   MergeFrom(from);
 }
 
 void BitStream::CopyFrom(const BitStream& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectrgbd.BitStream)
   if (&from == this) return;
   Clear();
   MergeFrom(from);

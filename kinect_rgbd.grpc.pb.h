@@ -6,14 +6,14 @@
 
 #include "kinect_rgbd.pb.h"
 
-#include <grpc++/support/async_stream.h>
-#include <grpc++/impl/rpc_method.h>
-#include <grpc++/impl/proto_utils.h>
-#include <grpc++/impl/service_type.h>
-#include <grpc++/support/async_unary_call.h>
-#include <grpc++/support/status.h>
-#include <grpc++/support/stub_options.h>
-#include <grpc++/support/sync_stream.h>
+#include <grpc++/impl/codegen/async_stream.h>
+#include <grpc++/impl/codegen/async_unary_call.h>
+#include <grpc++/impl/codegen/proto_utils.h>
+#include <grpc++/impl/codegen/rpc_method.h>
+#include <grpc++/impl/codegen/service_type.h>
+#include <grpc++/impl/codegen/status.h>
+#include <grpc++/impl/codegen/stub_options.h>
+#include <grpc++/impl/codegen/sync_stream.h>
 
 namespace grpc {
 class CompletionQueue;
@@ -64,7 +64,7 @@ class KinectRgbd GRPC_FINAL {
   };
   class Stub GRPC_FINAL : public StubInterface {
    public:
-    Stub(const std::shared_ptr< ::grpc::Channel>& channel);
+    Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel);
     ::grpc::Status CheckRequest(::grpc::ClientContext* context, const ::kinectrgbd::Header& request, ::kinectrgbd::Request* response) GRPC_OVERRIDE;
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Request>> AsyncCheckRequest(::grpc::ClientContext* context, const ::kinectrgbd::Header& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Request>>(AsyncCheckRequestRaw(context, request, cq));
@@ -91,7 +91,7 @@ class KinectRgbd GRPC_FINAL {
     }
 
    private:
-    std::shared_ptr< ::grpc::Channel> channel_;
+    std::shared_ptr< ::grpc::ChannelInterface> channel_;
     ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Request>* AsyncCheckRequestRaw(::grpc::ClientContext* context, const ::kinectrgbd::Header& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
     ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>* AsyncSendPointsRaw(::grpc::ClientContext* context, const ::kinectrgbd::Points& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
     ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>* AsyncSendImageRaw(::grpc::ClientContext* context, const ::kinectrgbd::Pixels& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
@@ -105,11 +105,11 @@ class KinectRgbd GRPC_FINAL {
     const ::grpc::RpcMethod rpcmethod_ReturnPixelBoundsFromSpaceBounds_;
     const ::grpc::RpcMethod rpcmethod_ReturnCognition_;
   };
-  static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::Channel>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
+  static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
-  class Service : public ::grpc::SynchronousService {
+  class Service : public ::grpc::Service {
    public:
-    Service() : service_(nullptr) {}
+    Service();
     virtual ~Service();
     virtual ::grpc::Status CheckRequest(::grpc::ServerContext* context, const ::kinectrgbd::Header* request, ::kinectrgbd::Request* response);
     virtual ::grpc::Status SendPoints(::grpc::ServerContext* context, const ::kinectrgbd::Points* request, ::kinectrgbd::Response* response);
@@ -117,20 +117,229 @@ class KinectRgbd GRPC_FINAL {
     virtual ::grpc::Status ReturnPositionsFromPixels(::grpc::ServerContext* context, const ::kinectrgbd::DataStream* request, ::kinectrgbd::Response* response);
     virtual ::grpc::Status ReturnPixelBoundsFromSpaceBounds(::grpc::ServerContext* context, const ::kinectrgbd::BitStream* request, ::kinectrgbd::Response* response);
     virtual ::grpc::Status ReturnCognition(::grpc::ServerContext* context, const ::kinectrgbd::DataStream* request, ::kinectrgbd::Response* response);
-    ::grpc::RpcService* service() GRPC_OVERRIDE GRPC_FINAL;
-   private:
-    ::grpc::RpcService* service_;
   };
-  class AsyncService GRPC_FINAL : public ::grpc::AsynchronousService {
+  template <class BaseClass>
+  class WithAsyncMethod_CheckRequest : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
-    explicit AsyncService();
-    ~AsyncService() {};
-    void RequestCheckRequest(::grpc::ServerContext* context, ::kinectrgbd::Header* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Request>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
-    void RequestSendPoints(::grpc::ServerContext* context, ::kinectrgbd::Points* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
-    void RequestSendImage(::grpc::ServerContext* context, ::kinectrgbd::Pixels* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
-    void RequestReturnPositionsFromPixels(::grpc::ServerContext* context, ::kinectrgbd::DataStream* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
-    void RequestReturnPixelBoundsFromSpaceBounds(::grpc::ServerContext* context, ::kinectrgbd::BitStream* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
-    void RequestReturnCognition(::grpc::ServerContext* context, ::kinectrgbd::DataStream* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag);
+    WithAsyncMethod_CheckRequest() {
+      ::grpc::Service::MarkMethodAsync(0);
+    }
+    ~WithAsyncMethod_CheckRequest() GRPC_OVERRIDE {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status CheckRequest(::grpc::ServerContext* context, const ::kinectrgbd::Header* request, ::kinectrgbd::Request* response) GRPC_FINAL GRPC_OVERRIDE {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestCheckRequest(::grpc::ServerContext* context, ::kinectrgbd::Header* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Request>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithAsyncMethod_SendPoints : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithAsyncMethod_SendPoints() {
+      ::grpc::Service::MarkMethodAsync(1);
+    }
+    ~WithAsyncMethod_SendPoints() GRPC_OVERRIDE {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SendPoints(::grpc::ServerContext* context, const ::kinectrgbd::Points* request, ::kinectrgbd::Response* response) GRPC_FINAL GRPC_OVERRIDE {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestSendPoints(::grpc::ServerContext* context, ::kinectrgbd::Points* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithAsyncMethod_SendImage : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithAsyncMethod_SendImage() {
+      ::grpc::Service::MarkMethodAsync(2);
+    }
+    ~WithAsyncMethod_SendImage() GRPC_OVERRIDE {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SendImage(::grpc::ServerContext* context, const ::kinectrgbd::Pixels* request, ::kinectrgbd::Response* response) GRPC_FINAL GRPC_OVERRIDE {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestSendImage(::grpc::ServerContext* context, ::kinectrgbd::Pixels* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithAsyncMethod_ReturnPositionsFromPixels : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithAsyncMethod_ReturnPositionsFromPixels() {
+      ::grpc::Service::MarkMethodAsync(3);
+    }
+    ~WithAsyncMethod_ReturnPositionsFromPixels() GRPC_OVERRIDE {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status ReturnPositionsFromPixels(::grpc::ServerContext* context, const ::kinectrgbd::DataStream* request, ::kinectrgbd::Response* response) GRPC_FINAL GRPC_OVERRIDE {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestReturnPositionsFromPixels(::grpc::ServerContext* context, ::kinectrgbd::DataStream* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithAsyncMethod_ReturnPixelBoundsFromSpaceBounds : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithAsyncMethod_ReturnPixelBoundsFromSpaceBounds() {
+      ::grpc::Service::MarkMethodAsync(4);
+    }
+    ~WithAsyncMethod_ReturnPixelBoundsFromSpaceBounds() GRPC_OVERRIDE {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status ReturnPixelBoundsFromSpaceBounds(::grpc::ServerContext* context, const ::kinectrgbd::BitStream* request, ::kinectrgbd::Response* response) GRPC_FINAL GRPC_OVERRIDE {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestReturnPixelBoundsFromSpaceBounds(::grpc::ServerContext* context, ::kinectrgbd::BitStream* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
+  class WithAsyncMethod_ReturnCognition : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithAsyncMethod_ReturnCognition() {
+      ::grpc::Service::MarkMethodAsync(5);
+    }
+    ~WithAsyncMethod_ReturnCognition() GRPC_OVERRIDE {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status ReturnCognition(::grpc::ServerContext* context, const ::kinectrgbd::DataStream* request, ::kinectrgbd::Response* response) GRPC_FINAL GRPC_OVERRIDE {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestReturnCognition(::grpc::ServerContext* context, ::kinectrgbd::DataStream* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  typedef WithAsyncMethod_CheckRequest<WithAsyncMethod_SendPoints<WithAsyncMethod_SendImage<WithAsyncMethod_ReturnPositionsFromPixels<WithAsyncMethod_ReturnPixelBoundsFromSpaceBounds<WithAsyncMethod_ReturnCognition<Service > > > > > > AsyncService;
+  template <class BaseClass>
+  class WithGenericMethod_CheckRequest : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithGenericMethod_CheckRequest() {
+      ::grpc::Service::MarkMethodGeneric(0);
+    }
+    ~WithGenericMethod_CheckRequest() GRPC_OVERRIDE {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status CheckRequest(::grpc::ServerContext* context, const ::kinectrgbd::Header* request, ::kinectrgbd::Request* response) GRPC_FINAL GRPC_OVERRIDE {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_SendPoints : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithGenericMethod_SendPoints() {
+      ::grpc::Service::MarkMethodGeneric(1);
+    }
+    ~WithGenericMethod_SendPoints() GRPC_OVERRIDE {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SendPoints(::grpc::ServerContext* context, const ::kinectrgbd::Points* request, ::kinectrgbd::Response* response) GRPC_FINAL GRPC_OVERRIDE {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_SendImage : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithGenericMethod_SendImage() {
+      ::grpc::Service::MarkMethodGeneric(2);
+    }
+    ~WithGenericMethod_SendImage() GRPC_OVERRIDE {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SendImage(::grpc::ServerContext* context, const ::kinectrgbd::Pixels* request, ::kinectrgbd::Response* response) GRPC_FINAL GRPC_OVERRIDE {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_ReturnPositionsFromPixels : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithGenericMethod_ReturnPositionsFromPixels() {
+      ::grpc::Service::MarkMethodGeneric(3);
+    }
+    ~WithGenericMethod_ReturnPositionsFromPixels() GRPC_OVERRIDE {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status ReturnPositionsFromPixels(::grpc::ServerContext* context, const ::kinectrgbd::DataStream* request, ::kinectrgbd::Response* response) GRPC_FINAL GRPC_OVERRIDE {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_ReturnPixelBoundsFromSpaceBounds : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithGenericMethod_ReturnPixelBoundsFromSpaceBounds() {
+      ::grpc::Service::MarkMethodGeneric(4);
+    }
+    ~WithGenericMethod_ReturnPixelBoundsFromSpaceBounds() GRPC_OVERRIDE {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status ReturnPixelBoundsFromSpaceBounds(::grpc::ServerContext* context, const ::kinectrgbd::BitStream* request, ::kinectrgbd::Response* response) GRPC_FINAL GRPC_OVERRIDE {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_ReturnCognition : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithGenericMethod_ReturnCognition() {
+      ::grpc::Service::MarkMethodGeneric(5);
+    }
+    ~WithGenericMethod_ReturnCognition() GRPC_OVERRIDE {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status ReturnCognition(::grpc::ServerContext* context, const ::kinectrgbd::DataStream* request, ::kinectrgbd::Response* response) GRPC_FINAL GRPC_OVERRIDE {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
   };
 };
 

@@ -1219,6 +1219,7 @@ inline ::std::string* Bit::mutable_name() {
   return name_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Bit::release_name() {
+  // @@protoc_insertion_point(field_release:kinectrgbd.Bit.name)
   
   return name_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1324,6 +1325,7 @@ inline ::std::string* Request::mutable_args() {
   return args_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Request::release_args() {
+  // @@protoc_insertion_point(field_release:kinectrgbd.Request.args)
   
   return args_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1517,6 +1519,7 @@ inline ::std::string* Tag::mutable_tag() {
   return tag_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 inline ::std::string* Tag::release_tag() {
+  // @@protoc_insertion_point(field_release:kinectrgbd.Tag.tag)
   
   return tag_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1679,6 +1682,7 @@ inline void Data::set_texts(int index, const char* value, size_t size) {
   // @@protoc_insertion_point(field_set_pointer:kinectrgbd.Data.texts)
 }
 inline ::std::string* Data::add_texts() {
+  // @@protoc_insertion_point(field_add_mutable:kinectrgbd.Data.texts)
   return texts_.Add();
 }
 inline void Data::add_texts(const ::std::string& value) {
