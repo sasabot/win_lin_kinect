@@ -7,8 +7,8 @@ package kinectrgbd;
 
 service KinectRgbd {
   rpc CheckRequest(Header) returns (Request) {}
-  rpc SendPoints(Points) returns (Response) {}
-  rpc SendImage(Pixels) returns (Response) {}
+  rpc SendPoints(stream Points) returns (Response) {}
+  rpc SendImage(stream Pixels) returns (Response) {}
   rpc ReturnPositionsFromPixels(DataStream) returns (Response) {}
   rpc ReturnPixelBoundsFromSpaceBounds(BitStream) returns (Response) {}
   rpc ReturnCognition(DataStream) returns (Response) {}

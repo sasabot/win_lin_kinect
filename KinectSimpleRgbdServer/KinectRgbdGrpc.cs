@@ -28,14 +28,14 @@ namespace Kinectrgbd {
         __Marshaller_Request);
 
     static readonly Method<global::Kinectrgbd.Points, global::Kinectrgbd.Response> __Method_SendPoints = new Method<global::Kinectrgbd.Points, global::Kinectrgbd.Response>(
-        MethodType.Unary,
+        MethodType.ClientStreaming,
         __ServiceName,
         "SendPoints",
         __Marshaller_Points,
         __Marshaller_Response);
 
     static readonly Method<global::Kinectrgbd.Pixels, global::Kinectrgbd.Response> __Method_SendImage = new Method<global::Kinectrgbd.Pixels, global::Kinectrgbd.Response>(
-        MethodType.Unary,
+        MethodType.ClientStreaming,
         __ServiceName,
         "SendImage",
         __Marshaller_Pixels,
@@ -76,12 +76,12 @@ namespace Kinectrgbd {
         throw new RpcException(new Status(StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::Kinectrgbd.Response> SendPoints(global::Kinectrgbd.Points request, ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Kinectrgbd.Response> SendPoints(IAsyncStreamReader<global::Kinectrgbd.Points> requestStream, ServerCallContext context)
       {
         throw new RpcException(new Status(StatusCode.Unimplemented, ""));
       }
 
-      public virtual global::System.Threading.Tasks.Task<global::Kinectrgbd.Response> SendImage(global::Kinectrgbd.Pixels request, ServerCallContext context)
+      public virtual global::System.Threading.Tasks.Task<global::Kinectrgbd.Response> SendImage(IAsyncStreamReader<global::Kinectrgbd.Pixels> requestStream, ServerCallContext context)
       {
         throw new RpcException(new Status(StatusCode.Unimplemented, ""));
       }
@@ -142,37 +142,21 @@ namespace Kinectrgbd {
       {
         return CallInvoker.AsyncUnaryCall(__Method_CheckRequest, null, options, request);
       }
-      public virtual global::Kinectrgbd.Response SendPoints(global::Kinectrgbd.Points request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      public virtual AsyncClientStreamingCall<global::Kinectrgbd.Points, global::Kinectrgbd.Response> SendPoints(Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
-        return SendPoints(request, new CallOptions(headers, deadline, cancellationToken));
+        return SendPoints(new CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual global::Kinectrgbd.Response SendPoints(global::Kinectrgbd.Points request, CallOptions options)
+      public virtual AsyncClientStreamingCall<global::Kinectrgbd.Points, global::Kinectrgbd.Response> SendPoints(CallOptions options)
       {
-        return CallInvoker.BlockingUnaryCall(__Method_SendPoints, null, options, request);
+        return CallInvoker.AsyncClientStreamingCall(__Method_SendPoints, null, options);
       }
-      public virtual AsyncUnaryCall<global::Kinectrgbd.Response> SendPointsAsync(global::Kinectrgbd.Points request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      public virtual AsyncClientStreamingCall<global::Kinectrgbd.Pixels, global::Kinectrgbd.Response> SendImage(Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
-        return SendPointsAsync(request, new CallOptions(headers, deadline, cancellationToken));
+        return SendImage(new CallOptions(headers, deadline, cancellationToken));
       }
-      public virtual AsyncUnaryCall<global::Kinectrgbd.Response> SendPointsAsync(global::Kinectrgbd.Points request, CallOptions options)
+      public virtual AsyncClientStreamingCall<global::Kinectrgbd.Pixels, global::Kinectrgbd.Response> SendImage(CallOptions options)
       {
-        return CallInvoker.AsyncUnaryCall(__Method_SendPoints, null, options, request);
-      }
-      public virtual global::Kinectrgbd.Response SendImage(global::Kinectrgbd.Pixels request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
-      {
-        return SendImage(request, new CallOptions(headers, deadline, cancellationToken));
-      }
-      public virtual global::Kinectrgbd.Response SendImage(global::Kinectrgbd.Pixels request, CallOptions options)
-      {
-        return CallInvoker.BlockingUnaryCall(__Method_SendImage, null, options, request);
-      }
-      public virtual AsyncUnaryCall<global::Kinectrgbd.Response> SendImageAsync(global::Kinectrgbd.Pixels request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
-      {
-        return SendImageAsync(request, new CallOptions(headers, deadline, cancellationToken));
-      }
-      public virtual AsyncUnaryCall<global::Kinectrgbd.Response> SendImageAsync(global::Kinectrgbd.Pixels request, CallOptions options)
-      {
-        return CallInvoker.AsyncUnaryCall(__Method_SendImage, null, options, request);
+        return CallInvoker.AsyncClientStreamingCall(__Method_SendImage, null, options);
       }
       public virtual global::Kinectrgbd.Response ReturnPositionsFromPixels(global::Kinectrgbd.DataStream request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {

@@ -54,6 +54,8 @@ namespace KinectSimpleRgbdServer
 
         private bool onceFlag = false;
 
+        private int divideStream = 2; // if stream is small set to 1, if large set to N > 2
+
         public MainWindow()
         {
             this.kinectSensor = KinectSensor.GetDefault();
@@ -780,7 +782,7 @@ namespace KinectSimpleRgbdServer
             image.Save(path, jpegCodec, encoderParams);
         }
 
-        private void SendDepthCloud(MultiSourceFrame frame)
+        private async void SendDepthCloud(MultiSourceFrame frame)
         {
             ColorFrame colorFrame = frame.ColorFrameReference.AcquireFrame();
             DepthFrame depthFrame = frame.DepthFrameReference.AcquireFrame();
@@ -869,17 +871,51 @@ namespace KinectSimpleRgbdServer
                 points.Data.Add(p);
             }
 
-            // set point cloud to send
-            Kinectrgbd.Response response = this.client.SendPoints(points);
+            //// set point cloud to send
+            //Kinectrgbd.Response response = this.client.SendPoints(points);
 
-            // stop streaming if once or stop is requested
-            if (this.onceFlag || response.Finish) PrepareRequestMode();
+            //// stop streaming if once or stop is requested
+            //if (this.onceFlag || response.Finish) PrepareRequestMode();
 
             colorFrame.Dispose();
             depthFrame.Dispose();
+
+            if (this.onceFlag) PrepareRequestMode();
+
+            // set point cloud to send
+            Task.Run(() => ClientSendPoints(points));
         }
 
-        private void SendImage(MultiSourceFrame frame)
+        private async Task ClientSendPoints(Kinectrgbd.Points points)
+        {
+            int pointsPerStream = points.Data.Count / this.divideStream + 1;
+
+            try
+            {
+                using (var send = this.client.SendPoints())
+                {
+                    for (int i = 0; i < this.divideStream; ++i)
+                    {
+                        Kinectrgbd.Points blob = new Kinectrgbd.Points { };
+                        int range =  System.Math.Min((i + 1) * pointsPerStream, points.Data.Count);
+                        for (int j = pointsPerStream * i; j < range; ++j)
+                            blob.Data.Add(points.Data[j]);
+                        await send.RequestStream.WriteAsync(blob);
+                    }
+                    await send.RequestStream.CompleteAsync();
+
+                    Kinectrgbd.Response response = await send.ResponseAsync;
+                    // stop streaming if stop is requested
+                    if (response.Finish) PrepareRequestMode();
+                }
+            }
+            catch (RpcException e)
+            {
+                throw;
+            }
+        }
+
+        private async void SendImage(MultiSourceFrame frame)
         {
             ColorFrame colorFrame = frame.ColorFrameReference.AcquireFrame();
             DepthFrame depthFrame = frame.DepthFrameReference.AcquireFrame();
@@ -934,16 +970,49 @@ namespace KinectSimpleRgbdServer
                 result.Color.Add(color);
             }
 
-            // set image pixels to send (iterate through color map)
-            Kinectrgbd.Response response = this.client.SendImage(result);
+            //// set image pixels to send (iterate through color map)
+            //Kinectrgbd.Response response = this.client.SendImage(result);
 
-            // stop streaming if once or stop is requested
-            if (this.onceFlag || response.Finish) PrepareRequestMode();
+            //// stop streaming if once or stop is requested
+            //if (this.onceFlag || response.Finish) PrepareRequestMode();
 
             colorFrame.Dispose();
             depthFrame.Dispose();
+
+            if (this.onceFlag) PrepareRequestMode();
+
+            // set point cloud to send
+            Task.Run(() => ClientSendImage(result));
         }
 
+        private async Task ClientSendImage(Kinectrgbd.Pixels result)
+        {
+            int pointsPerStream = result.Color.Count / this.divideStream + 1;
+
+            try
+            {
+                using (var send = this.client.SendImage())
+                {
+                    for (int i = 0; i < this.divideStream; ++i)
+                    {
+                        Kinectrgbd.Pixels blob = new Kinectrgbd.Pixels { };
+                        int range = System.Math.Min((i + 1) * pointsPerStream, result.Color.Count);
+                        for (int j = pointsPerStream * i; j < range; ++j)
+                            blob.Color.Add(result.Color[j]);
+                        await send.RequestStream.WriteAsync(blob);
+                    }
+                    await send.RequestStream.CompleteAsync();
+
+                    Kinectrgbd.Response response = await send.ResponseAsync;
+                    // stop streaming if stop is requested
+                    if (response.Finish) PrepareRequestMode();
+                }
+            }
+            catch (RpcException e)
+            {
+                throw;
+            }
+        }
 
     }
 }
