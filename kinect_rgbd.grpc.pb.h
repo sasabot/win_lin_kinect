@@ -34,13 +34,17 @@ class KinectRgbd GRPC_FINAL {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Request>> AsyncCheckRequest(::grpc::ClientContext* context, const ::kinectrgbd::Header& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Request>>(AsyncCheckRequestRaw(context, request, cq));
     }
-    virtual ::grpc::Status SendPoints(::grpc::ClientContext* context, const ::kinectrgbd::Points& request, ::kinectrgbd::Response* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>> AsyncSendPoints(::grpc::ClientContext* context, const ::kinectrgbd::Points& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>>(AsyncSendPointsRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientWriterInterface< ::kinectrgbd::Points>> SendPoints(::grpc::ClientContext* context, ::kinectrgbd::Response* response) {
+      return std::unique_ptr< ::grpc::ClientWriterInterface< ::kinectrgbd::Points>>(SendPointsRaw(context, response));
     }
-    virtual ::grpc::Status SendImage(::grpc::ClientContext* context, const ::kinectrgbd::Pixels& request, ::kinectrgbd::Response* response) = 0;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>> AsyncSendImage(::grpc::ClientContext* context, const ::kinectrgbd::Pixels& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>>(AsyncSendImageRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::kinectrgbd::Points>> AsyncSendPoints(::grpc::ClientContext* context, ::kinectrgbd::Response* response, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::kinectrgbd::Points>>(AsyncSendPointsRaw(context, response, cq, tag));
+    }
+    std::unique_ptr< ::grpc::ClientWriterInterface< ::kinectrgbd::Pixels>> SendImage(::grpc::ClientContext* context, ::kinectrgbd::Response* response) {
+      return std::unique_ptr< ::grpc::ClientWriterInterface< ::kinectrgbd::Pixels>>(SendImageRaw(context, response));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::kinectrgbd::Pixels>> AsyncSendImage(::grpc::ClientContext* context, ::kinectrgbd::Response* response, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::kinectrgbd::Pixels>>(AsyncSendImageRaw(context, response, cq, tag));
     }
     virtual ::grpc::Status ReturnPositionsFromPixels(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::kinectrgbd::Response* response) = 0;
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>> AsyncReturnPositionsFromPixels(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::grpc::CompletionQueue* cq) {
@@ -56,8 +60,10 @@ class KinectRgbd GRPC_FINAL {
     }
   private:
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Request>* AsyncCheckRequestRaw(::grpc::ClientContext* context, const ::kinectrgbd::Header& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>* AsyncSendPointsRaw(::grpc::ClientContext* context, const ::kinectrgbd::Points& request, ::grpc::CompletionQueue* cq) = 0;
-    virtual ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>* AsyncSendImageRaw(::grpc::ClientContext* context, const ::kinectrgbd::Pixels& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientWriterInterface< ::kinectrgbd::Points>* SendPointsRaw(::grpc::ClientContext* context, ::kinectrgbd::Response* response) = 0;
+    virtual ::grpc::ClientAsyncWriterInterface< ::kinectrgbd::Points>* AsyncSendPointsRaw(::grpc::ClientContext* context, ::kinectrgbd::Response* response, ::grpc::CompletionQueue* cq, void* tag) = 0;
+    virtual ::grpc::ClientWriterInterface< ::kinectrgbd::Pixels>* SendImageRaw(::grpc::ClientContext* context, ::kinectrgbd::Response* response) = 0;
+    virtual ::grpc::ClientAsyncWriterInterface< ::kinectrgbd::Pixels>* AsyncSendImageRaw(::grpc::ClientContext* context, ::kinectrgbd::Response* response, ::grpc::CompletionQueue* cq, void* tag) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>* AsyncReturnPositionsFromPixelsRaw(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>* AsyncReturnPixelBoundsFromSpaceBoundsRaw(::grpc::ClientContext* context, const ::kinectrgbd::BitStream& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::kinectrgbd::Response>* AsyncReturnCognitionRaw(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::grpc::CompletionQueue* cq) = 0;
@@ -69,13 +75,17 @@ class KinectRgbd GRPC_FINAL {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Request>> AsyncCheckRequest(::grpc::ClientContext* context, const ::kinectrgbd::Header& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Request>>(AsyncCheckRequestRaw(context, request, cq));
     }
-    ::grpc::Status SendPoints(::grpc::ClientContext* context, const ::kinectrgbd::Points& request, ::kinectrgbd::Response* response) GRPC_OVERRIDE;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>> AsyncSendPoints(::grpc::ClientContext* context, const ::kinectrgbd::Points& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>>(AsyncSendPointsRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientWriter< ::kinectrgbd::Points>> SendPoints(::grpc::ClientContext* context, ::kinectrgbd::Response* response) {
+      return std::unique_ptr< ::grpc::ClientWriter< ::kinectrgbd::Points>>(SendPointsRaw(context, response));
     }
-    ::grpc::Status SendImage(::grpc::ClientContext* context, const ::kinectrgbd::Pixels& request, ::kinectrgbd::Response* response) GRPC_OVERRIDE;
-    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>> AsyncSendImage(::grpc::ClientContext* context, const ::kinectrgbd::Pixels& request, ::grpc::CompletionQueue* cq) {
-      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>>(AsyncSendImageRaw(context, request, cq));
+    std::unique_ptr< ::grpc::ClientAsyncWriter< ::kinectrgbd::Points>> AsyncSendPoints(::grpc::ClientContext* context, ::kinectrgbd::Response* response, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncWriter< ::kinectrgbd::Points>>(AsyncSendPointsRaw(context, response, cq, tag));
+    }
+    std::unique_ptr< ::grpc::ClientWriter< ::kinectrgbd::Pixels>> SendImage(::grpc::ClientContext* context, ::kinectrgbd::Response* response) {
+      return std::unique_ptr< ::grpc::ClientWriter< ::kinectrgbd::Pixels>>(SendImageRaw(context, response));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncWriter< ::kinectrgbd::Pixels>> AsyncSendImage(::grpc::ClientContext* context, ::kinectrgbd::Response* response, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncWriter< ::kinectrgbd::Pixels>>(AsyncSendImageRaw(context, response, cq, tag));
     }
     ::grpc::Status ReturnPositionsFromPixels(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::kinectrgbd::Response* response) GRPC_OVERRIDE;
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>> AsyncReturnPositionsFromPixels(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::grpc::CompletionQueue* cq) {
@@ -93,8 +103,10 @@ class KinectRgbd GRPC_FINAL {
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
     ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Request>* AsyncCheckRequestRaw(::grpc::ClientContext* context, const ::kinectrgbd::Header& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
-    ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>* AsyncSendPointsRaw(::grpc::ClientContext* context, const ::kinectrgbd::Points& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
-    ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>* AsyncSendImageRaw(::grpc::ClientContext* context, const ::kinectrgbd::Pixels& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
+    ::grpc::ClientWriter< ::kinectrgbd::Points>* SendPointsRaw(::grpc::ClientContext* context, ::kinectrgbd::Response* response) GRPC_OVERRIDE;
+    ::grpc::ClientAsyncWriter< ::kinectrgbd::Points>* AsyncSendPointsRaw(::grpc::ClientContext* context, ::kinectrgbd::Response* response, ::grpc::CompletionQueue* cq, void* tag) GRPC_OVERRIDE;
+    ::grpc::ClientWriter< ::kinectrgbd::Pixels>* SendImageRaw(::grpc::ClientContext* context, ::kinectrgbd::Response* response) GRPC_OVERRIDE;
+    ::grpc::ClientAsyncWriter< ::kinectrgbd::Pixels>* AsyncSendImageRaw(::grpc::ClientContext* context, ::kinectrgbd::Response* response, ::grpc::CompletionQueue* cq, void* tag) GRPC_OVERRIDE;
     ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>* AsyncReturnPositionsFromPixelsRaw(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
     ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>* AsyncReturnPixelBoundsFromSpaceBoundsRaw(::grpc::ClientContext* context, const ::kinectrgbd::BitStream& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
     ::grpc::ClientAsyncResponseReader< ::kinectrgbd::Response>* AsyncReturnCognitionRaw(::grpc::ClientContext* context, const ::kinectrgbd::DataStream& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
@@ -112,8 +124,8 @@ class KinectRgbd GRPC_FINAL {
     Service();
     virtual ~Service();
     virtual ::grpc::Status CheckRequest(::grpc::ServerContext* context, const ::kinectrgbd::Header* request, ::kinectrgbd::Request* response);
-    virtual ::grpc::Status SendPoints(::grpc::ServerContext* context, const ::kinectrgbd::Points* request, ::kinectrgbd::Response* response);
-    virtual ::grpc::Status SendImage(::grpc::ServerContext* context, const ::kinectrgbd::Pixels* request, ::kinectrgbd::Response* response);
+    virtual ::grpc::Status SendPoints(::grpc::ServerContext* context, ::grpc::ServerReader< ::kinectrgbd::Points>* reader, ::kinectrgbd::Response* response);
+    virtual ::grpc::Status SendImage(::grpc::ServerContext* context, ::grpc::ServerReader< ::kinectrgbd::Pixels>* reader, ::kinectrgbd::Response* response);
     virtual ::grpc::Status ReturnPositionsFromPixels(::grpc::ServerContext* context, const ::kinectrgbd::DataStream* request, ::kinectrgbd::Response* response);
     virtual ::grpc::Status ReturnPixelBoundsFromSpaceBounds(::grpc::ServerContext* context, const ::kinectrgbd::BitStream* request, ::kinectrgbd::Response* response);
     virtual ::grpc::Status ReturnCognition(::grpc::ServerContext* context, const ::kinectrgbd::DataStream* request, ::kinectrgbd::Response* response);
@@ -150,12 +162,12 @@ class KinectRgbd GRPC_FINAL {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SendPoints(::grpc::ServerContext* context, const ::kinectrgbd::Points* request, ::kinectrgbd::Response* response) GRPC_FINAL GRPC_OVERRIDE {
+    ::grpc::Status SendPoints(::grpc::ServerContext* context, ::grpc::ServerReader< ::kinectrgbd::Points>* reader, ::kinectrgbd::Response* response) GRPC_FINAL GRPC_OVERRIDE {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestSendPoints(::grpc::ServerContext* context, ::kinectrgbd::Points* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(1, context, request, response, new_call_cq, notification_cq, tag);
+    void RequestSendPoints(::grpc::ServerContext* context, ::grpc::ServerAsyncReader< ::kinectrgbd::Response, ::kinectrgbd::Points>* reader, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncClientStreaming(1, context, reader, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -170,12 +182,12 @@ class KinectRgbd GRPC_FINAL {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SendImage(::grpc::ServerContext* context, const ::kinectrgbd::Pixels* request, ::kinectrgbd::Response* response) GRPC_FINAL GRPC_OVERRIDE {
+    ::grpc::Status SendImage(::grpc::ServerContext* context, ::grpc::ServerReader< ::kinectrgbd::Pixels>* reader, ::kinectrgbd::Response* response) GRPC_FINAL GRPC_OVERRIDE {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
-    void RequestSendImage(::grpc::ServerContext* context, ::kinectrgbd::Pixels* request, ::grpc::ServerAsyncResponseWriter< ::kinectrgbd::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
+    void RequestSendImage(::grpc::ServerContext* context, ::grpc::ServerAsyncReader< ::kinectrgbd::Response, ::kinectrgbd::Pixels>* reader, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncClientStreaming(2, context, reader, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -268,7 +280,7 @@ class KinectRgbd GRPC_FINAL {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SendPoints(::grpc::ServerContext* context, const ::kinectrgbd::Points* request, ::kinectrgbd::Response* response) GRPC_FINAL GRPC_OVERRIDE {
+    ::grpc::Status SendPoints(::grpc::ServerContext* context, ::grpc::ServerReader< ::kinectrgbd::Points>* reader, ::kinectrgbd::Response* response) GRPC_FINAL GRPC_OVERRIDE {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
@@ -285,7 +297,7 @@ class KinectRgbd GRPC_FINAL {
       BaseClassMustBeDerivedFromService(this);
     }
     // disable synchronous version of this method
-    ::grpc::Status SendImage(::grpc::ServerContext* context, const ::kinectrgbd::Pixels* request, ::kinectrgbd::Response* response) GRPC_FINAL GRPC_OVERRIDE {
+    ::grpc::Status SendImage(::grpc::ServerContext* context, ::grpc::ServerReader< ::kinectrgbd::Pixels>* reader, ::kinectrgbd::Response* response) GRPC_FINAL GRPC_OVERRIDE {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }

@@ -334,18 +334,18 @@ void protobuf_AddDesc_kinect_5frgbd_2eproto() {
     "xts\030\006 \003(\t\022\016\n\006status\030\007 \001(\010\"<\n\nDataStream\022"
     "\016\n\006status\030\001 \001(\010\022\036\n\004data\030\002 \003(\0132\020.kinectrg"
     "bd.Data\":\n\tBitStream\022\016\n\006status\030\001 \001(\010\022\035\n\004"
-    "data\030\002 \003(\0132\017.kinectrgbd.Bit2\235\003\n\nKinectRg"
+    "data\030\002 \003(\0132\017.kinectrgbd.Bit2\241\003\n\nKinectRg"
     "bd\0229\n\014CheckRequest\022\022.kinectrgbd.Header\032\023"
-    ".kinectrgbd.Request\"\000\0228\n\nSendPoints\022\022.ki"
-    "nectrgbd.Points\032\024.kinectrgbd.Response\"\000\022"
-    "7\n\tSendImage\022\022.kinectrgbd.Pixels\032\024.kinec"
-    "trgbd.Response\"\000\022K\n\031ReturnPositionsFromP"
-    "ixels\022\026.kinectrgbd.DataStream\032\024.kinectrg"
-    "bd.Response\"\000\022Q\n ReturnPixelBoundsFromSp"
-    "aceBounds\022\025.kinectrgbd.BitStream\032\024.kinec"
-    "trgbd.Response\"\000\022A\n\017ReturnCognition\022\026.ki"
-    "nectrgbd.DataStream\032\024.kinectrgbd.Respons"
-    "e\"\000B\017\n\007ex.grpc\242\002\003RTGb\006proto3", 1108);
+    ".kinectrgbd.Request\"\000\022:\n\nSendPoints\022\022.ki"
+    "nectrgbd.Points\032\024.kinectrgbd.Response\"\000("
+    "\001\0229\n\tSendImage\022\022.kinectrgbd.Pixels\032\024.kin"
+    "ectrgbd.Response\"\000(\001\022K\n\031ReturnPositionsF"
+    "romPixels\022\026.kinectrgbd.DataStream\032\024.kine"
+    "ctrgbd.Response\"\000\022Q\n ReturnPixelBoundsFr"
+    "omSpaceBounds\022\025.kinectrgbd.BitStream\032\024.k"
+    "inectrgbd.Response\"\000\022A\n\017ReturnCognition\022"
+    "\026.kinectrgbd.DataStream\032\024.kinectrgbd.Res"
+    "ponse\"\000B\017\n\007ex.grpc\242\002\003RTGb\006proto3", 1112);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "kinect_rgbd.proto", &protobuf_RegisterTypes);
   Header::default_instance_ = new Header();

@@ -232,7 +232,8 @@ public:
   }
 
   // Publish point cloud XYZRGB.
-  Status SendPoints(ServerContext* context, const kinectrgbd::Points* points,
+  Status SendPoints(ServerContext* context,
+		    ServerReader<kinectrgbd::Points>* reader,
 		    kinectrgbd::Response* res) override
   {
     std::vector<uint8_t> data;
@@ -240,44 +241,47 @@ public:
 
     int point_index = 0;
     int point_count = 0;
-    for (unsigned int i = 0; i < points->data_size(); ++i)
-    {
-      float d = points->data(i).z();
-      float y = points->data(i).y();
-      float x = points->data(i).x();
-      uint8_t r = (points->data(i).color() & 0x00000ff);
-      uint8_t g = ((points->data(i).color() >> 8) & 0x00000ff);
-      uint8_t b = ((points->data(i).color() >> 16) & 0x00000ff);
 
-      uint8_t *x_bytes;
-      x_bytes = reinterpret_cast<uint8_t*>(&x);
-      data.push_back(x_bytes[0]);
-      data.push_back(x_bytes[1]);
-      data.push_back(x_bytes[2]);
-      data.push_back(x_bytes[3]);
+    kinectrgbd::Points points;
+    while (reader->Read(&points))
+      for (unsigned int i = 0; i < points.data_size(); ++i)
+      {
+	float d = points.data(i).z();
+	float y = points.data(i).y();
+	float x = points.data(i).x();
+	uint8_t r = (points.data(i).color() & 0x00000ff);
+	uint8_t g = ((points.data(i).color() >> 8) & 0x00000ff);
+	uint8_t b = ((points.data(i).color() >> 16) & 0x00000ff);
 
-      uint8_t *y_bytes;
-      y_bytes = reinterpret_cast<uint8_t*>(&y);
-      data.push_back(y_bytes[0]);
-      data.push_back(y_bytes[1]);
-      data.push_back(y_bytes[2]);
-      data.push_back(y_bytes[3]);
+	uint8_t *x_bytes;
+	x_bytes = reinterpret_cast<uint8_t*>(&x);
+	data.push_back(x_bytes[0]);
+	data.push_back(x_bytes[1]);
+	data.push_back(x_bytes[2]);
+	data.push_back(x_bytes[3]);
 
-      uint8_t *d_bytes;
-      d_bytes = reinterpret_cast<uint8_t*>(&d);
-      data.push_back(d_bytes[0]);
-      data.push_back(d_bytes[1]);
-      data.push_back(d_bytes[2]);
-      data.push_back(d_bytes[3]);
+	uint8_t *y_bytes;
+	y_bytes = reinterpret_cast<uint8_t*>(&y);
+	data.push_back(y_bytes[0]);
+	data.push_back(y_bytes[1]);
+	data.push_back(y_bytes[2]);
+	data.push_back(y_bytes[3]);
 
-      uint8_t dummy = 0;
-      data.push_back(b);
-      data.push_back(g);
-      data.push_back(r);
-      data.push_back(dummy);
+	uint8_t *d_bytes;
+	d_bytes = reinterpret_cast<uint8_t*>(&d);
+	data.push_back(d_bytes[0]);
+	data.push_back(d_bytes[1]);
+	data.push_back(d_bytes[2]);
+	data.push_back(d_bytes[3]);
 
-      ++point_count;      
-    }
+	uint8_t dummy = 0;
+	data.push_back(b);
+	data.push_back(g);
+	data.push_back(r);
+	data.push_back(dummy);
+
+	++point_count;
+      }
     data.resize(16 * point_count);
 
     ROS_INFO("read %d points", point_count);
@@ -304,25 +308,29 @@ public:
   }
 
   // Publish image rgb.
-  Status SendImage(ServerContext* context, const kinectrgbd::Pixels* pixels,
+  Status SendImage(ServerContext* context,
+		   ServerReader<kinectrgbd::Pixels>* reader,
 		   kinectrgbd::Response* res) override
   {
     std::vector<uint8_t> data;
     data.reserve(3 * 1920 * 1080);
 
     int pixel_count = 0;
-    for (unsigned int i = 0; i < pixels->color_size(); ++i)
-    {
-      uint8_t r = (pixels->color(i) & 0x00000ff);
-      uint8_t g = ((pixels->color(i) >> 8) & 0x00000ff);
-      uint8_t b = ((pixels->color(i) >> 16) & 0x00000ff);
 
-      data.push_back(b);
-      data.push_back(g);
-      data.push_back(r);
+    kinectrgbd::Pixels pixels;
+    while (reader->Read(&pixels))
+      for (unsigned int i = 0; i < pixels.color_size(); ++i)
+      {
+	uint8_t r = (pixels.color(i) & 0x00000ff);
+	uint8_t g = ((pixels.color(i) >> 8) & 0x00000ff);
+	uint8_t b = ((pixels.color(i) >> 16) & 0x00000ff);
 
-      ++pixel_count;
-    }
+	data.push_back(b);
+	data.push_back(g);
+	data.push_back(r);
+
+	++pixel_count;
+      }
     data.resize(3 * pixel_count);
 
     ROS_INFO("read %d pixels", pixel_count);
