@@ -34,7 +34,7 @@ namespace KinectSimpleRgbdServer
 
         private int skippedFrame = 0;
 
-        private int fps = 1; // note this sets seconds per frame
+        private float fps = 1; // note this sets seconds per frame
 
         private const int frameUnit = 30;
 
@@ -160,7 +160,16 @@ namespace KinectSimpleRgbdServer
             this.sendPointHeight = Convert.ToInt32(request.Data[0].Height);
             this.onceFlag = request.Once;
             this.mode = 1;
-            this.fps = 2;
+            if (request.Args != "")
+            {
+                string[] args = request.Args.Split(' ');
+                for (int i = 0; i < args.Length; ++i)
+                {
+                    if (args[i] == "-traffic")
+                        this.fps = Convert.ToSingle(args[++i]);
+                }
+            }
+            //this.fps = 2;
             //this.skippedFrame = KinectSimpleRgbdServer.MainWindow.frameUnit * this.fps;
         }
 
@@ -172,7 +181,16 @@ namespace KinectSimpleRgbdServer
             this.sendPointHeight = Convert.ToInt32(request.Data[0].Height);
             this.onceFlag = request.Once;
             this.mode = 2;
-            this.fps = 3;
+            if (request.Args != "")
+            {
+                string[] args = request.Args.Split(' ');
+                for (int i = 0; i < args.Length; ++i)
+                {
+                    if (args[i] == "-traffic")
+                        this.fps = Convert.ToSingle(args[++i]);
+                }
+            }
+            //this.fps = 3;
             //this.skippedFrame = KinectSimpleRgbdServer.MainWindow.frameUnit * this.fps;
         }
 
