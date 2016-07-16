@@ -70,21 +70,22 @@ namespace KinectSimpleRgbdServer
 
             this.imageSpaceValues = new List<CameraSpacePoint>();
 
-            InitializeComponent();
-        }
-
-        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
-        {
             Console.WriteLine("Enter IP [example] 192.168.101.192:50052");
             string x = Console.ReadLine().ToString();
             if (x != "")
             {
                 Properties.Settings.Default.Ip = x;
                 Properties.Settings.Default.Save();
-            }       
+            }
             var ip = Properties.Settings.Default.Ip;
             this.channel = new Channel(ip, ChannelCredentials.Insecure);
             this.client = new Kinectrgbd.KinectRgbd.KinectRgbdClient(this.channel);
+
+            InitializeComponent();
+        }
+
+        private void MainWindow_Loaded(object sender, RoutedEventArgs e)
+        {
         }
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
@@ -254,14 +255,27 @@ namespace KinectSimpleRgbdServer
                 PixelFormats.Bgr32, null, pixels, colorDesc.Width * 4);
             this.canvas.Background = new ImageBrush(bitmapSource);
 
-            float referenceXMin = request.Data[0].X;
-            float referenceYMin = request.Data[0].Y;
-            float minimumMinDist = 100;
-            int depthPixelMin = -1;
-            float referenceXMax = request.Data[0].X + request.Data[0].Width;
-            float referenceYMax = request.Data[0].Y + request.Data[0].Height;
-            float minimumMaxDist = 100;
-            int depthPixelMax = -1;
+            List<float> referenceXMin = new List<float>();
+            List<float> referenceYMin = new List<float>();
+            List<float> referenceXMax = new List<float>();
+            List<float> referenceYMax = new List<float>();
+            List<float> minimumMinDist = new List<float>();
+            List<float> minimumMaxDist = new List<float>();
+            List<int> depthPixelMin = new List<int>();
+            List<int> depthPixelMax = new List<int>();
+
+            foreach (var req in request.Data)
+            {
+                referenceXMin.Add(req.X);
+                referenceYMin.Add(req.Y);
+                referenceXMax.Add(req.X + req.Width);
+                referenceYMax.Add(req.Y + req.Height);
+                minimumMinDist.Add(100);
+                minimumMaxDist.Add(100);
+                depthPixelMin.Add(-1);
+                depthPixelMax.Add(-1);
+            }
+
             int pointIndex = 0;
             foreach (var point in cameraPoints)
             {
@@ -288,60 +302,98 @@ namespace KinectSimpleRgbdServer
                     continue;
                 }
 
-                float distanceMin =
-                    (point.X - referenceXMin) * (point.X - referenceXMin) + (point.Y - referenceYMin) * (point.Y - referenceYMin);
-                if (distanceMin < minimumMinDist)
+                // for each requested bound, check if current point is near any of the reference bound corners
+                for (int i = 0; i < request.Data.Count; ++i)
                 {
-                    minimumMinDist = distanceMin;
-                    depthPixelMin = pointIndex;
-                }
-                float distanceMax =
-                    (point.X - referenceXMax) * (point.X - referenceXMax) + (point.Y - referenceYMax) * (point.Y - referenceYMax);
-                if (distanceMax < minimumMaxDist)
-                {
-                    minimumMaxDist = distanceMax;
-                    depthPixelMax = pointIndex;
+                    float distanceMin =
+                        (point.X - referenceXMin[i]) * (point.X - referenceXMin[i])
+                        + (point.Y - referenceYMin[i]) * (point.Y - referenceYMin[i]);
+                    if (distanceMin < minimumMinDist[i])
+                    {
+                        minimumMinDist[i] = distanceMin;
+                        depthPixelMin[i] = pointIndex;
+                    }
+                    float distanceMax =
+                        (point.X - referenceXMax[i]) * (point.X - referenceXMax[i])
+                        + (point.Y - referenceYMax[i]) * (point.Y - referenceYMax[i]);
+                    if (distanceMax < minimumMaxDist[i])
+                    {
+                        minimumMaxDist[i] = distanceMax;
+                        depthPixelMax[i] = pointIndex;
+                    }
                 }
 
                 ++pointIndex;
             }
 
-            if (depthPixelMin < 0 || depthPixelMax < 0)
+            // check request args
+            bool getDepthBounds = false;
+            bool getColorBounds = false;
+            if (request.Args == "") // default return both
             {
-                Kinectrgbd.Response badresponse = this.client.ReturnPixelBoundsFromSpaceBounds(result);
-                colorFrame.Dispose();
-                depthFrame.Dispose();
-                return;
+                getDepthBounds = true;
+                getColorBounds = true;
+            }
+            else if (request.Args == "-depth")
+            {
+                getDepthBounds = true;
+            }
+            else if (request.Args == "-color")
+            {
+                getColorBounds = true;
             }
 
-            int depthMinY = depthPixelMin / depthDesc.Width;
-            int depthMinX = depthPixelMin - depthMinY * depthDesc.Width;
-            int depthMaxY = depthPixelMax / depthDesc.Width;
-            int depthMaxX = depthPixelMax - depthMaxY * depthDesc.Width;
-            Kinectrgbd.Bit depth = new Kinectrgbd.Bit
+            // set results to send data
+            for (int i = 0; i < request.Data.Count; ++i)
             {
-                Name = "depth",
-                X = depthMinX,
-                Y = depthMaxY,
-                Width = depthMaxX - depthMinX,
-                Height = depthMinY - depthMaxY
-            };
-            int colorMinX = Convert.ToInt32(colorPoints[depthPixelMin].X);
-            int colorMinY = Convert.ToInt32(colorPoints[depthPixelMin].Y);
-            int colorMaxX = Convert.ToInt32(colorPoints[depthPixelMax].X);
-            int colorMaxY = Convert.ToInt32(colorPoints[depthPixelMax].Y);
-            Kinectrgbd.Bit color = new Kinectrgbd.Bit
-            { 
-                Name = "color",
-                X = colorMinX,
-                Y = colorMaxY,
-                Width = colorMaxX - colorMinX,
-                Height = colorMinY - colorMaxY
-            };
+                // return when an invalid result is detected
+                if (depthPixelMin[i] < 0 || depthPixelMax[i] < 0)
+                {
+                    Kinectrgbd.Response badresponse = this.client.ReturnPixelBoundsFromSpaceBounds(result);
+                    colorFrame.Dispose();
+                    depthFrame.Dispose();
+                    return;
+                }
+
+                int depthMinY = depthPixelMin[i] / depthDesc.Width;
+                int depthMinX = depthPixelMin[i] - depthMinY * depthDesc.Width;
+                int depthMaxY = depthPixelMax[i] / depthDesc.Width;
+                int depthMaxX = depthPixelMax[i] - depthMaxY * depthDesc.Width;
+
+                if (getDepthBounds)
+                {
+                    Kinectrgbd.Bit depth = new Kinectrgbd.Bit
+                    {
+                        Name = "depth",
+                        X = depthMinX,
+                        Y = depthMaxY,
+                        Width = depthMaxX - depthMinX,
+                        Height = depthMinY - depthMaxY
+                    };
+                    result.Data.Add(depth);
+                }
+                
+                if (getColorBounds)
+                {
+                    int colorMinX = Convert.ToInt32(colorPoints[depthPixelMin[i]].X);
+                    int colorMinY = Convert.ToInt32(colorPoints[depthPixelMin[i]].Y);
+                    int colorMaxX = Convert.ToInt32(colorPoints[depthPixelMax[i]].X);
+                    int colorMaxY = Convert.ToInt32(colorPoints[depthPixelMax[i]].Y);
+                    Kinectrgbd.Bit color = new Kinectrgbd.Bit
+                    {
+                        Name = "color",
+                        X = colorMinX,
+                        Y = colorMaxY,
+                        Width = colorMaxX - colorMinX,
+                        Height = colorMinY - colorMaxY
+                    };
+
+                    result.Data.Add(color);
+                }
+                
+            }
 
             result.Status = true;
-            result.Data.Add(depth);
-            result.Data.Add(color);
             Kinectrgbd.Response response = this.client.ReturnPixelBoundsFromSpaceBounds(result);
 
             colorFrame.Dispose();
