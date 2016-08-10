@@ -1,0 +1,9 @@
+int32 mode
+linux_kinect/Bit[] data
+bool once
+string args
+---
+geometry_msgs/Point[] points
+linux_kinect/Cognition[] cognitions
+linux_kinect/Bit[] bits
+bool status

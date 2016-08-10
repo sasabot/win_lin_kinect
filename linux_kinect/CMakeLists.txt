@@ -1,0 +1,86 @@
+cmake_minimum_required(VERSION 2.8.3)
+project(linux_kinect)
+
+# Dependencies
+
+# catkin ROS
+find_package(catkin REQUIRED COMPONENTS
+  roscpp std_msgs sensor_msgs geometry_msgs
+  message_generation
+  )
+if(NOT catkin_LIBRARIES)
+  message(FATAL "catkin required but not supported")
+endif()
+
+# boost
+find_package(Boost REQUIRED COMPONENTS filesystem system signals thread)
+if(NOT Boost_INCLUDE_DIRS)
+  message(FATAL "boost required but not supported")
+else()
+  include_directories(include ${Boost_INCLUDE_DIRS})
+endif()
+
+add_message_files(
+  FILES
+  Bit.msg
+  Cognition.msg
+  Tag.msg
+  Person.msg
+  UrlInfo.msg
+  )
+add_service_files(
+  FILES
+  KinectRequest.srv
+  )
+generate_messages(
+  DEPENDENCIES
+  std_msgs
+  geometry_msgs
+  sensor_msgs
+  )
+
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
+CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+if(COMPILER_SUPPORTS_CXX11)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+  add_definitions(-DCXX11_SUPPORTED)
+elseif(COMPILER_SUPPORTS_CXX0X)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+  add_definitions(-DCXX11_SUPPORTED)
+else()
+  message(FATAL "c++11 required but not supported")
+endif()
+
+find_package(Protobuf REQUIRED)
+include_directories(${PROTOBUF_INCLUDE_DIRS})
+find_package(Threads)
+find_library(GRPC_LIBRARY grpc /usr/local/lib)
+find_library(GRPC++_LIBRARY grpc++_unsecure /usr/local/lib)
+find_library(GPR_LIBRARY gpr /usr/local/lib)
+message(STATUS "protobuf : " ${PROTOBUF_INCLUDE_DIRS})
+message(STATUS "grpc library : " ${GRPC_LIBRARY})
+message(STATUS "grpc++ library : " ${GRPC++_LIBRARY})
+message(STATUS "gpr library : " ${GPR_LIBRARY})
+
+# add_executable(kinect_simple_rgbd_client
+#   KinectSimpleRgbdClient/KinectSimpleRgbdClient.cc
+#   KinectSimpleRgbdClient/kinect_rgbd.grpc.pb.cc
+#   KinectSimpleRgbdClient/kinect_rgbd.pb.cc
+#   )
+
+# target_link_libraries(kinect_simple_rgbd_client
+#   ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${GRPC++_LIBRARY} ${GRPC_LIBRARY} ${GPR_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} /usr/local/lib/libprotobuf.a /usr/local/lib/libprotobuf-lite.a /usr/local/lib/libprotoc.a dl
+#   )
+
+add_executable(kinect_simple_interaction_client
+  KinectSimpleInteractionClient/KinectSimpleInteractionClient.cc
+  KinectSimpleInteractionClient/kinect_person.grpc.pb.cc
+  KinectSimpleInteractionClient/kinect_person.pb.cc
+  KinectSimpleInteractionClient/kinect_robot.grpc.pb.cc
+  KinectSimpleInteractionClient/kinect_robot.pb.cc
+  )
+
+target_link_libraries(kinect_simple_interaction_client
+  ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${GRPC++_LIBRARY} ${GRPC_LIBRARY} ${GPR_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} /usr/local/lib/libprotobuf.a /usr/local/lib/libprotobuf-lite.a /usr/local/lib/libprotoc.a dl
+  )
