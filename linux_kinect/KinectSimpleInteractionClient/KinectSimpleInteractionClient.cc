@@ -6,6 +6,7 @@
 #include "geometry_msgs/Vector3.h"
 #include "linux_kinect/Bit.h"
 #include "linux_kinect/Person.h"
+#include "linux_kinect/People.h"
 #include "linux_kinect/UrlInfo.h"
 
 #include <chrono>
@@ -159,7 +160,7 @@ public:
   explicit KinectPersonImpl(ros::NodeHandle nh) : nh_(nh)
   {
     pub_person_speaker_ = nh_.advertise<linux_kinect::Person>("/kinect/person/speaker", 1);
-    pub_person_target_ = nh_.advertise<linux_kinect::Person>("/kinect/person/target", 1); // todo
+    pub_person_targets_ = nh_.advertise<linux_kinect::People>("/kinect/person/targets", 1);
     pub_voice_recognition_ = nh_.advertise<std_msgs::String>("/kinect/voice", 1);
     pub_console_command_ = nh_.advertise<std_msgs::String>("/console/command", 1);
     previous_target_ = -1;
@@ -173,15 +174,40 @@ public:
 			 kinectperson::Response* res) override
   {
     int this_target_id = -1;
+    linux_kinect::People targets;
+
     if (persons->status() > 0)
     {
       int target = -1;
       int candidate_from_previous = -1;
       std::map<int, float> candidate_farness;
 
+      targets.data.resize(persons->data_size());
+
       // find speaker
       for (unsigned int i = 0; i < persons->data_size(); ++i)
       {
+	// save data to targets
+	targets.data[i].verified_id = i; // todo
+	linux_kinect::Bit bounds;
+	bounds.x = persons->data(i).face().x();
+	bounds.y = persons->data(i).face().y();
+	bounds.width = persons->data(i).face().width();
+	bounds.height = persons->data(i).face().height();
+	targets.data[i].face2d = bounds;
+	geometry_msgs::Point position;
+	position.x = 0.0; // todo
+	position.y = 0.0; // todo
+	position.z = persons->data(i).distance();
+	targets.data[i].face3d = position;
+	geometry_msgs::Vector3 rpy;
+	rpy.x = persons->data(i).face().roll();
+	rpy.y = persons->data(i).face().pitch();
+	rpy.z = persons->data(i).face().yaw();
+	targets.data[i].face6d = rpy;
+	targets.data[i].looking = persons->data(i).looking();
+	targets.data[i].speaking = persons->data(i).speaking();
+
 	if (persons->data(i).speaking())
 	{
 	  target = i; // set target to speaker
@@ -202,38 +228,20 @@ public:
       // if no speaker and last speaker is not in scene
       if (target == -1)
       {
-	float distance = 100000;
+	float distance = std::numeric_limits<float>::max();
 	for (auto it = candidate_farness.begin(); it != candidate_farness.end(); ++it)
 	  if (it->second < distance)
 	    target = it->first; // set target to nearest face
       }
-      
+
       if (target >= 0)
       {
-	int face_center_x = persons->data(target).face().x()
-	  + persons->data(target).face().width() * 0.5;
-	linux_kinect::Person data;
-	linux_kinect::Bit bounds;
-	bounds.x = persons->data(target).face().x();
-	bounds.y = persons->data(target).face().y();
-	bounds.width = persons->data(target).face().width();
-	bounds.height = persons->data(target).face().height();
-	data.face2d = bounds;
-	geometry_msgs::Point position;
-	position.x = 0.0; // todo
-	position.y = 0.0; // todo
-	position.z = persons->data(target).distance();
-	data.face3d = position;
-	geometry_msgs::Vector3 rpy;
-	rpy.x = persons->data(target).face().roll();
-	rpy.y = persons->data(target).face().pitch();
-	rpy.z = persons->data(target).face().yaw();
-	data.face6d = rpy;
-	data.looking = persons->data(target).looking();
-	data.speaking = persons->data(target).speaking();
+	linux_kinect::Person data = targets.data[target];
 	pub_person_speaker_.publish(data);
 	this_target_id = persons->data(target).id();
       }
+
+      pub_person_targets_.publish(targets);
     }
     previous_target_ = this_target_id;
 
@@ -287,7 +295,7 @@ private:
 
   ros::Publisher pub_person_speaker_;
 
-  ros::Publisher pub_person_target_; // todo
+  ros::Publisher pub_person_targets_;
 
   ros::Publisher pub_voice_recognition_;
 

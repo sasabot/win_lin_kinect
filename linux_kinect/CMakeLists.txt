@@ -26,6 +26,7 @@ add_message_files(
   Cognition.msg
   Tag.msg
   Person.msg
+  People.msg
   UrlInfo.msg
   )
 add_service_files(
