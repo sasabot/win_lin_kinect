@@ -64,24 +64,36 @@ message(STATUS "grpc library : " ${GRPC_LIBRARY})
 message(STATUS "grpc++ library : " ${GRPC++_LIBRARY})
 message(STATUS "gpr library : " ${GPR_LIBRARY})
 
-add_executable(kinect_simple_rgbd_client
-  KinectSimpleRgbdClient/KinectSimpleRgbdClient.cc
-  KinectSimpleRgbdClient/kinect_rgbd.grpc.pb.cc
-  KinectSimpleRgbdClient/kinect_rgbd.pb.cc
+# add_executable(kinect_simple_rgbd_client
+#   KinectSimpleRgbdClient/KinectSimpleRgbdClient.cc
+#   KinectSimpleRgbdClient/kinect_rgbd.grpc.pb.cc
+#   KinectSimpleRgbdClient/kinect_rgbd.pb.cc
+#   )
+
+# target_link_libraries(kinect_simple_rgbd_client
+#   ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${GRPC++_LIBRARY} ${GRPC_LIBRARY} ${GPR_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} /usr/local/lib/libprotobuf.a /usr/local/lib/libprotobuf-lite.a /usr/local/lib/libprotoc.a dl
+#   )
+
+# add_executable(kinect_simple_interaction_client
+#   KinectSimpleInteractionClient/KinectSimpleInteractionClient.cc
+#   KinectSimpleInteractionClient/kinect_person.grpc.pb.cc
+#   KinectSimpleInteractionClient/kinect_person.pb.cc
+#   KinectSimpleInteractionClient/kinect_robot.grpc.pb.cc
+#   KinectSimpleInteractionClient/kinect_robot.pb.cc
+#   )
+
+# target_link_libraries(kinect_simple_interaction_client
+#   ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${GRPC++_LIBRARY} ${GRPC_LIBRARY} ${GPR_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} /usr/local/lib/libprotobuf.a /usr/local/lib/libprotobuf-lite.a /usr/local/lib/libprotoc.a dl
+#   )
+
+add_executable(kinect_rgbd_interaction_client
+  KinectRgbdInteractionClient/KinectRgbdInteractionClient.cc
+  KinectRgbdInteractionClient/kinect_person.grpc.pb.cc
+  KinectRgbdInteractionClient/kinect_person.pb.cc
+  KinectRgbdInteractionClient/kinect_robot.grpc.pb.cc
+  KinectRgbdInteractionClient/kinect_robot.pb.cc
   )
 
-target_link_libraries(kinect_simple_rgbd_client
-  ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${GRPC++_LIBRARY} ${GRPC_LIBRARY} ${GPR_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} /usr/local/lib/libprotobuf.a /usr/local/lib/libprotobuf-lite.a /usr/local/lib/libprotoc.a dl
-  )
-
-add_executable(kinect_simple_interaction_client
-  KinectSimpleInteractionClient/KinectSimpleInteractionClient.cc
-  KinectSimpleInteractionClient/kinect_person.grpc.pb.cc
-  KinectSimpleInteractionClient/kinect_person.pb.cc
-  KinectSimpleInteractionClient/kinect_robot.grpc.pb.cc
-  KinectSimpleInteractionClient/kinect_robot.pb.cc
-  )
-
-target_link_libraries(kinect_simple_interaction_client
+target_link_libraries(kinect_rgbd_interaction_client
   ${catkin_LIBRARIES} ${Boost_LIBRARIES} ${GRPC++_LIBRARY} ${GRPC_LIBRARY} ${GPR_LIBRARY} ${CMAKE_THREAD_LIBS_INIT} /usr/local/lib/libprotobuf.a /usr/local/lib/libprotobuf-lite.a /usr/local/lib/libprotoc.a dl
   )

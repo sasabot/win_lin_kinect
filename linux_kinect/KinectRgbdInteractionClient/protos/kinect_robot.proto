@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+option java_package = "ex.grpc";
+
+option objc_class_prefix = "RTG";
+
+
+package kinectrobot;
+
+service KinectRobot {
+  rpc SendSpeech(Speech) returns (Response) {}
+  rpc SetSTTBehavior(VoiceTriggers) returns (Response) {}
+  rpc WebAgent(UrlInfo) returns (Response) {}
+}
+
+message Speech {
+  string command = 1;
+  string speech = 2;
+}
+
+message VoiceTriggers {
+  bool AutoTriggerAfterRecognition = 1;
+  bool AutoTriggerDuringSpeech = 2;
+  bool ManualTriggerOn = 3;
+  bool ManualTriggerOff = 4;
+}
+
+message UrlInfo {
+  string url = 1;
+  string linkhead = 2;
+  string key = 3;
+  string style = 4;
+}
+
+message Response {
+  bool status = 1;
+}
