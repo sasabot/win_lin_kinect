@@ -47,6 +47,10 @@ namespace Kinectrobot
 
             // setup for rgbd streaming
             this.pointBlobs = new Kinectrobot.Points[divideStream];
+            for (int i = 0; i < this.pointBlobs.Length; ++i)
+            {
+                this.pointBlobs[i] = new Kinectrobot.Points { };
+            }
 
             // setup for TTS
             this.speechSynthesizer = new SpeechSynthesizer();
@@ -72,7 +76,6 @@ namespace Kinectrobot
             {
                 for (int i = 0; i < this.pointBlobs.Length; ++i)
                 {
-                    
                     this.pointBlobs[i].Data.Clear();
                     int range = System.Math.Min((i + 1) * pointsPerStream, points.Data.Count);
                     for (int j = pointsPerStream * i; j < range; ++j)
