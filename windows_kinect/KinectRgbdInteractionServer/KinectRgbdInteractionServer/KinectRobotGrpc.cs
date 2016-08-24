@@ -12,10 +12,19 @@ namespace Kinectrobot {
   {
     static readonly string __ServiceName = "kinectrobot.KinectRobot";
 
+    static readonly Marshaller<global::Kinectrobot.Request> __Marshaller_Request = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Request.Parser.ParseFrom);
+    static readonly Marshaller<global::Kinectrobot.Points> __Marshaller_Points = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Points.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.Speech> __Marshaller_Speech = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Speech.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.Response> __Marshaller_Response = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Response.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.VoiceTriggers> __Marshaller_VoiceTriggers = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.VoiceTriggers.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.UrlInfo> __Marshaller_UrlInfo = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.UrlInfo.Parser.ParseFrom);
+
+    static readonly Method<global::Kinectrobot.Request, global::Kinectrobot.Points> __Method_ReturnPoints = new Method<global::Kinectrobot.Request, global::Kinectrobot.Points>(
+        MethodType.ServerStreaming,
+        __ServiceName,
+        "ReturnPoints",
+        __Marshaller_Request,
+        __Marshaller_Points);
 
     static readonly Method<global::Kinectrobot.Speech, global::Kinectrobot.Response> __Method_SendSpeech = new Method<global::Kinectrobot.Speech, global::Kinectrobot.Response>(
         MethodType.Unary,
@@ -47,6 +56,11 @@ namespace Kinectrobot {
     /// <summary>Base class for server-side implementations of KinectRobot</summary>
     public abstract class KinectRobotBase
     {
+      public virtual global::System.Threading.Tasks.Task ReturnPoints(global::Kinectrobot.Request request, IServerStreamWriter<global::Kinectrobot.Points> responseStream, ServerCallContext context)
+      {
+        throw new RpcException(new Status(StatusCode.Unimplemented, ""));
+      }
+
       public virtual global::System.Threading.Tasks.Task<global::Kinectrobot.Response> SendSpeech(global::Kinectrobot.Speech request, ServerCallContext context)
       {
         throw new RpcException(new Status(StatusCode.Unimplemented, ""));
@@ -57,9 +71,6 @@ namespace Kinectrobot {
         throw new RpcException(new Status(StatusCode.Unimplemented, ""));
       }
 
-      /// <summary>
-      ///   rpc WriteLogOnWindows(Log) returns (Response) {}
-      /// </summary>
       public virtual global::System.Threading.Tasks.Task<global::Kinectrobot.Response> WebAgent(global::Kinectrobot.UrlInfo request, ServerCallContext context)
       {
         throw new RpcException(new Status(StatusCode.Unimplemented, ""));
@@ -90,6 +101,14 @@ namespace Kinectrobot {
       {
       }
 
+      public virtual AsyncServerStreamingCall<global::Kinectrobot.Points> ReturnPoints(global::Kinectrobot.Request request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return ReturnPoints(request, new CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual AsyncServerStreamingCall<global::Kinectrobot.Points> ReturnPoints(global::Kinectrobot.Request request, CallOptions options)
+      {
+        return CallInvoker.AsyncServerStreamingCall(__Method_ReturnPoints, null, options, request);
+      }
       public virtual global::Kinectrobot.Response SendSpeech(global::Kinectrobot.Speech request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
         return SendSpeech(request, new CallOptions(headers, deadline, cancellationToken));
@@ -122,30 +141,18 @@ namespace Kinectrobot {
       {
         return CallInvoker.AsyncUnaryCall(__Method_SetSTTBehavior, null, options, request);
       }
-      /// <summary>
-      ///   rpc WriteLogOnWindows(Log) returns (Response) {}
-      /// </summary>
       public virtual global::Kinectrobot.Response WebAgent(global::Kinectrobot.UrlInfo request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
         return WebAgent(request, new CallOptions(headers, deadline, cancellationToken));
       }
-      /// <summary>
-      ///   rpc WriteLogOnWindows(Log) returns (Response) {}
-      /// </summary>
       public virtual global::Kinectrobot.Response WebAgent(global::Kinectrobot.UrlInfo request, CallOptions options)
       {
         return CallInvoker.BlockingUnaryCall(__Method_WebAgent, null, options, request);
       }
-      /// <summary>
-      ///   rpc WriteLogOnWindows(Log) returns (Response) {}
-      /// </summary>
       public virtual AsyncUnaryCall<global::Kinectrobot.Response> WebAgentAsync(global::Kinectrobot.UrlInfo request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
         return WebAgentAsync(request, new CallOptions(headers, deadline, cancellationToken));
       }
-      /// <summary>
-      ///   rpc WriteLogOnWindows(Log) returns (Response) {}
-      /// </summary>
       public virtual AsyncUnaryCall<global::Kinectrobot.Response> WebAgentAsync(global::Kinectrobot.UrlInfo request, CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_WebAgent, null, options, request);
@@ -160,6 +167,7 @@ namespace Kinectrobot {
     public static ServerServiceDefinition BindService(KinectRobotBase serviceImpl)
     {
       return ServerServiceDefinition.CreateBuilder()
+          .AddMethod(__Method_ReturnPoints, serviceImpl.ReturnPoints)
           .AddMethod(__Method_SendSpeech, serviceImpl.SendSpeech)
           .AddMethod(__Method_SetSTTBehavior, serviceImpl.SetSTTBehavior)
           .AddMethod(__Method_WebAgent, serviceImpl.WebAgent).Build();

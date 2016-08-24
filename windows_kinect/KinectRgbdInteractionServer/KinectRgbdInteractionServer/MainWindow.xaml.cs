@@ -31,9 +31,20 @@ namespace KinectRgbdInteractionServer
 
         private MultiSourceFrameReader multiSourceFrameReader = null;
 
+        // bodies
+
+        private int maxBodies;
+        private Body[] bodies = null;
+
+        // faces
+
         private FaceFrameSource[] faceSource = null;
         private FaceFrameReader[] faceReader = null;
-        private Body[] bodies = null;
+        private FaceFrameResult[] faceResult = null;
+        // save face bounds for tracked-but-face-not-found case
+        private RectI[] savedFaceBounds = null;
+
+        // faces settings
 
         private const FaceFrameFeatures DefaultFaceFrameFeatures =
             FaceFrameFeatures.BoundingBoxInColorSpace
@@ -48,92 +59,162 @@ namespace KinectRgbdInteractionServer
             | FaceFrameFeatures.LookingAway
             | FaceFrameFeatures.RotationOrientation;
 
-        private FaceFrameResult[] faceResult = null;
-        private RectI[] savedFaceBounds = null;
-        
-        private int maxBodies;
-
-        private int displayWidth;
-
-        private int displayHeight;
+        // audio
 
         private AudioBeamFrameReader audioReader = null;
-        private bool[] speakingResult = null;
+        private readonly byte[] audioBuffer = null;
+        // save buffers for mistaken audio cuts
+        private List<byte[]> savedAudioBuffers;
 
+        // speech
+
+        private DataRecognitionClient recogClient = null;
+        private bool[] speakingResult = null;
         // Speaking result is true with non-speech sounds
         // Worded result checks whether sound is speech
         private bool wordedResult = false;
 
-        private DataRecognitionClient recogClient;
-        private string subscriptionKey;
+        // speech settings
+
         private SpeechAudioFormat audioFormat;
-        private readonly byte[] audioBuffer = null;
-        private List<byte[]> savedAudioBuffers;
+
+        // speech temporary state variables
+
+        private bool finishingSpeech = false;
+        private TimeSpan pauseDetectedTime;
+
+        // speech parameters
 
         // In English speech the average pause between conversations is .74 seconds
         // Therefore threshold around .74 seconds should be appropriate
         // In Japanese speech the average is 5.15 to 8.5 seconds
         private const int speechFinishThreshold = 500; // millisecs
-        private bool finishingSpeech = false;
-        private TimeSpan pauseDetectedTime;
-
         private const double speakerDistanceThreshold = 2.0; // meters
 
-        private Channel[] channel = null;
+        // rgbd streaming
 
-        private Kinectperson.KinectPerson.KinectPersonClient[] client = null;
+        private CoordinateMapper coordinateMapper = null;
+        private ColorSpacePoint[] colorPoints;
+        private List<CameraSpacePoint> imageSpaceValues;
+
+        // rgbd streaming settings
+
+        private int sendStartPointX = 0;
+        private int sendStartPointY = 0;
+        private int sendPointWidth = 512;
+        private int sendPointHeight = 424;
+        private bool onceFlag = false;
+
+        // rgbd streaming parameters
+
+        private const int divideStream = 2; // if stream is small set to 1, if large set to N > 2
+
+        // grpc
 
         private int numClients;
+        private Channel[] channel = null;
+        private Kinectperson.KinectPerson.KinectPersonClient[] client = null;
 
         private Server server;
-
         private Kinectrobot.KinectRobotImpl robotImpl = null;
+
+        // runtime settings
+
+        private float rate = 1; // this sets rgbd stream refresh rate (seconds)
+        private const int frameUnit = 30;
+
+        // runtime temporary state variables
+
+        private int skippedFrame = 0;
+
+        // display settings
+
+        private int displayWidth;
+        private int displayHeight;
+
+        // azure keys
+
+        private string subscriptionKey;
 
         public MainWindow()
         {
+            // setup Kinect
+
             this.kinectSensor = KinectSensor.GetDefault();
 
             this.multiSourceFrameReader =
-                this.kinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color | FrameSourceTypes.Body);
+                this.kinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color | FrameSourceTypes.Depth | FrameSourceTypes.Body);
             this.multiSourceFrameReader.MultiSourceFrameArrived += this.Reader_FrameArrived;
 
-            // setup for face detection
+            // setup bodies
+
             this.maxBodies = this.kinectSensor.BodyFrameSource.BodyCount;
+            this.bodies = new Body[this.maxBodies];
+
+            // setup faces
+
             this.faceSource = new FaceFrameSource[this.maxBodies];
             this.faceReader = new FaceFrameReader[this.maxBodies];
             this.faceResult = new FaceFrameResult[this.maxBodies];
-            // save face bounds for tracked-but-face-not-found case
             this.savedFaceBounds = new RectI[this.maxBodies];
-            this.bodies = new Body[this.maxBodies];
+            
             for (int i = 0; i < this.maxBodies; ++i)
             {
-                this.faceSource[i] = new FaceFrameSource(kinectSensor, 0, DefaultFaceFrameFeatures);
+                this.faceSource[i] = new FaceFrameSource(this.kinectSensor, 0, DefaultFaceFrameFeatures);
                 this.faceReader[i] = this.faceSource[i].OpenReader();
                 this.faceReader[i].FrameArrived += Face_FrameArrived;
             }
 
-            this.displayWidth = this.kinectSensor.ColorFrameSource.FrameDescription.Width;
-            this.displayHeight = this.kinectSensor.ColorFrameSource.FrameDescription.Height;
+            // setup audio
 
-            this.kinectSensor.Open();
-
-            // setup for audio detection
             AudioSource audioSource = this.kinectSensor.AudioSource;
             this.audioReader = audioSource.OpenReader();
             this.audioReader.FrameArrived += this.Audio_FrameArrived;
+
+            this.audioBuffer = new byte[audioSource.SubFrameLengthInBytes];
+            this.savedAudioBuffers = new List<byte[]>();
+
+            // setup speech
+
+            this.audioFormat = new SpeechAudioFormat
+            {
+                EncodingFormat = AudioCompressionType.PCM,
+                BitsPerSample = 16, // 32-bit input will be coverted to 16-bit for recognition
+                ChannelCount = 1, // only 1 channel is used
+                SamplesPerSecond = 16000,
+                AverageBytesPerSecond = 32000,
+                BlockAlign = 2 // BytesPerSample * ChannelCount
+            };
+
+            Console.WriteLine("Enter subscription key for voice recognition (press enter if same)");
+            string key = Console.ReadLine().ToString();
+            if (key != "")
+            {
+                Properties.Settings.Default.Key = key;
+                Properties.Settings.Default.Save();
+            }
+            this.subscriptionKey = Properties.Settings.Default.Key;
+            Console.WriteLine("got key {0}", this.subscriptionKey);
+
+            this.recogClient = SpeechRecognitionServiceFactory.CreateDataClient(
+                SpeechRecognitionMode.ShortPhrase,
+                "en-US",
+                this.subscriptionKey,
+                this.subscriptionKey);
+            this.recogClient.OnResponseReceived += this.VoiceRecognition_FrameArrived;
+            this.recogClient.SendAudioFormat(audioFormat);
+
             this.speakingResult = new bool[this.maxBodies];
 
-            // setup TTS server
-            string host = Dns.GetHostName();
-            this.robotImpl = new Kinectrobot.KinectRobotImpl(this.LogInfo);
-            this.server = new Server
-            {
-                Services = { Kinectrobot.KinectRobot.BindService(this.robotImpl) },
-                Ports = { new ServerPort(Dns.GetHostByName(host).AddressList[0].ToString(), 50051, ServerCredentials.Insecure) }
-            };
-            this.server.Start();
+            // setup rgbd streaming
 
-            // setting up communications
+            this.coordinateMapper = this.kinectSensor.CoordinateMapper;
+            this.colorPoints = Enumerable.Repeat(new ColorSpacePoint { X = -1, Y = -1 },
+                this.kinectSensor.ColorFrameSource.FrameDescription.Width * this.kinectSensor.ColorFrameSource.FrameDescription.Height)
+                .ToArray();
+            this.imageSpaceValues = new List<CameraSpacePoint>();
+
+            // setup grpc
 
             Console.WriteLine("Enter number of Clients [example] 1");
             string numClients = Console.ReadLine().ToString();
@@ -143,8 +224,8 @@ namespace KinectRgbdInteractionServer
                 Properties.Settings.Default.Save();
             }
             this.numClients = Properties.Settings.Default.Clients;
-            this.client = new Kinectperson.KinectPerson.KinectPersonClient[this.numClients];
             this.channel = new Channel[this.numClients];
+            this.client = new Kinectperson.KinectPerson.KinectPersonClient[this.numClients];
 
             if (Properties.Settings.Default.Ips == null)
                 Properties.Settings.Default.Ips = new System.Collections.Specialized.StringCollection { };
@@ -173,46 +254,29 @@ namespace KinectRgbdInteractionServer
                 this.client[i] = new Kinectperson.KinectPerson.KinectPersonClient(this.channel[i]);
             }
 
-            // setup speech recognition
-            Console.WriteLine("Enter subscription key for voice recognition (press enter if same)");
-            string key = Console.ReadLine().ToString();
-            if (key != "")
+            // setup grpc: start TTS server
+            string host = Dns.GetHostName();
+            this.robotImpl = new Kinectrobot.KinectRobotImpl(this.LogInfo, MainWindow.divideStream);
+            this.server = new Server
             {
-                Properties.Settings.Default.Key = key;
-                Properties.Settings.Default.Save();
-            }
-            this.subscriptionKey = Properties.Settings.Default.Key;
-            Console.WriteLine("got key {0}", this.subscriptionKey);
-
-            this.audioFormat = new SpeechAudioFormat
-            {
-                EncodingFormat = AudioCompressionType.PCM,
-                BitsPerSample = 16, // 32-bit input will be coverted to 16-bit for recognition
-                ChannelCount = 1, // only 1 channel is used
-                SamplesPerSecond = 16000,
-                AverageBytesPerSecond = 32000,
-                BlockAlign = 2 // BytesPerSample * ChannelCount
+                Services = { Kinectrobot.KinectRobot.BindService(this.robotImpl) },
+                Ports = { new ServerPort(Dns.GetHostByName(host).AddressList[0].ToString(), 50051, ServerCredentials.Insecure) }
             };
+            this.server.Start();
 
-            this.recogClient = SpeechRecognitionServiceFactory.CreateDataClient(
-                SpeechRecognitionMode.ShortPhrase,
-                "en-US",
-                this.subscriptionKey,
-                this.subscriptionKey);
-            this.recogClient.OnResponseReceived += this.VoiceRecognition_FrameArrived;
-            this.recogClient.SendAudioFormat(audioFormat);
-
-            this.audioBuffer = new byte[audioSource.SubFrameLengthInBytes];
-
-            // save buffers for mistaken audio cuts
-            this.savedAudioBuffers = new List<byte[]>();
-
-            // start robot clients
+            // setup grpc: start robot clients
             Kinectperson.Text thisIp = new Kinectperson.Text { Text_ = Dns.GetHostByName(host).AddressList[0].ToString() + ":50051" };
             for (int i = 0; i < this.numClients; ++i)
             {
                 Kinectperson.Response response = this.client[i].CreateRobotClient(thisIp);
             }
+
+            // setup finish
+
+            this.displayWidth = this.kinectSensor.ColorFrameSource.FrameDescription.Width;
+            this.displayHeight = this.kinectSensor.ColorFrameSource.FrameDescription.Height;
+
+            this.kinectSensor.Open();
 
             InitializeComponent();
         }
@@ -255,12 +319,30 @@ namespace KinectRgbdInteractionServer
                 this.robotImpl.Dispose();
             }
             this.server.ShutdownAsync().Wait();
+
+            foreach (var c in this.channel)
+            {
+                c.ShutdownAsync().Wait();
+            }
         }
 
         private void Reader_FrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
             var frame = e.FrameReference.AcquireFrame();
-            SendPersonDetectionResults(frame);   
+
+            // person detection is real time
+            SendPersonDetectionResults(frame);
+
+            // rgbd streaming is not real time
+            // code might crash with 30fps, set parameter according to computer specifications
+            if (this.skippedFrame < MainWindow.frameUnit * this.rate)
+            {
+                ++skippedFrame;
+                return;
+            }
+            skippedFrame = 0;
+
+            this.RgbdOnce(frame);
         }
 
         private async void SendPersonDetectionResults(MultiSourceFrame frame)
@@ -409,6 +491,89 @@ namespace KinectRgbdInteractionServer
                     Kinectperson.Response response = this.client[i].SendPersonState(result);
                 }
             }
+        }
+
+        private async void RgbdOnce(MultiSourceFrame frame)
+        {
+            ColorFrame colorFrame = frame.ColorFrameReference.AcquireFrame();
+            DepthFrame depthFrame = frame.DepthFrameReference.AcquireFrame();
+            if (colorFrame == null || depthFrame == null)
+            {
+                return;
+            }
+
+            // get depth map from depthFrame
+            var depthDesc = depthFrame.FrameDescription;
+            ushort[] depthData = new ushort[depthDesc.Width * depthDesc.Height];
+            depthFrame.CopyFrameDataToArray(depthData);
+
+            // get color pixels from colorFrame
+            var colorDesc = colorFrame.FrameDescription;
+            byte[] pixels = new byte[colorDesc.Width * colorDesc.Height * 4];
+            colorFrame.CopyConvertedFrameDataToArray(pixels, ColorImageFormat.Bgra);
+
+            // get physical xyz position for each point on depth map
+            CameraSpacePoint[] cameraPoints = new CameraSpacePoint[depthDesc.Width * depthDesc.Height];
+            this.coordinateMapper.MapDepthFrameToCameraSpace(depthData, cameraPoints);
+
+            // get corresponding color pixel for each point on depth map
+            ColorSpacePoint[] colorPoints = new ColorSpacePoint[depthDesc.Width * depthDesc.Height];
+            this.coordinateMapper.MapDepthFrameToColorSpace(depthData, colorPoints);
+            Array.Copy(colorPoints, this.colorPoints, depthDesc.Width * depthDesc.Height);
+
+            int pointIndex = 0;
+            int sendEndPointX = this.sendStartPointX + this.sendPointWidth;
+            int sendEndPointY = this.sendStartPointY + this.sendPointHeight;
+            Kinectrobot.Points points = new Kinectrobot.Points { };
+            foreach (CameraSpacePoint point in cameraPoints)
+            {
+                // get points only in region
+                int pointYonDepth = pointIndex / depthDesc.Width;
+                int pointXonDepth = pointIndex - depthDesc.Width * pointYonDepth;
+                if (pointXonDepth < this.sendStartPointX || pointYonDepth < this.sendStartPointY
+                    || pointXonDepth >= sendEndPointX || pointYonDepth >= sendEndPointY)
+                {
+                    ++pointIndex;
+                    continue;
+                }
+
+                // get color from corresponding color pixel
+                // set default values
+                int color = ((255 << 16) & 0xfffffff) + ((255 << 8) & 0xfffffff) + 255;
+                int img_y = -1;
+                int img_x = -1;
+                // below check required if point with infinity or nan value is not rejected beforehand
+                if (!Double.IsInfinity(colorPoints[pointIndex].X) && !Double.IsInfinity(colorPoints[pointIndex].Y)
+                    && !Double.IsNaN(colorPoints[pointIndex].X) && !Double.IsNaN(colorPoints[pointIndex].Y))
+                {
+                    img_y = Convert.ToInt32(colorPoints[pointIndex].Y);
+                    img_x = Convert.ToInt32(colorPoints[pointIndex].X);
+                }
+                // note, corresponding pixel can be out of range on color map, due to coordinate difference
+                if (img_x >= 0 && img_y >= 0 && img_x < colorDesc.Width && img_y < colorDesc.Height)
+                {
+                    int pixel = 4 * (img_y * colorDesc.Width + img_x); // bgra, so skip by 4
+                    color = ((pixels[pixel++] << 16) & 0xfffffff) + ((pixels[pixel++] << 8) & 0xfffffff) + pixels[pixel++];
+                }
+
+                // add point to stream
+                Kinectrobot.Point p = new Kinectrobot.Point
+                {
+                    Color = color,
+                    X = point.X,
+                    Y = point.Y,
+                    Z = point.Z
+                };
+                ++pointIndex;
+                points.Data.Add(p);
+            }
+
+            this.robotImpl.SetPoints(points);
+
+            colorFrame.Dispose();
+            depthFrame.Dispose();
+
+            // TODO: stream if !this.onceFlag
         }
 
         private void Face_FrameArrived(object sender, FaceFrameArrivedEventArgs e)

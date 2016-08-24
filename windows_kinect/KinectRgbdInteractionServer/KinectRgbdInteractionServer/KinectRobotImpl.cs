@@ -12,9 +12,17 @@ namespace Kinectrobot
 {
     class KinectRobotImpl : KinectRobot.KinectRobotBase
     {
+        // rgbd streaming
+
+        private ReaderWriterLockSlim pointsLocker = null;
+
+        private Kinectrobot.Points[] pointBlobs = null;
+
+        // speech
+
         private SpeechSynthesizer speechSynthesizer;
 
-        ReaderWriterLockSlim locker = null;
+        private ReaderWriterLockSlim locker = null;
 
         private bool abortSpeech = false;
 
@@ -22,24 +30,23 @@ namespace Kinectrobot
 
         private bool triggerDuringSpeech = false;
 
+        // logs
+
         public delegate void LogInfo(string blockName, string text, bool concatenate = false);
 
         private LogInfo logInfo = null;
 
-        //private string logFilename;
-
-        //private string[] logs = new string[12];
-
-        //private int writeto = 0;
-
-        public KinectRobotImpl(LogInfo logFunction)
+        public KinectRobotImpl(LogInfo logFunction, int divideStream)
         {
+            // create lockers
+            this.pointsLocker = new ReaderWriterLockSlim();
             this.locker = new ReaderWriterLockSlim();
 
-            // for logs
+            // setup for logs
             this.logInfo = new LogInfo(logFunction);
-            //string path = AppDomain.CurrentDomain.BaseDirectory + @"logs\";
-            //this.logFilename = path + Convert.ToString(DateTime.Now.TimeOfDay).Replace(":", "-") + ".txt";
+
+            // setup for rgbd streaming
+            this.pointBlobs = new Kinectrobot.Points[divideStream];
 
             // setup for TTS
             this.speechSynthesizer = new SpeechSynthesizer();
@@ -54,6 +61,38 @@ namespace Kinectrobot
             {
                 this.speechSynthesizer.Dispose();
             }
+        }
+
+        public void SetPoints(Kinectrobot.Points points)
+        {
+            int pointsPerStream = points.Data.Count / this.pointBlobs.Length + 1;
+
+            this.pointsLocker.EnterWriteLock();
+            try
+            {
+                for (int i = 0; i < this.pointBlobs.Length; ++i)
+                {
+                    
+                    this.pointBlobs[i].Data.Clear();
+                    int range = System.Math.Min((i + 1) * pointsPerStream, points.Data.Count);
+                    for (int j = pointsPerStream * i; j < range; ++j)
+                        this.pointBlobs[i].Data.Add(points.Data[j]);
+                }
+            }
+            finally { this.pointsLocker.ExitWriteLock(); }
+        }
+
+        public override async Task ReturnPoints(Request request, IServerStreamWriter<Points> responseStream, ServerCallContext context)
+        {
+            this.pointsLocker.EnterReadLock();
+            try
+            {
+                foreach (var blob in this.pointBlobs)
+                {
+                    await responseStream.WriteAsync(blob);
+                }
+            }
+            finally { this.pointsLocker.ExitReadLock(); }
         }
 
         public bool RecognitionOffTriggerOn()
@@ -166,58 +205,6 @@ namespace Kinectrobot
 
             return Task.FromResult(ReturnTrue());
         }
-
-        //public override Task<Response> WriteLogOnWindows(Log request, ServerCallContext context)
-        //{
-        //    // -1 writes time info and saves log to file
-        //    if (request.Id == -1)
-        //    {
-        //        // print time
-        //        this.logs[0] = Convert.ToString(DateTime.Now.TimeOfDay);
-        //        this.logInfo("winInfoTime", this.logs[0]);
-
-        //        // save logs
-        //        using (System.IO.StreamWriter file =
-        //            new System.IO.StreamWriter(this.logFilename, true))
-        //        {
-        //            for (int i = 1; i < logs.Length; ++i)
-        //                file.WriteLine(logs[i]);
-        //            file.WriteLine("--------------- saved at " + logs[0]);
-        //        }
-
-        //        // flush write line
-        //        this.writeto = 0;
-
-        //        return Task.FromResult(ReturnTrue());
-        //    }
-
-        //    // -2 writes to error
-        //    if (request.Id == -2)
-        //    {
-        //        this.logs[logs.Length - 1] = request.Message;
-        //        this.logInfo("winInfoError", this.logs[logs.Length - 1]);
-        //        return Task.FromResult(ReturnTrue());
-        //    }
-
-        //    // discard out of range values
-        //    if (request.Id < 0) return Task.FromResult(ReturnTrue());
-
-        //    int writeAt = request.Id;
-        //    // if id 0, add to stream
-        //    if (request.Id == 0)
-        //    {
-        //        writeAt = this.writeto;
-        //        ++this.writeto;
-        //    }
-        //    // if stream buffer is full or out of range value, don't write
-        //    if (writeAt > this.logs.Length - 2) return Task.FromResult(ReturnTrue());
-
-        //    // write log
-        //    this.logInfo("winInfo" + writeAt, request.Message);
-        //    this.logs[writeAt + 1] = request.Message; // 0 is time stamp, therefore +1
-
-        //    return Task.FromResult(ReturnTrue());
-        //}
 
         public override Task<Response> WebAgent(UrlInfo request, ServerCallContext context)
         {

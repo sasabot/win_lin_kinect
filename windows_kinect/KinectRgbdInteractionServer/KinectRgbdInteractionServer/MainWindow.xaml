@@ -16,19 +16,6 @@
             <TextBlock x:Name="faces" Canvas.Top="48" Width="517"></TextBlock>
             <TextBlock x:Name="speakers" Canvas.Top="64" Width="517"></TextBlock>
             <TextBlock x:Name="recognized" Canvas.Top="80" Width="517"></TextBlock>
-            <!--TextBlock x:Name="winInfoTime" Canvas.Top="112" Width="517"></>
-            <TextBlock x:Name="winInfo0" Canvas.Top="128" Width="517"></TextBlock>
-            <TextBlock x:Name="winInfo1" Canvas.Top="144" Width="517"></TextBlock>
-            <TextBlock x:Name="winInfo2" Canvas.Top="160" Width="517"></TextBlock>
-            <TextBlock x:Name="winInfo3" Canvas.Top="176" Width="517"></TextBlock>
-            <TextBlock x:Name="winInfo4" Canvas.Top="192" Width="517"></TextBlock>
-            <TextBlock x:Name="winInfo5" Canvas.Top="208" Width="517"></TextBlock>
-            <TextBlock x:Name="winInfo6" Canvas.Top="224" Width="517"></TextBlock>
-            <TextBlock x:Name="winInfo7" Canvas.Top="240" Width="517"></TextBlock>
-            <TextBlock x:Name="winInfo8" Canvas.Top="256" Width="517"></TextBlock>
-            <TextBlock x:Name="winInfo9" Canvas.Top="272" Width="517"></TextBlock>
-            <TextBlock x:Name="winInfo10" Canvas.Top="288" Width="517"></TextBlock>
-            <TextBlock x:Name="winInfoError" Canvas.Top="304" Width="517"></TextBlock-->
         </Canvas>
     </Grid>
 </Window>
