@@ -3,10 +3,10 @@
 #include "sensor_msgs/PointField.h"
 #include "sensor_msgs/Image.h"
 #include "geometry_msgs/Point.h"
-#include <aero_application/KinectRequest.h>
-#include <aero_application/Bit.h>
-#include <aero_application/Tag.h>
-#include <aero_application/Cognition.h>
+#include <linux_kinect/KinectRequest.h>
+#include <linux_kinect/Bit.h>
+#include <linux_kinect/Tag.h>
+#include <linux_kinect/Cognition.h>
 
 #include <chrono>
 #include <iostream>
@@ -35,13 +35,13 @@ using kinectrgbd::KinectRgbd;
 /*
   @define srv KinectRequest
   int32 mode
-  aero_application/Bit[] data
+  linux_kinect/Bit[] data
   bool once
   string args
   ---
   geometry_msgs/Point[] points
-  aero_application/Cognition[] cognitions
-  aero_application/Bit[] bits
+  linux_kinect/Cognition[] cognitions
+  linux_kinect/Bit[] bits
   bool status
 */
 
@@ -62,8 +62,8 @@ using kinectrgbd::KinectRgbd;
 
 /*
   @define msg Cognition
-  aero_application/Tag[] captions
-  aero_application/Tag[] tags
+  linux_kinect/Tag[] captions
+  linux_kinect/Tag[] tags
   string[] texts
   bool status
 */
@@ -124,8 +124,8 @@ public:
     status_ = false;
   }
 
-  bool KinectRequest(aero_application::KinectRequest::Request &req,
-		     aero_application::KinectRequest::Response &res)
+  bool KinectRequest(linux_kinect::KinectRequest::Request &req,
+		     linux_kinect::KinectRequest::Response &res)
   {
     ROS_WARN("received request from ROS");
 
@@ -393,7 +393,7 @@ public:
       boundings_.reserve(boundings->data().size());
       for (unsigned int i = 0; i < boundings->data().size(); ++i)
       {
-	aero_application::Bit bit;
+	linux_kinect::Bit bit;
 	bit.name = boundings->data(i).name();
 	bit.x = boundings->data(i).x();
 	bit.y = boundings->data(i).y();
@@ -430,11 +430,11 @@ public:
       image_i_pos.y = stream->data(i).y();
       image_i_pos.z = stream->data(i).z();
       image_space_values_.push_back(image_i_pos);
-      aero_application::Cognition image_i;
+      linux_kinect::Cognition image_i;
       image_i.status = stream->data(i).status();
       if (stream->data(i).captions_size() > 0)
       {
-	aero_application::Tag image_i_cap;
+	linux_kinect::Tag image_i_cap;
 	image_i_cap.tag = stream->data(i).captions(0).tag();
 	image_i_cap.confidence = stream->data(i).captions(0).confidence();
 	image_i.captions.push_back(image_i_cap);
@@ -442,7 +442,7 @@ public:
       image_i.tags.reserve(stream->data(i).tags_size());
       for (unsigned int j = 0; j < stream->data(i).tags_size(); ++j)
       {
-	aero_application::Tag image_i_tag_j;
+	linux_kinect::Tag image_i_tag_j;
 	image_i_tag_j.tag = stream->data(i).tags(j).tag();
 	image_i_tag_j.confidence = stream->data(i).tags(j).confidence();
 	image_i.tags.push_back(image_i_tag_j);
@@ -475,13 +475,13 @@ private:
 
   std::vector<geometry_msgs::Point> image_space_values_;
 
-  std::vector<aero_application::Bit> boundings_;
+  std::vector<linux_kinect::Bit> boundings_;
 
   std::vector<bool> request_status_finished_;
 
   kinectrgbd::Request request_;
 
-  std::vector<aero_application::Cognition> cognitions_;
+  std::vector<linux_kinect::Cognition> cognitions_;
 
   bool finish_stream_;
 
