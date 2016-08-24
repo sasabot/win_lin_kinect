@@ -16,6 +16,7 @@
 namespace kinectrobot {
 
 static const char* KinectRobot_method_names[] = {
+  "/kinectrobot.KinectRobot/ReturnPoints",
   "/kinectrobot.KinectRobot/SendSpeech",
   "/kinectrobot.KinectRobot/SetSTTBehavior",
   "/kinectrobot.KinectRobot/WebAgent",
@@ -27,10 +28,19 @@ std::unique_ptr< KinectRobot::Stub> KinectRobot::NewStub(const std::shared_ptr< 
 }
 
 KinectRobot::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
-  : channel_(channel), rpcmethod_SendSpeech_(KinectRobot_method_names[0], ::grpc::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_SetSTTBehavior_(KinectRobot_method_names[1], ::grpc::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_WebAgent_(KinectRobot_method_names[2], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  : channel_(channel), rpcmethod_ReturnPoints_(KinectRobot_method_names[0], ::grpc::RpcMethod::SERVER_STREAMING, channel)
+  , rpcmethod_SendSpeech_(KinectRobot_method_names[1], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SetSTTBehavior_(KinectRobot_method_names[2], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_WebAgent_(KinectRobot_method_names[3], ::grpc::RpcMethod::NORMAL_RPC, channel)
   {}
+
+::grpc::ClientReader< ::kinectrobot::Points>* KinectRobot::Stub::ReturnPointsRaw(::grpc::ClientContext* context, const ::kinectrobot::Request& request) {
+  return new ::grpc::ClientReader< ::kinectrobot::Points>(channel_.get(), rpcmethod_ReturnPoints_, context, request);
+}
+
+::grpc::ClientAsyncReader< ::kinectrobot::Points>* KinectRobot::Stub::AsyncReturnPointsRaw(::grpc::ClientContext* context, const ::kinectrobot::Request& request, ::grpc::CompletionQueue* cq, void* tag) {
+  return new ::grpc::ClientAsyncReader< ::kinectrobot::Points>(channel_.get(), cq, rpcmethod_ReturnPoints_, context, request, tag);
+}
 
 ::grpc::Status KinectRobot::Stub::SendSpeech(::grpc::ClientContext* context, const ::kinectrobot::Speech& request, ::kinectrobot::Response* response) {
   return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_SendSpeech_, context, request, response);
@@ -60,22 +70,34 @@ KinectRobot::Service::Service() {
   (void)KinectRobot_method_names;
   AddMethod(new ::grpc::RpcServiceMethod(
       KinectRobot_method_names[0],
+      ::grpc::RpcMethod::SERVER_STREAMING,
+      new ::grpc::ServerStreamingHandler< KinectRobot::Service, ::kinectrobot::Request, ::kinectrobot::Points>(
+          std::mem_fn(&KinectRobot::Service::ReturnPoints), this)));
+  AddMethod(new ::grpc::RpcServiceMethod(
+      KinectRobot_method_names[1],
       ::grpc::RpcMethod::NORMAL_RPC,
       new ::grpc::RpcMethodHandler< KinectRobot::Service, ::kinectrobot::Speech, ::kinectrobot::Response>(
           std::mem_fn(&KinectRobot::Service::SendSpeech), this)));
   AddMethod(new ::grpc::RpcServiceMethod(
-      KinectRobot_method_names[1],
+      KinectRobot_method_names[2],
       ::grpc::RpcMethod::NORMAL_RPC,
       new ::grpc::RpcMethodHandler< KinectRobot::Service, ::kinectrobot::VoiceTriggers, ::kinectrobot::Response>(
           std::mem_fn(&KinectRobot::Service::SetSTTBehavior), this)));
   AddMethod(new ::grpc::RpcServiceMethod(
-      KinectRobot_method_names[2],
+      KinectRobot_method_names[3],
       ::grpc::RpcMethod::NORMAL_RPC,
       new ::grpc::RpcMethodHandler< KinectRobot::Service, ::kinectrobot::UrlInfo, ::kinectrobot::Response>(
           std::mem_fn(&KinectRobot::Service::WebAgent), this)));
 }
 
 KinectRobot::Service::~Service() {
+}
+
+::grpc::Status KinectRobot::Service::ReturnPoints(::grpc::ServerContext* context, const ::kinectrobot::Request* request, ::grpc::ServerWriter< ::kinectrobot::Points>* writer) {
+  (void) context;
+  (void) request;
+  (void) writer;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
 
 ::grpc::Status KinectRobot::Service::SendSpeech(::grpc::ServerContext* context, const ::kinectrobot::Speech* request, ::kinectrobot::Response* response) {
