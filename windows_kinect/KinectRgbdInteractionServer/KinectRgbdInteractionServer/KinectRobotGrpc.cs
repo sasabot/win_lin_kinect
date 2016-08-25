@@ -14,8 +14,12 @@ namespace Kinectrobot {
 
     static readonly Marshaller<global::Kinectrobot.Request> __Marshaller_Request = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Request.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.Points> __Marshaller_Points = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Points.Parser.ParseFrom);
-    static readonly Marshaller<global::Kinectrobot.Speech> __Marshaller_Speech = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Speech.Parser.ParseFrom);
+    static readonly Marshaller<global::Kinectrobot.Pixels> __Marshaller_Pixels = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Pixels.Parser.ParseFrom);
+    static readonly Marshaller<global::Kinectrobot.BitStream> __Marshaller_BitStream = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.BitStream.Parser.ParseFrom);
+    static readonly Marshaller<global::Kinectrobot.DataStream> __Marshaller_DataStream = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.DataStream.Parser.ParseFrom);
+    static readonly Marshaller<global::Kinectrobot.StreamSettings> __Marshaller_StreamSettings = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.StreamSettings.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.Response> __Marshaller_Response = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Response.Parser.ParseFrom);
+    static readonly Marshaller<global::Kinectrobot.Speech> __Marshaller_Speech = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Speech.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.VoiceTriggers> __Marshaller_VoiceTriggers = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.VoiceTriggers.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.UrlInfo> __Marshaller_UrlInfo = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.UrlInfo.Parser.ParseFrom);
 
@@ -25,6 +29,34 @@ namespace Kinectrobot {
         "ReturnPoints",
         __Marshaller_Request,
         __Marshaller_Points);
+
+    static readonly Method<global::Kinectrobot.Request, global::Kinectrobot.Pixels> __Method_ReturnImage = new Method<global::Kinectrobot.Request, global::Kinectrobot.Pixels>(
+        MethodType.ServerStreaming,
+        __ServiceName,
+        "ReturnImage",
+        __Marshaller_Request,
+        __Marshaller_Pixels);
+
+    static readonly Method<global::Kinectrobot.Request, global::Kinectrobot.BitStream> __Method_ReturnPixelBoundsFromSpaceBounds = new Method<global::Kinectrobot.Request, global::Kinectrobot.BitStream>(
+        MethodType.Unary,
+        __ServiceName,
+        "ReturnPixelBoundsFromSpaceBounds",
+        __Marshaller_Request,
+        __Marshaller_BitStream);
+
+    static readonly Method<global::Kinectrobot.Request, global::Kinectrobot.DataStream> __Method_ReturnCognition = new Method<global::Kinectrobot.Request, global::Kinectrobot.DataStream>(
+        MethodType.Unary,
+        __ServiceName,
+        "ReturnCognition",
+        __Marshaller_Request,
+        __Marshaller_DataStream);
+
+    static readonly Method<global::Kinectrobot.StreamSettings, global::Kinectrobot.Response> __Method_SetStreamSettings = new Method<global::Kinectrobot.StreamSettings, global::Kinectrobot.Response>(
+        MethodType.Unary,
+        __ServiceName,
+        "SetStreamSettings",
+        __Marshaller_StreamSettings,
+        __Marshaller_Response);
 
     static readonly Method<global::Kinectrobot.Speech, global::Kinectrobot.Response> __Method_SendSpeech = new Method<global::Kinectrobot.Speech, global::Kinectrobot.Response>(
         MethodType.Unary,
@@ -57,6 +89,26 @@ namespace Kinectrobot {
     public abstract class KinectRobotBase
     {
       public virtual global::System.Threading.Tasks.Task ReturnPoints(global::Kinectrobot.Request request, IServerStreamWriter<global::Kinectrobot.Points> responseStream, ServerCallContext context)
+      {
+        throw new RpcException(new Status(StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task ReturnImage(global::Kinectrobot.Request request, IServerStreamWriter<global::Kinectrobot.Pixels> responseStream, ServerCallContext context)
+      {
+        throw new RpcException(new Status(StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task<global::Kinectrobot.BitStream> ReturnPixelBoundsFromSpaceBounds(global::Kinectrobot.Request request, ServerCallContext context)
+      {
+        throw new RpcException(new Status(StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task<global::Kinectrobot.DataStream> ReturnCognition(global::Kinectrobot.Request request, ServerCallContext context)
+      {
+        throw new RpcException(new Status(StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task<global::Kinectrobot.Response> SetStreamSettings(global::Kinectrobot.StreamSettings request, ServerCallContext context)
       {
         throw new RpcException(new Status(StatusCode.Unimplemented, ""));
       }
@@ -108,6 +160,62 @@ namespace Kinectrobot {
       public virtual AsyncServerStreamingCall<global::Kinectrobot.Points> ReturnPoints(global::Kinectrobot.Request request, CallOptions options)
       {
         return CallInvoker.AsyncServerStreamingCall(__Method_ReturnPoints, null, options, request);
+      }
+      public virtual AsyncServerStreamingCall<global::Kinectrobot.Pixels> ReturnImage(global::Kinectrobot.Request request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return ReturnImage(request, new CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual AsyncServerStreamingCall<global::Kinectrobot.Pixels> ReturnImage(global::Kinectrobot.Request request, CallOptions options)
+      {
+        return CallInvoker.AsyncServerStreamingCall(__Method_ReturnImage, null, options, request);
+      }
+      public virtual global::Kinectrobot.BitStream ReturnPixelBoundsFromSpaceBounds(global::Kinectrobot.Request request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return ReturnPixelBoundsFromSpaceBounds(request, new CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual global::Kinectrobot.BitStream ReturnPixelBoundsFromSpaceBounds(global::Kinectrobot.Request request, CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_ReturnPixelBoundsFromSpaceBounds, null, options, request);
+      }
+      public virtual AsyncUnaryCall<global::Kinectrobot.BitStream> ReturnPixelBoundsFromSpaceBoundsAsync(global::Kinectrobot.Request request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return ReturnPixelBoundsFromSpaceBoundsAsync(request, new CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual AsyncUnaryCall<global::Kinectrobot.BitStream> ReturnPixelBoundsFromSpaceBoundsAsync(global::Kinectrobot.Request request, CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_ReturnPixelBoundsFromSpaceBounds, null, options, request);
+      }
+      public virtual global::Kinectrobot.DataStream ReturnCognition(global::Kinectrobot.Request request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return ReturnCognition(request, new CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual global::Kinectrobot.DataStream ReturnCognition(global::Kinectrobot.Request request, CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_ReturnCognition, null, options, request);
+      }
+      public virtual AsyncUnaryCall<global::Kinectrobot.DataStream> ReturnCognitionAsync(global::Kinectrobot.Request request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return ReturnCognitionAsync(request, new CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual AsyncUnaryCall<global::Kinectrobot.DataStream> ReturnCognitionAsync(global::Kinectrobot.Request request, CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_ReturnCognition, null, options, request);
+      }
+      public virtual global::Kinectrobot.Response SetStreamSettings(global::Kinectrobot.StreamSettings request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return SetStreamSettings(request, new CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual global::Kinectrobot.Response SetStreamSettings(global::Kinectrobot.StreamSettings request, CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_SetStreamSettings, null, options, request);
+      }
+      public virtual AsyncUnaryCall<global::Kinectrobot.Response> SetStreamSettingsAsync(global::Kinectrobot.StreamSettings request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return SetStreamSettingsAsync(request, new CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual AsyncUnaryCall<global::Kinectrobot.Response> SetStreamSettingsAsync(global::Kinectrobot.StreamSettings request, CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_SetStreamSettings, null, options, request);
       }
       public virtual global::Kinectrobot.Response SendSpeech(global::Kinectrobot.Speech request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
@@ -168,6 +276,10 @@ namespace Kinectrobot {
     {
       return ServerServiceDefinition.CreateBuilder()
           .AddMethod(__Method_ReturnPoints, serviceImpl.ReturnPoints)
+          .AddMethod(__Method_ReturnImage, serviceImpl.ReturnImage)
+          .AddMethod(__Method_ReturnPixelBoundsFromSpaceBounds, serviceImpl.ReturnPixelBoundsFromSpaceBounds)
+          .AddMethod(__Method_ReturnCognition, serviceImpl.ReturnCognition)
+          .AddMethod(__Method_SetStreamSettings, serviceImpl.SetStreamSettings)
           .AddMethod(__Method_SendSpeech, serviceImpl.SendSpeech)
           .AddMethod(__Method_SetSTTBehavior, serviceImpl.SetSTTBehavior)
           .AddMethod(__Method_WebAgent, serviceImpl.WebAgent).Build();

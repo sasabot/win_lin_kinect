@@ -25,31 +25,51 @@ namespace Kinectrobot {
           string.Concat(
             "ChJraW5lY3Rfcm9ib3QucHJvdG8SC2tpbmVjdHJvYm90IkgKA0JpdBIJCgF4",
             "GAEgASgCEgkKAXkYAiABKAISDQoFd2lkdGgYAyABKAISDgoGaGVpZ2h0GAQg",
-            "ASgCEgwKBG5hbWUYBSABKAkiUwoHUmVxdWVzdBIMCgRtb2RlGAEgASgFEh4K",
-            "BGRhdGEYAiADKAsyEC5raW5lY3Ryb2JvdC5CaXQSDAoEb25jZRgDIAEoCBIM",
-            "CgRhcmdzGAQgASgJIjcKBVBvaW50EgkKAXgYASABKAISCQoBeRgCIAEoAhIJ",
-            "CgF6GAMgASgCEg0KBWNvbG9yGAQgASgFIioKBlBvaW50cxIgCgRkYXRhGAEg",
-            "AygLMhIua2luZWN0cm9ib3QuUG9pbnQiKQoGU3BlZWNoEg8KB2NvbW1hbmQY",
-            "ASABKAkSDgoGc3BlZWNoGAIgASgJIogBCg1Wb2ljZVRyaWdnZXJzEiMKG0F1",
-            "dG9UcmlnZ2VyQWZ0ZXJSZWNvZ25pdGlvbhgBIAEoCBIfChdBdXRvVHJpZ2dl",
-            "ckR1cmluZ1NwZWVjaBgCIAEoCBIXCg9NYW51YWxUcmlnZ2VyT24YAyABKAgS",
-            "GAoQTWFudWFsVHJpZ2dlck9mZhgEIAEoCCJECgdVcmxJbmZvEgsKA3VybBgB",
-            "IAEoCRIQCghsaW5raGVhZBgCIAEoCRILCgNrZXkYAyABKAkSDQoFc3R5bGUY",
-            "BCABKAkiGgoIUmVzcG9uc2USDgoGc3RhdHVzGAEgASgIMooCCgtLaW5lY3RS",
-            "b2JvdBI9CgxSZXR1cm5Qb2ludHMSFC5raW5lY3Ryb2JvdC5SZXF1ZXN0GhMu",
-            "a2luZWN0cm9ib3QuUG9pbnRzIgAwARI6CgpTZW5kU3BlZWNoEhMua2luZWN0",
-            "cm9ib3QuU3BlZWNoGhUua2luZWN0cm9ib3QuUmVzcG9uc2UiABJFCg5TZXRT",
-            "VFRCZWhhdmlvchIaLmtpbmVjdHJvYm90LlZvaWNlVHJpZ2dlcnMaFS5raW5l",
-            "Y3Ryb2JvdC5SZXNwb25zZSIAEjkKCFdlYkFnZW50EhQua2luZWN0cm9ib3Qu",
-            "VXJsSW5mbxoVLmtpbmVjdHJvYm90LlJlc3BvbnNlIgBCDwoHZXguZ3JwY6IC",
-            "A1JUR2IGcHJvdG8z"));
+            "ASgCEgwKBG5hbWUYBSABKAkiNwoHUmVxdWVzdBIeCgRkYXRhGAEgAygLMhAu",
+            "a2luZWN0cm9ib3QuQml0EgwKBGFyZ3MYAiABKAkiNwoFUG9pbnQSCQoBeBgB",
+            "IAEoAhIJCgF5GAIgASgCEgkKAXoYAyABKAISDQoFY29sb3IYBCABKAUiKgoG",
+            "UG9pbnRzEiAKBGRhdGEYASADKAsyEi5raW5lY3Ryb2JvdC5Qb2ludCIXCgZQ",
+            "aXhlbHMSDQoFY29sb3IYASADKAUiJgoDVGFnEgsKA3RhZxgBIAEoCRISCgpj",
+            "b25maWRlbmNlGAIgASgCIooBCgREYXRhEgkKAXgYASABKAISCQoBeRgCIAEo",
+            "AhIJCgF6GAMgASgCEiIKCGNhcHRpb25zGAQgAygLMhAua2luZWN0cm9ib3Qu",
+            "VGFnEh4KBHRhZ3MYBSADKAsyEC5raW5lY3Ryb2JvdC5UYWcSDQoFdGV4dHMY",
+            "BiADKAkSDgoGc3RhdHVzGAcgASgIIj0KCkRhdGFTdHJlYW0SDgoGc3RhdHVz",
+            "GAEgASgIEh8KBGRhdGEYAiADKAsyES5raW5lY3Ryb2JvdC5EYXRhIjsKCUJp",
+            "dFN0cmVhbRIOCgZzdGF0dXMYASABKAgSHgoEZGF0YRgCIAMoCzIQLmtpbmVj",
+            "dHJvYm90LkJpdCIsCg5TdHJlYW1TZXR0aW5ncxIMCgRvbmNlGAEgASgIEgwK",
+            "BGFyZ3MYBCABKAkiKQoGU3BlZWNoEg8KB2NvbW1hbmQYASABKAkSDgoGc3Bl",
+            "ZWNoGAIgASgJIogBCg1Wb2ljZVRyaWdnZXJzEiMKG0F1dG9UcmlnZ2VyQWZ0",
+            "ZXJSZWNvZ25pdGlvbhgBIAEoCBIfChdBdXRvVHJpZ2dlckR1cmluZ1NwZWVj",
+            "aBgCIAEoCBIXCg9NYW51YWxUcmlnZ2VyT24YAyABKAgSGAoQTWFudWFsVHJp",
+            "Z2dlck9mZhgEIAEoCCJECgdVcmxJbmZvEgsKA3VybBgBIAEoCRIQCghsaW5r",
+            "aGVhZBgCIAEoCRILCgNrZXkYAyABKAkSDQoFc3R5bGUYBCABKAkiGgoIUmVz",
+            "cG9uc2USDgoGc3RhdHVzGAEgASgIMqsECgtLaW5lY3RSb2JvdBI9CgxSZXR1",
+            "cm5Qb2ludHMSFC5raW5lY3Ryb2JvdC5SZXF1ZXN0GhMua2luZWN0cm9ib3Qu",
+            "UG9pbnRzIgAwARI8CgtSZXR1cm5JbWFnZRIULmtpbmVjdHJvYm90LlJlcXVl",
+            "c3QaEy5raW5lY3Ryb2JvdC5QaXhlbHMiADABElIKIFJldHVyblBpeGVsQm91",
+            "bmRzRnJvbVNwYWNlQm91bmRzEhQua2luZWN0cm9ib3QuUmVxdWVzdBoWLmtp",
+            "bmVjdHJvYm90LkJpdFN0cmVhbSIAEkIKD1JldHVybkNvZ25pdGlvbhIULmtp",
+            "bmVjdHJvYm90LlJlcXVlc3QaFy5raW5lY3Ryb2JvdC5EYXRhU3RyZWFtIgAS",
+            "SQoRU2V0U3RyZWFtU2V0dGluZ3MSGy5raW5lY3Ryb2JvdC5TdHJlYW1TZXR0",
+            "aW5ncxoVLmtpbmVjdHJvYm90LlJlc3BvbnNlIgASOgoKU2VuZFNwZWVjaBIT",
+            "LmtpbmVjdHJvYm90LlNwZWVjaBoVLmtpbmVjdHJvYm90LlJlc3BvbnNlIgAS",
+            "RQoOU2V0U1RUQmVoYXZpb3ISGi5raW5lY3Ryb2JvdC5Wb2ljZVRyaWdnZXJz",
+            "GhUua2luZWN0cm9ib3QuUmVzcG9uc2UiABI5CghXZWJBZ2VudBIULmtpbmVj",
+            "dHJvYm90LlVybEluZm8aFS5raW5lY3Ryb2JvdC5SZXNwb25zZSIAQg8KB2V4",
+            "LmdycGOiAgNSVEdiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Bit), global::Kinectrobot.Bit.Parser, new[]{ "X", "Y", "Width", "Height", "Name" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Request), global::Kinectrobot.Request.Parser, new[]{ "Mode", "Data", "Once", "Args" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Request), global::Kinectrobot.Request.Parser, new[]{ "Data", "Args" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Point), global::Kinectrobot.Point.Parser, new[]{ "X", "Y", "Z", "Color" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Points), global::Kinectrobot.Points.Parser, new[]{ "Data" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Pixels), global::Kinectrobot.Pixels.Parser, new[]{ "Color" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Tag), global::Kinectrobot.Tag.Parser, new[]{ "Tag_", "Confidence" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Data), global::Kinectrobot.Data.Parser, new[]{ "X", "Y", "Z", "Captions", "Tags", "Texts", "Status" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.DataStream), global::Kinectrobot.DataStream.Parser, new[]{ "Status", "Data" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.BitStream), global::Kinectrobot.BitStream.Parser, new[]{ "Status", "Data" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.StreamSettings), global::Kinectrobot.StreamSettings.Parser, new[]{ "Once", "Args" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Speech), global::Kinectrobot.Speech.Parser, new[]{ "Command", "Speech_" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.VoiceTriggers), global::Kinectrobot.VoiceTriggers.Parser, new[]{ "AutoTriggerAfterRecognition", "AutoTriggerDuringSpeech", "ManualTriggerOn", "ManualTriggerOff" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.UrlInfo), global::Kinectrobot.UrlInfo.Parser, new[]{ "Url", "Linkhead", "Key", "Style" }, null, null, null),
@@ -291,9 +311,7 @@ namespace Kinectrobot {
     partial void OnConstruction();
 
     public Request(Request other) : this() {
-      mode_ = other.mode_;
       data_ = other.data_.Clone();
-      once_ = other.once_;
       args_ = other.args_;
     }
 
@@ -301,37 +319,17 @@ namespace Kinectrobot {
       return new Request(this);
     }
 
-    /// <summary>Field number for the "mode" field.</summary>
-    public const int ModeFieldNumber = 1;
-    private int mode_;
-    public int Mode {
-      get { return mode_; }
-      set {
-        mode_ = value;
-      }
-    }
-
     /// <summary>Field number for the "data" field.</summary>
-    public const int DataFieldNumber = 2;
+    public const int DataFieldNumber = 1;
     private static readonly pb::FieldCodec<global::Kinectrobot.Bit> _repeated_data_codec
-        = pb::FieldCodec.ForMessage(18, global::Kinectrobot.Bit.Parser);
+        = pb::FieldCodec.ForMessage(10, global::Kinectrobot.Bit.Parser);
     private readonly pbc::RepeatedField<global::Kinectrobot.Bit> data_ = new pbc::RepeatedField<global::Kinectrobot.Bit>();
     public pbc::RepeatedField<global::Kinectrobot.Bit> Data {
       get { return data_; }
     }
 
-    /// <summary>Field number for the "once" field.</summary>
-    public const int OnceFieldNumber = 3;
-    private bool once_;
-    public bool Once {
-      get { return once_; }
-      set {
-        once_ = value;
-      }
-    }
-
     /// <summary>Field number for the "args" field.</summary>
-    public const int ArgsFieldNumber = 4;
+    public const int ArgsFieldNumber = 2;
     private string args_ = "";
     public string Args {
       get { return args_; }
@@ -351,18 +349,14 @@ namespace Kinectrobot {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Mode != other.Mode) return false;
       if(!data_.Equals(other.data_)) return false;
-      if (Once != other.Once) return false;
       if (Args != other.Args) return false;
       return true;
     }
 
     public override int GetHashCode() {
       int hash = 1;
-      if (Mode != 0) hash ^= Mode.GetHashCode();
       hash ^= data_.GetHashCode();
-      if (Once != false) hash ^= Once.GetHashCode();
       if (Args.Length != 0) hash ^= Args.GetHashCode();
       return hash;
     }
@@ -372,30 +366,16 @@ namespace Kinectrobot {
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
-      if (Mode != 0) {
-        output.WriteRawTag(8);
-        output.WriteInt32(Mode);
-      }
       data_.WriteTo(output, _repeated_data_codec);
-      if (Once != false) {
-        output.WriteRawTag(24);
-        output.WriteBool(Once);
-      }
       if (Args.Length != 0) {
-        output.WriteRawTag(34);
+        output.WriteRawTag(18);
         output.WriteString(Args);
       }
     }
 
     public int CalculateSize() {
       int size = 0;
-      if (Mode != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Mode);
-      }
       size += data_.CalculateSize(_repeated_data_codec);
-      if (Once != false) {
-        size += 1 + 1;
-      }
       if (Args.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Args);
       }
@@ -406,13 +386,7 @@ namespace Kinectrobot {
       if (other == null) {
         return;
       }
-      if (other.Mode != 0) {
-        Mode = other.Mode;
-      }
       data_.Add(other.data_);
-      if (other.Once != false) {
-        Once = other.Once;
-      }
       if (other.Args.Length != 0) {
         Args = other.Args;
       }
@@ -425,19 +399,11 @@ namespace Kinectrobot {
           default:
             input.SkipLastField();
             break;
-          case 8: {
-            Mode = input.ReadInt32();
-            break;
-          }
-          case 18: {
+          case 10: {
             data_.AddEntriesFrom(input, _repeated_data_codec);
             break;
           }
-          case 24: {
-            Once = input.ReadBool();
-            break;
-          }
-          case 34: {
+          case 18: {
             Args = input.ReadString();
             break;
           }
@@ -727,12 +693,853 @@ namespace Kinectrobot {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class Pixels : pb::IMessage<Pixels> {
+    private static readonly pb::MessageParser<Pixels> _parser = new pb::MessageParser<Pixels>(() => new Pixels());
+    public static pb::MessageParser<Pixels> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Kinectrobot.KinectRobotReflection.Descriptor.MessageTypes[4]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public Pixels() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public Pixels(Pixels other) : this() {
+      color_ = other.color_.Clone();
+    }
+
+    public Pixels Clone() {
+      return new Pixels(this);
+    }
+
+    /// <summary>Field number for the "color" field.</summary>
+    public const int ColorFieldNumber = 1;
+    private static readonly pb::FieldCodec<int> _repeated_color_codec
+        = pb::FieldCodec.ForInt32(10);
+    private readonly pbc::RepeatedField<int> color_ = new pbc::RepeatedField<int>();
+    public pbc::RepeatedField<int> Color {
+      get { return color_; }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as Pixels);
+    }
+
+    public bool Equals(Pixels other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if(!color_.Equals(other.color_)) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      hash ^= color_.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      color_.WriteTo(output, _repeated_color_codec);
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      size += color_.CalculateSize(_repeated_color_codec);
+      return size;
+    }
+
+    public void MergeFrom(Pixels other) {
+      if (other == null) {
+        return;
+      }
+      color_.Add(other.color_);
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10:
+          case 8: {
+            color_.AddEntriesFrom(input, _repeated_color_codec);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class Tag : pb::IMessage<Tag> {
+    private static readonly pb::MessageParser<Tag> _parser = new pb::MessageParser<Tag>(() => new Tag());
+    public static pb::MessageParser<Tag> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Kinectrobot.KinectRobotReflection.Descriptor.MessageTypes[5]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public Tag() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public Tag(Tag other) : this() {
+      tag_ = other.tag_;
+      confidence_ = other.confidence_;
+    }
+
+    public Tag Clone() {
+      return new Tag(this);
+    }
+
+    /// <summary>Field number for the "tag" field.</summary>
+    public const int Tag_FieldNumber = 1;
+    private string tag_ = "";
+    public string Tag_ {
+      get { return tag_; }
+      set {
+        tag_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "confidence" field.</summary>
+    public const int ConfidenceFieldNumber = 2;
+    private float confidence_;
+    public float Confidence {
+      get { return confidence_; }
+      set {
+        confidence_ = value;
+      }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as Tag);
+    }
+
+    public bool Equals(Tag other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Tag_ != other.Tag_) return false;
+      if (Confidence != other.Confidence) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Tag_.Length != 0) hash ^= Tag_.GetHashCode();
+      if (Confidence != 0F) hash ^= Confidence.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Tag_.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Tag_);
+      }
+      if (Confidence != 0F) {
+        output.WriteRawTag(21);
+        output.WriteFloat(Confidence);
+      }
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (Tag_.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Tag_);
+      }
+      if (Confidence != 0F) {
+        size += 1 + 4;
+      }
+      return size;
+    }
+
+    public void MergeFrom(Tag other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Tag_.Length != 0) {
+        Tag_ = other.Tag_;
+      }
+      if (other.Confidence != 0F) {
+        Confidence = other.Confidence;
+      }
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10: {
+            Tag_ = input.ReadString();
+            break;
+          }
+          case 21: {
+            Confidence = input.ReadFloat();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class Data : pb::IMessage<Data> {
+    private static readonly pb::MessageParser<Data> _parser = new pb::MessageParser<Data>(() => new Data());
+    public static pb::MessageParser<Data> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Kinectrobot.KinectRobotReflection.Descriptor.MessageTypes[6]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public Data() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public Data(Data other) : this() {
+      x_ = other.x_;
+      y_ = other.y_;
+      z_ = other.z_;
+      captions_ = other.captions_.Clone();
+      tags_ = other.tags_.Clone();
+      texts_ = other.texts_.Clone();
+      status_ = other.status_;
+    }
+
+    public Data Clone() {
+      return new Data(this);
+    }
+
+    /// <summary>Field number for the "x" field.</summary>
+    public const int XFieldNumber = 1;
+    private float x_;
+    public float X {
+      get { return x_; }
+      set {
+        x_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "y" field.</summary>
+    public const int YFieldNumber = 2;
+    private float y_;
+    public float Y {
+      get { return y_; }
+      set {
+        y_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "z" field.</summary>
+    public const int ZFieldNumber = 3;
+    private float z_;
+    public float Z {
+      get { return z_; }
+      set {
+        z_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "captions" field.</summary>
+    public const int CaptionsFieldNumber = 4;
+    private static readonly pb::FieldCodec<global::Kinectrobot.Tag> _repeated_captions_codec
+        = pb::FieldCodec.ForMessage(34, global::Kinectrobot.Tag.Parser);
+    private readonly pbc::RepeatedField<global::Kinectrobot.Tag> captions_ = new pbc::RepeatedField<global::Kinectrobot.Tag>();
+    public pbc::RepeatedField<global::Kinectrobot.Tag> Captions {
+      get { return captions_; }
+    }
+
+    /// <summary>Field number for the "tags" field.</summary>
+    public const int TagsFieldNumber = 5;
+    private static readonly pb::FieldCodec<global::Kinectrobot.Tag> _repeated_tags_codec
+        = pb::FieldCodec.ForMessage(42, global::Kinectrobot.Tag.Parser);
+    private readonly pbc::RepeatedField<global::Kinectrobot.Tag> tags_ = new pbc::RepeatedField<global::Kinectrobot.Tag>();
+    public pbc::RepeatedField<global::Kinectrobot.Tag> Tags {
+      get { return tags_; }
+    }
+
+    /// <summary>Field number for the "texts" field.</summary>
+    public const int TextsFieldNumber = 6;
+    private static readonly pb::FieldCodec<string> _repeated_texts_codec
+        = pb::FieldCodec.ForString(50);
+    private readonly pbc::RepeatedField<string> texts_ = new pbc::RepeatedField<string>();
+    public pbc::RepeatedField<string> Texts {
+      get { return texts_; }
+    }
+
+    /// <summary>Field number for the "status" field.</summary>
+    public const int StatusFieldNumber = 7;
+    private bool status_;
+    public bool Status {
+      get { return status_; }
+      set {
+        status_ = value;
+      }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as Data);
+    }
+
+    public bool Equals(Data other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (X != other.X) return false;
+      if (Y != other.Y) return false;
+      if (Z != other.Z) return false;
+      if(!captions_.Equals(other.captions_)) return false;
+      if(!tags_.Equals(other.tags_)) return false;
+      if(!texts_.Equals(other.texts_)) return false;
+      if (Status != other.Status) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (X != 0F) hash ^= X.GetHashCode();
+      if (Y != 0F) hash ^= Y.GetHashCode();
+      if (Z != 0F) hash ^= Z.GetHashCode();
+      hash ^= captions_.GetHashCode();
+      hash ^= tags_.GetHashCode();
+      hash ^= texts_.GetHashCode();
+      if (Status != false) hash ^= Status.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (X != 0F) {
+        output.WriteRawTag(13);
+        output.WriteFloat(X);
+      }
+      if (Y != 0F) {
+        output.WriteRawTag(21);
+        output.WriteFloat(Y);
+      }
+      if (Z != 0F) {
+        output.WriteRawTag(29);
+        output.WriteFloat(Z);
+      }
+      captions_.WriteTo(output, _repeated_captions_codec);
+      tags_.WriteTo(output, _repeated_tags_codec);
+      texts_.WriteTo(output, _repeated_texts_codec);
+      if (Status != false) {
+        output.WriteRawTag(56);
+        output.WriteBool(Status);
+      }
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (X != 0F) {
+        size += 1 + 4;
+      }
+      if (Y != 0F) {
+        size += 1 + 4;
+      }
+      if (Z != 0F) {
+        size += 1 + 4;
+      }
+      size += captions_.CalculateSize(_repeated_captions_codec);
+      size += tags_.CalculateSize(_repeated_tags_codec);
+      size += texts_.CalculateSize(_repeated_texts_codec);
+      if (Status != false) {
+        size += 1 + 1;
+      }
+      return size;
+    }
+
+    public void MergeFrom(Data other) {
+      if (other == null) {
+        return;
+      }
+      if (other.X != 0F) {
+        X = other.X;
+      }
+      if (other.Y != 0F) {
+        Y = other.Y;
+      }
+      if (other.Z != 0F) {
+        Z = other.Z;
+      }
+      captions_.Add(other.captions_);
+      tags_.Add(other.tags_);
+      texts_.Add(other.texts_);
+      if (other.Status != false) {
+        Status = other.Status;
+      }
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 13: {
+            X = input.ReadFloat();
+            break;
+          }
+          case 21: {
+            Y = input.ReadFloat();
+            break;
+          }
+          case 29: {
+            Z = input.ReadFloat();
+            break;
+          }
+          case 34: {
+            captions_.AddEntriesFrom(input, _repeated_captions_codec);
+            break;
+          }
+          case 42: {
+            tags_.AddEntriesFrom(input, _repeated_tags_codec);
+            break;
+          }
+          case 50: {
+            texts_.AddEntriesFrom(input, _repeated_texts_codec);
+            break;
+          }
+          case 56: {
+            Status = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class DataStream : pb::IMessage<DataStream> {
+    private static readonly pb::MessageParser<DataStream> _parser = new pb::MessageParser<DataStream>(() => new DataStream());
+    public static pb::MessageParser<DataStream> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Kinectrobot.KinectRobotReflection.Descriptor.MessageTypes[7]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public DataStream() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public DataStream(DataStream other) : this() {
+      status_ = other.status_;
+      data_ = other.data_.Clone();
+    }
+
+    public DataStream Clone() {
+      return new DataStream(this);
+    }
+
+    /// <summary>Field number for the "status" field.</summary>
+    public const int StatusFieldNumber = 1;
+    private bool status_;
+    public bool Status {
+      get { return status_; }
+      set {
+        status_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "data" field.</summary>
+    public const int DataFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::Kinectrobot.Data> _repeated_data_codec
+        = pb::FieldCodec.ForMessage(18, global::Kinectrobot.Data.Parser);
+    private readonly pbc::RepeatedField<global::Kinectrobot.Data> data_ = new pbc::RepeatedField<global::Kinectrobot.Data>();
+    public pbc::RepeatedField<global::Kinectrobot.Data> Data {
+      get { return data_; }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as DataStream);
+    }
+
+    public bool Equals(DataStream other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Status != other.Status) return false;
+      if(!data_.Equals(other.data_)) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Status != false) hash ^= Status.GetHashCode();
+      hash ^= data_.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Status != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Status);
+      }
+      data_.WriteTo(output, _repeated_data_codec);
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (Status != false) {
+        size += 1 + 1;
+      }
+      size += data_.CalculateSize(_repeated_data_codec);
+      return size;
+    }
+
+    public void MergeFrom(DataStream other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Status != false) {
+        Status = other.Status;
+      }
+      data_.Add(other.data_);
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 8: {
+            Status = input.ReadBool();
+            break;
+          }
+          case 18: {
+            data_.AddEntriesFrom(input, _repeated_data_codec);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class BitStream : pb::IMessage<BitStream> {
+    private static readonly pb::MessageParser<BitStream> _parser = new pb::MessageParser<BitStream>(() => new BitStream());
+    public static pb::MessageParser<BitStream> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Kinectrobot.KinectRobotReflection.Descriptor.MessageTypes[8]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public BitStream() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public BitStream(BitStream other) : this() {
+      status_ = other.status_;
+      data_ = other.data_.Clone();
+    }
+
+    public BitStream Clone() {
+      return new BitStream(this);
+    }
+
+    /// <summary>Field number for the "status" field.</summary>
+    public const int StatusFieldNumber = 1;
+    private bool status_;
+    public bool Status {
+      get { return status_; }
+      set {
+        status_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "data" field.</summary>
+    public const int DataFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::Kinectrobot.Bit> _repeated_data_codec
+        = pb::FieldCodec.ForMessage(18, global::Kinectrobot.Bit.Parser);
+    private readonly pbc::RepeatedField<global::Kinectrobot.Bit> data_ = new pbc::RepeatedField<global::Kinectrobot.Bit>();
+    public pbc::RepeatedField<global::Kinectrobot.Bit> Data {
+      get { return data_; }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as BitStream);
+    }
+
+    public bool Equals(BitStream other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Status != other.Status) return false;
+      if(!data_.Equals(other.data_)) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Status != false) hash ^= Status.GetHashCode();
+      hash ^= data_.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Status != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Status);
+      }
+      data_.WriteTo(output, _repeated_data_codec);
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (Status != false) {
+        size += 1 + 1;
+      }
+      size += data_.CalculateSize(_repeated_data_codec);
+      return size;
+    }
+
+    public void MergeFrom(BitStream other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Status != false) {
+        Status = other.Status;
+      }
+      data_.Add(other.data_);
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 8: {
+            Status = input.ReadBool();
+            break;
+          }
+          case 18: {
+            data_.AddEntriesFrom(input, _repeated_data_codec);
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class StreamSettings : pb::IMessage<StreamSettings> {
+    private static readonly pb::MessageParser<StreamSettings> _parser = new pb::MessageParser<StreamSettings>(() => new StreamSettings());
+    public static pb::MessageParser<StreamSettings> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Kinectrobot.KinectRobotReflection.Descriptor.MessageTypes[9]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public StreamSettings() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public StreamSettings(StreamSettings other) : this() {
+      once_ = other.once_;
+      args_ = other.args_;
+    }
+
+    public StreamSettings Clone() {
+      return new StreamSettings(this);
+    }
+
+    /// <summary>Field number for the "once" field.</summary>
+    public const int OnceFieldNumber = 1;
+    private bool once_;
+    public bool Once {
+      get { return once_; }
+      set {
+        once_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "args" field.</summary>
+    public const int ArgsFieldNumber = 4;
+    private string args_ = "";
+    public string Args {
+      get { return args_; }
+      set {
+        args_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as StreamSettings);
+    }
+
+    public bool Equals(StreamSettings other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Once != other.Once) return false;
+      if (Args != other.Args) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Once != false) hash ^= Once.GetHashCode();
+      if (Args.Length != 0) hash ^= Args.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Once != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Once);
+      }
+      if (Args.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(Args);
+      }
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (Once != false) {
+        size += 1 + 1;
+      }
+      if (Args.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Args);
+      }
+      return size;
+    }
+
+    public void MergeFrom(StreamSettings other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Once != false) {
+        Once = other.Once;
+      }
+      if (other.Args.Length != 0) {
+        Args = other.Args;
+      }
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 8: {
+            Once = input.ReadBool();
+            break;
+          }
+          case 34: {
+            Args = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class Speech : pb::IMessage<Speech> {
     private static readonly pb::MessageParser<Speech> _parser = new pb::MessageParser<Speech>(() => new Speech());
     public static pb::MessageParser<Speech> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrobot.KinectRobotReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Kinectrobot.KinectRobotReflection.Descriptor.MessageTypes[10]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -862,7 +1669,7 @@ namespace Kinectrobot {
     public static pb::MessageParser<VoiceTriggers> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrobot.KinectRobotReflection.Descriptor.MessageTypes[5]; }
+      get { return global::Kinectrobot.KinectRobotReflection.Descriptor.MessageTypes[11]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1046,7 +1853,7 @@ namespace Kinectrobot {
     public static pb::MessageParser<UrlInfo> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrobot.KinectRobotReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Kinectrobot.KinectRobotReflection.Descriptor.MessageTypes[12]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -1230,7 +2037,7 @@ namespace Kinectrobot {
     public static pb::MessageParser<Response> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrobot.KinectRobotReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Kinectrobot.KinectRobotReflection.Descriptor.MessageTypes[13]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {

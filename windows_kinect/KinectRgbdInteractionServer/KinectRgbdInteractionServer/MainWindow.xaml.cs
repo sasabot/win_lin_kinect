@@ -94,20 +94,14 @@ namespace KinectRgbdInteractionServer
         // rgbd streaming
 
         private CoordinateMapper coordinateMapper = null;
-        private ColorSpacePoint[] colorPoints;
-        private List<CameraSpacePoint> imageSpaceValues;
 
         // rgbd streaming settings
 
-        private int sendStartPointX = 0;
-        private int sendStartPointY = 0;
-        private int sendPointWidth = 512;
-        private int sendPointHeight = 424;
         private bool onceFlag = false;
 
         // rgbd streaming parameters
 
-        private const int divideStream = 2; // if stream is small set to 1, if large set to N > 2
+        public const int divideStream = 2; // if stream is small set to 1, if large set to N > 2
 
         // grpc
 
@@ -127,10 +121,10 @@ namespace KinectRgbdInteractionServer
 
         private int skippedFrame = 0;
 
-        // display settings
+        // display settings (should equal ColorFrameSource)
 
-        private int displayWidth;
-        private int displayHeight;
+        public int displayWidth;
+        public int displayHeight;
 
         // azure keys
 
@@ -145,6 +139,9 @@ namespace KinectRgbdInteractionServer
             this.multiSourceFrameReader =
                 this.kinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color | FrameSourceTypes.Depth | FrameSourceTypes.Body);
             this.multiSourceFrameReader.MultiSourceFrameArrived += this.Reader_FrameArrived;
+
+            this.displayWidth = this.kinectSensor.ColorFrameSource.FrameDescription.Width;
+            this.displayHeight = this.kinectSensor.ColorFrameSource.FrameDescription.Height;
 
             // setup bodies
 
@@ -194,7 +191,7 @@ namespace KinectRgbdInteractionServer
                 Properties.Settings.Default.Save();
             }
             this.subscriptionKey = Properties.Settings.Default.Key;
-            Console.WriteLine("got key {0}", this.subscriptionKey);
+            Console.WriteLine("got key {0}\n", this.subscriptionKey);
 
             this.recogClient = SpeechRecognitionServiceFactory.CreateDataClient(
                 SpeechRecognitionMode.ShortPhrase,
@@ -209,10 +206,6 @@ namespace KinectRgbdInteractionServer
             // setup rgbd streaming
 
             this.coordinateMapper = this.kinectSensor.CoordinateMapper;
-            this.colorPoints = Enumerable.Repeat(new ColorSpacePoint { X = -1, Y = -1 },
-                this.kinectSensor.ColorFrameSource.FrameDescription.Width * this.kinectSensor.ColorFrameSource.FrameDescription.Height)
-                .ToArray();
-            this.imageSpaceValues = new List<CameraSpacePoint>();
 
             // setup grpc
 
@@ -256,7 +249,7 @@ namespace KinectRgbdInteractionServer
 
             // setup grpc: start TTS server
             string host = Dns.GetHostName();
-            this.robotImpl = new Kinectrobot.KinectRobotImpl(this.LogInfo, MainWindow.divideStream);
+            this.robotImpl = new Kinectrobot.KinectRobotImpl(this);
             this.server = new Server
             {
                 Services = { Kinectrobot.KinectRobot.BindService(this.robotImpl) },
@@ -272,9 +265,6 @@ namespace KinectRgbdInteractionServer
             }
 
             // setup finish
-
-            this.displayWidth = this.kinectSensor.ColorFrameSource.FrameDescription.Width;
-            this.displayHeight = this.kinectSensor.ColorFrameSource.FrameDescription.Height;
 
             this.kinectSensor.Open();
 
@@ -513,30 +503,21 @@ namespace KinectRgbdInteractionServer
             colorFrame.CopyConvertedFrameDataToArray(pixels, ColorImageFormat.Bgra);
 
             // get physical xyz position for each point on depth map
-            CameraSpacePoint[] cameraPoints = new CameraSpacePoint[depthDesc.Width * depthDesc.Height];
-            this.coordinateMapper.MapDepthFrameToCameraSpace(depthData, cameraPoints);
+            CameraSpacePoint[] cameraPointsDepth = new CameraSpacePoint[depthDesc.Width * depthDesc.Height];
+            this.coordinateMapper.MapDepthFrameToCameraSpace(depthData, cameraPointsDepth);
+
+            // get physical xyz position for each point on color map
+            CameraSpacePoint[] cameraPointsColor = new CameraSpacePoint[colorDesc.Width * colorDesc.Height];
+            this.coordinateMapper.MapColorFrameToCameraSpace(depthData, cameraPointsColor);
 
             // get corresponding color pixel for each point on depth map
             ColorSpacePoint[] colorPoints = new ColorSpacePoint[depthDesc.Width * depthDesc.Height];
-            this.coordinateMapper.MapDepthFrameToColorSpace(depthData, colorPoints);
-            Array.Copy(colorPoints, this.colorPoints, depthDesc.Width * depthDesc.Height);
+            this.coordinateMapper.MapDepthFrameToColorSpace(depthData, colorPoints);       
 
             int pointIndex = 0;
-            int sendEndPointX = this.sendStartPointX + this.sendPointWidth;
-            int sendEndPointY = this.sendStartPointY + this.sendPointHeight;
             Kinectrobot.Points points = new Kinectrobot.Points { };
-            foreach (CameraSpacePoint point in cameraPoints)
+            foreach (CameraSpacePoint point in cameraPointsDepth)
             {
-                // get points only in region
-                int pointYonDepth = pointIndex / depthDesc.Width;
-                int pointXonDepth = pointIndex - depthDesc.Width * pointYonDepth;
-                if (pointXonDepth < this.sendStartPointX || pointYonDepth < this.sendStartPointY
-                    || pointXonDepth >= sendEndPointX || pointYonDepth >= sendEndPointY)
-                {
-                    ++pointIndex;
-                    continue;
-                }
-
                 // get color from corresponding color pixel
                 // set default values
                 int color = ((255 << 16) & 0xfffffff) + ((255 << 8) & 0xfffffff) + 255;
@@ -568,7 +549,24 @@ namespace KinectRgbdInteractionServer
                 points.Data.Add(p);
             }
 
-            this.robotImpl.SetPoints(points);
+            this.robotImpl.SetPoints(points, colorPoints);
+
+            int pixelIndex = 0;          
+            Kinectrobot.Pixels image = new Kinectrobot.Pixels { };
+            while (true)
+            {
+                // get color
+                int pixel = 4 * pixelIndex; // bgra, so skip by 4
+                if (pixel >= pixels.Length) break;
+
+                int color = ((pixels[pixel++] << 16) & 0xfffffff) + ((pixels[pixel++] << 8) & 0xfffffff) + pixels[pixel++];
+
+                // add pixel to stream
+                ++pixelIndex;
+                image.Color.Add(color);
+            }
+
+            this.robotImpl.SetPixels(image, pixels, cameraPointsColor);
 
             colorFrame.Dispose();
             depthFrame.Dispose();
@@ -767,7 +765,7 @@ namespace KinectRgbdInteractionServer
             return response;
         }
 
-        private void LogInfo(string blockName, string text, bool concatenate=false)
+        public void LogInfo(string blockName, string text, bool concatenate=false)
         {
             this.Dispatcher.Invoke((Action)(() =>
             {
