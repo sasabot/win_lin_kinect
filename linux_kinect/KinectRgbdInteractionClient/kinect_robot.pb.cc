@@ -33,6 +33,24 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* Points_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Points_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Pixels_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Pixels_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Tag_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Tag_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Data_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Data_reflection_ = NULL;
+const ::google::protobuf::Descriptor* DataStream_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  DataStream_reflection_ = NULL;
+const ::google::protobuf::Descriptor* BitStream_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  BitStream_reflection_ = NULL;
+const ::google::protobuf::Descriptor* StreamSettings_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  StreamSettings_reflection_ = NULL;
 const ::google::protobuf::Descriptor* Speech_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Speech_reflection_ = NULL;
@@ -75,10 +93,8 @@ void protobuf_AssignDesc_kinect_5frobot_2eproto() {
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bit, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Bit, _is_default_instance_));
   Request_descriptor_ = file->message_type(1);
-  static const int Request_offsets_[4] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, mode_),
+  static const int Request_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, data_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, once_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Request, args_),
   };
   Request_reflection_ =
@@ -125,7 +141,107 @@ void protobuf_AssignDesc_kinect_5frobot_2eproto() {
       sizeof(Points),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Points, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Points, _is_default_instance_));
-  Speech_descriptor_ = file->message_type(4);
+  Pixels_descriptor_ = file->message_type(4);
+  static const int Pixels_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pixels, color_),
+  };
+  Pixels_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      Pixels_descriptor_,
+      Pixels::default_instance_,
+      Pixels_offsets_,
+      -1,
+      -1,
+      -1,
+      sizeof(Pixels),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pixels, _internal_metadata_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pixels, _is_default_instance_));
+  Tag_descriptor_ = file->message_type(5);
+  static const int Tag_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tag, tag_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tag, confidence_),
+  };
+  Tag_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      Tag_descriptor_,
+      Tag::default_instance_,
+      Tag_offsets_,
+      -1,
+      -1,
+      -1,
+      sizeof(Tag),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tag, _internal_metadata_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Tag, _is_default_instance_));
+  Data_descriptor_ = file->message_type(6);
+  static const int Data_offsets_[7] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Data, x_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Data, y_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Data, z_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Data, captions_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Data, tags_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Data, texts_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Data, status_),
+  };
+  Data_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      Data_descriptor_,
+      Data::default_instance_,
+      Data_offsets_,
+      -1,
+      -1,
+      -1,
+      sizeof(Data),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Data, _internal_metadata_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Data, _is_default_instance_));
+  DataStream_descriptor_ = file->message_type(7);
+  static const int DataStream_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataStream, status_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataStream, data_),
+  };
+  DataStream_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      DataStream_descriptor_,
+      DataStream::default_instance_,
+      DataStream_offsets_,
+      -1,
+      -1,
+      -1,
+      sizeof(DataStream),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataStream, _internal_metadata_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(DataStream, _is_default_instance_));
+  BitStream_descriptor_ = file->message_type(8);
+  static const int BitStream_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BitStream, status_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BitStream, data_),
+  };
+  BitStream_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      BitStream_descriptor_,
+      BitStream::default_instance_,
+      BitStream_offsets_,
+      -1,
+      -1,
+      -1,
+      sizeof(BitStream),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BitStream, _internal_metadata_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BitStream, _is_default_instance_));
+  StreamSettings_descriptor_ = file->message_type(9);
+  static const int StreamSettings_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StreamSettings, once_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StreamSettings, args_),
+  };
+  StreamSettings_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      StreamSettings_descriptor_,
+      StreamSettings::default_instance_,
+      StreamSettings_offsets_,
+      -1,
+      -1,
+      -1,
+      sizeof(StreamSettings),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StreamSettings, _internal_metadata_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StreamSettings, _is_default_instance_));
+  Speech_descriptor_ = file->message_type(10);
   static const int Speech_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Speech, command_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Speech, speech_),
@@ -141,7 +257,7 @@ void protobuf_AssignDesc_kinect_5frobot_2eproto() {
       sizeof(Speech),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Speech, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Speech, _is_default_instance_));
-  VoiceTriggers_descriptor_ = file->message_type(5);
+  VoiceTriggers_descriptor_ = file->message_type(11);
   static const int VoiceTriggers_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(VoiceTriggers, autotriggerafterrecognition_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(VoiceTriggers, autotriggerduringspeech_),
@@ -159,7 +275,7 @@ void protobuf_AssignDesc_kinect_5frobot_2eproto() {
       sizeof(VoiceTriggers),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(VoiceTriggers, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(VoiceTriggers, _is_default_instance_));
-  UrlInfo_descriptor_ = file->message_type(6);
+  UrlInfo_descriptor_ = file->message_type(12);
   static const int UrlInfo_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UrlInfo, url_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UrlInfo, linkhead_),
@@ -177,7 +293,7 @@ void protobuf_AssignDesc_kinect_5frobot_2eproto() {
       sizeof(UrlInfo),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UrlInfo, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UrlInfo, _is_default_instance_));
-  Response_descriptor_ = file->message_type(7);
+  Response_descriptor_ = file->message_type(13);
   static const int Response_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response, status_),
   };
@@ -213,6 +329,18 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       Points_descriptor_, &Points::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      Pixels_descriptor_, &Pixels::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      Tag_descriptor_, &Tag::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      Data_descriptor_, &Data::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      DataStream_descriptor_, &DataStream::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      BitStream_descriptor_, &BitStream::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      StreamSettings_descriptor_, &StreamSettings::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       Speech_descriptor_, &Speech::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       VoiceTriggers_descriptor_, &VoiceTriggers::default_instance());
@@ -233,6 +361,18 @@ void protobuf_ShutdownFile_kinect_5frobot_2eproto() {
   delete Point_reflection_;
   delete Points::default_instance_;
   delete Points_reflection_;
+  delete Pixels::default_instance_;
+  delete Pixels_reflection_;
+  delete Tag::default_instance_;
+  delete Tag_reflection_;
+  delete Data::default_instance_;
+  delete Data_reflection_;
+  delete DataStream::default_instance_;
+  delete DataStream_reflection_;
+  delete BitStream::default_instance_;
+  delete BitStream_reflection_;
+  delete StreamSettings::default_instance_;
+  delete StreamSettings_reflection_;
   delete Speech::default_instance_;
   delete Speech_reflection_;
   delete VoiceTriggers::default_instance_;
@@ -252,32 +392,54 @@ void protobuf_AddDesc_kinect_5frobot_2eproto() {
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\022kinect_robot.proto\022\013kinectrobot\"H\n\003Bit"
     "\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\r\n\005width\030\003 \001(\002\022\016\n"
-    "\006height\030\004 \001(\002\022\014\n\004name\030\005 \001(\t\"S\n\007Request\022\014"
-    "\n\004mode\030\001 \001(\005\022\036\n\004data\030\002 \003(\0132\020.kinectrobot"
-    ".Bit\022\014\n\004once\030\003 \001(\010\022\014\n\004args\030\004 \001(\t\"7\n\005Poin"
-    "t\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001(\002\022\r\n\005co"
-    "lor\030\004 \001(\005\"*\n\006Points\022 \n\004data\030\001 \003(\0132\022.kine"
-    "ctrobot.Point\")\n\006Speech\022\017\n\007command\030\001 \001(\t"
-    "\022\016\n\006speech\030\002 \001(\t\"\210\001\n\rVoiceTriggers\022#\n\033Au"
-    "toTriggerAfterRecognition\030\001 \001(\010\022\037\n\027AutoT"
-    "riggerDuringSpeech\030\002 \001(\010\022\027\n\017ManualTrigge"
-    "rOn\030\003 \001(\010\022\030\n\020ManualTriggerOff\030\004 \001(\010\"D\n\007U"
-    "rlInfo\022\013\n\003url\030\001 \001(\t\022\020\n\010linkhead\030\002 \001(\t\022\013\n"
-    "\003key\030\003 \001(\t\022\r\n\005style\030\004 \001(\t\"\032\n\010Response\022\016\n"
-    "\006status\030\001 \001(\0102\212\002\n\013KinectRobot\022=\n\014ReturnP"
-    "oints\022\024.kinectrobot.Request\032\023.kinectrobo"
-    "t.Points\"\0000\001\022:\n\nSendSpeech\022\023.kinectrobot"
-    ".Speech\032\025.kinectrobot.Response\"\000\022E\n\016SetS"
-    "TTBehavior\022\032.kinectrobot.VoiceTriggers\032\025"
-    ".kinectrobot.Response\"\000\0229\n\010WebAgent\022\024.ki"
-    "nectrobot.UrlInfo\032\025.kinectrobot.Response"
-    "\"\000B\017\n\007ex.grpc\242\002\003RTGb\006proto3", 867);
+    "\006height\030\004 \001(\002\022\014\n\004name\030\005 \001(\t\"7\n\007Request\022\036"
+    "\n\004data\030\001 \003(\0132\020.kinectrobot.Bit\022\014\n\004args\030\002"
+    " \001(\t\"7\n\005Point\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\t\n\001z"
+    "\030\003 \001(\002\022\r\n\005color\030\004 \001(\005\"*\n\006Points\022 \n\004data\030"
+    "\001 \003(\0132\022.kinectrobot.Point\"\027\n\006Pixels\022\r\n\005c"
+    "olor\030\001 \003(\005\"&\n\003Tag\022\013\n\003tag\030\001 \001(\t\022\022\n\nconfid"
+    "ence\030\002 \001(\002\"\212\001\n\004Data\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001("
+    "\002\022\t\n\001z\030\003 \001(\002\022\"\n\010captions\030\004 \003(\0132\020.kinectr"
+    "obot.Tag\022\036\n\004tags\030\005 \003(\0132\020.kinectrobot.Tag"
+    "\022\r\n\005texts\030\006 \003(\t\022\016\n\006status\030\007 \001(\010\"=\n\nDataS"
+    "tream\022\016\n\006status\030\001 \001(\010\022\037\n\004data\030\002 \003(\0132\021.ki"
+    "nectrobot.Data\";\n\tBitStream\022\016\n\006status\030\001 "
+    "\001(\010\022\036\n\004data\030\002 \003(\0132\020.kinectrobot.Bit\",\n\016S"
+    "treamSettings\022\014\n\004once\030\001 \001(\010\022\014\n\004args\030\004 \001("
+    "\t\")\n\006Speech\022\017\n\007command\030\001 \001(\t\022\016\n\006speech\030\002"
+    " \001(\t\"\210\001\n\rVoiceTriggers\022#\n\033AutoTriggerAft"
+    "erRecognition\030\001 \001(\010\022\037\n\027AutoTriggerDuring"
+    "Speech\030\002 \001(\010\022\027\n\017ManualTriggerOn\030\003 \001(\010\022\030\n"
+    "\020ManualTriggerOff\030\004 \001(\010\"D\n\007UrlInfo\022\013\n\003ur"
+    "l\030\001 \001(\t\022\020\n\010linkhead\030\002 \001(\t\022\013\n\003key\030\003 \001(\t\022\r"
+    "\n\005style\030\004 \001(\t\"\032\n\010Response\022\016\n\006status\030\001 \001("
+    "\0102\253\004\n\013KinectRobot\022=\n\014ReturnPoints\022\024.kine"
+    "ctrobot.Request\032\023.kinectrobot.Points\"\0000\001"
+    "\022<\n\013ReturnImage\022\024.kinectrobot.Request\032\023."
+    "kinectrobot.Pixels\"\0000\001\022R\n ReturnPixelBou"
+    "ndsFromSpaceBounds\022\024.kinectrobot.Request"
+    "\032\026.kinectrobot.BitStream\"\000\022B\n\017ReturnCogn"
+    "ition\022\024.kinectrobot.Request\032\027.kinectrobo"
+    "t.DataStream\"\000\022I\n\021SetStreamSettings\022\033.ki"
+    "nectrobot.StreamSettings\032\025.kinectrobot.R"
+    "esponse\"\000\022:\n\nSendSpeech\022\023.kinectrobot.Sp"
+    "eech\032\025.kinectrobot.Response\"\000\022E\n\016SetSTTB"
+    "ehavior\022\032.kinectrobot.VoiceTriggers\032\025.ki"
+    "nectrobot.Response\"\000\0229\n\010WebAgent\022\024.kinec"
+    "trobot.UrlInfo\032\025.kinectrobot.Response\"\000B"
+    "\017\n\007ex.grpc\242\002\003RTGb\006proto3", 1504);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "kinect_robot.proto", &protobuf_RegisterTypes);
   Bit::default_instance_ = new Bit();
   Request::default_instance_ = new Request();
   Point::default_instance_ = new Point();
   Points::default_instance_ = new Points();
+  Pixels::default_instance_ = new Pixels();
+  Tag::default_instance_ = new Tag();
+  Data::default_instance_ = new Data();
+  DataStream::default_instance_ = new DataStream();
+  BitStream::default_instance_ = new BitStream();
+  StreamSettings::default_instance_ = new StreamSettings();
   Speech::default_instance_ = new Speech();
   VoiceTriggers::default_instance_ = new VoiceTriggers();
   UrlInfo::default_instance_ = new UrlInfo();
@@ -286,6 +448,12 @@ void protobuf_AddDesc_kinect_5frobot_2eproto() {
   Request::default_instance_->InitAsDefaultInstance();
   Point::default_instance_->InitAsDefaultInstance();
   Points::default_instance_->InitAsDefaultInstance();
+  Pixels::default_instance_->InitAsDefaultInstance();
+  Tag::default_instance_->InitAsDefaultInstance();
+  Data::default_instance_->InitAsDefaultInstance();
+  DataStream::default_instance_->InitAsDefaultInstance();
+  BitStream::default_instance_->InitAsDefaultInstance();
+  StreamSettings::default_instance_->InitAsDefaultInstance();
   Speech::default_instance_->InitAsDefaultInstance();
   VoiceTriggers::default_instance_->InitAsDefaultInstance();
   UrlInfo::default_instance_->InitAsDefaultInstance();
@@ -814,9 +982,7 @@ void Bit::clear_name() {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int Request::kModeFieldNumber;
 const int Request::kDataFieldNumber;
-const int Request::kOnceFieldNumber;
 const int Request::kArgsFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
@@ -842,8 +1008,6 @@ void Request::SharedCtor() {
     _is_default_instance_ = false;
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  mode_ = 0;
-  once_ = false;
   args_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
@@ -885,28 +1049,7 @@ Request* Request::New(::google::protobuf::Arena* arena) const {
 
 void Request::Clear() {
 // @@protoc_insertion_point(message_clear_start:kinectrobot.Request)
-#if defined(__clang__)
-#define ZR_HELPER_(f) \
-  _Pragma("clang diagnostic push") \
-  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
-  __builtin_offsetof(Request, f) \
-  _Pragma("clang diagnostic pop")
-#else
-#define ZR_HELPER_(f) reinterpret_cast<char*>(\
-  &reinterpret_cast<Request*>(16)->f)
-#endif
-
-#define ZR_(first, last) do {\
-  ::memset(&first, 0,\
-           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
-} while (0)
-
-  ZR_(mode_, once_);
   args_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-
-#undef ZR_HELPER_
-#undef ZR_
-
   data_.Clear();
 }
 
@@ -920,24 +1063,9 @@ bool Request::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional int32 mode = 1;
+      // repeated .kinectrobot.Bit data = 1;
       case 1: {
-        if (tag == 8) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &mode_)));
-
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(18)) goto parse_data;
-        break;
-      }
-
-      // repeated .kinectrobot.Bit data = 2;
-      case 2: {
-        if (tag == 18) {
-         parse_data:
+        if (tag == 10) {
           DO_(input->IncrementRecursionDepth());
          parse_loop_data:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
@@ -945,30 +1073,15 @@ bool Request::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(18)) goto parse_loop_data;
+        if (input->ExpectTag(10)) goto parse_loop_data;
         input->UnsafeDecrementRecursionDepth();
-        if (input->ExpectTag(24)) goto parse_once;
+        if (input->ExpectTag(18)) goto parse_args;
         break;
       }
 
-      // optional bool once = 3;
-      case 3: {
-        if (tag == 24) {
-         parse_once:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &once_)));
-
-        } else {
-          goto handle_unusual;
-        }
-        if (input->ExpectTag(34)) goto parse_args;
-        break;
-      }
-
-      // optional string args = 4;
-      case 4: {
-        if (tag == 34) {
+      // optional string args = 2;
+      case 2: {
+        if (tag == 18) {
          parse_args:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
                 input, this->mutable_args()));
@@ -1007,30 +1120,20 @@ failure:
 void Request::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:kinectrobot.Request)
-  // optional int32 mode = 1;
-  if (this->mode() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->mode(), output);
-  }
-
-  // repeated .kinectrobot.Bit data = 2;
+  // repeated .kinectrobot.Bit data = 1;
   for (unsigned int i = 0, n = this->data_size(); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      2, this->data(i), output);
+      1, this->data(i), output);
   }
 
-  // optional bool once = 3;
-  if (this->once() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->once(), output);
-  }
-
-  // optional string args = 4;
+  // optional string args = 2;
   if (this->args().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->args().data(), this->args().length(),
       ::google::protobuf::internal::WireFormatLite::SERIALIZE,
       "kinectrobot.Request.args");
     ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      4, this->args(), output);
+      2, this->args(), output);
   }
 
   // @@protoc_insertion_point(serialize_end:kinectrobot.Request)
@@ -1039,24 +1142,14 @@ void Request::SerializeWithCachedSizes(
 ::google::protobuf::uint8* Request::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:kinectrobot.Request)
-  // optional int32 mode = 1;
-  if (this->mode() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->mode(), target);
-  }
-
-  // repeated .kinectrobot.Bit data = 2;
+  // repeated .kinectrobot.Bit data = 1;
   for (unsigned int i = 0, n = this->data_size(); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        2, this->data(i), target);
+        1, this->data(i), target);
   }
 
-  // optional bool once = 3;
-  if (this->once() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->once(), target);
-  }
-
-  // optional string args = 4;
+  // optional string args = 2;
   if (this->args().size() > 0) {
     ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
       this->args().data(), this->args().length(),
@@ -1064,7 +1157,7 @@ void Request::SerializeWithCachedSizes(
       "kinectrobot.Request.args");
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        4, this->args(), target);
+        2, this->args(), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:kinectrobot.Request)
@@ -1075,26 +1168,14 @@ int Request::ByteSize() const {
 // @@protoc_insertion_point(message_byte_size_start:kinectrobot.Request)
   int total_size = 0;
 
-  // optional int32 mode = 1;
-  if (this->mode() != 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::Int32Size(
-        this->mode());
-  }
-
-  // optional bool once = 3;
-  if (this->once() != 0) {
-    total_size += 1 + 1;
-  }
-
-  // optional string args = 4;
+  // optional string args = 2;
   if (this->args().size() > 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::StringSize(
         this->args());
   }
 
-  // repeated .kinectrobot.Bit data = 2;
+  // repeated .kinectrobot.Bit data = 1;
   total_size += 1 * this->data_size();
   for (int i = 0; i < this->data_size(); i++) {
     total_size +=
@@ -1127,12 +1208,6 @@ void Request::MergeFrom(const Request& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:kinectrobot.Request)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   data_.MergeFrom(from.data_);
-  if (from.mode() != 0) {
-    set_mode(from.mode());
-  }
-  if (from.once() != 0) {
-    set_once(from.once());
-  }
   if (from.args().size() > 0) {
 
     args_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.args_);
@@ -1163,9 +1238,7 @@ void Request::Swap(Request* other) {
   InternalSwap(other);
 }
 void Request::InternalSwap(Request* other) {
-  std::swap(mode_, other->mode_);
   data_.UnsafeArenaSwap(&other->data_);
-  std::swap(once_, other->once_);
   args_.Swap(&other->args_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
@@ -1182,21 +1255,7 @@ void Request::InternalSwap(Request* other) {
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
 // Request
 
-// optional int32 mode = 1;
-void Request::clear_mode() {
-  mode_ = 0;
-}
- ::google::protobuf::int32 Request::mode() const {
-  // @@protoc_insertion_point(field_get:kinectrobot.Request.mode)
-  return mode_;
-}
- void Request::set_mode(::google::protobuf::int32 value) {
-  
-  mode_ = value;
-  // @@protoc_insertion_point(field_set:kinectrobot.Request.mode)
-}
-
-// repeated .kinectrobot.Bit data = 2;
+// repeated .kinectrobot.Bit data = 1;
 int Request::data_size() const {
   return data_.size();
 }
@@ -1226,21 +1285,7 @@ Request::data() const {
   return data_;
 }
 
-// optional bool once = 3;
-void Request::clear_once() {
-  once_ = false;
-}
- bool Request::once() const {
-  // @@protoc_insertion_point(field_get:kinectrobot.Request.once)
-  return once_;
-}
- void Request::set_once(bool value) {
-  
-  once_ = value;
-  // @@protoc_insertion_point(field_set:kinectrobot.Request.once)
-}
-
-// optional string args = 4;
+// optional string args = 2;
 void Request::clear_args() {
   args_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1939,6 +1984,2202 @@ const ::google::protobuf::RepeatedPtrField< ::kinectrobot::Point >&
 Points::data() const {
   // @@protoc_insertion_point(field_list:kinectrobot.Points.data)
   return data_;
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Pixels::kColorFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+Pixels::Pixels()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:kinectrobot.Pixels)
+}
+
+void Pixels::InitAsDefaultInstance() {
+  _is_default_instance_ = true;
+}
+
+Pixels::Pixels(const Pixels& from)
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:kinectrobot.Pixels)
+}
+
+void Pixels::SharedCtor() {
+    _is_default_instance_ = false;
+  _cached_size_ = 0;
+}
+
+Pixels::~Pixels() {
+  // @@protoc_insertion_point(destructor:kinectrobot.Pixels)
+  SharedDtor();
+}
+
+void Pixels::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void Pixels::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Pixels::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Pixels_descriptor_;
+}
+
+const Pixels& Pixels::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_kinect_5frobot_2eproto();
+  return *default_instance_;
+}
+
+Pixels* Pixels::default_instance_ = NULL;
+
+Pixels* Pixels::New(::google::protobuf::Arena* arena) const {
+  Pixels* n = new Pixels;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void Pixels::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectrobot.Pixels)
+  color_.Clear();
+}
+
+bool Pixels::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:kinectrobot.Pixels)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated int32 color = 1;
+      case 1: {
+        if (tag == 10) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, this->mutable_color())));
+        } else if (tag == 8) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 1, 10, input, this->mutable_color())));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:kinectrobot.Pixels)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:kinectrobot.Pixels)
+  return false;
+#undef DO_
+}
+
+void Pixels::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:kinectrobot.Pixels)
+  // repeated int32 color = 1;
+  if (this->color_size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteTag(1, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
+    output->WriteVarint32(_color_cached_byte_size_);
+  }
+  for (int i = 0; i < this->color_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32NoTag(
+      this->color(i), output);
+  }
+
+  // @@protoc_insertion_point(serialize_end:kinectrobot.Pixels)
+}
+
+::google::protobuf::uint8* Pixels::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:kinectrobot.Pixels)
+  // repeated int32 color = 1;
+  if (this->color_size() > 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
+      1,
+      ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED,
+      target);
+    target = ::google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(
+      _color_cached_byte_size_, target);
+  }
+  for (int i = 0; i < this->color_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteInt32NoTagToArray(this->color(i), target);
+  }
+
+  // @@protoc_insertion_point(serialize_to_array_end:kinectrobot.Pixels)
+  return target;
+}
+
+int Pixels::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectrobot.Pixels)
+  int total_size = 0;
+
+  // repeated int32 color = 1;
+  {
+    int data_size = 0;
+    for (int i = 0; i < this->color_size(); i++) {
+      data_size += ::google::protobuf::internal::WireFormatLite::
+        Int32Size(this->color(i));
+    }
+    if (data_size > 0) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(data_size);
+    }
+    GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+    _color_cached_byte_size_ = data_size;
+    GOOGLE_SAFE_CONCURRENT_WRITES_END();
+    total_size += data_size;
+  }
+
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Pixels::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectrobot.Pixels)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  const Pixels* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const Pixels>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectrobot.Pixels)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectrobot.Pixels)
+    MergeFrom(*source);
+  }
+}
+
+void Pixels::MergeFrom(const Pixels& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectrobot.Pixels)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  color_.MergeFrom(from.color_);
+}
+
+void Pixels::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectrobot.Pixels)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Pixels::CopyFrom(const Pixels& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectrobot.Pixels)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Pixels::IsInitialized() const {
+
+  return true;
+}
+
+void Pixels::Swap(Pixels* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void Pixels::InternalSwap(Pixels* other) {
+  color_.UnsafeArenaSwap(&other->color_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata Pixels::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Pixels_descriptor_;
+  metadata.reflection = Pixels_reflection_;
+  return metadata;
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// Pixels
+
+// repeated int32 color = 1;
+int Pixels::color_size() const {
+  return color_.size();
+}
+void Pixels::clear_color() {
+  color_.Clear();
+}
+ ::google::protobuf::int32 Pixels::color(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Pixels.color)
+  return color_.Get(index);
+}
+ void Pixels::set_color(int index, ::google::protobuf::int32 value) {
+  color_.Set(index, value);
+  // @@protoc_insertion_point(field_set:kinectrobot.Pixels.color)
+}
+ void Pixels::add_color(::google::protobuf::int32 value) {
+  color_.Add(value);
+  // @@protoc_insertion_point(field_add:kinectrobot.Pixels.color)
+}
+ const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+Pixels::color() const {
+  // @@protoc_insertion_point(field_list:kinectrobot.Pixels.color)
+  return color_;
+}
+ ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+Pixels::mutable_color() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrobot.Pixels.color)
+  return &color_;
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Tag::kTagFieldNumber;
+const int Tag::kConfidenceFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+Tag::Tag()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:kinectrobot.Tag)
+}
+
+void Tag::InitAsDefaultInstance() {
+  _is_default_instance_ = true;
+}
+
+Tag::Tag(const Tag& from)
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:kinectrobot.Tag)
+}
+
+void Tag::SharedCtor() {
+    _is_default_instance_ = false;
+  ::google::protobuf::internal::GetEmptyString();
+  _cached_size_ = 0;
+  tag_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  confidence_ = 0;
+}
+
+Tag::~Tag() {
+  // @@protoc_insertion_point(destructor:kinectrobot.Tag)
+  SharedDtor();
+}
+
+void Tag::SharedDtor() {
+  tag_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (this != default_instance_) {
+  }
+}
+
+void Tag::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Tag::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Tag_descriptor_;
+}
+
+const Tag& Tag::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_kinect_5frobot_2eproto();
+  return *default_instance_;
+}
+
+Tag* Tag::default_instance_ = NULL;
+
+Tag* Tag::New(::google::protobuf::Arena* arena) const {
+  Tag* n = new Tag;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void Tag::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectrobot.Tag)
+  tag_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  confidence_ = 0;
+}
+
+bool Tag::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:kinectrobot.Tag)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string tag = 1;
+      case 1: {
+        if (tag == 10) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_tag()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->tag().data(), this->tag().length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "kinectrobot.Tag.tag"));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(21)) goto parse_confidence;
+        break;
+      }
+
+      // optional float confidence = 2;
+      case 2: {
+        if (tag == 21) {
+         parse_confidence:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &confidence_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:kinectrobot.Tag)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:kinectrobot.Tag)
+  return false;
+#undef DO_
+}
+
+void Tag::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:kinectrobot.Tag)
+  // optional string tag = 1;
+  if (this->tag().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->tag().data(), this->tag().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "kinectrobot.Tag.tag");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      1, this->tag(), output);
+  }
+
+  // optional float confidence = 2;
+  if (this->confidence() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->confidence(), output);
+  }
+
+  // @@protoc_insertion_point(serialize_end:kinectrobot.Tag)
+}
+
+::google::protobuf::uint8* Tag::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:kinectrobot.Tag)
+  // optional string tag = 1;
+  if (this->tag().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->tag().data(), this->tag().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "kinectrobot.Tag.tag");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->tag(), target);
+  }
+
+  // optional float confidence = 2;
+  if (this->confidence() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->confidence(), target);
+  }
+
+  // @@protoc_insertion_point(serialize_to_array_end:kinectrobot.Tag)
+  return target;
+}
+
+int Tag::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectrobot.Tag)
+  int total_size = 0;
+
+  // optional string tag = 1;
+  if (this->tag().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->tag());
+  }
+
+  // optional float confidence = 2;
+  if (this->confidence() != 0) {
+    total_size += 1 + 4;
+  }
+
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Tag::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectrobot.Tag)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  const Tag* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const Tag>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectrobot.Tag)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectrobot.Tag)
+    MergeFrom(*source);
+  }
+}
+
+void Tag::MergeFrom(const Tag& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectrobot.Tag)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  if (from.tag().size() > 0) {
+
+    tag_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.tag_);
+  }
+  if (from.confidence() != 0) {
+    set_confidence(from.confidence());
+  }
+}
+
+void Tag::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectrobot.Tag)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Tag::CopyFrom(const Tag& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectrobot.Tag)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Tag::IsInitialized() const {
+
+  return true;
+}
+
+void Tag::Swap(Tag* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void Tag::InternalSwap(Tag* other) {
+  tag_.Swap(&other->tag_);
+  std::swap(confidence_, other->confidence_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata Tag::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Tag_descriptor_;
+  metadata.reflection = Tag_reflection_;
+  return metadata;
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// Tag
+
+// optional string tag = 1;
+void Tag::clear_tag() {
+  tag_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ const ::std::string& Tag::tag() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Tag.tag)
+  return tag_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void Tag::set_tag(const ::std::string& value) {
+  
+  tag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:kinectrobot.Tag.tag)
+}
+ void Tag::set_tag(const char* value) {
+  
+  tag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:kinectrobot.Tag.tag)
+}
+ void Tag::set_tag(const char* value, size_t size) {
+  
+  tag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:kinectrobot.Tag.tag)
+}
+ ::std::string* Tag::mutable_tag() {
+  
+  // @@protoc_insertion_point(field_mutable:kinectrobot.Tag.tag)
+  return tag_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* Tag::release_tag() {
+  // @@protoc_insertion_point(field_release:kinectrobot.Tag.tag)
+  
+  return tag_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void Tag::set_allocated_tag(::std::string* tag) {
+  if (tag != NULL) {
+    
+  } else {
+    
+  }
+  tag_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), tag);
+  // @@protoc_insertion_point(field_set_allocated:kinectrobot.Tag.tag)
+}
+
+// optional float confidence = 2;
+void Tag::clear_confidence() {
+  confidence_ = 0;
+}
+ float Tag::confidence() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Tag.confidence)
+  return confidence_;
+}
+ void Tag::set_confidence(float value) {
+  
+  confidence_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.Tag.confidence)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Data::kXFieldNumber;
+const int Data::kYFieldNumber;
+const int Data::kZFieldNumber;
+const int Data::kCaptionsFieldNumber;
+const int Data::kTagsFieldNumber;
+const int Data::kTextsFieldNumber;
+const int Data::kStatusFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+Data::Data()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:kinectrobot.Data)
+}
+
+void Data::InitAsDefaultInstance() {
+  _is_default_instance_ = true;
+}
+
+Data::Data(const Data& from)
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:kinectrobot.Data)
+}
+
+void Data::SharedCtor() {
+    _is_default_instance_ = false;
+  ::google::protobuf::internal::GetEmptyString();
+  _cached_size_ = 0;
+  x_ = 0;
+  y_ = 0;
+  z_ = 0;
+  status_ = false;
+}
+
+Data::~Data() {
+  // @@protoc_insertion_point(destructor:kinectrobot.Data)
+  SharedDtor();
+}
+
+void Data::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void Data::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Data::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Data_descriptor_;
+}
+
+const Data& Data::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_kinect_5frobot_2eproto();
+  return *default_instance_;
+}
+
+Data* Data::default_instance_ = NULL;
+
+Data* Data::New(::google::protobuf::Arena* arena) const {
+  Data* n = new Data;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void Data::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectrobot.Data)
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(Data, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<Data*>(16)->f)
+#endif
+
+#define ZR_(first, last) do {\
+  ::memset(&first, 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
+
+  ZR_(x_, y_);
+  ZR_(z_, status_);
+
+#undef ZR_HELPER_
+#undef ZR_
+
+  captions_.Clear();
+  tags_.Clear();
+  texts_.Clear();
+}
+
+bool Data::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:kinectrobot.Data)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional float x = 1;
+      case 1: {
+        if (tag == 13) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &x_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(21)) goto parse_y;
+        break;
+      }
+
+      // optional float y = 2;
+      case 2: {
+        if (tag == 21) {
+         parse_y:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &y_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(29)) goto parse_z;
+        break;
+      }
+
+      // optional float z = 3;
+      case 3: {
+        if (tag == 29) {
+         parse_z:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &z_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(34)) goto parse_captions;
+        break;
+      }
+
+      // repeated .kinectrobot.Tag captions = 4;
+      case 4: {
+        if (tag == 34) {
+         parse_captions:
+          DO_(input->IncrementRecursionDepth());
+         parse_loop_captions:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+                input, add_captions()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(34)) goto parse_loop_captions;
+        if (input->ExpectTag(42)) goto parse_loop_tags;
+        input->UnsafeDecrementRecursionDepth();
+        break;
+      }
+
+      // repeated .kinectrobot.Tag tags = 5;
+      case 5: {
+        if (tag == 42) {
+          DO_(input->IncrementRecursionDepth());
+         parse_loop_tags:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+                input, add_tags()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(42)) goto parse_loop_tags;
+        input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectTag(50)) goto parse_texts;
+        break;
+      }
+
+      // repeated string texts = 6;
+      case 6: {
+        if (tag == 50) {
+         parse_texts:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_texts()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->texts(this->texts_size() - 1).data(),
+            this->texts(this->texts_size() - 1).length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "kinectrobot.Data.texts"));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(50)) goto parse_texts;
+        if (input->ExpectTag(56)) goto parse_status;
+        break;
+      }
+
+      // optional bool status = 7;
+      case 7: {
+        if (tag == 56) {
+         parse_status:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &status_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:kinectrobot.Data)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:kinectrobot.Data)
+  return false;
+#undef DO_
+}
+
+void Data::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:kinectrobot.Data)
+  // optional float x = 1;
+  if (this->x() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(1, this->x(), output);
+  }
+
+  // optional float y = 2;
+  if (this->y() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->y(), output);
+  }
+
+  // optional float z = 3;
+  if (this->z() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(3, this->z(), output);
+  }
+
+  // repeated .kinectrobot.Tag captions = 4;
+  for (unsigned int i = 0, n = this->captions_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      4, this->captions(i), output);
+  }
+
+  // repeated .kinectrobot.Tag tags = 5;
+  for (unsigned int i = 0, n = this->tags_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      5, this->tags(i), output);
+  }
+
+  // repeated string texts = 6;
+  for (int i = 0; i < this->texts_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->texts(i).data(), this->texts(i).length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "kinectrobot.Data.texts");
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      6, this->texts(i), output);
+  }
+
+  // optional bool status = 7;
+  if (this->status() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(7, this->status(), output);
+  }
+
+  // @@protoc_insertion_point(serialize_end:kinectrobot.Data)
+}
+
+::google::protobuf::uint8* Data::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:kinectrobot.Data)
+  // optional float x = 1;
+  if (this->x() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(1, this->x(), target);
+  }
+
+  // optional float y = 2;
+  if (this->y() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->y(), target);
+  }
+
+  // optional float z = 3;
+  if (this->z() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(3, this->z(), target);
+  }
+
+  // repeated .kinectrobot.Tag captions = 4;
+  for (unsigned int i = 0, n = this->captions_size(); i < n; i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        4, this->captions(i), target);
+  }
+
+  // repeated .kinectrobot.Tag tags = 5;
+  for (unsigned int i = 0, n = this->tags_size(); i < n; i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        5, this->tags(i), target);
+  }
+
+  // repeated string texts = 6;
+  for (int i = 0; i < this->texts_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->texts(i).data(), this->texts(i).length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "kinectrobot.Data.texts");
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteStringToArray(6, this->texts(i), target);
+  }
+
+  // optional bool status = 7;
+  if (this->status() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(7, this->status(), target);
+  }
+
+  // @@protoc_insertion_point(serialize_to_array_end:kinectrobot.Data)
+  return target;
+}
+
+int Data::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectrobot.Data)
+  int total_size = 0;
+
+  // optional float x = 1;
+  if (this->x() != 0) {
+    total_size += 1 + 4;
+  }
+
+  // optional float y = 2;
+  if (this->y() != 0) {
+    total_size += 1 + 4;
+  }
+
+  // optional float z = 3;
+  if (this->z() != 0) {
+    total_size += 1 + 4;
+  }
+
+  // optional bool status = 7;
+  if (this->status() != 0) {
+    total_size += 1 + 1;
+  }
+
+  // repeated .kinectrobot.Tag captions = 4;
+  total_size += 1 * this->captions_size();
+  for (int i = 0; i < this->captions_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->captions(i));
+  }
+
+  // repeated .kinectrobot.Tag tags = 5;
+  total_size += 1 * this->tags_size();
+  for (int i = 0; i < this->tags_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->tags(i));
+  }
+
+  // repeated string texts = 6;
+  total_size += 1 * this->texts_size();
+  for (int i = 0; i < this->texts_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->texts(i));
+  }
+
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Data::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectrobot.Data)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  const Data* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const Data>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectrobot.Data)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectrobot.Data)
+    MergeFrom(*source);
+  }
+}
+
+void Data::MergeFrom(const Data& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectrobot.Data)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  captions_.MergeFrom(from.captions_);
+  tags_.MergeFrom(from.tags_);
+  texts_.MergeFrom(from.texts_);
+  if (from.x() != 0) {
+    set_x(from.x());
+  }
+  if (from.y() != 0) {
+    set_y(from.y());
+  }
+  if (from.z() != 0) {
+    set_z(from.z());
+  }
+  if (from.status() != 0) {
+    set_status(from.status());
+  }
+}
+
+void Data::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectrobot.Data)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Data::CopyFrom(const Data& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectrobot.Data)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Data::IsInitialized() const {
+
+  return true;
+}
+
+void Data::Swap(Data* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void Data::InternalSwap(Data* other) {
+  std::swap(x_, other->x_);
+  std::swap(y_, other->y_);
+  std::swap(z_, other->z_);
+  captions_.UnsafeArenaSwap(&other->captions_);
+  tags_.UnsafeArenaSwap(&other->tags_);
+  texts_.UnsafeArenaSwap(&other->texts_);
+  std::swap(status_, other->status_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata Data::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Data_descriptor_;
+  metadata.reflection = Data_reflection_;
+  return metadata;
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// Data
+
+// optional float x = 1;
+void Data::clear_x() {
+  x_ = 0;
+}
+ float Data::x() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Data.x)
+  return x_;
+}
+ void Data::set_x(float value) {
+  
+  x_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.Data.x)
+}
+
+// optional float y = 2;
+void Data::clear_y() {
+  y_ = 0;
+}
+ float Data::y() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Data.y)
+  return y_;
+}
+ void Data::set_y(float value) {
+  
+  y_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.Data.y)
+}
+
+// optional float z = 3;
+void Data::clear_z() {
+  z_ = 0;
+}
+ float Data::z() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Data.z)
+  return z_;
+}
+ void Data::set_z(float value) {
+  
+  z_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.Data.z)
+}
+
+// repeated .kinectrobot.Tag captions = 4;
+int Data::captions_size() const {
+  return captions_.size();
+}
+void Data::clear_captions() {
+  captions_.Clear();
+}
+const ::kinectrobot::Tag& Data::captions(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Data.captions)
+  return captions_.Get(index);
+}
+::kinectrobot::Tag* Data::mutable_captions(int index) {
+  // @@protoc_insertion_point(field_mutable:kinectrobot.Data.captions)
+  return captions_.Mutable(index);
+}
+::kinectrobot::Tag* Data::add_captions() {
+  // @@protoc_insertion_point(field_add:kinectrobot.Data.captions)
+  return captions_.Add();
+}
+::google::protobuf::RepeatedPtrField< ::kinectrobot::Tag >*
+Data::mutable_captions() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrobot.Data.captions)
+  return &captions_;
+}
+const ::google::protobuf::RepeatedPtrField< ::kinectrobot::Tag >&
+Data::captions() const {
+  // @@protoc_insertion_point(field_list:kinectrobot.Data.captions)
+  return captions_;
+}
+
+// repeated .kinectrobot.Tag tags = 5;
+int Data::tags_size() const {
+  return tags_.size();
+}
+void Data::clear_tags() {
+  tags_.Clear();
+}
+const ::kinectrobot::Tag& Data::tags(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Data.tags)
+  return tags_.Get(index);
+}
+::kinectrobot::Tag* Data::mutable_tags(int index) {
+  // @@protoc_insertion_point(field_mutable:kinectrobot.Data.tags)
+  return tags_.Mutable(index);
+}
+::kinectrobot::Tag* Data::add_tags() {
+  // @@protoc_insertion_point(field_add:kinectrobot.Data.tags)
+  return tags_.Add();
+}
+::google::protobuf::RepeatedPtrField< ::kinectrobot::Tag >*
+Data::mutable_tags() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrobot.Data.tags)
+  return &tags_;
+}
+const ::google::protobuf::RepeatedPtrField< ::kinectrobot::Tag >&
+Data::tags() const {
+  // @@protoc_insertion_point(field_list:kinectrobot.Data.tags)
+  return tags_;
+}
+
+// repeated string texts = 6;
+int Data::texts_size() const {
+  return texts_.size();
+}
+void Data::clear_texts() {
+  texts_.Clear();
+}
+ const ::std::string& Data::texts(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Data.texts)
+  return texts_.Get(index);
+}
+ ::std::string* Data::mutable_texts(int index) {
+  // @@protoc_insertion_point(field_mutable:kinectrobot.Data.texts)
+  return texts_.Mutable(index);
+}
+ void Data::set_texts(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:kinectrobot.Data.texts)
+  texts_.Mutable(index)->assign(value);
+}
+ void Data::set_texts(int index, const char* value) {
+  texts_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:kinectrobot.Data.texts)
+}
+ void Data::set_texts(int index, const char* value, size_t size) {
+  texts_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:kinectrobot.Data.texts)
+}
+ ::std::string* Data::add_texts() {
+  // @@protoc_insertion_point(field_add_mutable:kinectrobot.Data.texts)
+  return texts_.Add();
+}
+ void Data::add_texts(const ::std::string& value) {
+  texts_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:kinectrobot.Data.texts)
+}
+ void Data::add_texts(const char* value) {
+  texts_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:kinectrobot.Data.texts)
+}
+ void Data::add_texts(const char* value, size_t size) {
+  texts_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:kinectrobot.Data.texts)
+}
+ const ::google::protobuf::RepeatedPtrField< ::std::string>&
+Data::texts() const {
+  // @@protoc_insertion_point(field_list:kinectrobot.Data.texts)
+  return texts_;
+}
+ ::google::protobuf::RepeatedPtrField< ::std::string>*
+Data::mutable_texts() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrobot.Data.texts)
+  return &texts_;
+}
+
+// optional bool status = 7;
+void Data::clear_status() {
+  status_ = false;
+}
+ bool Data::status() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Data.status)
+  return status_;
+}
+ void Data::set_status(bool value) {
+  
+  status_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.Data.status)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int DataStream::kStatusFieldNumber;
+const int DataStream::kDataFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+DataStream::DataStream()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:kinectrobot.DataStream)
+}
+
+void DataStream::InitAsDefaultInstance() {
+  _is_default_instance_ = true;
+}
+
+DataStream::DataStream(const DataStream& from)
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:kinectrobot.DataStream)
+}
+
+void DataStream::SharedCtor() {
+    _is_default_instance_ = false;
+  _cached_size_ = 0;
+  status_ = false;
+}
+
+DataStream::~DataStream() {
+  // @@protoc_insertion_point(destructor:kinectrobot.DataStream)
+  SharedDtor();
+}
+
+void DataStream::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void DataStream::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* DataStream::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return DataStream_descriptor_;
+}
+
+const DataStream& DataStream::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_kinect_5frobot_2eproto();
+  return *default_instance_;
+}
+
+DataStream* DataStream::default_instance_ = NULL;
+
+DataStream* DataStream::New(::google::protobuf::Arena* arena) const {
+  DataStream* n = new DataStream;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void DataStream::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectrobot.DataStream)
+  status_ = false;
+  data_.Clear();
+}
+
+bool DataStream::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:kinectrobot.DataStream)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional bool status = 1;
+      case 1: {
+        if (tag == 8) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &status_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_data;
+        break;
+      }
+
+      // repeated .kinectrobot.Data data = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_data:
+          DO_(input->IncrementRecursionDepth());
+         parse_loop_data:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+                input, add_data()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_loop_data;
+        input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:kinectrobot.DataStream)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:kinectrobot.DataStream)
+  return false;
+#undef DO_
+}
+
+void DataStream::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:kinectrobot.DataStream)
+  // optional bool status = 1;
+  if (this->status() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->status(), output);
+  }
+
+  // repeated .kinectrobot.Data data = 2;
+  for (unsigned int i = 0, n = this->data_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->data(i), output);
+  }
+
+  // @@protoc_insertion_point(serialize_end:kinectrobot.DataStream)
+}
+
+::google::protobuf::uint8* DataStream::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:kinectrobot.DataStream)
+  // optional bool status = 1;
+  if (this->status() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->status(), target);
+  }
+
+  // repeated .kinectrobot.Data data = 2;
+  for (unsigned int i = 0, n = this->data_size(); i < n; i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, this->data(i), target);
+  }
+
+  // @@protoc_insertion_point(serialize_to_array_end:kinectrobot.DataStream)
+  return target;
+}
+
+int DataStream::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectrobot.DataStream)
+  int total_size = 0;
+
+  // optional bool status = 1;
+  if (this->status() != 0) {
+    total_size += 1 + 1;
+  }
+
+  // repeated .kinectrobot.Data data = 2;
+  total_size += 1 * this->data_size();
+  for (int i = 0; i < this->data_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->data(i));
+  }
+
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void DataStream::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectrobot.DataStream)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  const DataStream* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const DataStream>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectrobot.DataStream)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectrobot.DataStream)
+    MergeFrom(*source);
+  }
+}
+
+void DataStream::MergeFrom(const DataStream& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectrobot.DataStream)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  data_.MergeFrom(from.data_);
+  if (from.status() != 0) {
+    set_status(from.status());
+  }
+}
+
+void DataStream::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectrobot.DataStream)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void DataStream::CopyFrom(const DataStream& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectrobot.DataStream)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool DataStream::IsInitialized() const {
+
+  return true;
+}
+
+void DataStream::Swap(DataStream* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void DataStream::InternalSwap(DataStream* other) {
+  std::swap(status_, other->status_);
+  data_.UnsafeArenaSwap(&other->data_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata DataStream::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = DataStream_descriptor_;
+  metadata.reflection = DataStream_reflection_;
+  return metadata;
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// DataStream
+
+// optional bool status = 1;
+void DataStream::clear_status() {
+  status_ = false;
+}
+ bool DataStream::status() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.DataStream.status)
+  return status_;
+}
+ void DataStream::set_status(bool value) {
+  
+  status_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.DataStream.status)
+}
+
+// repeated .kinectrobot.Data data = 2;
+int DataStream::data_size() const {
+  return data_.size();
+}
+void DataStream::clear_data() {
+  data_.Clear();
+}
+const ::kinectrobot::Data& DataStream::data(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrobot.DataStream.data)
+  return data_.Get(index);
+}
+::kinectrobot::Data* DataStream::mutable_data(int index) {
+  // @@protoc_insertion_point(field_mutable:kinectrobot.DataStream.data)
+  return data_.Mutable(index);
+}
+::kinectrobot::Data* DataStream::add_data() {
+  // @@protoc_insertion_point(field_add:kinectrobot.DataStream.data)
+  return data_.Add();
+}
+::google::protobuf::RepeatedPtrField< ::kinectrobot::Data >*
+DataStream::mutable_data() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrobot.DataStream.data)
+  return &data_;
+}
+const ::google::protobuf::RepeatedPtrField< ::kinectrobot::Data >&
+DataStream::data() const {
+  // @@protoc_insertion_point(field_list:kinectrobot.DataStream.data)
+  return data_;
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int BitStream::kStatusFieldNumber;
+const int BitStream::kDataFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+BitStream::BitStream()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:kinectrobot.BitStream)
+}
+
+void BitStream::InitAsDefaultInstance() {
+  _is_default_instance_ = true;
+}
+
+BitStream::BitStream(const BitStream& from)
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:kinectrobot.BitStream)
+}
+
+void BitStream::SharedCtor() {
+    _is_default_instance_ = false;
+  _cached_size_ = 0;
+  status_ = false;
+}
+
+BitStream::~BitStream() {
+  // @@protoc_insertion_point(destructor:kinectrobot.BitStream)
+  SharedDtor();
+}
+
+void BitStream::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void BitStream::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* BitStream::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return BitStream_descriptor_;
+}
+
+const BitStream& BitStream::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_kinect_5frobot_2eproto();
+  return *default_instance_;
+}
+
+BitStream* BitStream::default_instance_ = NULL;
+
+BitStream* BitStream::New(::google::protobuf::Arena* arena) const {
+  BitStream* n = new BitStream;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void BitStream::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectrobot.BitStream)
+  status_ = false;
+  data_.Clear();
+}
+
+bool BitStream::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:kinectrobot.BitStream)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional bool status = 1;
+      case 1: {
+        if (tag == 8) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &status_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_data;
+        break;
+      }
+
+      // repeated .kinectrobot.Bit data = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_data:
+          DO_(input->IncrementRecursionDepth());
+         parse_loop_data:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
+                input, add_data()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_loop_data;
+        input->UnsafeDecrementRecursionDepth();
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:kinectrobot.BitStream)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:kinectrobot.BitStream)
+  return false;
+#undef DO_
+}
+
+void BitStream::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:kinectrobot.BitStream)
+  // optional bool status = 1;
+  if (this->status() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->status(), output);
+  }
+
+  // repeated .kinectrobot.Bit data = 2;
+  for (unsigned int i = 0, n = this->data_size(); i < n; i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      2, this->data(i), output);
+  }
+
+  // @@protoc_insertion_point(serialize_end:kinectrobot.BitStream)
+}
+
+::google::protobuf::uint8* BitStream::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:kinectrobot.BitStream)
+  // optional bool status = 1;
+  if (this->status() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->status(), target);
+  }
+
+  // repeated .kinectrobot.Bit data = 2;
+  for (unsigned int i = 0, n = this->data_size(); i < n; i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        2, this->data(i), target);
+  }
+
+  // @@protoc_insertion_point(serialize_to_array_end:kinectrobot.BitStream)
+  return target;
+}
+
+int BitStream::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectrobot.BitStream)
+  int total_size = 0;
+
+  // optional bool status = 1;
+  if (this->status() != 0) {
+    total_size += 1 + 1;
+  }
+
+  // repeated .kinectrobot.Bit data = 2;
+  total_size += 1 * this->data_size();
+  for (int i = 0; i < this->data_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->data(i));
+  }
+
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void BitStream::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectrobot.BitStream)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  const BitStream* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const BitStream>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectrobot.BitStream)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectrobot.BitStream)
+    MergeFrom(*source);
+  }
+}
+
+void BitStream::MergeFrom(const BitStream& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectrobot.BitStream)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  data_.MergeFrom(from.data_);
+  if (from.status() != 0) {
+    set_status(from.status());
+  }
+}
+
+void BitStream::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectrobot.BitStream)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void BitStream::CopyFrom(const BitStream& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectrobot.BitStream)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool BitStream::IsInitialized() const {
+
+  return true;
+}
+
+void BitStream::Swap(BitStream* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void BitStream::InternalSwap(BitStream* other) {
+  std::swap(status_, other->status_);
+  data_.UnsafeArenaSwap(&other->data_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata BitStream::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = BitStream_descriptor_;
+  metadata.reflection = BitStream_reflection_;
+  return metadata;
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// BitStream
+
+// optional bool status = 1;
+void BitStream::clear_status() {
+  status_ = false;
+}
+ bool BitStream::status() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.BitStream.status)
+  return status_;
+}
+ void BitStream::set_status(bool value) {
+  
+  status_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.BitStream.status)
+}
+
+// repeated .kinectrobot.Bit data = 2;
+int BitStream::data_size() const {
+  return data_.size();
+}
+void BitStream::clear_data() {
+  data_.Clear();
+}
+const ::kinectrobot::Bit& BitStream::data(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrobot.BitStream.data)
+  return data_.Get(index);
+}
+::kinectrobot::Bit* BitStream::mutable_data(int index) {
+  // @@protoc_insertion_point(field_mutable:kinectrobot.BitStream.data)
+  return data_.Mutable(index);
+}
+::kinectrobot::Bit* BitStream::add_data() {
+  // @@protoc_insertion_point(field_add:kinectrobot.BitStream.data)
+  return data_.Add();
+}
+::google::protobuf::RepeatedPtrField< ::kinectrobot::Bit >*
+BitStream::mutable_data() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrobot.BitStream.data)
+  return &data_;
+}
+const ::google::protobuf::RepeatedPtrField< ::kinectrobot::Bit >&
+BitStream::data() const {
+  // @@protoc_insertion_point(field_list:kinectrobot.BitStream.data)
+  return data_;
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int StreamSettings::kOnceFieldNumber;
+const int StreamSettings::kArgsFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+StreamSettings::StreamSettings()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:kinectrobot.StreamSettings)
+}
+
+void StreamSettings::InitAsDefaultInstance() {
+  _is_default_instance_ = true;
+}
+
+StreamSettings::StreamSettings(const StreamSettings& from)
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:kinectrobot.StreamSettings)
+}
+
+void StreamSettings::SharedCtor() {
+    _is_default_instance_ = false;
+  ::google::protobuf::internal::GetEmptyString();
+  _cached_size_ = 0;
+  once_ = false;
+  args_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+StreamSettings::~StreamSettings() {
+  // @@protoc_insertion_point(destructor:kinectrobot.StreamSettings)
+  SharedDtor();
+}
+
+void StreamSettings::SharedDtor() {
+  args_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  if (this != default_instance_) {
+  }
+}
+
+void StreamSettings::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* StreamSettings::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return StreamSettings_descriptor_;
+}
+
+const StreamSettings& StreamSettings::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_kinect_5frobot_2eproto();
+  return *default_instance_;
+}
+
+StreamSettings* StreamSettings::default_instance_ = NULL;
+
+StreamSettings* StreamSettings::New(::google::protobuf::Arena* arena) const {
+  StreamSettings* n = new StreamSettings;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void StreamSettings::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectrobot.StreamSettings)
+  once_ = false;
+  args_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+
+bool StreamSettings::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:kinectrobot.StreamSettings)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional bool once = 1;
+      case 1: {
+        if (tag == 8) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &once_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(34)) goto parse_args;
+        break;
+      }
+
+      // optional string args = 4;
+      case 4: {
+        if (tag == 34) {
+         parse_args:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_args()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->args().data(), this->args().length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "kinectrobot.StreamSettings.args"));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:kinectrobot.StreamSettings)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:kinectrobot.StreamSettings)
+  return false;
+#undef DO_
+}
+
+void StreamSettings::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:kinectrobot.StreamSettings)
+  // optional bool once = 1;
+  if (this->once() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->once(), output);
+  }
+
+  // optional string args = 4;
+  if (this->args().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->args().data(), this->args().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "kinectrobot.StreamSettings.args");
+    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
+      4, this->args(), output);
+  }
+
+  // @@protoc_insertion_point(serialize_end:kinectrobot.StreamSettings)
+}
+
+::google::protobuf::uint8* StreamSettings::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:kinectrobot.StreamSettings)
+  // optional bool once = 1;
+  if (this->once() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->once(), target);
+  }
+
+  // optional string args = 4;
+  if (this->args().size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->args().data(), this->args().length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "kinectrobot.StreamSettings.args");
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        4, this->args(), target);
+  }
+
+  // @@protoc_insertion_point(serialize_to_array_end:kinectrobot.StreamSettings)
+  return target;
+}
+
+int StreamSettings::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectrobot.StreamSettings)
+  int total_size = 0;
+
+  // optional bool once = 1;
+  if (this->once() != 0) {
+    total_size += 1 + 1;
+  }
+
+  // optional string args = 4;
+  if (this->args().size() > 0) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::StringSize(
+        this->args());
+  }
+
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void StreamSettings::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectrobot.StreamSettings)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  const StreamSettings* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const StreamSettings>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectrobot.StreamSettings)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectrobot.StreamSettings)
+    MergeFrom(*source);
+  }
+}
+
+void StreamSettings::MergeFrom(const StreamSettings& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectrobot.StreamSettings)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  if (from.once() != 0) {
+    set_once(from.once());
+  }
+  if (from.args().size() > 0) {
+
+    args_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.args_);
+  }
+}
+
+void StreamSettings::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectrobot.StreamSettings)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void StreamSettings::CopyFrom(const StreamSettings& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectrobot.StreamSettings)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool StreamSettings::IsInitialized() const {
+
+  return true;
+}
+
+void StreamSettings::Swap(StreamSettings* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void StreamSettings::InternalSwap(StreamSettings* other) {
+  std::swap(once_, other->once_);
+  args_.Swap(&other->args_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata StreamSettings::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = StreamSettings_descriptor_;
+  metadata.reflection = StreamSettings_reflection_;
+  return metadata;
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// StreamSettings
+
+// optional bool once = 1;
+void StreamSettings::clear_once() {
+  once_ = false;
+}
+ bool StreamSettings::once() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.StreamSettings.once)
+  return once_;
+}
+ void StreamSettings::set_once(bool value) {
+  
+  once_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.StreamSettings.once)
+}
+
+// optional string args = 4;
+void StreamSettings::clear_args() {
+  args_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ const ::std::string& StreamSettings::args() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.StreamSettings.args)
+  return args_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void StreamSettings::set_args(const ::std::string& value) {
+  
+  args_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:kinectrobot.StreamSettings.args)
+}
+ void StreamSettings::set_args(const char* value) {
+  
+  args_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:kinectrobot.StreamSettings.args)
+}
+ void StreamSettings::set_args(const char* value, size_t size) {
+  
+  args_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:kinectrobot.StreamSettings.args)
+}
+ ::std::string* StreamSettings::mutable_args() {
+  
+  // @@protoc_insertion_point(field_mutable:kinectrobot.StreamSettings.args)
+  return args_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ ::std::string* StreamSettings::release_args() {
+  // @@protoc_insertion_point(field_release:kinectrobot.StreamSettings.args)
+  
+  return args_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+ void StreamSettings::set_allocated_args(::std::string* args) {
+  if (args != NULL) {
+    
+  } else {
+    
+  }
+  args_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), args);
+  // @@protoc_insertion_point(field_set_allocated:kinectrobot.StreamSettings.args)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS

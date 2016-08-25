@@ -37,11 +37,17 @@ void protobuf_AssignDesc_kinect_5frobot_2eproto();
 void protobuf_ShutdownFile_kinect_5frobot_2eproto();
 
 class Bit;
+class BitStream;
+class Data;
+class DataStream;
+class Pixels;
 class Point;
 class Points;
 class Request;
 class Response;
 class Speech;
+class StreamSettings;
+class Tag;
 class UrlInfo;
 class VoiceTriggers;
 
@@ -214,16 +220,10 @@ class Request : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional int32 mode = 1;
-  void clear_mode();
-  static const int kModeFieldNumber = 1;
-  ::google::protobuf::int32 mode() const;
-  void set_mode(::google::protobuf::int32 value);
-
-  // repeated .kinectrobot.Bit data = 2;
+  // repeated .kinectrobot.Bit data = 1;
   int data_size() const;
   void clear_data();
-  static const int kDataFieldNumber = 2;
+  static const int kDataFieldNumber = 1;
   const ::kinectrobot::Bit& data(int index) const;
   ::kinectrobot::Bit* mutable_data(int index);
   ::kinectrobot::Bit* add_data();
@@ -232,15 +232,9 @@ class Request : public ::google::protobuf::Message {
   const ::google::protobuf::RepeatedPtrField< ::kinectrobot::Bit >&
       data() const;
 
-  // optional bool once = 3;
-  void clear_once();
-  static const int kOnceFieldNumber = 3;
-  bool once() const;
-  void set_once(bool value);
-
-  // optional string args = 4;
+  // optional string args = 2;
   void clear_args();
-  static const int kArgsFieldNumber = 4;
+  static const int kArgsFieldNumber = 2;
   const ::std::string& args() const;
   void set_args(const ::std::string& value);
   void set_args(const char* value);
@@ -255,8 +249,6 @@ class Request : public ::google::protobuf::Message {
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
   ::google::protobuf::RepeatedPtrField< ::kinectrobot::Bit > data_;
-  ::google::protobuf::int32 mode_;
-  bool once_;
   ::google::protobuf::internal::ArenaStringPtr args_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_kinect_5frobot_2eproto();
@@ -448,6 +440,595 @@ class Points : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static Points* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Pixels : public ::google::protobuf::Message {
+ public:
+  Pixels();
+  virtual ~Pixels();
+
+  Pixels(const Pixels& from);
+
+  inline Pixels& operator=(const Pixels& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Pixels& default_instance();
+
+  void Swap(Pixels* other);
+
+  // implements Message ----------------------------------------------
+
+  inline Pixels* New() const { return New(NULL); }
+
+  Pixels* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Pixels& from);
+  void MergeFrom(const Pixels& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(Pixels* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated int32 color = 1;
+  int color_size() const;
+  void clear_color();
+  static const int kColorFieldNumber = 1;
+  ::google::protobuf::int32 color(int index) const;
+  void set_color(int index, ::google::protobuf::int32 value);
+  void add_color(::google::protobuf::int32 value);
+  const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+      color() const;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+      mutable_color();
+
+  // @@protoc_insertion_point(class_scope:kinectrobot.Pixels)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::RepeatedField< ::google::protobuf::int32 > color_;
+  mutable int _color_cached_byte_size_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_kinect_5frobot_2eproto();
+  friend void protobuf_AssignDesc_kinect_5frobot_2eproto();
+  friend void protobuf_ShutdownFile_kinect_5frobot_2eproto();
+
+  void InitAsDefaultInstance();
+  static Pixels* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Tag : public ::google::protobuf::Message {
+ public:
+  Tag();
+  virtual ~Tag();
+
+  Tag(const Tag& from);
+
+  inline Tag& operator=(const Tag& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Tag& default_instance();
+
+  void Swap(Tag* other);
+
+  // implements Message ----------------------------------------------
+
+  inline Tag* New() const { return New(NULL); }
+
+  Tag* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Tag& from);
+  void MergeFrom(const Tag& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(Tag* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional string tag = 1;
+  void clear_tag();
+  static const int kTagFieldNumber = 1;
+  const ::std::string& tag() const;
+  void set_tag(const ::std::string& value);
+  void set_tag(const char* value);
+  void set_tag(const char* value, size_t size);
+  ::std::string* mutable_tag();
+  ::std::string* release_tag();
+  void set_allocated_tag(::std::string* tag);
+
+  // optional float confidence = 2;
+  void clear_confidence();
+  static const int kConfidenceFieldNumber = 2;
+  float confidence() const;
+  void set_confidence(float value);
+
+  // @@protoc_insertion_point(class_scope:kinectrobot.Tag)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::internal::ArenaStringPtr tag_;
+  float confidence_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_kinect_5frobot_2eproto();
+  friend void protobuf_AssignDesc_kinect_5frobot_2eproto();
+  friend void protobuf_ShutdownFile_kinect_5frobot_2eproto();
+
+  void InitAsDefaultInstance();
+  static Tag* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class Data : public ::google::protobuf::Message {
+ public:
+  Data();
+  virtual ~Data();
+
+  Data(const Data& from);
+
+  inline Data& operator=(const Data& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Data& default_instance();
+
+  void Swap(Data* other);
+
+  // implements Message ----------------------------------------------
+
+  inline Data* New() const { return New(NULL); }
+
+  Data* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Data& from);
+  void MergeFrom(const Data& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(Data* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional float x = 1;
+  void clear_x();
+  static const int kXFieldNumber = 1;
+  float x() const;
+  void set_x(float value);
+
+  // optional float y = 2;
+  void clear_y();
+  static const int kYFieldNumber = 2;
+  float y() const;
+  void set_y(float value);
+
+  // optional float z = 3;
+  void clear_z();
+  static const int kZFieldNumber = 3;
+  float z() const;
+  void set_z(float value);
+
+  // repeated .kinectrobot.Tag captions = 4;
+  int captions_size() const;
+  void clear_captions();
+  static const int kCaptionsFieldNumber = 4;
+  const ::kinectrobot::Tag& captions(int index) const;
+  ::kinectrobot::Tag* mutable_captions(int index);
+  ::kinectrobot::Tag* add_captions();
+  ::google::protobuf::RepeatedPtrField< ::kinectrobot::Tag >*
+      mutable_captions();
+  const ::google::protobuf::RepeatedPtrField< ::kinectrobot::Tag >&
+      captions() const;
+
+  // repeated .kinectrobot.Tag tags = 5;
+  int tags_size() const;
+  void clear_tags();
+  static const int kTagsFieldNumber = 5;
+  const ::kinectrobot::Tag& tags(int index) const;
+  ::kinectrobot::Tag* mutable_tags(int index);
+  ::kinectrobot::Tag* add_tags();
+  ::google::protobuf::RepeatedPtrField< ::kinectrobot::Tag >*
+      mutable_tags();
+  const ::google::protobuf::RepeatedPtrField< ::kinectrobot::Tag >&
+      tags() const;
+
+  // repeated string texts = 6;
+  int texts_size() const;
+  void clear_texts();
+  static const int kTextsFieldNumber = 6;
+  const ::std::string& texts(int index) const;
+  ::std::string* mutable_texts(int index);
+  void set_texts(int index, const ::std::string& value);
+  void set_texts(int index, const char* value);
+  void set_texts(int index, const char* value, size_t size);
+  ::std::string* add_texts();
+  void add_texts(const ::std::string& value);
+  void add_texts(const char* value);
+  void add_texts(const char* value, size_t size);
+  const ::google::protobuf::RepeatedPtrField< ::std::string>& texts() const;
+  ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_texts();
+
+  // optional bool status = 7;
+  void clear_status();
+  static const int kStatusFieldNumber = 7;
+  bool status() const;
+  void set_status(bool value);
+
+  // @@protoc_insertion_point(class_scope:kinectrobot.Data)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  float x_;
+  float y_;
+  ::google::protobuf::RepeatedPtrField< ::kinectrobot::Tag > captions_;
+  ::google::protobuf::RepeatedPtrField< ::kinectrobot::Tag > tags_;
+  float z_;
+  bool status_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> texts_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_kinect_5frobot_2eproto();
+  friend void protobuf_AssignDesc_kinect_5frobot_2eproto();
+  friend void protobuf_ShutdownFile_kinect_5frobot_2eproto();
+
+  void InitAsDefaultInstance();
+  static Data* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class DataStream : public ::google::protobuf::Message {
+ public:
+  DataStream();
+  virtual ~DataStream();
+
+  DataStream(const DataStream& from);
+
+  inline DataStream& operator=(const DataStream& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const DataStream& default_instance();
+
+  void Swap(DataStream* other);
+
+  // implements Message ----------------------------------------------
+
+  inline DataStream* New() const { return New(NULL); }
+
+  DataStream* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const DataStream& from);
+  void MergeFrom(const DataStream& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(DataStream* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bool status = 1;
+  void clear_status();
+  static const int kStatusFieldNumber = 1;
+  bool status() const;
+  void set_status(bool value);
+
+  // repeated .kinectrobot.Data data = 2;
+  int data_size() const;
+  void clear_data();
+  static const int kDataFieldNumber = 2;
+  const ::kinectrobot::Data& data(int index) const;
+  ::kinectrobot::Data* mutable_data(int index);
+  ::kinectrobot::Data* add_data();
+  ::google::protobuf::RepeatedPtrField< ::kinectrobot::Data >*
+      mutable_data();
+  const ::google::protobuf::RepeatedPtrField< ::kinectrobot::Data >&
+      data() const;
+
+  // @@protoc_insertion_point(class_scope:kinectrobot.DataStream)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::RepeatedPtrField< ::kinectrobot::Data > data_;
+  bool status_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_kinect_5frobot_2eproto();
+  friend void protobuf_AssignDesc_kinect_5frobot_2eproto();
+  friend void protobuf_ShutdownFile_kinect_5frobot_2eproto();
+
+  void InitAsDefaultInstance();
+  static DataStream* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class BitStream : public ::google::protobuf::Message {
+ public:
+  BitStream();
+  virtual ~BitStream();
+
+  BitStream(const BitStream& from);
+
+  inline BitStream& operator=(const BitStream& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const BitStream& default_instance();
+
+  void Swap(BitStream* other);
+
+  // implements Message ----------------------------------------------
+
+  inline BitStream* New() const { return New(NULL); }
+
+  BitStream* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const BitStream& from);
+  void MergeFrom(const BitStream& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(BitStream* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bool status = 1;
+  void clear_status();
+  static const int kStatusFieldNumber = 1;
+  bool status() const;
+  void set_status(bool value);
+
+  // repeated .kinectrobot.Bit data = 2;
+  int data_size() const;
+  void clear_data();
+  static const int kDataFieldNumber = 2;
+  const ::kinectrobot::Bit& data(int index) const;
+  ::kinectrobot::Bit* mutable_data(int index);
+  ::kinectrobot::Bit* add_data();
+  ::google::protobuf::RepeatedPtrField< ::kinectrobot::Bit >*
+      mutable_data();
+  const ::google::protobuf::RepeatedPtrField< ::kinectrobot::Bit >&
+      data() const;
+
+  // @@protoc_insertion_point(class_scope:kinectrobot.BitStream)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::RepeatedPtrField< ::kinectrobot::Bit > data_;
+  bool status_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_kinect_5frobot_2eproto();
+  friend void protobuf_AssignDesc_kinect_5frobot_2eproto();
+  friend void protobuf_ShutdownFile_kinect_5frobot_2eproto();
+
+  void InitAsDefaultInstance();
+  static BitStream* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class StreamSettings : public ::google::protobuf::Message {
+ public:
+  StreamSettings();
+  virtual ~StreamSettings();
+
+  StreamSettings(const StreamSettings& from);
+
+  inline StreamSettings& operator=(const StreamSettings& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const StreamSettings& default_instance();
+
+  void Swap(StreamSettings* other);
+
+  // implements Message ----------------------------------------------
+
+  inline StreamSettings* New() const { return New(NULL); }
+
+  StreamSettings* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const StreamSettings& from);
+  void MergeFrom(const StreamSettings& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(StreamSettings* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional bool once = 1;
+  void clear_once();
+  static const int kOnceFieldNumber = 1;
+  bool once() const;
+  void set_once(bool value);
+
+  // optional string args = 4;
+  void clear_args();
+  static const int kArgsFieldNumber = 4;
+  const ::std::string& args() const;
+  void set_args(const ::std::string& value);
+  void set_args(const char* value);
+  void set_args(const char* value, size_t size);
+  ::std::string* mutable_args();
+  ::std::string* release_args();
+  void set_allocated_args(::std::string* args);
+
+  // @@protoc_insertion_point(class_scope:kinectrobot.StreamSettings)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::internal::ArenaStringPtr args_;
+  bool once_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_kinect_5frobot_2eproto();
+  friend void protobuf_AssignDesc_kinect_5frobot_2eproto();
+  friend void protobuf_ShutdownFile_kinect_5frobot_2eproto();
+
+  void InitAsDefaultInstance();
+  static StreamSettings* default_instance_;
 };
 // -------------------------------------------------------------------
 
@@ -952,21 +1533,7 @@ inline void Bit::set_allocated_name(::std::string* name) {
 
 // Request
 
-// optional int32 mode = 1;
-inline void Request::clear_mode() {
-  mode_ = 0;
-}
-inline ::google::protobuf::int32 Request::mode() const {
-  // @@protoc_insertion_point(field_get:kinectrobot.Request.mode)
-  return mode_;
-}
-inline void Request::set_mode(::google::protobuf::int32 value) {
-  
-  mode_ = value;
-  // @@protoc_insertion_point(field_set:kinectrobot.Request.mode)
-}
-
-// repeated .kinectrobot.Bit data = 2;
+// repeated .kinectrobot.Bit data = 1;
 inline int Request::data_size() const {
   return data_.size();
 }
@@ -996,21 +1563,7 @@ Request::data() const {
   return data_;
 }
 
-// optional bool once = 3;
-inline void Request::clear_once() {
-  once_ = false;
-}
-inline bool Request::once() const {
-  // @@protoc_insertion_point(field_get:kinectrobot.Request.once)
-  return once_;
-}
-inline void Request::set_once(bool value) {
-  
-  once_ = value;
-  // @@protoc_insertion_point(field_set:kinectrobot.Request.once)
-}
-
-// optional string args = 4;
+// optional string args = 2;
 inline void Request::clear_args() {
   args_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
@@ -1146,6 +1699,435 @@ inline const ::google::protobuf::RepeatedPtrField< ::kinectrobot::Point >&
 Points::data() const {
   // @@protoc_insertion_point(field_list:kinectrobot.Points.data)
   return data_;
+}
+
+// -------------------------------------------------------------------
+
+// Pixels
+
+// repeated int32 color = 1;
+inline int Pixels::color_size() const {
+  return color_.size();
+}
+inline void Pixels::clear_color() {
+  color_.Clear();
+}
+inline ::google::protobuf::int32 Pixels::color(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Pixels.color)
+  return color_.Get(index);
+}
+inline void Pixels::set_color(int index, ::google::protobuf::int32 value) {
+  color_.Set(index, value);
+  // @@protoc_insertion_point(field_set:kinectrobot.Pixels.color)
+}
+inline void Pixels::add_color(::google::protobuf::int32 value) {
+  color_.Add(value);
+  // @@protoc_insertion_point(field_add:kinectrobot.Pixels.color)
+}
+inline const ::google::protobuf::RepeatedField< ::google::protobuf::int32 >&
+Pixels::color() const {
+  // @@protoc_insertion_point(field_list:kinectrobot.Pixels.color)
+  return color_;
+}
+inline ::google::protobuf::RepeatedField< ::google::protobuf::int32 >*
+Pixels::mutable_color() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrobot.Pixels.color)
+  return &color_;
+}
+
+// -------------------------------------------------------------------
+
+// Tag
+
+// optional string tag = 1;
+inline void Tag::clear_tag() {
+  tag_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& Tag::tag() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Tag.tag)
+  return tag_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Tag::set_tag(const ::std::string& value) {
+  
+  tag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:kinectrobot.Tag.tag)
+}
+inline void Tag::set_tag(const char* value) {
+  
+  tag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:kinectrobot.Tag.tag)
+}
+inline void Tag::set_tag(const char* value, size_t size) {
+  
+  tag_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:kinectrobot.Tag.tag)
+}
+inline ::std::string* Tag::mutable_tag() {
+  
+  // @@protoc_insertion_point(field_mutable:kinectrobot.Tag.tag)
+  return tag_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* Tag::release_tag() {
+  // @@protoc_insertion_point(field_release:kinectrobot.Tag.tag)
+  
+  return tag_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void Tag::set_allocated_tag(::std::string* tag) {
+  if (tag != NULL) {
+    
+  } else {
+    
+  }
+  tag_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), tag);
+  // @@protoc_insertion_point(field_set_allocated:kinectrobot.Tag.tag)
+}
+
+// optional float confidence = 2;
+inline void Tag::clear_confidence() {
+  confidence_ = 0;
+}
+inline float Tag::confidence() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Tag.confidence)
+  return confidence_;
+}
+inline void Tag::set_confidence(float value) {
+  
+  confidence_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.Tag.confidence)
+}
+
+// -------------------------------------------------------------------
+
+// Data
+
+// optional float x = 1;
+inline void Data::clear_x() {
+  x_ = 0;
+}
+inline float Data::x() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Data.x)
+  return x_;
+}
+inline void Data::set_x(float value) {
+  
+  x_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.Data.x)
+}
+
+// optional float y = 2;
+inline void Data::clear_y() {
+  y_ = 0;
+}
+inline float Data::y() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Data.y)
+  return y_;
+}
+inline void Data::set_y(float value) {
+  
+  y_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.Data.y)
+}
+
+// optional float z = 3;
+inline void Data::clear_z() {
+  z_ = 0;
+}
+inline float Data::z() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Data.z)
+  return z_;
+}
+inline void Data::set_z(float value) {
+  
+  z_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.Data.z)
+}
+
+// repeated .kinectrobot.Tag captions = 4;
+inline int Data::captions_size() const {
+  return captions_.size();
+}
+inline void Data::clear_captions() {
+  captions_.Clear();
+}
+inline const ::kinectrobot::Tag& Data::captions(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Data.captions)
+  return captions_.Get(index);
+}
+inline ::kinectrobot::Tag* Data::mutable_captions(int index) {
+  // @@protoc_insertion_point(field_mutable:kinectrobot.Data.captions)
+  return captions_.Mutable(index);
+}
+inline ::kinectrobot::Tag* Data::add_captions() {
+  // @@protoc_insertion_point(field_add:kinectrobot.Data.captions)
+  return captions_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::kinectrobot::Tag >*
+Data::mutable_captions() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrobot.Data.captions)
+  return &captions_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::kinectrobot::Tag >&
+Data::captions() const {
+  // @@protoc_insertion_point(field_list:kinectrobot.Data.captions)
+  return captions_;
+}
+
+// repeated .kinectrobot.Tag tags = 5;
+inline int Data::tags_size() const {
+  return tags_.size();
+}
+inline void Data::clear_tags() {
+  tags_.Clear();
+}
+inline const ::kinectrobot::Tag& Data::tags(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Data.tags)
+  return tags_.Get(index);
+}
+inline ::kinectrobot::Tag* Data::mutable_tags(int index) {
+  // @@protoc_insertion_point(field_mutable:kinectrobot.Data.tags)
+  return tags_.Mutable(index);
+}
+inline ::kinectrobot::Tag* Data::add_tags() {
+  // @@protoc_insertion_point(field_add:kinectrobot.Data.tags)
+  return tags_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::kinectrobot::Tag >*
+Data::mutable_tags() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrobot.Data.tags)
+  return &tags_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::kinectrobot::Tag >&
+Data::tags() const {
+  // @@protoc_insertion_point(field_list:kinectrobot.Data.tags)
+  return tags_;
+}
+
+// repeated string texts = 6;
+inline int Data::texts_size() const {
+  return texts_.size();
+}
+inline void Data::clear_texts() {
+  texts_.Clear();
+}
+inline const ::std::string& Data::texts(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Data.texts)
+  return texts_.Get(index);
+}
+inline ::std::string* Data::mutable_texts(int index) {
+  // @@protoc_insertion_point(field_mutable:kinectrobot.Data.texts)
+  return texts_.Mutable(index);
+}
+inline void Data::set_texts(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:kinectrobot.Data.texts)
+  texts_.Mutable(index)->assign(value);
+}
+inline void Data::set_texts(int index, const char* value) {
+  texts_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:kinectrobot.Data.texts)
+}
+inline void Data::set_texts(int index, const char* value, size_t size) {
+  texts_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:kinectrobot.Data.texts)
+}
+inline ::std::string* Data::add_texts() {
+  // @@protoc_insertion_point(field_add_mutable:kinectrobot.Data.texts)
+  return texts_.Add();
+}
+inline void Data::add_texts(const ::std::string& value) {
+  texts_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:kinectrobot.Data.texts)
+}
+inline void Data::add_texts(const char* value) {
+  texts_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:kinectrobot.Data.texts)
+}
+inline void Data::add_texts(const char* value, size_t size) {
+  texts_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:kinectrobot.Data.texts)
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+Data::texts() const {
+  // @@protoc_insertion_point(field_list:kinectrobot.Data.texts)
+  return texts_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+Data::mutable_texts() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrobot.Data.texts)
+  return &texts_;
+}
+
+// optional bool status = 7;
+inline void Data::clear_status() {
+  status_ = false;
+}
+inline bool Data::status() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Data.status)
+  return status_;
+}
+inline void Data::set_status(bool value) {
+  
+  status_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.Data.status)
+}
+
+// -------------------------------------------------------------------
+
+// DataStream
+
+// optional bool status = 1;
+inline void DataStream::clear_status() {
+  status_ = false;
+}
+inline bool DataStream::status() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.DataStream.status)
+  return status_;
+}
+inline void DataStream::set_status(bool value) {
+  
+  status_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.DataStream.status)
+}
+
+// repeated .kinectrobot.Data data = 2;
+inline int DataStream::data_size() const {
+  return data_.size();
+}
+inline void DataStream::clear_data() {
+  data_.Clear();
+}
+inline const ::kinectrobot::Data& DataStream::data(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrobot.DataStream.data)
+  return data_.Get(index);
+}
+inline ::kinectrobot::Data* DataStream::mutable_data(int index) {
+  // @@protoc_insertion_point(field_mutable:kinectrobot.DataStream.data)
+  return data_.Mutable(index);
+}
+inline ::kinectrobot::Data* DataStream::add_data() {
+  // @@protoc_insertion_point(field_add:kinectrobot.DataStream.data)
+  return data_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::kinectrobot::Data >*
+DataStream::mutable_data() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrobot.DataStream.data)
+  return &data_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::kinectrobot::Data >&
+DataStream::data() const {
+  // @@protoc_insertion_point(field_list:kinectrobot.DataStream.data)
+  return data_;
+}
+
+// -------------------------------------------------------------------
+
+// BitStream
+
+// optional bool status = 1;
+inline void BitStream::clear_status() {
+  status_ = false;
+}
+inline bool BitStream::status() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.BitStream.status)
+  return status_;
+}
+inline void BitStream::set_status(bool value) {
+  
+  status_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.BitStream.status)
+}
+
+// repeated .kinectrobot.Bit data = 2;
+inline int BitStream::data_size() const {
+  return data_.size();
+}
+inline void BitStream::clear_data() {
+  data_.Clear();
+}
+inline const ::kinectrobot::Bit& BitStream::data(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrobot.BitStream.data)
+  return data_.Get(index);
+}
+inline ::kinectrobot::Bit* BitStream::mutable_data(int index) {
+  // @@protoc_insertion_point(field_mutable:kinectrobot.BitStream.data)
+  return data_.Mutable(index);
+}
+inline ::kinectrobot::Bit* BitStream::add_data() {
+  // @@protoc_insertion_point(field_add:kinectrobot.BitStream.data)
+  return data_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::kinectrobot::Bit >*
+BitStream::mutable_data() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrobot.BitStream.data)
+  return &data_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::kinectrobot::Bit >&
+BitStream::data() const {
+  // @@protoc_insertion_point(field_list:kinectrobot.BitStream.data)
+  return data_;
+}
+
+// -------------------------------------------------------------------
+
+// StreamSettings
+
+// optional bool once = 1;
+inline void StreamSettings::clear_once() {
+  once_ = false;
+}
+inline bool StreamSettings::once() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.StreamSettings.once)
+  return once_;
+}
+inline void StreamSettings::set_once(bool value) {
+  
+  once_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.StreamSettings.once)
+}
+
+// optional string args = 4;
+inline void StreamSettings::clear_args() {
+  args_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline const ::std::string& StreamSettings::args() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.StreamSettings.args)
+  return args_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void StreamSettings::set_args(const ::std::string& value) {
+  
+  args_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
+  // @@protoc_insertion_point(field_set:kinectrobot.StreamSettings.args)
+}
+inline void StreamSettings::set_args(const char* value) {
+  
+  args_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
+  // @@protoc_insertion_point(field_set_char:kinectrobot.StreamSettings.args)
+}
+inline void StreamSettings::set_args(const char* value, size_t size) {
+  
+  args_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
+      ::std::string(reinterpret_cast<const char*>(value), size));
+  // @@protoc_insertion_point(field_set_pointer:kinectrobot.StreamSettings.args)
+}
+inline ::std::string* StreamSettings::mutable_args() {
+  
+  // @@protoc_insertion_point(field_mutable:kinectrobot.StreamSettings.args)
+  return args_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline ::std::string* StreamSettings::release_args() {
+  // @@protoc_insertion_point(field_release:kinectrobot.StreamSettings.args)
+  
+  return args_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+}
+inline void StreamSettings::set_allocated_args(::std::string* args) {
+  if (args != NULL) {
+    
+  } else {
+    
+  }
+  args_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), args);
+  // @@protoc_insertion_point(field_set_allocated:kinectrobot.StreamSettings.args)
 }
 
 // -------------------------------------------------------------------
@@ -1499,6 +2481,18 @@ inline void Response::set_status(bool value) {
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
