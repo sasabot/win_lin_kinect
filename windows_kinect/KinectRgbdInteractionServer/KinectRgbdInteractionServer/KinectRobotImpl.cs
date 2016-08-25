@@ -80,7 +80,9 @@ namespace Kinectrobot
             }
 
             this.colorPoints = Enumerable.Repeat(new ColorSpacePoint { X = -1, Y = -1 }, parent.displayWidth * parent.displayHeight).ToArray();
-            this.rawImage = Enumerable.Repeat(new byte { }, parent.displayWidth * parent.displayHeight).ToArray();
+            this.rawImage = Enumerable.Repeat(new byte { }, parent.displayWidth * parent.displayHeight * 4).ToArray();
+            this.cameraPointsColor = Enumerable.Repeat(new CameraSpacePoint { X = 0, Y = 0, Z = 0 },
+                parent.displayWidth * parent.displayHeight).ToArray();
 
             // setup for TTS
             this.speechSynthesizer = new SpeechSynthesizer();
@@ -99,11 +101,10 @@ namespace Kinectrobot
 
         public void SetPoints(Kinectrobot.Points points, ColorSpacePoint[] image)
         {
-            int pointsPerStream = points.Data.Count / this.pointBlobs.Length + 1;
-
             this.pointsLocker.EnterWriteLock();
             try
             {
+                int pointsPerStream = points.Data.Count / this.pointBlobs.Length + 1;
                 Array.Copy(image, this.colorPoints, image.Length);
 
                 for (int i = 0; i < this.pointBlobs.Length; ++i)
@@ -119,11 +120,10 @@ namespace Kinectrobot
 
         public void SetPixels(Kinectrobot.Pixels pixels, byte[] raw, CameraSpacePoint[] positions)
         {
-            int pointsPerStream = pixels.Color.Count / this.pixelBlobs.Length + 1;
-
             this.pixelsLocker.EnterWriteLock();
             try
             {
+                int pointsPerStream = pixels.Color.Count / this.pixelBlobs.Length + 1;
                 Array.Copy(raw, this.rawImage, raw.Length);
                 Array.Copy(positions, this.cameraPointsColor, positions.Length);
 
@@ -135,7 +135,7 @@ namespace Kinectrobot
                         this.pixelBlobs[i].Color.Add(pixels.Color[j]);
                 }
             }
-            finally { this.pixelsLocker.ExitReadLock(); }
+            finally { this.pixelsLocker.ExitWriteLock(); }
         }
 
         public override async Task ReturnPoints(Request request, IServerStreamWriter<Points> responseStream, ServerCallContext context)
@@ -169,10 +169,13 @@ namespace Kinectrobot
             this.pointsLocker.EnterReadLock();
             try
             {
-                Kinectrobot.BitStream result = new Kinectrobot.BitStream { Status = false };
+                Kinectrobot.BitStream result = new Kinectrobot.BitStream { Status = true };
 
+                int boundsId = -1;
                 foreach (var req in request.Data)
                 {
+                    ++boundsId;
+
                     List<int> boundsInLinux = new List<int> { Convert.ToInt32(req.X), Convert.ToInt32(req.Y),
                     Convert.ToInt32(req.Width), Convert.ToInt32(req.Height) };
                     List<int> boundsInWindows = new List<int> { };
@@ -193,16 +196,17 @@ namespace Kinectrobot
                     int colorMaxX = Convert.ToInt32(this.colorPoints[boundsInWindows[2]].X);
                     int colorMaxY = Convert.ToInt32(this.colorPoints[boundsInWindows[3]].Y);
 
-                    // return when an invalid result is detected
+                    // skip when an invalid result is detected
                     if (colorMinX < 0 || colorMinY < 0 || colorMaxX >= 1920 || colorMaxY >= 1080
                         || colorMaxX < 0 || colorMaxY < 0 || colorMinX >= 1920 || colorMinY >= 1080)
                     {
-                        return Task.FromResult(new Kinectrobot.BitStream { Status = false });
+                        // return Task.FromResult(new Kinectrobot.BitStream { Status = false });
+                        continue;
                     }
 
                     Kinectrobot.Bit color = new Kinectrobot.Bit
                     {
-                        Name = "color",
+                        Name = Convert.ToString(boundsId), // id saved to keep input output correspondent
                         X = colorMinX,
                         Y = colorMinY,
                         Width = colorMaxX - colorMinX,
@@ -214,7 +218,7 @@ namespace Kinectrobot
 
                 return Task.FromResult(result);
             }
-            finally { this.pixelsLocker.ExitReadLock(); }
+            finally { this.pointsLocker.ExitReadLock(); }
         }
 
         public override Task<DataStream> ReturnCognition(Request request, ServerCallContext context)
@@ -231,89 +235,95 @@ namespace Kinectrobot
             List<CameraSpacePoint> objectPositions = new List<CameraSpacePoint>();
             List<bool> valids = new List<bool>(); // far away positions are cut by valids
 
-            foreach (var image in request.Data)
+            this.pixelsLocker.EnterReadLock();
+
+            try
             {
-                // initiate imageInSpace
-                CameraSpacePoint initP = new CameraSpacePoint { X = 0.0f, Y = 0.0f, Z = 100.0f };
-                objectPositions.Add(initP);
+                foreach (var image in request.Data)
+                {
+                    // initiate imageInSpace
+                    CameraSpacePoint initP = new CameraSpacePoint { X = 0.0f, Y = 0.0f, Z = 100.0f };
+                    objectPositions.Add(initP);
 
-                // initiate valid
-                valids.Add(true);
+                    // initiate valid
+                    valids.Add(true);
 
-                // get partial image
-                byte[] partial = new byte[Convert.ToInt32(image.Width) * Convert.ToInt32(image.Height) * 4];
-                int atPixel = 0;
-                for (int i = Convert.ToInt32(image.Y); i < Convert.ToInt32(image.Y) + Convert.ToInt32(image.Height); ++i)
-                    for (int j = Convert.ToInt32(image.X) + Convert.ToInt32(image.Width) - 1; j >= Convert.ToInt32(image.X); --j) // flip image
+                    // get partial image
+                    byte[] partial = new byte[Convert.ToInt32(image.Width) * Convert.ToInt32(image.Height) * 4];
+                    int atPixel = 0;
+                    for (int i = Convert.ToInt32(image.Y); i < Convert.ToInt32(image.Y) + Convert.ToInt32(image.Height); ++i)
+                        for (int j = Convert.ToInt32(image.X) + Convert.ToInt32(image.Width) - 1; j >= Convert.ToInt32(image.X); --j) // flip image
+                        {
+                            int idx = (i * 1920 + j) * 4;
+                            partial[atPixel++] = this.rawImage[idx++];
+                            partial[atPixel++] = this.rawImage[idx++];
+                            partial[atPixel++] = this.rawImage[idx++];
+                            partial[atPixel++] = this.rawImage[idx++];
+                        }
+
+                    // save to image
+                    string file = System.Environment.GetFolderPath(Environment.SpecialFolder.Personal) + image.Name + ".jpg";
+                    BitmapSource partialBitmapSource = BitmapSource.Create(Convert.ToInt32(image.Width), Convert.ToInt32(image.Height), 96, 96,
+                        PixelFormats.Bgr32, null, partial, Convert.ToInt32(image.Width) * 4);
+                    System.Drawing.Bitmap partialBitmap;
+                    using (var ms = new MemoryStream())
                     {
-                        int idx = (i * 1920 + j) * 4;
-                        partial[atPixel++] = this.rawImage[idx++];
-                        partial[atPixel++] = this.rawImage[idx++];
-                        partial[atPixel++] = this.rawImage[idx++];
-                        partial[atPixel++] = this.rawImage[idx++];
+                        BitmapEncoder enc = new BmpBitmapEncoder();
+                        enc.Frames.Add(BitmapFrame.Create(partialBitmapSource));
+                        enc.Save(ms);
+                        partialBitmap = new System.Drawing.Bitmap(ms);
+                    }
+                    using (Image resized = ResizeImage(partialBitmap, Convert.ToInt32(image.Width * 2), Convert.ToInt32(image.Height * 2)))
+                    {
+                        SaveJpeg(file, resized, 100);
                     }
 
-                // save to image
-                string file = System.Environment.GetFolderPath(Environment.SpecialFolder.Personal) + image.Name + ".jpg";
-                BitmapSource partialBitmapSource = BitmapSource.Create(Convert.ToInt32(image.Width), Convert.ToInt32(image.Height), 96, 96,
-                    PixelFormats.Bgr32, null, partial, Convert.ToInt32(image.Width) * 4);
-                System.Drawing.Bitmap partialBitmap;
-                using (var ms = new MemoryStream())
-                {
-                    BitmapEncoder enc = new BmpBitmapEncoder();
-                    enc.Frames.Add(BitmapFrame.Create(partialBitmapSource));
-                    enc.Save(ms);
-                    partialBitmap = new System.Drawing.Bitmap(ms);
-                }
-                using (Image resized = ResizeImage(partialBitmap, Convert.ToInt32(image.Width * 2), Convert.ToInt32(image.Height * 2)))
-                {
-                    SaveJpeg(file, resized, 100);
+                    // add call cloud task
+                    tasks.Add(AnalyzeImage(request.Args, file));
+                    tasks.Add(OCR(request.Args, file));
+
+                    // create mask filter
+                    Kinectrobot.Bit bit = new Kinectrobot.Bit
+                    {
+                        X = Convert.ToInt32(image.X + 0.5 * (1 - maskRatio) * image.Width),
+                        Y = Convert.ToInt32(image.Y + 0.5 * (1 - maskRatio) * image.Height),
+                        Width = maskRatio * image.Width,
+                        Height = maskRatio * image.Height
+                    };
+                    maskedImage.Add(bit);
                 }
 
-                // add call cloud task
-                tasks.Add(AnalyzeImage(request.Args, file));
-                tasks.Add(OCR(request.Args, file));
-
-                // create mask filter
-                Kinectrobot.Bit bit = new Kinectrobot.Bit
+                // get 3D position of image
+                int pointIndex = 0;
+                foreach (var point in this.cameraPointsColor)
                 {
-                    X = Convert.ToInt32(image.X + 0.5 * (1 - maskRatio) * image.Width),
-                    Y = Convert.ToInt32(image.Y + 0.5 * (1 - maskRatio) * image.Height),
-                    Width = maskRatio * image.Width,
-                    Height = maskRatio * image.Height
-                };
-                maskedImage.Add(bit);
-            }
+                    // reject invalid points
+                    if (Double.IsInfinity(point.X) || Double.IsInfinity(point.Y) || Double.IsInfinity(point.Z)
+                        || Double.IsNaN(point.X) || Double.IsNaN(point.Y) || Double.IsNaN(point.Z))
+                    {
+                        ++pointIndex;
+                        continue;
+                    }
 
-            // get 3D position of image
-            int pointIndex = 0;
-            foreach (var point in this.cameraPointsColor)
-            {
-                // reject invalid points
-                if (Double.IsInfinity(point.X) || Double.IsInfinity(point.Y) || Double.IsInfinity(point.Z)
-                    || Double.IsNaN(point.X) || Double.IsNaN(point.Y) || Double.IsNaN(point.Z))
-                {
+                    int maskIndex = 0;
+                    foreach (var image in maskedImage)
+                    {
+                        int y = pointIndex / 1920;
+                        int x = pointIndex - y * 1920;
+                        // find point with closest depth && near image center
+                        if (x >= image.X && y >= image.Y && x <= (image.X + image.Width) && y <= (image.Y + image.Height))
+                            if (point.Z < objectPositions[maskIndex].Z)
+                            {
+                                CameraSpacePoint p = new CameraSpacePoint { X = point.X, Y = point.Y, Z = point.Z };
+                                objectPositions[maskIndex] = p;
+                            }
+                        ++maskIndex;
+                    }
+
                     ++pointIndex;
-                    continue;
                 }
-
-                int maskIndex = 0;
-                foreach (var image in maskedImage)
-                {
-                    int y = pointIndex / 1920;
-                    int x = pointIndex - y * 1920;
-                    // find point with closest depth && near image center
-                    if (x >= image.X && y >= image.Y && x <= (image.X + image.Width) && y <= (image.Y + image.Height))
-                        if (point.Z < objectPositions[maskIndex].Z)
-                        {
-                            CameraSpacePoint p = new CameraSpacePoint { X = point.X, Y = point.Y, Z = point.Z };
-                            objectPositions[maskIndex] = p;
-                        }
-                    ++maskIndex;
-                }
-
-                ++pointIndex;
             }
+            finally { this.pixelsLocker.ExitReadLock(); };
 
             // check validity of 3D position
             int inSpaceIndex = 0;
