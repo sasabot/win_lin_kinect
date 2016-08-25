@@ -74,8 +74,14 @@ public:
     pub_points_ = nh_.advertise<sensor_msgs::PointCloud2>("/kinect/points", 1);
     pub_pixels_ = nh_.advertise<sensor_msgs::Image>("/kinect/image", 1);
 
-    ros_to_grpc_ = nh_.advertiseService(
-	"/kinect/request", &KinectRobotClient::KinectRequest, this);
+    srv_points_ = nh_.advertiseService(
+	"/kinect/request/points", &KinectRobotClient::RequestPoints, this);
+    srv_image_ = nh_.advertiseService(
+	"/kinect/request/image", &KinectRobotClient::RequestImage, this);
+    srv_bounds_ = nh_.advertiseService(
+	"/kinect/request/bounds", &KinectRobotClient::RequestBounds, this);
+    srv_cognition_ = nh_.advertiseService(
+	"/kinect/request/cognition", &KinectRobotClient::RequestCognition, this);
 
     field_.resize(4);
     sensor_msgs::PointField x;
@@ -118,14 +124,10 @@ public:
 	&KinectRobotClient::UrlInfoSubscriber, this);
   }
 
-  bool KinectRequest(linux_kinect::KinectRequest::Request &req,
-                     linux_kinect::KinectRequest::Response &res)
+  void SetupRequest(kinectrobot::Request &request,
+		    linux_kinect::KinectRequest::Request &req)
   {
     ROS_WARN("received request from ROS");
-
-    kinectrobot::Request request;
-
-    // setup request
     for (unsigned int i = 0; i < req.data.size(); ++i)
     {
       auto bit = request.add_data();
@@ -137,184 +139,213 @@ public:
 	bit->set_name("image" + std::to_string(i));
     }
     request.set_args(req.args);
+  }
 
-    if (req.mode == static_cast<int>(KinectModes::RGBD))
-    {
-      ClientContext context;
-      kinectrobot::Points points;
-      std::unique_ptr<ClientReader<kinectrobot::Points> > reader(
-	   stub_->ReturnPoints(&context, request));
+  bool RequestPoints(linux_kinect::KinectRequest::Request &req,
+                     linux_kinect::KinectRequest::Response &res)
+  {
+    kinectrobot::Request request;
+    SetupRequest(request, req);
 
-      std::vector<uint8_t> data;
-      data.reserve(16 * 512 * 424);
-      int point_count = 0;
+    ClientContext context;
+    kinectrobot::Points points;
+    std::unique_ptr<ClientReader<kinectrobot::Points> > reader(
+	stub_->ReturnPoints(&context, request));
 
-      while (reader->Read(&points))
-	for (unsigned int i = 0; i < points.data_size(); ++i)
-	{
-	  float d = points.data(i).z();
-	  float y = points.data(i).y();
-	  float x = points.data(i).x();
-	  uint8_t r = (points.data(i).color() & 0x00000ff);
-	  uint8_t g = ((points.data(i).color() >> 8) & 0x00000ff);
-	  uint8_t b = ((points.data(i).color() >> 16) & 0x00000ff);
+    std::vector<uint8_t> data;
+    data.reserve(16 * 512 * 424);
+    int point_count = 0;
 
-	  uint8_t *x_bytes;
-	  x_bytes = reinterpret_cast<uint8_t*>(&x);
-	  data.push_back(x_bytes[0]);
-	  data.push_back(x_bytes[1]);
-	  data.push_back(x_bytes[2]);
-	  data.push_back(x_bytes[3]);
-
-	  uint8_t *y_bytes;
-	  y_bytes = reinterpret_cast<uint8_t*>(&y);
-	  data.push_back(y_bytes[0]);
-	  data.push_back(y_bytes[1]);
-	  data.push_back(y_bytes[2]);
-	  data.push_back(y_bytes[3]);
-
-	  uint8_t *d_bytes;
-	  d_bytes = reinterpret_cast<uint8_t*>(&d);
-	  data.push_back(d_bytes[0]);
-	  data.push_back(d_bytes[1]);
-	  data.push_back(d_bytes[2]);
-	  data.push_back(d_bytes[3]);
-
-	  uint8_t dummy = 0;
-	  data.push_back(b);
-	  data.push_back(g);
-	  data.push_back(r);
-	  data.push_back(dummy);
-
-	  ++point_count;
-	}
-      Status status = reader->Finish();
-      data.resize(16 * point_count);
-
-      ROS_INFO("read %d points", point_count);
-
-      sensor_msgs::PointCloud2 msg;
-      msg.header.frame_id = "kinect_frame";
-      msg.header.stamp = ros::Time(0);
-      msg.height = request.data(0).height();
-      msg.width = request.data(0).width();
-      msg.fields.assign(field_.begin(), field_.end());
-      msg.point_step = 16;
-      msg.row_step = msg.point_step * msg.width;
-      msg.is_dense = false;
-      msg.is_bigendian = true;
-      msg.data.assign(data.begin(), data.end());
-      pub_points_.publish(msg);
-    } // KinectModes::RGBD
-    else if (req.mode == static_cast<int>(KinectModes::IMAGE))
-    {
-      ClientContext context;
-      kinectrobot::Pixels pixels;
-      std::unique_ptr<ClientReader<kinectrobot::Pixels> > reader(
-	   stub_->ReturnImage(&context, request));
-
-      std::vector<uint8_t> data;
-      data.reserve(3 * 1920 * 1080);
-      int pixel_count = 0;
-
-      while (reader->Read(&pixels))
-	for (unsigned int i = 0; i < pixels.color_size(); ++i)
-	{
-	  uint8_t r = (pixels.color(i) & 0x00000ff);
-	  uint8_t g = ((pixels.color(i) >> 8) & 0x00000ff);
-	  uint8_t b = ((pixels.color(i) >> 16) & 0x00000ff);
-
-	  data.push_back(b);
-	  data.push_back(g);
-	  data.push_back(r);
-
-	  ++pixel_count;
-	}
-      data.resize(3 * pixel_count);
-
-      ROS_INFO("read %d pixels", pixel_count);
-
-      sensor_msgs::Image msg;
-      msg.header.frame_id = "kinect_frame";
-      msg.header.stamp = ros::Time(0);
-      msg.height = request.data(0).height();
-      msg.width = request.data(0).width();
-      msg.step = 3 * msg.width;
-      msg.encoding = "bgr8";
-      msg.is_bigendian = true;
-      msg.data.assign(data.begin(), data.end());
-      pub_pixels_.publish(msg);
-    } // KinectModes::IMAGE
-    else if (req.mode == static_cast<int>(KinectModes::SPACE2PIXEL_BOUNDINGS))
-    {
-      ClientContext context;
-      kinectrobot::BitStream boundings;
-
-      Status status = stub_->ReturnPixelBoundsFromSpaceBounds(
-          &context, request, &boundings);
-
-      res.status = boundings.status();
-      std::cout << "super debug: " << boundings.status() << std::endl;
-      if (boundings.status())
+    while (reader->Read(&points))
+      for (unsigned int i = 0; i < points.data_size(); ++i)
       {
-	res.bits.reserve(boundings.data().size());
-	for (unsigned int i = 0; i < boundings.data().size(); ++i)
-	{
-	  linux_kinect::Bit bit;
-	  bit.name = boundings.data(i).name();
-	  bit.x = boundings.data(i).x();
-	  bit.y = boundings.data(i).y();
-	  bit.width = boundings.data(i).width();
-	  bit.height = boundings.data(i).height();
-	  res.bits.push_back(bit);
-	  ROS_INFO("got bounding [%f, %f], width: %f, height: %f",
-		   bit.x, bit.y, bit.width, bit.height);
-	}
-      }
-    } // KinectModes::SPACE2PIXEL_BOUNDINGS
-    else if (req.mode == static_cast<int>(KinectModes::COGNITION))
-    {
-      ClientContext context;
-      kinectrobot::DataStream stream;
+	float d = points.data(i).z();
+	float y = points.data(i).y();
+	float x = points.data(i).x();
+	uint8_t r = (points.data(i).color() & 0x00000ff);
+	uint8_t g = ((points.data(i).color() >> 8) & 0x00000ff);
+	uint8_t b = ((points.data(i).color() >> 16) & 0x00000ff);
 
-      Status status = stub_->ReturnCognition(&context, request, &stream);
+	uint8_t *x_bytes;
+	x_bytes = reinterpret_cast<uint8_t*>(&x);
+	data.push_back(x_bytes[0]);
+	data.push_back(x_bytes[1]);
+	data.push_back(x_bytes[2]);
+	data.push_back(x_bytes[3]);
 
-      res.status = stream.status();
-      res.cognitions.reserve(stream.data_size());
-      res.points.reserve(stream.data_size());
-      for (unsigned int i = 0; i < stream.data_size(); ++i)
-      {
-	geometry_msgs::Point image_i_pos;
-	image_i_pos.x = stream.data(i).x();
-	image_i_pos.y = stream.data(i).y();
-	image_i_pos.z = stream.data(i).z();
-	res.points.push_back(image_i_pos);
-	linux_kinect::Cognition image_i;
-	image_i.status = stream.data(i).status();
-	if (stream.data(i).captions_size() > 0)
-	{
-	  linux_kinect::Tag image_i_cap;
-	  image_i_cap.tag = stream.data(i).captions(0).tag();
-	  image_i_cap.confidence = stream.data(i).captions(0).confidence();
-	  image_i.captions.push_back(image_i_cap);
-	}
-	image_i.tags.reserve(stream.data(i).tags_size());
-	for (unsigned int j = 0; j < stream.data(i).tags_size(); ++j)
-	{
-	  linux_kinect::Tag image_i_tag_j;
-	  image_i_tag_j.tag = stream.data(i).tags(j).tag();
-	  image_i_tag_j.confidence = stream.data(i).tags(j).confidence();
-	  image_i.tags.push_back(image_i_tag_j);
-	}
-	image_i.texts.reserve(stream.data(i).texts_size());
-	for (unsigned int j = 0; j < stream.data(i).texts_size(); ++j)
-	  image_i.texts.push_back(stream.data(i).texts(j));
-	res.cognitions.push_back(image_i);
+	uint8_t *y_bytes;
+	y_bytes = reinterpret_cast<uint8_t*>(&y);
+	data.push_back(y_bytes[0]);
+	data.push_back(y_bytes[1]);
+	data.push_back(y_bytes[2]);
+	data.push_back(y_bytes[3]);
+
+	uint8_t *d_bytes;
+	d_bytes = reinterpret_cast<uint8_t*>(&d);
+	data.push_back(d_bytes[0]);
+	data.push_back(d_bytes[1]);
+	data.push_back(d_bytes[2]);
+	data.push_back(d_bytes[3]);
+
+	uint8_t dummy = 0;
+	data.push_back(b);
+	data.push_back(g);
+	data.push_back(r);
+	data.push_back(dummy);
+
+	++point_count;
       }
-    } // KinectModes::COGNITION
+    Status status = reader->Finish();
+    data.resize(16 * point_count);
+
+    ROS_INFO("read %d points", point_count);
+
+    sensor_msgs::PointCloud2 msg;
+    msg.header.frame_id = "kinect_frame";
+    msg.header.stamp = ros::Time(0);
+    msg.height = request.data(0).height();
+    msg.width = request.data(0).width();
+    msg.fields.assign(field_.begin(), field_.end());
+    msg.point_step = 16;
+    msg.row_step = msg.point_step * msg.width;
+    msg.is_dense = false;
+    msg.is_bigendian = true;
+    msg.data.assign(data.begin(), data.end());
+    pub_points_.publish(msg);
 
     ROS_WARN("finished request");
+    return true;
+  }
 
+  bool RequestImage(linux_kinect::KinectRequest::Request &req,
+		    linux_kinect::KinectRequest::Response &res)
+  {
+    kinectrobot::Request request;
+    SetupRequest(request, req);
+
+    ClientContext context;
+    kinectrobot::Pixels pixels;
+    std::unique_ptr<ClientReader<kinectrobot::Pixels> > reader(
+	stub_->ReturnImage(&context, request));
+
+    std::vector<uint8_t> data;
+    data.reserve(3 * 1920 * 1080);
+    int pixel_count = 0;
+
+    while (reader->Read(&pixels))
+      for (unsigned int i = 0; i < pixels.color_size(); ++i)
+      {
+	uint8_t r = (pixels.color(i) & 0x00000ff);
+	uint8_t g = ((pixels.color(i) >> 8) & 0x00000ff);
+	uint8_t b = ((pixels.color(i) >> 16) & 0x00000ff);
+
+	data.push_back(b);
+	data.push_back(g);
+	data.push_back(r);
+
+	++pixel_count;
+      }
+    data.resize(3 * pixel_count);
+
+    ROS_INFO("read %d pixels", pixel_count);
+
+    sensor_msgs::Image msg;
+    msg.header.frame_id = "kinect_frame";
+    msg.header.stamp = ros::Time(0);
+    msg.height = request.data(0).height();
+    msg.width = request.data(0).width();
+    msg.step = 3 * msg.width;
+    msg.encoding = "bgr8";
+    msg.is_bigendian = true;
+    msg.data.assign(data.begin(), data.end());
+    pub_pixels_.publish(msg);
+
+    ROS_WARN("finished request");
+    return true;
+  }
+
+  bool RequestBounds(linux_kinect::KinectRequest::Request &req,
+                     linux_kinect::KinectRequest::Response &res)
+  {
+    kinectrobot::Request request;
+    SetupRequest(request, req);
+
+    ClientContext context;
+    kinectrobot::BitStream boundings;
+
+    Status status = stub_->ReturnPixelBoundsFromSpaceBounds(
+        &context, request, &boundings);
+
+    res.status = boundings.status();
+    if (!boundings.status())
+    {
+      ROS_WARN("finished request");
+      return true;
+    }
+
+    res.bits.reserve(boundings.data().size());
+    for (unsigned int i = 0; i < boundings.data().size(); ++i)
+    {
+      linux_kinect::Bit bit;
+      bit.name = boundings.data(i).name();
+      bit.x = boundings.data(i).x();
+      bit.y = boundings.data(i).y();
+      bit.width = boundings.data(i).width();
+      bit.height = boundings.data(i).height();
+      res.bits.push_back(bit);
+      ROS_INFO("got bounding [%f, %f], width: %f, height: %f",
+	       bit.x, bit.y, bit.width, bit.height);
+    }
+
+    ROS_WARN("finished request");
+    return true;
+  }
+
+  bool RequestCognition(linux_kinect::KinectRequest::Request &req,
+			linux_kinect::KinectRequest::Response &res)
+  {
+    kinectrobot::Request request;
+    SetupRequest(request, req);
+
+    ClientContext context;
+    kinectrobot::DataStream stream;
+
+    Status status = stub_->ReturnCognition(&context, request, &stream);
+
+    res.status = stream.status();
+    res.cognitions.reserve(stream.data_size());
+    res.points.reserve(stream.data_size());
+    for (unsigned int i = 0; i < stream.data_size(); ++i)
+    {
+      geometry_msgs::Point image_i_pos;
+      image_i_pos.x = stream.data(i).x();
+      image_i_pos.y = stream.data(i).y();
+      image_i_pos.z = stream.data(i).z();
+      res.points.push_back(image_i_pos);
+      linux_kinect::Cognition image_i;
+      image_i.status = stream.data(i).status();
+      if (stream.data(i).captions_size() > 0)
+      {
+	linux_kinect::Tag image_i_cap;
+	image_i_cap.tag = stream.data(i).captions(0).tag();
+	image_i_cap.confidence = stream.data(i).captions(0).confidence();
+	image_i.captions.push_back(image_i_cap);
+      }
+      image_i.tags.reserve(stream.data(i).tags_size());
+      for (unsigned int j = 0; j < stream.data(i).tags_size(); ++j)
+      {
+	linux_kinect::Tag image_i_tag_j;
+	image_i_tag_j.tag = stream.data(i).tags(j).tag();
+	image_i_tag_j.confidence = stream.data(i).tags(j).confidence();
+	image_i.tags.push_back(image_i_tag_j);
+      }
+      image_i.texts.reserve(stream.data(i).texts_size());
+      for (unsigned int j = 0; j < stream.data(i).texts_size(); ++j)
+	image_i.texts.push_back(stream.data(i).texts(j));
+      res.cognitions.push_back(image_i);
+    }
+
+    ROS_WARN("finished request");
     return true;
   }
 
@@ -391,7 +422,13 @@ private:
 
   ros::Publisher pub_pixels_;
 
-  ros::ServiceServer ros_to_grpc_;
+  ros::ServiceServer srv_points_;
+
+  ros::ServiceServer srv_image_;
+
+  ros::ServiceServer srv_bounds_;
+
+  ros::ServiceServer srv_cognition_;
 
   std::vector<sensor_msgs::PointField> field_;
 
@@ -400,8 +437,6 @@ private:
   ros::Subscriber sub_stt_manual_trigger_;
 
   ros::Subscriber sub_stt_auto_trigger_;
-
-  // ros::Subscriber sub_log_;
   
   ros::Subscriber sub_web_agent_;
 
