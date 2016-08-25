@@ -50,18 +50,6 @@ using grpc::ClientWriter;
 using kinectperson::KinectPerson;
 using kinectrobot::KinectRobot;
 
-enum KinectModes
-{
-  MODES = 6,
-  WAIT = 0,
-  RGBD = 1,
-  IMAGE = 2,
-  IMAGE_SPACE_POSITIONS = 3,
-  SPACE2PIXEL_BOUNDINGS = 4,
-  COGNITION = 5
-};
-
-
 class KinectRobotClient
 {
 public:
