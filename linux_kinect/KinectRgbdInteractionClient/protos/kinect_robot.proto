@@ -1,0 +1,98 @@
+syntax = "proto3";
+
+option java_package = "ex.grpc";
+option objc_class_prefix = "RTG";
+
+package kinectrobot;
+
+service KinectRobot {
+  rpc ReturnPoints(Request) returns (stream Points) {}
+  rpc ReturnImage(Request) returns (stream Pixels) {}
+  rpc ReturnPixelBoundsFromSpaceBounds(Request) returns (BitStream) {}
+  rpc ReturnCognition(Request) returns (DataStream) {}
+  rpc SetStreamSettings(StreamSettings) returns (Response) {}
+  rpc SendSpeech(Speech) returns (Response) {}
+  rpc SetSTTBehavior(VoiceTriggers) returns (Response) {}
+  rpc WebAgent(UrlInfo) returns (Response) {}
+}
+
+message Bit {
+  float x = 1;
+  float y = 2;
+  float width = 3;
+  float height = 4;
+  string name = 5;
+}
+
+message Request {
+  repeated Bit data = 1;
+  string args = 2;
+}
+
+message Point {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+  int32 color = 4;
+}
+
+message Points {
+  repeated Point data = 1;
+}
+
+message Pixels {
+  repeated int32 color = 1;
+}
+
+message Tag {
+  string tag = 1;
+  float confidence = 2;
+}
+
+message Data {
+  float x = 1;
+  float y = 2;
+  float z = 3;
+  repeated Tag captions = 4;
+  repeated Tag tags = 5;
+  repeated string texts = 6;
+  bool status = 7;
+}
+
+message DataStream {
+  bool status = 1;
+  repeated Data data = 2;
+}
+
+message BitStream {
+  bool status = 1;
+  repeated Bit data = 2;
+}
+
+message StreamSettings {
+  bool once = 1;
+  string args = 4;  
+}
+
+message Speech {
+  string command = 1;
+  string speech = 2;
+}
+
+message VoiceTriggers {
+  bool AutoTriggerAfterRecognition = 1;
+  bool AutoTriggerDuringSpeech = 2;
+  bool ManualTriggerOn = 3;
+  bool ManualTriggerOff = 4;
+}
+
+message UrlInfo {
+  string url = 1;
+  string linkhead = 2;
+  string key = 3;
+  string style = 4;
+}
+
+message Response {
+  bool status = 1;
+}
