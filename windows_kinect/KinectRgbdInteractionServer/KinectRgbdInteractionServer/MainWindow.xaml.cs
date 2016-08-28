@@ -381,10 +381,13 @@ namespace KinectRgbdInteractionServer
                         double y = faceOrientation.Y;
                         double z = faceOrientation.Z;
                         double w = faceOrientation.W;
-                        // convert face rotation quaternion to Euler angles in degrees
-                        double yawD;
+                        // below for face looking debugging
+                        double pitchD, yawD;
+                        pitchD = Math.Atan2(2 * ((y * z) + (w * x)), (w * w) - (x * x) - (y * y) + (z * z)) / Math.PI * 180.0;
                         yawD = Math.Asin(2 * ((w * y) - (x * z))) / Math.PI * 180.0;
-                        if (Math.Abs(yawD) < 20.0) LogInfo("faces", "1 ", true);
+                        if (pitchD > 0.0 && Math.Abs(yawD) < 20.0) LogInfo("faces", "1 ", true);
+                        else if (pitchD > 0.0) LogInfo("faces", "P ", true);
+                        else if (Math.Abs(yawD) < 20.0) LogInfo("faces", "Y ", true);
                         else LogInfo("faces", "0 ", true);
                     }
 
