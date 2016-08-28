@@ -59,6 +59,9 @@ public:
   {
     // rgbd streaming
 
+    frame_name_ = "";
+    nh_.getParam("/kinect_rgbd_interaction_client/frame", frame_name_);
+
     pub_points_ = nh_.advertise<sensor_msgs::PointCloud2>("/kinect/points", 1);
     pub_pixels_ = nh_.advertise<sensor_msgs::Image>("/kinect/image", 1);
 
@@ -189,7 +192,7 @@ public:
     ROS_INFO("read %d points", point_count);
 
     sensor_msgs::PointCloud2 msg;
-    msg.header.frame_id = "kinect_frame";
+    msg.header.frame_id = frame_name_;
     msg.header.stamp = ros::Time(0);
     msg.height = request.data(0).height();
     msg.width = request.data(0).width();
@@ -238,7 +241,7 @@ public:
     ROS_INFO("read %d pixels", pixel_count);
 
     sensor_msgs::Image msg;
-    msg.header.frame_id = "kinect_frame";
+    msg.header.frame_id = frame_name_;
     msg.header.stamp = ros::Time(0);
     msg.height = request.data(0).height();
     msg.width = request.data(0).width();
@@ -339,7 +342,7 @@ public:
 
   void LinkSpeechOutputSettings(bool* setting)
   {
-    // speech output settings must exist before KinectRobotClient initialization
+    // speech output setting must exist before KinectRobotClient initialization
     // therefore, pointer is used to set output settings from KinectRobotClient
     use_robot_speech_engine_ = setting;
   }
@@ -419,6 +422,8 @@ private:
   ros::ServiceServer srv_cognition_;
 
   std::vector<sensor_msgs::PointField> field_;
+
+  std::string frame_name_;
 
   ros::Subscriber sub_robot_speech_;
 
@@ -592,7 +597,7 @@ private:
 
 int main(int argc, char** argv)
 {
-  ros::init(argc, argv, "kinect_rgbd");
+  ros::init(argc, argv, "kinect_rgbd_interaction_client");
 
   ros::NodeHandle nh;
 
