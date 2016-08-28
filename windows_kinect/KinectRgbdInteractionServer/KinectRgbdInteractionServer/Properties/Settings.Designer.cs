@@ -57,5 +57,17 @@ namespace KinectRgbdInteractionServer.Properties {
                 this["Key"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AudioOn {
+            get {
+                return ((bool)(this["AudioOn"]));
+            }
+            set {
+                this["AudioOn"] = value;
+            }
+        }
     }
 }

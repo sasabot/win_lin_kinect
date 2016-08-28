@@ -164,42 +164,54 @@ namespace KinectRgbdInteractionServer
 
             // setup audio
 
-            AudioSource audioSource = this.kinectSensor.AudioSource;
-            this.audioReader = audioSource.OpenReader();
-            this.audioReader.FrameArrived += this.Audio_FrameArrived;
+            Console.WriteLine("Voice recognition / speaker detection requires subscription key.");
+            Console.WriteLine("If you do not have key, you can turn voice recognition off. Turn off? (y or n)");
+            string audioOn = Console.ReadLine().ToString();
+            if (audioOn == "y" || audioOn == "Y")
+                Properties.Settings.Default.AudioOn = false;
+            else
+                Properties.Settings.Default.AudioOn = true;
+            Properties.Settings.Default.Save();
 
-            this.audioBuffer = new byte[audioSource.SubFrameLengthInBytes];
-            this.savedAudioBuffers = new List<byte[]>();
-
-            // setup speech
-
-            this.audioFormat = new SpeechAudioFormat
+            if (Properties.Settings.Default.AudioOn)
             {
-                EncodingFormat = AudioCompressionType.PCM,
-                BitsPerSample = 16, // 32-bit input will be coverted to 16-bit for recognition
-                ChannelCount = 1, // only 1 channel is used
-                SamplesPerSecond = 16000,
-                AverageBytesPerSecond = 32000,
-                BlockAlign = 2 // BytesPerSample * ChannelCount
-            };
+                AudioSource audioSource = this.kinectSensor.AudioSource;
+                this.audioReader = audioSource.OpenReader();
+                this.audioReader.FrameArrived += this.Audio_FrameArrived;
 
-            Console.WriteLine("Enter subscription key for voice recognition (press enter if same)");
-            string key = Console.ReadLine().ToString();
-            if (key != "")
-            {
-                Properties.Settings.Default.Key = key;
-                Properties.Settings.Default.Save();
+                this.audioBuffer = new byte[audioSource.SubFrameLengthInBytes];
+                this.savedAudioBuffers = new List<byte[]>();
+
+                // setup speech
+
+                this.audioFormat = new SpeechAudioFormat
+                {
+                    EncodingFormat = AudioCompressionType.PCM,
+                    BitsPerSample = 16, // 32-bit input will be coverted to 16-bit for recognition
+                    ChannelCount = 1, // only 1 channel is used
+                    SamplesPerSecond = 16000,
+                    AverageBytesPerSecond = 32000,
+                    BlockAlign = 2 // BytesPerSample * ChannelCount
+                };
+
+                Console.WriteLine("Enter subscription key for voice recognition (press enter if same)");
+                string key = Console.ReadLine().ToString();
+                if (key != "")
+                {
+                    Properties.Settings.Default.Key = key;
+                    Properties.Settings.Default.Save();
+                }
+                this.subscriptionKey = Properties.Settings.Default.Key;
+                Console.WriteLine("got key {0}\n", this.subscriptionKey);
+
+                this.recogClient = SpeechRecognitionServiceFactory.CreateDataClient(
+                    SpeechRecognitionMode.ShortPhrase,
+                    "en-US",
+                    this.subscriptionKey,
+                    this.subscriptionKey);
+                this.recogClient.OnResponseReceived += this.VoiceRecognition_FrameArrived;
+                this.recogClient.SendAudioFormat(audioFormat);
             }
-            this.subscriptionKey = Properties.Settings.Default.Key;
-            Console.WriteLine("got key {0}\n", this.subscriptionKey);
-
-            this.recogClient = SpeechRecognitionServiceFactory.CreateDataClient(
-                SpeechRecognitionMode.ShortPhrase,
-                "en-US",
-                this.subscriptionKey,
-                this.subscriptionKey);
-            this.recogClient.OnResponseReceived += this.VoiceRecognition_FrameArrived;
-            this.recogClient.SendAudioFormat(audioFormat);
 
             this.speakingResult = new bool[this.maxBodies];
 
