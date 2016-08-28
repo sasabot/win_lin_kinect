@@ -67,8 +67,23 @@ make
 
 Linux (must run first)
 ```
+rosparam set /kinect_rgbd_interaction_client/frame "kinect_frame"
 rosrun linux_kinect kinect_rgbd_interaction_client
 ```
 
 Windows
 - Double click windows_kinect/KinectRgbdInteractionServer/KinectRgbdInteractionServer/bin/Debug/KinectRgbdInteractionServer.exe.
+- Once the program starts, the console will ask whether to use voice recognition or not. The voice recognition will require an Azure key. If you do not have one, type 'y' and disable voice recognition. By disabling, speaker recognition will also be disabled. If you do have a key, the console will ask to type in the key.
+- The console will ask for number of clients (which should be 1) and then ask to enter an IP address. If you are using previous settings, you can skip this process by directly pressing enter twice.
+
+## easy examples
+
+Getting point clouds on Linux
+```
+rosrun linux_kinect points.sh
+```
+
+Getting image pixels on Linux
+```
+rosrun linux_kinect image.sh
+```
