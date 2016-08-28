@@ -179,6 +179,7 @@ namespace Kinectrobot
                     List<int> boundsInLinux = new List<int> { Convert.ToInt32(req.X), Convert.ToInt32(req.Y),
                     Convert.ToInt32(req.Width), Convert.ToInt32(req.Height) };
                     List<int> boundsInWindows = new List<int> { };
+                    bool allPointsAreValid = true;
 
                     // in case point cloud bounds had a region cut
                     foreach (var depthLinuxIndex in boundsInLinux)
@@ -188,8 +189,20 @@ namespace Kinectrobot
                         int depthWindowsX = depthLinuxX + this.sendStartPointX;
                         int depthWindowsY = depthLinuxY + this.sendStartPointY;
                         int depthWindowsIndex = depthWindowsY * 512 + depthWindowsX;
+
+                        // check whether point value is valid or not
+                        if (Double.IsInfinity(this.colorPoints[depthWindowsIndex].X) ||
+                            Double.IsNaN(this.colorPoints[depthWindowsIndex].X) ||
+                            Double.IsInfinity(this.colorPoints[depthWindowsIndex].Y) ||
+                            Double.IsNaN(this.colorPoints[depthWindowsIndex].Y))
+                        {
+                            allPointsAreValid = false;
+                            break;
+                        }
                         boundsInWindows.Add(depthWindowsIndex);
                     }
+
+                    if (!allPointsAreValid) continue;
 
                     int colorMinX = Convert.ToInt32(this.colorPoints[boundsInWindows[0]].X);
                     int colorMinY = Convert.ToInt32(this.colorPoints[boundsInWindows[1]].Y);
