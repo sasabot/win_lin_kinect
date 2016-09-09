@@ -440,6 +440,11 @@ namespace KinectRgbdInteractionServer
                                 },
                                 Speaking = this.speakingResult[i],
                                 Looking = looking,
+                                Position = new Kinectperson.Point
+                                {
+                                    X = this.bodies[i].Joints[JointType.Head].Position.X,
+                                    Y = this.bodies[i].Joints[JointType.Head].Position.Y + Convert.ToSingle(0.1)
+                                },
                                 Distance = this.bodies[i].Joints[JointType.Head].Position.Z,
                                 Id = i
                             };
@@ -463,6 +468,11 @@ namespace KinectRgbdInteractionServer
                                 },
                                 Speaking = speakingResult[i],
                                 Looking = false,
+                                Position = new Kinectperson.Point
+                                {
+                                    X = this.bodies[i].Joints[JointType.Head].Position.X,
+                                    Y = this.bodies[i].Joints[JointType.Head].Position.Y + Convert.ToSingle(0.1)
+                                },
                                 Distance = this.bodies[i].Joints[JointType.Head].Position.Z,
                                 Id = i
                             };

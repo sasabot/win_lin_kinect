@@ -26,24 +26,26 @@ namespace Kinectperson {
             "ChNraW5lY3RfcGVyc29uLnByb3RvEgxraW5lY3RwZXJzb24iZQoERmFjZRIJ",
             "CgF4GAEgASgCEgkKAXkYAiABKAISDQoFd2lkdGgYAyABKAISDgoGaGVpZ2h0",
             "GAQgASgCEgwKBHJvbGwYBSABKAISDQoFcGl0Y2gYBiABKAISCwoDeWF3GAcg",
-            "ASgCImsKBlBlcnNvbhIgCgRmYWNlGAEgASgLMhIua2luZWN0cGVyc29uLkZh",
-            "Y2USEAoIc3BlYWtpbmcYAiABKAgSDwoHbG9va2luZxgDIAEoCBIQCghkaXN0",
-            "YW5jZRgEIAEoAhIKCgJpZBgFIAEoBSJCCgxQZXJzb25TdHJlYW0SDgoGc3Rh",
-            "dHVzGAEgASgFEiIKBGRhdGEYAiADKAsyFC5raW5lY3RwZXJzb24uUGVyc29u",
-            "IhoKCFJlc3BvbnNlEg4KBnN0YXR1cxgBIAEoCCIUCgRUZXh0EgwKBHRleHQY",
-            "ASABKAkypAIKDEtpbmVjdFBlcnNvbhJHCg9TZW5kUGVyc29uU3RhdGUSGi5r",
-            "aW5lY3RwZXJzb24uUGVyc29uU3RyZWFtGhYua2luZWN0cGVyc29uLlJlc3Bv",
-            "bnNlIgASRAoUU2VuZFZvaWNlUmVjb2duaXRpb24SEi5raW5lY3RwZXJzb24u",
-            "VGV4dBoWLmtpbmVjdHBlcnNvbi5SZXNwb25zZSIAEkIKElNlbmRDb25zb2xl",
-            "Q29tbWFuZBISLmtpbmVjdHBlcnNvbi5UZXh0GhYua2luZWN0cGVyc29uLlJl",
-            "c3BvbnNlIgASQQoRQ3JlYXRlUm9ib3RDbGllbnQSEi5raW5lY3RwZXJzb24u",
-            "VGV4dBoWLmtpbmVjdHBlcnNvbi5SZXNwb25zZSIAQg8KB2V4LmdycGOiAgNS",
-            "VEdiBnByb3RvMw=="));
+            "ASgCIh0KBVBvaW50EgkKAXgYASABKAISCQoBeRgCIAEoAiKSAQoGUGVyc29u",
+            "EiAKBGZhY2UYASABKAsyEi5raW5lY3RwZXJzb24uRmFjZRIQCghzcGVha2lu",
+            "ZxgCIAEoCBIPCgdsb29raW5nGAMgASgIEiUKCHBvc2l0aW9uGAQgASgLMhMu",
+            "a2luZWN0cGVyc29uLlBvaW50EhAKCGRpc3RhbmNlGAUgASgCEgoKAmlkGAYg",
+            "ASgFIkIKDFBlcnNvblN0cmVhbRIOCgZzdGF0dXMYASABKAUSIgoEZGF0YRgC",
+            "IAMoCzIULmtpbmVjdHBlcnNvbi5QZXJzb24iGgoIUmVzcG9uc2USDgoGc3Rh",
+            "dHVzGAEgASgIIhQKBFRleHQSDAoEdGV4dBgBIAEoCTKkAgoMS2luZWN0UGVy",
+            "c29uEkcKD1NlbmRQZXJzb25TdGF0ZRIaLmtpbmVjdHBlcnNvbi5QZXJzb25T",
+            "dHJlYW0aFi5raW5lY3RwZXJzb24uUmVzcG9uc2UiABJEChRTZW5kVm9pY2VS",
+            "ZWNvZ25pdGlvbhISLmtpbmVjdHBlcnNvbi5UZXh0GhYua2luZWN0cGVyc29u",
+            "LlJlc3BvbnNlIgASQgoSU2VuZENvbnNvbGVDb21tYW5kEhIua2luZWN0cGVy",
+            "c29uLlRleHQaFi5raW5lY3RwZXJzb24uUmVzcG9uc2UiABJBChFDcmVhdGVS",
+            "b2JvdENsaWVudBISLmtpbmVjdHBlcnNvbi5UZXh0GhYua2luZWN0cGVyc29u",
+            "LlJlc3BvbnNlIgBCDwoHZXguZ3JwY6ICA1JUR2IGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectperson.Face), global::Kinectperson.Face.Parser, new[]{ "X", "Y", "Width", "Height", "Roll", "Pitch", "Yaw" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectperson.Person), global::Kinectperson.Person.Parser, new[]{ "Face", "Speaking", "Looking", "Distance", "Id" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectperson.Point), global::Kinectperson.Point.Parser, new[]{ "X", "Y" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectperson.Person), global::Kinectperson.Person.Parser, new[]{ "Face", "Speaking", "Looking", "Position", "Distance", "Id" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectperson.PersonStream), global::Kinectperson.PersonStream.Parser, new[]{ "Status", "Data" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectperson.Response), global::Kinectperson.Response.Parser, new[]{ "Status" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectperson.Text), global::Kinectperson.Text.Parser, new[]{ "Text_" }, null, null, null)
@@ -319,12 +321,142 @@ namespace Kinectperson {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class Point : pb::IMessage<Point> {
+    private static readonly pb::MessageParser<Point> _parser = new pb::MessageParser<Point>(() => new Point());
+    public static pb::MessageParser<Point> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Kinectperson.KinectPersonReflection.Descriptor.MessageTypes[1]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public Point() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public Point(Point other) : this() {
+      x_ = other.x_;
+      y_ = other.y_;
+    }
+
+    public Point Clone() {
+      return new Point(this);
+    }
+
+    /// <summary>Field number for the "x" field.</summary>
+    public const int XFieldNumber = 1;
+    private float x_;
+    public float X {
+      get { return x_; }
+      set {
+        x_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "y" field.</summary>
+    public const int YFieldNumber = 2;
+    private float y_;
+    public float Y {
+      get { return y_; }
+      set {
+        y_ = value;
+      }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as Point);
+    }
+
+    public bool Equals(Point other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (X != other.X) return false;
+      if (Y != other.Y) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (X != 0F) hash ^= X.GetHashCode();
+      if (Y != 0F) hash ^= Y.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (X != 0F) {
+        output.WriteRawTag(13);
+        output.WriteFloat(X);
+      }
+      if (Y != 0F) {
+        output.WriteRawTag(21);
+        output.WriteFloat(Y);
+      }
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (X != 0F) {
+        size += 1 + 4;
+      }
+      if (Y != 0F) {
+        size += 1 + 4;
+      }
+      return size;
+    }
+
+    public void MergeFrom(Point other) {
+      if (other == null) {
+        return;
+      }
+      if (other.X != 0F) {
+        X = other.X;
+      }
+      if (other.Y != 0F) {
+        Y = other.Y;
+      }
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 13: {
+            X = input.ReadFloat();
+            break;
+          }
+          case 21: {
+            Y = input.ReadFloat();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class Person : pb::IMessage<Person> {
     private static readonly pb::MessageParser<Person> _parser = new pb::MessageParser<Person>(() => new Person());
     public static pb::MessageParser<Person> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectperson.KinectPersonReflection.Descriptor.MessageTypes[1]; }
+      get { return global::Kinectperson.KinectPersonReflection.Descriptor.MessageTypes[2]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -341,6 +473,7 @@ namespace Kinectperson {
       Face = other.face_ != null ? other.Face.Clone() : null;
       speaking_ = other.speaking_;
       looking_ = other.looking_;
+      Position = other.position_ != null ? other.Position.Clone() : null;
       distance_ = other.distance_;
       id_ = other.id_;
     }
@@ -379,8 +512,18 @@ namespace Kinectperson {
       }
     }
 
+    /// <summary>Field number for the "position" field.</summary>
+    public const int PositionFieldNumber = 4;
+    private global::Kinectperson.Point position_;
+    public global::Kinectperson.Point Position {
+      get { return position_; }
+      set {
+        position_ = value;
+      }
+    }
+
     /// <summary>Field number for the "distance" field.</summary>
-    public const int DistanceFieldNumber = 4;
+    public const int DistanceFieldNumber = 5;
     private float distance_;
     public float Distance {
       get { return distance_; }
@@ -390,7 +533,7 @@ namespace Kinectperson {
     }
 
     /// <summary>Field number for the "id" field.</summary>
-    public const int IdFieldNumber = 5;
+    public const int IdFieldNumber = 6;
     private int id_;
     public int Id {
       get { return id_; }
@@ -413,6 +556,7 @@ namespace Kinectperson {
       if (!object.Equals(Face, other.Face)) return false;
       if (Speaking != other.Speaking) return false;
       if (Looking != other.Looking) return false;
+      if (!object.Equals(Position, other.Position)) return false;
       if (Distance != other.Distance) return false;
       if (Id != other.Id) return false;
       return true;
@@ -423,6 +567,7 @@ namespace Kinectperson {
       if (face_ != null) hash ^= Face.GetHashCode();
       if (Speaking != false) hash ^= Speaking.GetHashCode();
       if (Looking != false) hash ^= Looking.GetHashCode();
+      if (position_ != null) hash ^= Position.GetHashCode();
       if (Distance != 0F) hash ^= Distance.GetHashCode();
       if (Id != 0) hash ^= Id.GetHashCode();
       return hash;
@@ -445,12 +590,16 @@ namespace Kinectperson {
         output.WriteRawTag(24);
         output.WriteBool(Looking);
       }
+      if (position_ != null) {
+        output.WriteRawTag(34);
+        output.WriteMessage(Position);
+      }
       if (Distance != 0F) {
-        output.WriteRawTag(37);
+        output.WriteRawTag(45);
         output.WriteFloat(Distance);
       }
       if (Id != 0) {
-        output.WriteRawTag(40);
+        output.WriteRawTag(48);
         output.WriteInt32(Id);
       }
     }
@@ -465,6 +614,9 @@ namespace Kinectperson {
       }
       if (Looking != false) {
         size += 1 + 1;
+      }
+      if (position_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Position);
       }
       if (Distance != 0F) {
         size += 1 + 4;
@@ -490,6 +642,12 @@ namespace Kinectperson {
       }
       if (other.Looking != false) {
         Looking = other.Looking;
+      }
+      if (other.position_ != null) {
+        if (position_ == null) {
+          position_ = new global::Kinectperson.Point();
+        }
+        Position.MergeFrom(other.Position);
       }
       if (other.Distance != 0F) {
         Distance = other.Distance;
@@ -521,11 +679,18 @@ namespace Kinectperson {
             Looking = input.ReadBool();
             break;
           }
-          case 37: {
+          case 34: {
+            if (position_ == null) {
+              position_ = new global::Kinectperson.Point();
+            }
+            input.ReadMessage(position_);
+            break;
+          }
+          case 45: {
             Distance = input.ReadFloat();
             break;
           }
-          case 40: {
+          case 48: {
             Id = input.ReadInt32();
             break;
           }
@@ -541,7 +706,7 @@ namespace Kinectperson {
     public static pb::MessageParser<PersonStream> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectperson.KinectPersonReflection.Descriptor.MessageTypes[2]; }
+      get { return global::Kinectperson.KinectPersonReflection.Descriptor.MessageTypes[3]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -663,7 +828,7 @@ namespace Kinectperson {
     public static pb::MessageParser<Response> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectperson.KinectPersonReflection.Descriptor.MessageTypes[3]; }
+      get { return global::Kinectperson.KinectPersonReflection.Descriptor.MessageTypes[4]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
@@ -766,7 +931,7 @@ namespace Kinectperson {
     public static pb::MessageParser<Text> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectperson.KinectPersonReflection.Descriptor.MessageTypes[4]; }
+      get { return global::Kinectperson.KinectPersonReflection.Descriptor.MessageTypes[5]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {

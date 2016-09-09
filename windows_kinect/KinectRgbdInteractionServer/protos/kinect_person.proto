@@ -22,12 +22,18 @@ message Face {
   float yaw = 7;
 }
 
+message Point {
+  float x = 1;
+  float y = 2;
+}
+
 message Person {
   Face face = 1;
   bool speaking = 2;
   bool looking = 3;
-  float distance = 4;
-  int32 id = 5;
+  Point position = 4;
+  float distance = 5;
+  int32 id = 6;
 }
 
 message PersonStream {
