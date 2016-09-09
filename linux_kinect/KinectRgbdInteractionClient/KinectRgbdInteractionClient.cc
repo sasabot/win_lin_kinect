@@ -480,8 +480,8 @@ public:
 	bounds.height = persons->data(i).face().height();
 	targets.data[i].face2d = bounds;
 	geometry_msgs::Point position;
-	position.x = 0.0; // todo
-	position.y = 0.0; // todo
+	position.x = persons->data(i).position().x();
+	position.y = persons->data(i).position().y();
 	position.z = persons->data(i).distance();
 	targets.data[i].face3d = position;
 	geometry_msgs::Vector3 rpy;

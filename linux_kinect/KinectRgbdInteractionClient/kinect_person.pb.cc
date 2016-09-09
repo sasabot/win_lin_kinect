@@ -24,6 +24,9 @@ namespace {
 const ::google::protobuf::Descriptor* Face_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Face_reflection_ = NULL;
+const ::google::protobuf::Descriptor* Point_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  Point_reflection_ = NULL;
 const ::google::protobuf::Descriptor* Person_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Person_reflection_ = NULL;
@@ -67,11 +70,28 @@ void protobuf_AssignDesc_kinect_5fperson_2eproto() {
       sizeof(Face),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Face, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Face, _is_default_instance_));
-  Person_descriptor_ = file->message_type(1);
-  static const int Person_offsets_[5] = {
+  Point_descriptor_ = file->message_type(1);
+  static const int Point_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Point, x_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Point, y_),
+  };
+  Point_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      Point_descriptor_,
+      Point::default_instance_,
+      Point_offsets_,
+      -1,
+      -1,
+      -1,
+      sizeof(Point),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Point, _internal_metadata_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Point, _is_default_instance_));
+  Person_descriptor_ = file->message_type(2);
+  static const int Person_offsets_[6] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Person, face_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Person, speaking_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Person, looking_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Person, position_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Person, distance_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Person, id_),
   };
@@ -86,7 +106,7 @@ void protobuf_AssignDesc_kinect_5fperson_2eproto() {
       sizeof(Person),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Person, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Person, _is_default_instance_));
-  PersonStream_descriptor_ = file->message_type(2);
+  PersonStream_descriptor_ = file->message_type(3);
   static const int PersonStream_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PersonStream, status_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PersonStream, data_),
@@ -102,7 +122,7 @@ void protobuf_AssignDesc_kinect_5fperson_2eproto() {
       sizeof(PersonStream),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PersonStream, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(PersonStream, _is_default_instance_));
-  Response_descriptor_ = file->message_type(3);
+  Response_descriptor_ = file->message_type(4);
   static const int Response_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response, status_),
   };
@@ -117,7 +137,7 @@ void protobuf_AssignDesc_kinect_5fperson_2eproto() {
       sizeof(Response),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response, _is_default_instance_));
-  Text_descriptor_ = file->message_type(4);
+  Text_descriptor_ = file->message_type(5);
   static const int Text_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Text, text_),
   };
@@ -147,6 +167,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       Face_descriptor_, &Face::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      Point_descriptor_, &Point::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       Person_descriptor_, &Person::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       PersonStream_descriptor_, &PersonStream::default_instance());
@@ -161,6 +183,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
 void protobuf_ShutdownFile_kinect_5fperson_2eproto() {
   delete Face::default_instance_;
   delete Face_reflection_;
+  delete Point::default_instance_;
+  delete Point_reflection_;
   delete Person::default_instance_;
   delete Person_reflection_;
   delete PersonStream::default_instance_;
@@ -181,29 +205,32 @@ void protobuf_AddDesc_kinect_5fperson_2eproto() {
     "\n\023kinect_person.proto\022\014kinectperson\"e\n\004F"
     "ace\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\r\n\005width\030\003 \001(\002"
     "\022\016\n\006height\030\004 \001(\002\022\014\n\004roll\030\005 \001(\002\022\r\n\005pitch\030"
-    "\006 \001(\002\022\013\n\003yaw\030\007 \001(\002\"k\n\006Person\022 \n\004face\030\001 \001"
-    "(\0132\022.kinectperson.Face\022\020\n\010speaking\030\002 \001(\010"
-    "\022\017\n\007looking\030\003 \001(\010\022\020\n\010distance\030\004 \001(\002\022\n\n\002i"
-    "d\030\005 \001(\005\"B\n\014PersonStream\022\016\n\006status\030\001 \001(\005\022"
-    "\"\n\004data\030\002 \003(\0132\024.kinectperson.Person\"\032\n\010R"
-    "esponse\022\016\n\006status\030\001 \001(\010\"\024\n\004Text\022\014\n\004text\030"
-    "\001 \001(\t2\244\002\n\014KinectPerson\022G\n\017SendPersonStat"
-    "e\022\032.kinectperson.PersonStream\032\026.kinectpe"
-    "rson.Response\"\000\022D\n\024SendVoiceRecognition\022"
-    "\022.kinectperson.Text\032\026.kinectperson.Respo"
-    "nse\"\000\022B\n\022SendConsoleCommand\022\022.kinectpers"
-    "on.Text\032\026.kinectperson.Response\"\000\022A\n\021Cre"
-    "ateRobotClient\022\022.kinectperson.Text\032\026.kin"
-    "ectperson.Response\"\000B\017\n\007ex.grpc\242\002\003RTGb\006p"
-    "roto3", 685);
+    "\006 \001(\002\022\013\n\003yaw\030\007 \001(\002\"\035\n\005Point\022\t\n\001x\030\001 \001(\002\022\t"
+    "\n\001y\030\002 \001(\002\"\222\001\n\006Person\022 \n\004face\030\001 \001(\0132\022.kin"
+    "ectperson.Face\022\020\n\010speaking\030\002 \001(\010\022\017\n\007look"
+    "ing\030\003 \001(\010\022%\n\010position\030\004 \001(\0132\023.kinectpers"
+    "on.Point\022\020\n\010distance\030\005 \001(\002\022\n\n\002id\030\006 \001(\005\"B"
+    "\n\014PersonStream\022\016\n\006status\030\001 \001(\005\022\"\n\004data\030\002"
+    " \003(\0132\024.kinectperson.Person\"\032\n\010Response\022\016"
+    "\n\006status\030\001 \001(\010\"\024\n\004Text\022\014\n\004text\030\001 \001(\t2\244\002\n"
+    "\014KinectPerson\022G\n\017SendPersonState\022\032.kinec"
+    "tperson.PersonStream\032\026.kinectperson.Resp"
+    "onse\"\000\022D\n\024SendVoiceRecognition\022\022.kinectp"
+    "erson.Text\032\026.kinectperson.Response\"\000\022B\n\022"
+    "SendConsoleCommand\022\022.kinectperson.Text\032\026"
+    ".kinectperson.Response\"\000\022A\n\021CreateRobotC"
+    "lient\022\022.kinectperson.Text\032\026.kinectperson"
+    ".Response\"\000B\017\n\007ex.grpc\242\002\003RTGb\006proto3", 756);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "kinect_person.proto", &protobuf_RegisterTypes);
   Face::default_instance_ = new Face();
+  Point::default_instance_ = new Point();
   Person::default_instance_ = new Person();
   PersonStream::default_instance_ = new PersonStream();
   Response::default_instance_ = new Response();
   Text::default_instance_ = new Text();
   Face::default_instance_->InitAsDefaultInstance();
+  Point::default_instance_->InitAsDefaultInstance();
   Person::default_instance_->InitAsDefaultInstance();
   PersonStream::default_instance_->InitAsDefaultInstance();
   Response::default_instance_->InitAsDefaultInstance();
@@ -783,9 +810,312 @@ void Face::clear_yaw() {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Point::kXFieldNumber;
+const int Point::kYFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+Point::Point()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:kinectperson.Point)
+}
+
+void Point::InitAsDefaultInstance() {
+  _is_default_instance_ = true;
+}
+
+Point::Point(const Point& from)
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:kinectperson.Point)
+}
+
+void Point::SharedCtor() {
+    _is_default_instance_ = false;
+  _cached_size_ = 0;
+  x_ = 0;
+  y_ = 0;
+}
+
+Point::~Point() {
+  // @@protoc_insertion_point(destructor:kinectperson.Point)
+  SharedDtor();
+}
+
+void Point::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void Point::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* Point::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return Point_descriptor_;
+}
+
+const Point& Point::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_kinect_5fperson_2eproto();
+  return *default_instance_;
+}
+
+Point* Point::default_instance_ = NULL;
+
+Point* Point::New(::google::protobuf::Arena* arena) const {
+  Point* n = new Point;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void Point::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectperson.Point)
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(Point, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<Point*>(16)->f)
+#endif
+
+#define ZR_(first, last) do {\
+  ::memset(&first, 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
+
+  ZR_(x_, y_);
+
+#undef ZR_HELPER_
+#undef ZR_
+
+}
+
+bool Point::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:kinectperson.Point)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional float x = 1;
+      case 1: {
+        if (tag == 13) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &x_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(21)) goto parse_y;
+        break;
+      }
+
+      // optional float y = 2;
+      case 2: {
+        if (tag == 21) {
+         parse_y:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &y_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:kinectperson.Point)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:kinectperson.Point)
+  return false;
+#undef DO_
+}
+
+void Point::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:kinectperson.Point)
+  // optional float x = 1;
+  if (this->x() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(1, this->x(), output);
+  }
+
+  // optional float y = 2;
+  if (this->y() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->y(), output);
+  }
+
+  // @@protoc_insertion_point(serialize_end:kinectperson.Point)
+}
+
+::google::protobuf::uint8* Point::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:kinectperson.Point)
+  // optional float x = 1;
+  if (this->x() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(1, this->x(), target);
+  }
+
+  // optional float y = 2;
+  if (this->y() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->y(), target);
+  }
+
+  // @@protoc_insertion_point(serialize_to_array_end:kinectperson.Point)
+  return target;
+}
+
+int Point::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectperson.Point)
+  int total_size = 0;
+
+  // optional float x = 1;
+  if (this->x() != 0) {
+    total_size += 1 + 4;
+  }
+
+  // optional float y = 2;
+  if (this->y() != 0) {
+    total_size += 1 + 4;
+  }
+
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void Point::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectperson.Point)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  const Point* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const Point>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectperson.Point)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectperson.Point)
+    MergeFrom(*source);
+  }
+}
+
+void Point::MergeFrom(const Point& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectperson.Point)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  if (from.x() != 0) {
+    set_x(from.x());
+  }
+  if (from.y() != 0) {
+    set_y(from.y());
+  }
+}
+
+void Point::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectperson.Point)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void Point::CopyFrom(const Point& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectperson.Point)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool Point::IsInitialized() const {
+
+  return true;
+}
+
+void Point::Swap(Point* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void Point::InternalSwap(Point* other) {
+  std::swap(x_, other->x_);
+  std::swap(y_, other->y_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata Point::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = Point_descriptor_;
+  metadata.reflection = Point_reflection_;
+  return metadata;
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// Point
+
+// optional float x = 1;
+void Point::clear_x() {
+  x_ = 0;
+}
+ float Point::x() const {
+  // @@protoc_insertion_point(field_get:kinectperson.Point.x)
+  return x_;
+}
+ void Point::set_x(float value) {
+  
+  x_ = value;
+  // @@protoc_insertion_point(field_set:kinectperson.Point.x)
+}
+
+// optional float y = 2;
+void Point::clear_y() {
+  y_ = 0;
+}
+ float Point::y() const {
+  // @@protoc_insertion_point(field_get:kinectperson.Point.y)
+  return y_;
+}
+ void Point::set_y(float value) {
+  
+  y_ = value;
+  // @@protoc_insertion_point(field_set:kinectperson.Point.y)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
 const int Person::kFaceFieldNumber;
 const int Person::kSpeakingFieldNumber;
 const int Person::kLookingFieldNumber;
+const int Person::kPositionFieldNumber;
 const int Person::kDistanceFieldNumber;
 const int Person::kIdFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
@@ -799,6 +1129,7 @@ Person::Person()
 void Person::InitAsDefaultInstance() {
   _is_default_instance_ = true;
   face_ = const_cast< ::kinectperson::Face*>(&::kinectperson::Face::default_instance());
+  position_ = const_cast< ::kinectperson::Point*>(&::kinectperson::Point::default_instance());
 }
 
 Person::Person(const Person& from)
@@ -815,6 +1146,7 @@ void Person::SharedCtor() {
   face_ = NULL;
   speaking_ = false;
   looking_ = false;
+  position_ = NULL;
   distance_ = 0;
   id_ = 0;
 }
@@ -827,6 +1159,7 @@ Person::~Person() {
 void Person::SharedDtor() {
   if (this != default_instance_) {
     delete face_;
+    delete position_;
   }
 }
 
@@ -873,9 +1206,12 @@ void Person::Clear() {
            ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
 } while (0)
 
-  ZR_(speaking_, id_);
+  ZR_(speaking_, distance_);
   if (GetArenaNoVirtual() == NULL && face_ != NULL) delete face_;
   face_ = NULL;
+  if (GetArenaNoVirtual() == NULL && position_ != NULL) delete position_;
+  position_ = NULL;
+  id_ = 0;
 
 #undef ZR_HELPER_
 #undef ZR_
@@ -930,13 +1266,26 @@ bool Person::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(37)) goto parse_distance;
+        if (input->ExpectTag(34)) goto parse_position;
         break;
       }
 
-      // optional float distance = 4;
+      // optional .kinectperson.Point position = 4;
       case 4: {
-        if (tag == 37) {
+        if (tag == 34) {
+         parse_position:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+               input, mutable_position()));
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(45)) goto parse_distance;
+        break;
+      }
+
+      // optional float distance = 5;
+      case 5: {
+        if (tag == 45) {
          parse_distance:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
@@ -945,13 +1294,13 @@ bool Person::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(40)) goto parse_id;
+        if (input->ExpectTag(48)) goto parse_id;
         break;
       }
 
-      // optional int32 id = 5;
-      case 5: {
-        if (tag == 40) {
+      // optional int32 id = 6;
+      case 6: {
+        if (tag == 48) {
          parse_id:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
@@ -1004,14 +1353,20 @@ void Person::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->looking(), output);
   }
 
-  // optional float distance = 4;
-  if (this->distance() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteFloat(4, this->distance(), output);
+  // optional .kinectperson.Point position = 4;
+  if (this->has_position()) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      4, *this->position_, output);
   }
 
-  // optional int32 id = 5;
+  // optional float distance = 5;
+  if (this->distance() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(5, this->distance(), output);
+  }
+
+  // optional int32 id = 6;
   if (this->id() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(5, this->id(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(6, this->id(), output);
   }
 
   // @@protoc_insertion_point(serialize_end:kinectperson.Person)
@@ -1037,14 +1392,21 @@ void Person::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->looking(), target);
   }
 
-  // optional float distance = 4;
-  if (this->distance() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(4, this->distance(), target);
+  // optional .kinectperson.Point position = 4;
+  if (this->has_position()) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        4, *this->position_, target);
   }
 
-  // optional int32 id = 5;
+  // optional float distance = 5;
+  if (this->distance() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(5, this->distance(), target);
+  }
+
+  // optional int32 id = 6;
   if (this->id() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(5, this->id(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(6, this->id(), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:kinectperson.Person)
@@ -1072,12 +1434,19 @@ int Person::ByteSize() const {
     total_size += 1 + 1;
   }
 
-  // optional float distance = 4;
+  // optional .kinectperson.Point position = 4;
+  if (this->has_position()) {
+    total_size += 1 +
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        *this->position_);
+  }
+
+  // optional float distance = 5;
   if (this->distance() != 0) {
     total_size += 1 + 4;
   }
 
-  // optional int32 id = 5;
+  // optional int32 id = 6;
   if (this->id() != 0) {
     total_size += 1 +
       ::google::protobuf::internal::WireFormatLite::Int32Size(
@@ -1117,6 +1486,9 @@ void Person::MergeFrom(const Person& from) {
   if (from.looking() != 0) {
     set_looking(from.looking());
   }
+  if (from.has_position()) {
+    mutable_position()->::kinectperson::Point::MergeFrom(from.position());
+  }
   if (from.distance() != 0) {
     set_distance(from.distance());
   }
@@ -1152,6 +1524,7 @@ void Person::InternalSwap(Person* other) {
   std::swap(face_, other->face_);
   std::swap(speaking_, other->speaking_);
   std::swap(looking_, other->looking_);
+  std::swap(position_, other->position_);
   std::swap(distance_, other->distance_);
   std::swap(id_, other->id_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
@@ -1235,7 +1608,45 @@ void Person::clear_looking() {
   // @@protoc_insertion_point(field_set:kinectperson.Person.looking)
 }
 
-// optional float distance = 4;
+// optional .kinectperson.Point position = 4;
+bool Person::has_position() const {
+  return !_is_default_instance_ && position_ != NULL;
+}
+void Person::clear_position() {
+  if (GetArenaNoVirtual() == NULL && position_ != NULL) delete position_;
+  position_ = NULL;
+}
+const ::kinectperson::Point& Person::position() const {
+  // @@protoc_insertion_point(field_get:kinectperson.Person.position)
+  return position_ != NULL ? *position_ : *default_instance_->position_;
+}
+::kinectperson::Point* Person::mutable_position() {
+  
+  if (position_ == NULL) {
+    position_ = new ::kinectperson::Point;
+  }
+  // @@protoc_insertion_point(field_mutable:kinectperson.Person.position)
+  return position_;
+}
+::kinectperson::Point* Person::release_position() {
+  // @@protoc_insertion_point(field_release:kinectperson.Person.position)
+  
+  ::kinectperson::Point* temp = position_;
+  position_ = NULL;
+  return temp;
+}
+void Person::set_allocated_position(::kinectperson::Point* position) {
+  delete position_;
+  position_ = position;
+  if (position) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:kinectperson.Person.position)
+}
+
+// optional float distance = 5;
 void Person::clear_distance() {
   distance_ = 0;
 }
@@ -1249,7 +1660,7 @@ void Person::clear_distance() {
   // @@protoc_insertion_point(field_set:kinectperson.Person.distance)
 }
 
-// optional int32 id = 5;
+// optional int32 id = 6;
 void Person::clear_id() {
   id_ = 0;
 }

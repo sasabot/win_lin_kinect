@@ -39,6 +39,7 @@ void protobuf_ShutdownFile_kinect_5fperson_2eproto();
 class Face;
 class Person;
 class PersonStream;
+class Point;
 class Response;
 class Text;
 
@@ -164,6 +165,91 @@ class Face : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class Point : public ::google::protobuf::Message {
+ public:
+  Point();
+  virtual ~Point();
+
+  Point(const Point& from);
+
+  inline Point& operator=(const Point& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Point& default_instance();
+
+  void Swap(Point* other);
+
+  // implements Message ----------------------------------------------
+
+  inline Point* New() const { return New(NULL); }
+
+  Point* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Point& from);
+  void MergeFrom(const Point& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(Point* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional float x = 1;
+  void clear_x();
+  static const int kXFieldNumber = 1;
+  float x() const;
+  void set_x(float value);
+
+  // optional float y = 2;
+  void clear_y();
+  static const int kYFieldNumber = 2;
+  float y() const;
+  void set_y(float value);
+
+  // @@protoc_insertion_point(class_scope:kinectperson.Point)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  float x_;
+  float y_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_kinect_5fperson_2eproto();
+  friend void protobuf_AssignDesc_kinect_5fperson_2eproto();
+  friend void protobuf_ShutdownFile_kinect_5fperson_2eproto();
+
+  void InitAsDefaultInstance();
+  static Point* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class Person : public ::google::protobuf::Message {
  public:
   Person();
@@ -241,15 +327,24 @@ class Person : public ::google::protobuf::Message {
   bool looking() const;
   void set_looking(bool value);
 
-  // optional float distance = 4;
+  // optional .kinectperson.Point position = 4;
+  bool has_position() const;
+  void clear_position();
+  static const int kPositionFieldNumber = 4;
+  const ::kinectperson::Point& position() const;
+  ::kinectperson::Point* mutable_position();
+  ::kinectperson::Point* release_position();
+  void set_allocated_position(::kinectperson::Point* position);
+
+  // optional float distance = 5;
   void clear_distance();
-  static const int kDistanceFieldNumber = 4;
+  static const int kDistanceFieldNumber = 5;
   float distance() const;
   void set_distance(float value);
 
-  // optional int32 id = 5;
+  // optional int32 id = 6;
   void clear_id();
-  static const int kIdFieldNumber = 5;
+  static const int kIdFieldNumber = 6;
   ::google::protobuf::int32 id() const;
   void set_id(::google::protobuf::int32 value);
 
@@ -262,6 +357,7 @@ class Person : public ::google::protobuf::Message {
   bool speaking_;
   bool looking_;
   float distance_;
+  ::kinectperson::Point* position_;
   ::google::protobuf::int32 id_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_kinect_5fperson_2eproto();
@@ -631,6 +727,38 @@ inline void Face::set_yaw(float value) {
 
 // -------------------------------------------------------------------
 
+// Point
+
+// optional float x = 1;
+inline void Point::clear_x() {
+  x_ = 0;
+}
+inline float Point::x() const {
+  // @@protoc_insertion_point(field_get:kinectperson.Point.x)
+  return x_;
+}
+inline void Point::set_x(float value) {
+  
+  x_ = value;
+  // @@protoc_insertion_point(field_set:kinectperson.Point.x)
+}
+
+// optional float y = 2;
+inline void Point::clear_y() {
+  y_ = 0;
+}
+inline float Point::y() const {
+  // @@protoc_insertion_point(field_get:kinectperson.Point.y)
+  return y_;
+}
+inline void Point::set_y(float value) {
+  
+  y_ = value;
+  // @@protoc_insertion_point(field_set:kinectperson.Point.y)
+}
+
+// -------------------------------------------------------------------
+
 // Person
 
 // optional .kinectperson.Face face = 1;
@@ -699,7 +827,45 @@ inline void Person::set_looking(bool value) {
   // @@protoc_insertion_point(field_set:kinectperson.Person.looking)
 }
 
-// optional float distance = 4;
+// optional .kinectperson.Point position = 4;
+inline bool Person::has_position() const {
+  return !_is_default_instance_ && position_ != NULL;
+}
+inline void Person::clear_position() {
+  if (GetArenaNoVirtual() == NULL && position_ != NULL) delete position_;
+  position_ = NULL;
+}
+inline const ::kinectperson::Point& Person::position() const {
+  // @@protoc_insertion_point(field_get:kinectperson.Person.position)
+  return position_ != NULL ? *position_ : *default_instance_->position_;
+}
+inline ::kinectperson::Point* Person::mutable_position() {
+  
+  if (position_ == NULL) {
+    position_ = new ::kinectperson::Point;
+  }
+  // @@protoc_insertion_point(field_mutable:kinectperson.Person.position)
+  return position_;
+}
+inline ::kinectperson::Point* Person::release_position() {
+  // @@protoc_insertion_point(field_release:kinectperson.Person.position)
+  
+  ::kinectperson::Point* temp = position_;
+  position_ = NULL;
+  return temp;
+}
+inline void Person::set_allocated_position(::kinectperson::Point* position) {
+  delete position_;
+  position_ = position;
+  if (position) {
+    
+  } else {
+    
+  }
+  // @@protoc_insertion_point(field_set_allocated:kinectperson.Person.position)
+}
+
+// optional float distance = 5;
 inline void Person::clear_distance() {
   distance_ = 0;
 }
@@ -713,7 +879,7 @@ inline void Person::set_distance(float value) {
   // @@protoc_insertion_point(field_set:kinectperson.Person.distance)
 }
 
-// optional int32 id = 5;
+// optional int32 id = 6;
 inline void Person::clear_id() {
   id_ = 0;
 }
@@ -842,6 +1008,8 @@ inline void Text::set_allocated_text(::std::string* text) {
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------
