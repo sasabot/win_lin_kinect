@@ -32,6 +32,7 @@ add_message_files(
 add_service_files(
   FILES
   KinectRequest.srv
+  KinectPoints.srv
   )
 generate_messages(
   DEPENDENCIES

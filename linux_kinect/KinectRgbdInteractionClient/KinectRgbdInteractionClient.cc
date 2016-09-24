@@ -8,6 +8,7 @@
 #include "sensor_msgs/PointField.h"
 #include "sensor_msgs/Image.h"
 #include "linux_kinect/KinectRequest.h"
+#include "linux_kinect/KinectPoints.h"
 #include "linux_kinect/Tag.h"
 #include "linux_kinect/Cognition.h"
 #include "linux_kinect/Bit.h"
@@ -62,7 +63,7 @@ public:
     frame_name_ = "";
     nh_.getParam("/kinect_rgbd_interaction_client/frame", frame_name_);
 
-    pub_points_ = nh_.advertise<sensor_msgs::PointCloud2>("/kinect/points", 1);
+    // pub_points_ = nh_.advertise<sensor_msgs::PointCloud2>("/kinect/points", 1);
     pub_pixels_ = nh_.advertise<sensor_msgs::Image>("/kinect/image", 1);
 
     srv_points_ = nh_.advertiseService(
@@ -132,11 +133,22 @@ public:
     request.set_args(req.args);
   }
 
-  bool RequestPoints(linux_kinect::KinectRequest::Request &req,
-                     linux_kinect::KinectRequest::Response &res)
+  bool RequestPoints(linux_kinect::KinectPoints::Request &req,
+                     linux_kinect::KinectPoints::Response &res)
   {
     kinectrobot::Request request;
-    SetupRequest(request, req);
+    ROS_WARN("received request from ROS");
+    for (unsigned int i = 0; i < req.data.size(); ++i)
+    {
+      auto bit = request.add_data();
+      bit->set_x(req.data[i].x);
+      bit->set_y(req.data[i].y);
+      bit->set_width(req.data[i].width);
+      bit->set_height(req.data[i].height);
+      if (req.data[i].name == "")
+	bit->set_name("image" + std::to_string(i));
+    }
+    request.set_args(req.args);
 
     ClientContext context;
     kinectrobot::Points points;
@@ -191,18 +203,16 @@ public:
 
     ROS_INFO("read %d points", point_count);
 
-    sensor_msgs::PointCloud2 msg;
-    msg.header.frame_id = frame_name_;
-    msg.header.stamp = ros::Time(0);
-    msg.height = request.data(0).height();
-    msg.width = request.data(0).width();
-    msg.fields.assign(field_.begin(), field_.end());
-    msg.point_step = 16;
-    msg.row_step = msg.point_step * msg.width;
-    msg.is_dense = false;
-    msg.is_bigendian = true;
-    msg.data.assign(data.begin(), data.end());
-    pub_points_.publish(msg);
+    res.points.header.frame_id = frame_name_;
+    res.points.header.stamp = ros::Time(0);
+    res.points.height = request.data(0).height();
+    res.points.width = request.data(0).width();
+    res.points.fields.assign(field_.begin(), field_.end());
+    res.points.point_step = 16;
+    res.points.row_step = res.points.point_step * res.points.width;
+    res.points.is_dense = false;
+    res.points.is_bigendian = true;
+    res.points.data.assign(data.begin(), data.end());
 
     ROS_WARN("finished request");
     return true;

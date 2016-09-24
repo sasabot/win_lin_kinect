@@ -1,0 +1,6 @@
+int32 mode
+linux_kinect/Bit[] data
+bool once
+string args
+---
+sensor_msgs/PointCloud2 points
