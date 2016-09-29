@@ -9,6 +9,7 @@
 #include "sensor_msgs/Image.h"
 #include "linux_kinect/KinectRequest.h"
 #include "linux_kinect/KinectPoints.h"
+#include "linux_kinect/KinectImage.h"
 #include "linux_kinect/Tag.h"
 #include "linux_kinect/Cognition.h"
 #include "linux_kinect/Bit.h"
@@ -64,7 +65,7 @@ public:
     nh_.getParam("/kinect_rgbd_interaction_client/frame", frame_name_);
 
     // pub_points_ = nh_.advertise<sensor_msgs::PointCloud2>("/kinect/points", 1);
-    pub_pixels_ = nh_.advertise<sensor_msgs::Image>("/kinect/image", 1);
+    // pub_pixels_ = nh_.advertise<sensor_msgs::Image>("/kinect/image", 1);
 
     srv_points_ = nh_.advertiseService(
 	"/kinect/request/points", &KinectRobotClient::RequestPoints, this);
@@ -120,8 +121,7 @@ public:
 		    linux_kinect::KinectRequest::Request &req)
   {
     ROS_WARN("received request from ROS");
-    for (unsigned int i = 0; i < req.data.size(); ++i)
-    {
+    for (unsigned int i = 0; i < req.data.size(); ++i) {
       auto bit = request.add_data();
       bit->set_x(req.data[i].x);
       bit->set_y(req.data[i].y);
@@ -138,17 +138,13 @@ public:
   {
     kinectrobot::Request request;
     ROS_WARN("received request from ROS");
-    for (unsigned int i = 0; i < req.data.size(); ++i)
-    {
-      auto bit = request.add_data();
-      bit->set_x(req.data[i].x);
-      bit->set_y(req.data[i].y);
-      bit->set_width(req.data[i].width);
-      bit->set_height(req.data[i].height);
-      if (req.data[i].name == "")
-	bit->set_name("image" + std::to_string(i));
-    }
-    request.set_args(req.args);
+    auto bit = request.add_data();
+    bit->set_x(req.data.x);
+    bit->set_y(req.data.y);
+    bit->set_width(req.data.width);
+    bit->set_height(req.data.height);
+    if (req.data.name == "")
+      bit->set_name("image0");
 
     ClientContext context;
     kinectrobot::Points points;
@@ -160,8 +156,7 @@ public:
     int point_count = 0;
 
     while (reader->Read(&points))
-      for (unsigned int i = 0; i < points.data_size(); ++i)
-      {
+      for (unsigned int i = 0; i < points.data_size(); ++i) {
 	float d = points.data(i).z();
 	float y = points.data(i).y();
 	float x = points.data(i).x();
@@ -218,11 +213,18 @@ public:
     return true;
   }
 
-  bool RequestImage(linux_kinect::KinectRequest::Request &req,
-		    linux_kinect::KinectRequest::Response &res)
+  bool RequestImage(linux_kinect::KinectImage::Request &req,
+		    linux_kinect::KinectImage::Response &res)
   {
     kinectrobot::Request request;
-    SetupRequest(request, req);
+    ROS_WARN("received request from ROS");
+    auto bit = request.add_data();
+    bit->set_x(req.data.x);
+    bit->set_y(req.data.y);
+    bit->set_width(req.data.width);
+    bit->set_height(req.data.height);
+    if (req.data.name == "")
+      bit->set_name("image0");
 
     ClientContext context;
     kinectrobot::Pixels pixels;
@@ -234,8 +236,7 @@ public:
     int pixel_count = 0;
 
     while (reader->Read(&pixels))
-      for (unsigned int i = 0; i < pixels.color_size(); ++i)
-      {
+      for (unsigned int i = 0; i < pixels.color_size(); ++i) {
 	uint8_t r = (pixels.color(i) & 0x00000ff);
 	uint8_t g = ((pixels.color(i) >> 8) & 0x00000ff);
 	uint8_t b = ((pixels.color(i) >> 16) & 0x00000ff);
@@ -250,16 +251,14 @@ public:
 
     ROS_INFO("read %d pixels", pixel_count);
 
-    sensor_msgs::Image msg;
-    msg.header.frame_id = frame_name_;
-    msg.header.stamp = ros::Time(0);
-    msg.height = request.data(0).height();
-    msg.width = request.data(0).width();
-    msg.step = 3 * msg.width;
-    msg.encoding = "bgr8";
-    msg.is_bigendian = true;
-    msg.data.assign(data.begin(), data.end());
-    pub_pixels_.publish(msg);
+    res.image.header.frame_id = frame_name_;
+    res.image.header.stamp = ros::Time(0);
+    res.image.height = request.data(0).height();
+    res.image.width = request.data(0).width();
+    res.image.step = 3 * res.image.width;
+    res.image.encoding = "bgr8";
+    res.image.is_bigendian = true;
+    res.image.data.assign(data.begin(), data.end());
 
     ROS_WARN("finished request");
     return true;
@@ -278,15 +277,13 @@ public:
         &context, request, &boundings);
 
     res.status = boundings.status();
-    if (!boundings.status())
-    {
+    if (!boundings.status()) {
       ROS_WARN("finished request");
       return true;
     }
 
     res.bits.reserve(boundings.data().size());
-    for (unsigned int i = 0; i < boundings.data().size(); ++i)
-    {
+    for (unsigned int i = 0; i < boundings.data().size(); ++i) {
       linux_kinect::Bit bit;
       bit.name = boundings.data(i).name();
       bit.x = boundings.data(i).x();
@@ -316,8 +313,7 @@ public:
     res.status = stream.status();
     res.cognitions.reserve(stream.data_size());
     res.points.reserve(stream.data_size());
-    for (unsigned int i = 0; i < stream.data_size(); ++i)
-    {
+    for (unsigned int i = 0; i < stream.data_size(); ++i) {
       geometry_msgs::Point image_i_pos;
       image_i_pos.x = stream.data(i).x();
       image_i_pos.y = stream.data(i).y();
@@ -325,16 +321,14 @@ public:
       res.points.push_back(image_i_pos);
       linux_kinect::Cognition image_i;
       image_i.status = stream.data(i).status();
-      if (stream.data(i).captions_size() > 0)
-      {
+      if (stream.data(i).captions_size() > 0) {
 	linux_kinect::Tag image_i_cap;
 	image_i_cap.tag = stream.data(i).captions(0).tag();
 	image_i_cap.confidence = stream.data(i).captions(0).confidence();
 	image_i.captions.push_back(image_i_cap);
       }
       image_i.tags.reserve(stream.data(i).tags_size());
-      for (unsigned int j = 0; j < stream.data(i).tags_size(); ++j)
-      {
+      for (unsigned int j = 0; j < stream.data(i).tags_size(); ++j) {
 	linux_kinect::Tag image_i_tag_j;
 	image_i_tag_j.tag = stream.data(i).tags(j).tag();
 	image_i_tag_j.confidence = stream.data(i).tags(j).confidence();
@@ -362,8 +356,7 @@ public:
     ClientContext context;
     kinectrobot::Speech speech;
     kinectrobot::Response response;
-    if (msg.data == "quit")
-    {
+    if (msg.data == "quit") {
       speech.set_command("quit");
       Status status = stub_->SendSpeech(&context, speech, &response);
       return;
@@ -388,13 +381,10 @@ public:
     ClientContext context;
     kinectrobot::VoiceTriggers triggers;
     kinectrobot::Response response;
-    if (msg.data)
-    {
+    if (msg.data) {
       *use_robot_speech_engine_ = true;
       triggers.set_autotriggerafterrecognition(true);
-    }
-    else
-    {
+    } else {
       *use_robot_speech_engine_ = false;
       triggers.set_autotriggerduringspeech(true);
     }
@@ -419,9 +409,9 @@ private:
 
   ros::NodeHandle nh_;
 
-  ros::Publisher pub_points_;
+  // ros::Publisher pub_points_;
 
-  ros::Publisher pub_pixels_;
+  // ros::Publisher pub_pixels_;
 
   ros::ServiceServer srv_points_;
 
@@ -470,8 +460,7 @@ public:
     int this_target_id = -1;
     linux_kinect::People targets;
 
-    if (persons->status() > 0)
-    {
+    if (persons->status() > 0) {
       int target = -1;
       int candidate_from_previous = -1;
       std::map<int, float> candidate_farness;
@@ -479,8 +468,7 @@ public:
       targets.data.resize(persons->data_size());
 
       // find speaker
-      for (unsigned int i = 0; i < persons->data_size(); ++i)
-      {
+      for (unsigned int i = 0; i < persons->data_size(); ++i) {
 	// save data to targets
 	targets.data[i].verified_id = i; // todo
 	linux_kinect::Bit bounds;
@@ -502,8 +490,7 @@ public:
 	targets.data[i].looking = persons->data(i).looking();
 	targets.data[i].speaking = persons->data(i).speaking();
 
-	if (persons->data(i).speaking())
-	{
+	if (persons->data(i).speaking()) {
 	  target = i; // set target to speaker
 	  break;
 	}
@@ -514,22 +501,19 @@ public:
       }
 
       // if no speaker found and last speaker is in scene
-      if (target == -1 && candidate_from_previous >= 0)
-      {
+      if (target == -1 && candidate_from_previous >= 0) {
 	target = candidate_from_previous; // set target to last speaker
       }
 
       // if no speaker and last speaker is not in scene
-      if (target == -1)
-      {
+      if (target == -1) {
 	float distance = std::numeric_limits<float>::max();
 	for (auto it = candidate_farness.begin(); it != candidate_farness.end(); ++it)
 	  if (it->second < distance)
 	    target = it->first; // set target to nearest face
       }
 
-      if (target >= 0)
-      {
+      if (target >= 0) {
 	linux_kinect::Person data = targets.data[target];
 	pub_person_speaker_.publish(data);
 	this_target_id = persons->data(target).id();
@@ -548,12 +532,9 @@ public:
   {
     ROS_INFO("%s", voice->text().c_str());
 
-    if (use_robot_speech_engine_)
-    {
+    if (use_robot_speech_engine_) {
       // todo
-    }
-    else
-    {
+    } else {
       std_msgs::String result;
       result.data = voice->text();
       pub_voice_recognition_.publish(result);

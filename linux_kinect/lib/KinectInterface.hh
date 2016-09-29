@@ -4,8 +4,10 @@
 #include <ros/ros.h>
 
 #include "sensor_msgs/PointCloud2.h"
+#include "sensor_msgs/Image.h"
 
 #include "linux_kinect/KinectPoints.h"
+#include "linux_kinect/KinectImage.h"
 #include "linux_kinect/KinectRequest.h"
 #include "linux_kinect/Bit.h"
 #include "linux_kinect/Cognition.h"
@@ -52,11 +54,11 @@ namespace kinect
 
     public: ~KinectInterface();
 
-    public: std::string ReadKey();
+    public: void ReadKey();
 
     public: sensor_msgs::PointCloud2 ReadPoints();
 
-    public: sensor_msgs::PointCloud2 ReadPoints(int _x, int _y, int _width, int _height);
+    public: sensor_msgs::Image ReadImage();
 
     public: std::vector<linux_kinect::Bit> ImageBounds
     (std::vector<std::array<int, 4> > _depth_indicies);

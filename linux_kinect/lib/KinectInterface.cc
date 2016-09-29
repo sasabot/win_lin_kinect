@@ -28,7 +28,7 @@ KinectInterface::KinectInterface(ros::NodeHandle _nh) : nh_(_nh)
 }
 
 //////////////////////////////////////////////////
-std::string KinectInterface::ReadKey()
+void KinectInterface::ReadKey()
 {
  // read setup key for Microsoft Cognitive Service
   std::string cmd = "grep key= $(rospack find linux_kinect)/key.txt | cut -d= -f2";
@@ -53,15 +53,12 @@ KinectInterface::~KinectInterface()
 //////////////////////////////////////////////////
 sensor_msgs::PointCloud2 KinectInterface::ReadPoints()
 {
-  linux_kinect::Bit bounds;
-  bounds.x = 0;
-  bounds.y = 0;
-  bounds.width = 512;
-  bounds.height = 424;
-
   // request point clouds
   linux_kinect::KinectPoints srv;
-  srv.request.data.push_back(bounds);
+  srv.request.data.x = 0;
+  srv.request.data.y = 0;
+  srv.request.data.width = 512;
+  srv.request.data.height = 424;
 
   if (!call_points_.call(srv))
   {
@@ -71,6 +68,26 @@ sensor_msgs::PointCloud2 KinectInterface::ReadPoints()
   }
 
   return srv.response.points;
+}
+
+//////////////////////////////////////////////////
+sensor_msgs::Image KinectInterface::ReadImage()
+{
+  // request point clouds
+  linux_kinect::KinectImage srv;
+  srv.request.data.x = 0;
+  srv.request.data.y = 0;
+  srv.request.data.width = 1920;
+  srv.request.data.height = 1080;
+
+  if (!call_points_.call(srv))
+  {
+    ROS_WARN("service call failed");
+    sensor_msgs::Image null;
+    return null;
+  }
+
+  return srv.response.image;
 }
 
 //////////////////////////////////////////////////
