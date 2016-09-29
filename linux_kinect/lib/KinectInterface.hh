@@ -71,6 +71,8 @@ namespace kinect
 
     private: ros::ServiceClient call_points_;
 
+    private: ros::ServiceClient call_image_;
+
     private: ros::ServiceClient call_bounds_;
 
     private: ros::ServiceClient call_cognition_;

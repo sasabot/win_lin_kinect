@@ -21,6 +21,8 @@ KinectInterface::KinectInterface(ros::NodeHandle _nh) : nh_(_nh)
 {
   call_points_ =
     nh_.serviceClient<linux_kinect::KinectPoints>("/kinect/request/points");
+  call_image_ =
+    nh_.serviceClient<linux_kinect::KinectImage>("/kinect/request/image");
   call_bounds_ =
     nh_.serviceClient<linux_kinect::KinectRequest>("/kinect/request/bounds");
   call_cognition_ =
@@ -80,7 +82,7 @@ sensor_msgs::Image KinectInterface::ReadImage()
   srv.request.data.width = 1920;
   srv.request.data.height = 1080;
 
-  if (!call_points_.call(srv))
+  if (!call_image_.call(srv))
   {
     ROS_WARN("service call failed");
     sensor_msgs::Image null;
