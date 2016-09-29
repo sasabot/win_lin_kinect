@@ -8,12 +8,12 @@ win_lin_kinect is a ROS implemented Windows/Linux bridge for sending Kinect sens
 ## features
 
 Service call and receive organized point clouds:
-- [input] rosservice linux_kinect::KinectRequest  /kinect/request/points
-- [output] rostopic sensor_msgs::PointCloud2 /kinect/points
+- [input] rosservice linux_kinect::KinectPoints  /kinect/request/points
+- [return] sensor_msgs::PointCloud2 points
 
 Service call and receive image:
-- [input] rosservice linux_kinect::KinectRequest /kinect/request/image
-- [output] rostopic sensor_msgs::Image /kinect/image
+- [input] rosservice linux_kinect::KinectImage /kinect/request/image
+- [return] sensor_msgs::Image image
 
 Service call and receive bounding box in image from point cloud index
 - [input] rosservice linux_kinect::KinectRequest /kinect/request/bounds
@@ -35,7 +35,9 @@ Streaming voice detection
 Publish voice on Windows
 - [input] rostopic std_msgs::String /windows/voice
 
-## install
+## install (host computer)
+
+Following explains how to install the win_lin_kinect package on a host computer. A host computer is the Windows computer connected to the Kinect, or the Linux computer that launches the *kinect_rgbd_interaction_client*. To setup a client computer, please refer to install (client computer) section.
 
 Windows
 - download Visual Studio 2015.
@@ -61,17 +63,32 @@ cd ../..
 make
 [sudo] make install
 ```
-- catkin build linux_kinect
+- Build
+```
+cd win_lin_kinect/linux_kinect
+./setup.sh --all
+```
+
+## install (client computer)
+
+Following explains how to install the win_lin_kinect package on a client computer. A client computer is a Linux computer that communicates with the host computer via ROS. To setup a host computer, please refer to install (host computer) section.
+
+Linux
+- Build
+```
+cd win_lin_kinect/linux_kinect
+./setup.sh --lib
+```
 
 ## startup
 
-Linux (must run first)
+Linux host (must run first)
 ```
 rosparam set /kinect_rgbd_interaction_client/frame "kinect_frame"
 rosrun linux_kinect kinect_rgbd_interaction_client
 ```
 
-Windows
+Windows host
 - Double click windows_kinect/KinectRgbdInteractionServer/KinectRgbdInteractionServer/bin/Debug/KinectRgbdInteractionServer.exe.
 - Once the program starts, the console will ask whether to use voice recognition or not. The voice recognition will require an Azure key. If you do not have one, type 'y' and disable voice recognition. By disabling, speaker recognition will also be disabled. If you do have a key, the console will ask to type in the key.
 - The console will ask for number of clients (which should be 1) and then ask to enter an IP address. If you are using previous settings, you can skip this process by directly pressing enter twice.
