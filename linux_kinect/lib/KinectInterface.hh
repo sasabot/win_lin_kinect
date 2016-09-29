@@ -54,7 +54,7 @@ namespace kinect
 
     public: ~KinectInterface();
 
-    public: std::string ReadKey();
+    public: void ReadKey();
 
     public: sensor_msgs::PointCloud2 ReadPoints();
 

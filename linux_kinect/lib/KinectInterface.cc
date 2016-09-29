@@ -28,7 +28,7 @@ KinectInterface::KinectInterface(ros::NodeHandle _nh) : nh_(_nh)
 }
 
 //////////////////////////////////////////////////
-std::string KinectInterface::ReadKey()
+void KinectInterface::ReadKey()
 {
  // read setup key for Microsoft Cognitive Service
   std::string cmd = "grep key= $(rospack find linux_kinect)/key.txt | cut -d= -f2";
