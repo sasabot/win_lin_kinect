@@ -25,8 +25,12 @@ KinectInterface::KinectInterface(ros::NodeHandle _nh) : nh_(_nh)
     nh_.serviceClient<linux_kinect::KinectRequest>("/kinect/request/bounds");
   call_cognition_ =
     nh_.serviceClient<linux_kinect::KinectRequest>("/kinect/request/cognition");
+}
 
-  // read setup key for Microsoft Cognitive Service
+//////////////////////////////////////////////////
+std::string KinectInterface::ReadKey()
+{
+ // read setup key for Microsoft Cognitive Service
   std::string cmd = "grep key= $(rospack find linux_kinect)/key.txt | cut -d= -f2";
   char buffer[128];
   key_ = "";
