@@ -27,6 +27,8 @@ KinectInterface::KinectInterface(ros::NodeHandle _nh) : nh_(_nh)
     nh_.serviceClient<linux_kinect::KinectRequest>("/kinect/request/bounds");
   call_cognition_ =
     nh_.serviceClient<linux_kinect::KinectRequest>("/kinect/request/cognition");
+  call_settings_ =
+    nh_.serviceClient<linux_kinect::KinectSettings>("/kinect/stream/settings");
 }
 
 //////////////////////////////////////////////////
@@ -121,6 +123,23 @@ std::vector<linux_kinect::Bit> KinectInterface::ImageBounds
 }
 
 //////////////////////////////////////////////////
+std::vector<geometry_msgs::Point> KinectInterface::ImageCenters
+(std::vector<linux_kinect::Bit> _image_bounds)
+{
+  linux_kinect::KinectRequest cog;
+  cog.request.data.reserve(_image_bounds.size());
+  for (unsigned int i = 0; i < _image_bounds.size(); ++i)
+    cog.request.data.push_back(_image_bounds[i]);
+  cog.request.args = "";
+
+  // try until succeed
+  while (!call_cognition_.call(cog)) {
+  }
+
+  return cog.response.points;
+}
+
+//////////////////////////////////////////////////
 linux_kinect::KinectRequest::Response KinectInterface::Cognition
 (std::vector<linux_kinect::Bit> _image_bounds, std::vector<int>& _valid_cluster_ids,
  kinect::interface::optionptr opt)
@@ -159,4 +178,32 @@ linux_kinect::KinectRequest::Response KinectInterface::Cognition
   }
 
   return cog.response;
+}
+
+//////////////////////////////////////////////////
+bool KinectInterface::StartPersonStream()
+{
+  linux_kinect::KinectSettings settings;
+  settings.request.streams.push_back("person");
+  settings.request.settings.push_back(true);
+
+  // try until succeed
+  while (!call_settings_.call(settings)) {
+  }
+
+  return settings.response.status;
+}
+
+//////////////////////////////////////////////////
+bool KinectInterface::StopPersonStream()
+{
+  linux_kinect::KinectSettings settings;
+  settings.request.streams.push_back("person");
+  settings.request.settings.push_back(false);
+
+  // try until succeed
+  while (!call_settings_.call(settings)) {
+  }
+
+  return settings.response.status;
 }

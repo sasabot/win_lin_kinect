@@ -998,30 +998,42 @@ class StreamSettings : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional bool once = 1;
-  void clear_once();
-  static const int kOnceFieldNumber = 1;
-  bool once() const;
-  void set_once(bool value);
+  // repeated string streams = 1;
+  int streams_size() const;
+  void clear_streams();
+  static const int kStreamsFieldNumber = 1;
+  const ::std::string& streams(int index) const;
+  ::std::string* mutable_streams(int index);
+  void set_streams(int index, const ::std::string& value);
+  void set_streams(int index, const char* value);
+  void set_streams(int index, const char* value, size_t size);
+  ::std::string* add_streams();
+  void add_streams(const ::std::string& value);
+  void add_streams(const char* value);
+  void add_streams(const char* value, size_t size);
+  const ::google::protobuf::RepeatedPtrField< ::std::string>& streams() const;
+  ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_streams();
 
-  // optional string args = 4;
-  void clear_args();
-  static const int kArgsFieldNumber = 4;
-  const ::std::string& args() const;
-  void set_args(const ::std::string& value);
-  void set_args(const char* value);
-  void set_args(const char* value, size_t size);
-  ::std::string* mutable_args();
-  ::std::string* release_args();
-  void set_allocated_args(::std::string* args);
+  // repeated bool settings = 2;
+  int settings_size() const;
+  void clear_settings();
+  static const int kSettingsFieldNumber = 2;
+  bool settings(int index) const;
+  void set_settings(int index, bool value);
+  void add_settings(bool value);
+  const ::google::protobuf::RepeatedField< bool >&
+      settings() const;
+  ::google::protobuf::RepeatedField< bool >*
+      mutable_settings();
 
   // @@protoc_insertion_point(class_scope:kinectrobot.StreamSettings)
  private:
 
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
-  ::google::protobuf::internal::ArenaStringPtr args_;
-  bool once_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> streams_;
+  ::google::protobuf::RepeatedField< bool > settings_;
+  mutable int _settings_cached_byte_size_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_kinect_5frobot_2eproto();
   friend void protobuf_AssignDesc_kinect_5frobot_2eproto();
@@ -2072,62 +2084,89 @@ BitStream::data() const {
 
 // StreamSettings
 
-// optional bool once = 1;
-inline void StreamSettings::clear_once() {
-  once_ = false;
+// repeated string streams = 1;
+inline int StreamSettings::streams_size() const {
+  return streams_.size();
 }
-inline bool StreamSettings::once() const {
-  // @@protoc_insertion_point(field_get:kinectrobot.StreamSettings.once)
-  return once_;
+inline void StreamSettings::clear_streams() {
+  streams_.Clear();
 }
-inline void StreamSettings::set_once(bool value) {
-  
-  once_ = value;
-  // @@protoc_insertion_point(field_set:kinectrobot.StreamSettings.once)
+inline const ::std::string& StreamSettings::streams(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrobot.StreamSettings.streams)
+  return streams_.Get(index);
+}
+inline ::std::string* StreamSettings::mutable_streams(int index) {
+  // @@protoc_insertion_point(field_mutable:kinectrobot.StreamSettings.streams)
+  return streams_.Mutable(index);
+}
+inline void StreamSettings::set_streams(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:kinectrobot.StreamSettings.streams)
+  streams_.Mutable(index)->assign(value);
+}
+inline void StreamSettings::set_streams(int index, const char* value) {
+  streams_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:kinectrobot.StreamSettings.streams)
+}
+inline void StreamSettings::set_streams(int index, const char* value, size_t size) {
+  streams_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:kinectrobot.StreamSettings.streams)
+}
+inline ::std::string* StreamSettings::add_streams() {
+  // @@protoc_insertion_point(field_add_mutable:kinectrobot.StreamSettings.streams)
+  return streams_.Add();
+}
+inline void StreamSettings::add_streams(const ::std::string& value) {
+  streams_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:kinectrobot.StreamSettings.streams)
+}
+inline void StreamSettings::add_streams(const char* value) {
+  streams_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:kinectrobot.StreamSettings.streams)
+}
+inline void StreamSettings::add_streams(const char* value, size_t size) {
+  streams_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:kinectrobot.StreamSettings.streams)
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+StreamSettings::streams() const {
+  // @@protoc_insertion_point(field_list:kinectrobot.StreamSettings.streams)
+  return streams_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+StreamSettings::mutable_streams() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrobot.StreamSettings.streams)
+  return &streams_;
 }
 
-// optional string args = 4;
-inline void StreamSettings::clear_args() {
-  args_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+// repeated bool settings = 2;
+inline int StreamSettings::settings_size() const {
+  return settings_.size();
 }
-inline const ::std::string& StreamSettings::args() const {
-  // @@protoc_insertion_point(field_get:kinectrobot.StreamSettings.args)
-  return args_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+inline void StreamSettings::clear_settings() {
+  settings_.Clear();
 }
-inline void StreamSettings::set_args(const ::std::string& value) {
-  
-  args_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:kinectrobot.StreamSettings.args)
+inline bool StreamSettings::settings(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrobot.StreamSettings.settings)
+  return settings_.Get(index);
 }
-inline void StreamSettings::set_args(const char* value) {
-  
-  args_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:kinectrobot.StreamSettings.args)
+inline void StreamSettings::set_settings(int index, bool value) {
+  settings_.Set(index, value);
+  // @@protoc_insertion_point(field_set:kinectrobot.StreamSettings.settings)
 }
-inline void StreamSettings::set_args(const char* value, size_t size) {
-  
-  args_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:kinectrobot.StreamSettings.args)
+inline void StreamSettings::add_settings(bool value) {
+  settings_.Add(value);
+  // @@protoc_insertion_point(field_add:kinectrobot.StreamSettings.settings)
 }
-inline ::std::string* StreamSettings::mutable_args() {
-  
-  // @@protoc_insertion_point(field_mutable:kinectrobot.StreamSettings.args)
-  return args_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+inline const ::google::protobuf::RepeatedField< bool >&
+StreamSettings::settings() const {
+  // @@protoc_insertion_point(field_list:kinectrobot.StreamSettings.settings)
+  return settings_;
 }
-inline ::std::string* StreamSettings::release_args() {
-  // @@protoc_insertion_point(field_release:kinectrobot.StreamSettings.args)
-  
-  return args_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
-inline void StreamSettings::set_allocated_args(::std::string* args) {
-  if (args != NULL) {
-    
-  } else {
-    
-  }
-  args_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), args);
-  // @@protoc_insertion_point(field_set_allocated:kinectrobot.StreamSettings.args)
+inline ::google::protobuf::RepeatedField< bool >*
+StreamSettings::mutable_settings() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrobot.StreamSettings.settings)
+  return &settings_;
 }
 
 // -------------------------------------------------------------------

@@ -70,8 +70,8 @@ message BitStream {
 }
 
 message StreamSettings {
-  bool once = 1;
-  string args = 4;  
+  repeated string streams = 1;
+  repeated bool settings = 2;
 }
 
 message Speech {

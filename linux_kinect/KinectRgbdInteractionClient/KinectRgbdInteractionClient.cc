@@ -10,6 +10,7 @@
 #include "linux_kinect/KinectRequest.h"
 #include "linux_kinect/KinectPoints.h"
 #include "linux_kinect/KinectImage.h"
+#include "linux_kinect/KinectSettings.h"
 #include "linux_kinect/Tag.h"
 #include "linux_kinect/Cognition.h"
 #include "linux_kinect/Bit.h"
@@ -101,6 +102,11 @@ public:
     rgb.datatype = 7;
     rgb.count = 1;
     field_[3] = rgb;
+
+    // stream settings
+
+    srv_stream_settings_ = nh_.advertiseService(
+        "/kinect/stream/settings", &KinectRobotClient::StreamSettings, this);
 
     // interaction
 
@@ -344,6 +350,26 @@ public:
     return true;
   }
 
+  bool StreamSettings(linux_kinect::KinectSettings::Request &req,
+                      linux_kinect::KinectSettings::Response &res)
+  {
+    kinectrobot::StreamSettings settings;
+    ROS_WARN("received settings from ROS");
+    for (unsigned int i = 0; i < req.streams.size(); ++i) {
+      settings.add_streams(req.streams[i]);
+      settings.add_settings(req.settings[i]);
+    }
+
+    ClientContext context;
+    kinectrobot::Response response;
+
+    Status status = stub_->SetStreamSettings(&context, settings, &response);
+    res.status = response.status();
+
+    ROS_WARN("updateded settings");
+    return true;
+  }
+
   void LinkSpeechOutputSettings(bool* setting)
   {
     // speech output setting must exist before KinectRobotClient initialization
@@ -420,6 +446,8 @@ private:
   ros::ServiceServer srv_bounds_;
 
   ros::ServiceServer srv_cognition_;
+
+  ros::ServiceServer srv_stream_settings_;
 
   std::vector<sensor_msgs::PointField> field_;
 

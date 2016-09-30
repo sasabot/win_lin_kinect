@@ -9,6 +9,7 @@
 #include "linux_kinect/KinectPoints.h"
 #include "linux_kinect/KinectImage.h"
 #include "linux_kinect/KinectRequest.h"
+#include "linux_kinect/KinectSettings.h"
 #include "linux_kinect/Bit.h"
 #include "linux_kinect/Cognition.h"
 #include "linux_kinect/Tag.h"
@@ -63,9 +64,16 @@ namespace kinect
     public: std::vector<linux_kinect::Bit> ImageBounds
     (std::vector<std::array<int, 4> > _depth_indicies);
 
+    public: std::vector<geometry_msgs::Point> ImageCenters
+    (std::vector<linux_kinect::Bit> _image_bounds);
+
     public: linux_kinect::KinectRequest::Response Cognition
     (std::vector<linux_kinect::Bit> _image_bounds, std::vector<int>& _valid_cluster_ids,
      kinect::interface::optionptr opt);
+
+    public: bool StartPersonStream();
+
+    public: bool StopPersonStream();
 
     private: ros::NodeHandle nh_;
 
@@ -76,6 +84,8 @@ namespace kinect
     private: ros::ServiceClient call_bounds_;
 
     private: ros::ServiceClient call_cognition_;
+
+    private: ros::ServiceClient call_settings_;
 
     private: std::string key_;
     };

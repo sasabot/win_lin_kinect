@@ -227,8 +227,8 @@ void protobuf_AssignDesc_kinect_5frobot_2eproto() {
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(BitStream, _is_default_instance_));
   StreamSettings_descriptor_ = file->message_type(9);
   static const int StreamSettings_offsets_[2] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StreamSettings, once_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StreamSettings, args_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StreamSettings, streams_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(StreamSettings, settings_),
   };
   StreamSettings_reflection_ =
     ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
@@ -404,30 +404,30 @@ void protobuf_AddDesc_kinect_5frobot_2eproto() {
     "\022\r\n\005texts\030\006 \003(\t\022\016\n\006status\030\007 \001(\010\"=\n\nDataS"
     "tream\022\016\n\006status\030\001 \001(\010\022\037\n\004data\030\002 \003(\0132\021.ki"
     "nectrobot.Data\";\n\tBitStream\022\016\n\006status\030\001 "
-    "\001(\010\022\036\n\004data\030\002 \003(\0132\020.kinectrobot.Bit\",\n\016S"
-    "treamSettings\022\014\n\004once\030\001 \001(\010\022\014\n\004args\030\004 \001("
-    "\t\")\n\006Speech\022\017\n\007command\030\001 \001(\t\022\016\n\006speech\030\002"
-    " \001(\t\"\210\001\n\rVoiceTriggers\022#\n\033AutoTriggerAft"
-    "erRecognition\030\001 \001(\010\022\037\n\027AutoTriggerDuring"
-    "Speech\030\002 \001(\010\022\027\n\017ManualTriggerOn\030\003 \001(\010\022\030\n"
-    "\020ManualTriggerOff\030\004 \001(\010\"D\n\007UrlInfo\022\013\n\003ur"
-    "l\030\001 \001(\t\022\020\n\010linkhead\030\002 \001(\t\022\013\n\003key\030\003 \001(\t\022\r"
-    "\n\005style\030\004 \001(\t\"\032\n\010Response\022\016\n\006status\030\001 \001("
-    "\0102\253\004\n\013KinectRobot\022=\n\014ReturnPoints\022\024.kine"
-    "ctrobot.Request\032\023.kinectrobot.Points\"\0000\001"
-    "\022<\n\013ReturnImage\022\024.kinectrobot.Request\032\023."
-    "kinectrobot.Pixels\"\0000\001\022R\n ReturnPixelBou"
-    "ndsFromSpaceBounds\022\024.kinectrobot.Request"
-    "\032\026.kinectrobot.BitStream\"\000\022B\n\017ReturnCogn"
-    "ition\022\024.kinectrobot.Request\032\027.kinectrobo"
-    "t.DataStream\"\000\022I\n\021SetStreamSettings\022\033.ki"
-    "nectrobot.StreamSettings\032\025.kinectrobot.R"
-    "esponse\"\000\022:\n\nSendSpeech\022\023.kinectrobot.Sp"
-    "eech\032\025.kinectrobot.Response\"\000\022E\n\016SetSTTB"
-    "ehavior\022\032.kinectrobot.VoiceTriggers\032\025.ki"
-    "nectrobot.Response\"\000\0229\n\010WebAgent\022\024.kinec"
-    "trobot.UrlInfo\032\025.kinectrobot.Response\"\000B"
-    "\017\n\007ex.grpc\242\002\003RTGb\006proto3", 1504);
+    "\001(\010\022\036\n\004data\030\002 \003(\0132\020.kinectrobot.Bit\"3\n\016S"
+    "treamSettings\022\017\n\007streams\030\001 \003(\t\022\020\n\010settin"
+    "gs\030\002 \003(\010\")\n\006Speech\022\017\n\007command\030\001 \001(\t\022\016\n\006s"
+    "peech\030\002 \001(\t\"\210\001\n\rVoiceTriggers\022#\n\033AutoTri"
+    "ggerAfterRecognition\030\001 \001(\010\022\037\n\027AutoTrigge"
+    "rDuringSpeech\030\002 \001(\010\022\027\n\017ManualTriggerOn\030\003"
+    " \001(\010\022\030\n\020ManualTriggerOff\030\004 \001(\010\"D\n\007UrlInf"
+    "o\022\013\n\003url\030\001 \001(\t\022\020\n\010linkhead\030\002 \001(\t\022\013\n\003key\030"
+    "\003 \001(\t\022\r\n\005style\030\004 \001(\t\"\032\n\010Response\022\016\n\006stat"
+    "us\030\001 \001(\0102\253\004\n\013KinectRobot\022=\n\014ReturnPoints"
+    "\022\024.kinectrobot.Request\032\023.kinectrobot.Poi"
+    "nts\"\0000\001\022<\n\013ReturnImage\022\024.kinectrobot.Req"
+    "uest\032\023.kinectrobot.Pixels\"\0000\001\022R\n ReturnP"
+    "ixelBoundsFromSpaceBounds\022\024.kinectrobot."
+    "Request\032\026.kinectrobot.BitStream\"\000\022B\n\017Ret"
+    "urnCognition\022\024.kinectrobot.Request\032\027.kin"
+    "ectrobot.DataStream\"\000\022I\n\021SetStreamSettin"
+    "gs\022\033.kinectrobot.StreamSettings\032\025.kinect"
+    "robot.Response\"\000\022:\n\nSendSpeech\022\023.kinectr"
+    "obot.Speech\032\025.kinectrobot.Response\"\000\022E\n\016"
+    "SetSTTBehavior\022\032.kinectrobot.VoiceTrigge"
+    "rs\032\025.kinectrobot.Response\"\000\0229\n\010WebAgent\022"
+    "\024.kinectrobot.UrlInfo\032\025.kinectrobot.Resp"
+    "onse\"\000B\017\n\007ex.grpc\242\002\003RTGb\006proto3", 1511);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "kinect_robot.proto", &protobuf_RegisterTypes);
   Bit::default_instance_ = new Bit();
@@ -3856,8 +3856,8 @@ BitStream::data() const {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
-const int StreamSettings::kOnceFieldNumber;
-const int StreamSettings::kArgsFieldNumber;
+const int StreamSettings::kStreamsFieldNumber;
+const int StreamSettings::kSettingsFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
 StreamSettings::StreamSettings()
@@ -3882,8 +3882,6 @@ void StreamSettings::SharedCtor() {
     _is_default_instance_ = false;
   ::google::protobuf::internal::GetEmptyString();
   _cached_size_ = 0;
-  once_ = false;
-  args_.UnsafeSetDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
 }
 
 StreamSettings::~StreamSettings() {
@@ -3892,7 +3890,6 @@ StreamSettings::~StreamSettings() {
 }
 
 void StreamSettings::SharedDtor() {
-  args_.DestroyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
   if (this != default_instance_) {
   }
 }
@@ -3924,8 +3921,8 @@ StreamSettings* StreamSettings::New(::google::protobuf::Arena* arena) const {
 
 void StreamSettings::Clear() {
 // @@protoc_insertion_point(message_clear_start:kinectrobot.StreamSettings)
-  once_ = false;
-  args_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+  streams_.Clear();
+  settings_.Clear();
 }
 
 bool StreamSettings::MergePartialFromCodedStream(
@@ -3938,30 +3935,36 @@ bool StreamSettings::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional bool once = 1;
+      // repeated string streams = 1;
       case 1: {
-        if (tag == 8) {
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
-                 input, &once_)));
-
+        if (tag == 10) {
+         parse_streams:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_streams()));
+          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+            this->streams(this->streams_size() - 1).data(),
+            this->streams(this->streams_size() - 1).length(),
+            ::google::protobuf::internal::WireFormatLite::PARSE,
+            "kinectrobot.StreamSettings.streams"));
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(34)) goto parse_args;
+        if (input->ExpectTag(10)) goto parse_streams;
+        if (input->ExpectTag(18)) goto parse_settings;
         break;
       }
 
-      // optional string args = 4;
-      case 4: {
-        if (tag == 34) {
-         parse_args:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_args()));
-          DO_(::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-            this->args().data(), this->args().length(),
-            ::google::protobuf::internal::WireFormatLite::PARSE,
-            "kinectrobot.StreamSettings.args"));
+      // repeated bool settings = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_settings:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, this->mutable_settings())));
+        } else if (tag == 16) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 1, 18, input, this->mutable_settings())));
         } else {
           goto handle_unusual;
         }
@@ -3993,19 +3996,24 @@ failure:
 void StreamSettings::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:kinectrobot.StreamSettings)
-  // optional bool once = 1;
-  if (this->once() != 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->once(), output);
+  // repeated string streams = 1;
+  for (int i = 0; i < this->streams_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->streams(i).data(), this->streams(i).length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "kinectrobot.StreamSettings.streams");
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->streams(i), output);
   }
 
-  // optional string args = 4;
-  if (this->args().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->args().data(), this->args().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "kinectrobot.StreamSettings.args");
-    ::google::protobuf::internal::WireFormatLite::WriteStringMaybeAliased(
-      4, this->args(), output);
+  // repeated bool settings = 2;
+  if (this->settings_size() > 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteTag(2, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
+    output->WriteVarint32(_settings_cached_byte_size_);
+  }
+  for (int i = 0; i < this->settings_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteBoolNoTag(
+      this->settings(i), output);
   }
 
   // @@protoc_insertion_point(serialize_end:kinectrobot.StreamSettings)
@@ -4014,20 +4022,28 @@ void StreamSettings::SerializeWithCachedSizes(
 ::google::protobuf::uint8* StreamSettings::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:kinectrobot.StreamSettings)
-  // optional bool once = 1;
-  if (this->once() != 0) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->once(), target);
+  // repeated string streams = 1;
+  for (int i = 0; i < this->streams_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+      this->streams(i).data(), this->streams(i).length(),
+      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
+      "kinectrobot.StreamSettings.streams");
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteStringToArray(1, this->streams(i), target);
   }
 
-  // optional string args = 4;
-  if (this->args().size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
-      this->args().data(), this->args().length(),
-      ::google::protobuf::internal::WireFormatLite::SERIALIZE,
-      "kinectrobot.StreamSettings.args");
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        4, this->args(), target);
+  // repeated bool settings = 2;
+  if (this->settings_size() > 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
+      2,
+      ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED,
+      target);
+    target = ::google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(
+      _settings_cached_byte_size_, target);
+  }
+  for (int i = 0; i < this->settings_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteBoolNoTagToArray(this->settings(i), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:kinectrobot.StreamSettings)
@@ -4038,16 +4054,25 @@ int StreamSettings::ByteSize() const {
 // @@protoc_insertion_point(message_byte_size_start:kinectrobot.StreamSettings)
   int total_size = 0;
 
-  // optional bool once = 1;
-  if (this->once() != 0) {
-    total_size += 1 + 1;
+  // repeated string streams = 1;
+  total_size += 1 * this->streams_size();
+  for (int i = 0; i < this->streams_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->streams(i));
   }
 
-  // optional string args = 4;
-  if (this->args().size() > 0) {
-    total_size += 1 +
-      ::google::protobuf::internal::WireFormatLite::StringSize(
-        this->args());
+  // repeated bool settings = 2;
+  {
+    int data_size = 0;
+    data_size = 1 * this->settings_size();
+    if (data_size > 0) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(data_size);
+    }
+    GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+    _settings_cached_byte_size_ = data_size;
+    GOOGLE_SAFE_CONCURRENT_WRITES_END();
+    total_size += data_size;
   }
 
   GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
@@ -4074,13 +4099,8 @@ void StreamSettings::MergeFrom(const ::google::protobuf::Message& from) {
 void StreamSettings::MergeFrom(const StreamSettings& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:kinectrobot.StreamSettings)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
-  if (from.once() != 0) {
-    set_once(from.once());
-  }
-  if (from.args().size() > 0) {
-
-    args_.AssignWithDefault(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), from.args_);
-  }
+  streams_.MergeFrom(from.streams_);
+  settings_.MergeFrom(from.settings_);
 }
 
 void StreamSettings::CopyFrom(const ::google::protobuf::Message& from) {
@@ -4107,8 +4127,8 @@ void StreamSettings::Swap(StreamSettings* other) {
   InternalSwap(other);
 }
 void StreamSettings::InternalSwap(StreamSettings* other) {
-  std::swap(once_, other->once_);
-  args_.Swap(&other->args_);
+  streams_.UnsafeArenaSwap(&other->streams_);
+  settings_.UnsafeArenaSwap(&other->settings_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
 }
@@ -4124,62 +4144,89 @@ void StreamSettings::InternalSwap(StreamSettings* other) {
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
 // StreamSettings
 
-// optional bool once = 1;
-void StreamSettings::clear_once() {
-  once_ = false;
+// repeated string streams = 1;
+int StreamSettings::streams_size() const {
+  return streams_.size();
 }
- bool StreamSettings::once() const {
-  // @@protoc_insertion_point(field_get:kinectrobot.StreamSettings.once)
-  return once_;
+void StreamSettings::clear_streams() {
+  streams_.Clear();
 }
- void StreamSettings::set_once(bool value) {
-  
-  once_ = value;
-  // @@protoc_insertion_point(field_set:kinectrobot.StreamSettings.once)
+ const ::std::string& StreamSettings::streams(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrobot.StreamSettings.streams)
+  return streams_.Get(index);
+}
+ ::std::string* StreamSettings::mutable_streams(int index) {
+  // @@protoc_insertion_point(field_mutable:kinectrobot.StreamSettings.streams)
+  return streams_.Mutable(index);
+}
+ void StreamSettings::set_streams(int index, const ::std::string& value) {
+  // @@protoc_insertion_point(field_set:kinectrobot.StreamSettings.streams)
+  streams_.Mutable(index)->assign(value);
+}
+ void StreamSettings::set_streams(int index, const char* value) {
+  streams_.Mutable(index)->assign(value);
+  // @@protoc_insertion_point(field_set_char:kinectrobot.StreamSettings.streams)
+}
+ void StreamSettings::set_streams(int index, const char* value, size_t size) {
+  streams_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_set_pointer:kinectrobot.StreamSettings.streams)
+}
+ ::std::string* StreamSettings::add_streams() {
+  // @@protoc_insertion_point(field_add_mutable:kinectrobot.StreamSettings.streams)
+  return streams_.Add();
+}
+ void StreamSettings::add_streams(const ::std::string& value) {
+  streams_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add:kinectrobot.StreamSettings.streams)
+}
+ void StreamSettings::add_streams(const char* value) {
+  streams_.Add()->assign(value);
+  // @@protoc_insertion_point(field_add_char:kinectrobot.StreamSettings.streams)
+}
+ void StreamSettings::add_streams(const char* value, size_t size) {
+  streams_.Add()->assign(reinterpret_cast<const char*>(value), size);
+  // @@protoc_insertion_point(field_add_pointer:kinectrobot.StreamSettings.streams)
+}
+ const ::google::protobuf::RepeatedPtrField< ::std::string>&
+StreamSettings::streams() const {
+  // @@protoc_insertion_point(field_list:kinectrobot.StreamSettings.streams)
+  return streams_;
+}
+ ::google::protobuf::RepeatedPtrField< ::std::string>*
+StreamSettings::mutable_streams() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrobot.StreamSettings.streams)
+  return &streams_;
 }
 
-// optional string args = 4;
-void StreamSettings::clear_args() {
-  args_.ClearToEmptyNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+// repeated bool settings = 2;
+int StreamSettings::settings_size() const {
+  return settings_.size();
 }
- const ::std::string& StreamSettings::args() const {
-  // @@protoc_insertion_point(field_get:kinectrobot.StreamSettings.args)
-  return args_.GetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+void StreamSettings::clear_settings() {
+  settings_.Clear();
 }
- void StreamSettings::set_args(const ::std::string& value) {
-  
-  args_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), value);
-  // @@protoc_insertion_point(field_set:kinectrobot.StreamSettings.args)
+ bool StreamSettings::settings(int index) const {
+  // @@protoc_insertion_point(field_get:kinectrobot.StreamSettings.settings)
+  return settings_.Get(index);
 }
- void StreamSettings::set_args(const char* value) {
-  
-  args_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), ::std::string(value));
-  // @@protoc_insertion_point(field_set_char:kinectrobot.StreamSettings.args)
+ void StreamSettings::set_settings(int index, bool value) {
+  settings_.Set(index, value);
+  // @@protoc_insertion_point(field_set:kinectrobot.StreamSettings.settings)
 }
- void StreamSettings::set_args(const char* value, size_t size) {
-  
-  args_.SetNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(),
-      ::std::string(reinterpret_cast<const char*>(value), size));
-  // @@protoc_insertion_point(field_set_pointer:kinectrobot.StreamSettings.args)
+ void StreamSettings::add_settings(bool value) {
+  settings_.Add(value);
+  // @@protoc_insertion_point(field_add:kinectrobot.StreamSettings.settings)
 }
- ::std::string* StreamSettings::mutable_args() {
-  
-  // @@protoc_insertion_point(field_mutable:kinectrobot.StreamSettings.args)
-  return args_.MutableNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
+ const ::google::protobuf::RepeatedField< bool >&
+StreamSettings::settings() const {
+  // @@protoc_insertion_point(field_list:kinectrobot.StreamSettings.settings)
+  return settings_;
 }
- ::std::string* StreamSettings::release_args() {
-  // @@protoc_insertion_point(field_release:kinectrobot.StreamSettings.args)
-  
-  return args_.ReleaseNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited());
-}
- void StreamSettings::set_allocated_args(::std::string* args) {
-  if (args != NULL) {
-    
-  } else {
-    
-  }
-  args_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), args);
-  // @@protoc_insertion_point(field_set_allocated:kinectrobot.StreamSettings.args)
+ ::google::protobuf::RepeatedField< bool >*
+StreamSettings::mutable_settings() {
+  // @@protoc_insertion_point(field_mutable_list:kinectrobot.StreamSettings.settings)
+  return &settings_;
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
