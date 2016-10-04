@@ -36,27 +36,27 @@ namespace Kinectrobot {
             "BiADKAkSDgoGc3RhdHVzGAcgASgIIj0KCkRhdGFTdHJlYW0SDgoGc3RhdHVz",
             "GAEgASgIEh8KBGRhdGEYAiADKAsyES5raW5lY3Ryb2JvdC5EYXRhIjsKCUJp",
             "dFN0cmVhbRIOCgZzdGF0dXMYASABKAgSHgoEZGF0YRgCIAMoCzIQLmtpbmVj",
-            "dHJvYm90LkJpdCIsCg5TdHJlYW1TZXR0aW5ncxIMCgRvbmNlGAEgASgIEgwK",
-            "BGFyZ3MYBCABKAkiKQoGU3BlZWNoEg8KB2NvbW1hbmQYASABKAkSDgoGc3Bl",
-            "ZWNoGAIgASgJIogBCg1Wb2ljZVRyaWdnZXJzEiMKG0F1dG9UcmlnZ2VyQWZ0",
-            "ZXJSZWNvZ25pdGlvbhgBIAEoCBIfChdBdXRvVHJpZ2dlckR1cmluZ1NwZWVj",
-            "aBgCIAEoCBIXCg9NYW51YWxUcmlnZ2VyT24YAyABKAgSGAoQTWFudWFsVHJp",
-            "Z2dlck9mZhgEIAEoCCJECgdVcmxJbmZvEgsKA3VybBgBIAEoCRIQCghsaW5r",
-            "aGVhZBgCIAEoCRILCgNrZXkYAyABKAkSDQoFc3R5bGUYBCABKAkiGgoIUmVz",
-            "cG9uc2USDgoGc3RhdHVzGAEgASgIMqsECgtLaW5lY3RSb2JvdBI9CgxSZXR1",
-            "cm5Qb2ludHMSFC5raW5lY3Ryb2JvdC5SZXF1ZXN0GhMua2luZWN0cm9ib3Qu",
-            "UG9pbnRzIgAwARI8CgtSZXR1cm5JbWFnZRIULmtpbmVjdHJvYm90LlJlcXVl",
-            "c3QaEy5raW5lY3Ryb2JvdC5QaXhlbHMiADABElIKIFJldHVyblBpeGVsQm91",
-            "bmRzRnJvbVNwYWNlQm91bmRzEhQua2luZWN0cm9ib3QuUmVxdWVzdBoWLmtp",
-            "bmVjdHJvYm90LkJpdFN0cmVhbSIAEkIKD1JldHVybkNvZ25pdGlvbhIULmtp",
-            "bmVjdHJvYm90LlJlcXVlc3QaFy5raW5lY3Ryb2JvdC5EYXRhU3RyZWFtIgAS",
-            "SQoRU2V0U3RyZWFtU2V0dGluZ3MSGy5raW5lY3Ryb2JvdC5TdHJlYW1TZXR0",
-            "aW5ncxoVLmtpbmVjdHJvYm90LlJlc3BvbnNlIgASOgoKU2VuZFNwZWVjaBIT",
-            "LmtpbmVjdHJvYm90LlNwZWVjaBoVLmtpbmVjdHJvYm90LlJlc3BvbnNlIgAS",
-            "RQoOU2V0U1RUQmVoYXZpb3ISGi5raW5lY3Ryb2JvdC5Wb2ljZVRyaWdnZXJz",
-            "GhUua2luZWN0cm9ib3QuUmVzcG9uc2UiABI5CghXZWJBZ2VudBIULmtpbmVj",
-            "dHJvYm90LlVybEluZm8aFS5raW5lY3Ryb2JvdC5SZXNwb25zZSIAQg8KB2V4",
-            "LmdycGOiAgNSVEdiBnByb3RvMw=="));
+            "dHJvYm90LkJpdCIzCg5TdHJlYW1TZXR0aW5ncxIPCgdzdHJlYW1zGAEgAygJ",
+            "EhAKCHNldHRpbmdzGAIgAygIIikKBlNwZWVjaBIPCgdjb21tYW5kGAEgASgJ",
+            "Eg4KBnNwZWVjaBgCIAEoCSKIAQoNVm9pY2VUcmlnZ2VycxIjChtBdXRvVHJp",
+            "Z2dlckFmdGVyUmVjb2duaXRpb24YASABKAgSHwoXQXV0b1RyaWdnZXJEdXJp",
+            "bmdTcGVlY2gYAiABKAgSFwoPTWFudWFsVHJpZ2dlck9uGAMgASgIEhgKEE1h",
+            "bnVhbFRyaWdnZXJPZmYYBCABKAgiRAoHVXJsSW5mbxILCgN1cmwYASABKAkS",
+            "EAoIbGlua2hlYWQYAiABKAkSCwoDa2V5GAMgASgJEg0KBXN0eWxlGAQgASgJ",
+            "IhoKCFJlc3BvbnNlEg4KBnN0YXR1cxgBIAEoCDKrBAoLS2luZWN0Um9ib3QS",
+            "PQoMUmV0dXJuUG9pbnRzEhQua2luZWN0cm9ib3QuUmVxdWVzdBoTLmtpbmVj",
+            "dHJvYm90LlBvaW50cyIAMAESPAoLUmV0dXJuSW1hZ2USFC5raW5lY3Ryb2Jv",
+            "dC5SZXF1ZXN0GhMua2luZWN0cm9ib3QuUGl4ZWxzIgAwARJSCiBSZXR1cm5Q",
+            "aXhlbEJvdW5kc0Zyb21TcGFjZUJvdW5kcxIULmtpbmVjdHJvYm90LlJlcXVl",
+            "c3QaFi5raW5lY3Ryb2JvdC5CaXRTdHJlYW0iABJCCg9SZXR1cm5Db2duaXRp",
+            "b24SFC5raW5lY3Ryb2JvdC5SZXF1ZXN0Ghcua2luZWN0cm9ib3QuRGF0YVN0",
+            "cmVhbSIAEkkKEVNldFN0cmVhbVNldHRpbmdzEhsua2luZWN0cm9ib3QuU3Ry",
+            "ZWFtU2V0dGluZ3MaFS5raW5lY3Ryb2JvdC5SZXNwb25zZSIAEjoKClNlbmRT",
+            "cGVlY2gSEy5raW5lY3Ryb2JvdC5TcGVlY2gaFS5raW5lY3Ryb2JvdC5SZXNw",
+            "b25zZSIAEkUKDlNldFNUVEJlaGF2aW9yEhoua2luZWN0cm9ib3QuVm9pY2VU",
+            "cmlnZ2VycxoVLmtpbmVjdHJvYm90LlJlc3BvbnNlIgASOQoIV2ViQWdlbnQS",
+            "FC5raW5lY3Ryb2JvdC5VcmxJbmZvGhUua2luZWN0cm9ib3QuUmVzcG9uc2Ui",
+            "AEIPCgdleC5ncnBjogIDUlRHYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -69,7 +69,7 @@ namespace Kinectrobot {
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Data), global::Kinectrobot.Data.Parser, new[]{ "X", "Y", "Z", "Captions", "Tags", "Texts", "Status" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.DataStream), global::Kinectrobot.DataStream.Parser, new[]{ "Status", "Data" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.BitStream), global::Kinectrobot.BitStream.Parser, new[]{ "Status", "Data" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.StreamSettings), global::Kinectrobot.StreamSettings.Parser, new[]{ "Once", "Args" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.StreamSettings), global::Kinectrobot.StreamSettings.Parser, new[]{ "Streams", "Settings" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Speech), global::Kinectrobot.Speech.Parser, new[]{ "Command", "Speech_" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.VoiceTriggers), global::Kinectrobot.VoiceTriggers.Parser, new[]{ "AutoTriggerAfterRecognition", "AutoTriggerDuringSpeech", "ManualTriggerOn", "ManualTriggerOff" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.UrlInfo), global::Kinectrobot.UrlInfo.Parser, new[]{ "Url", "Linkhead", "Key", "Style" }, null, null, null),
@@ -1423,32 +1423,30 @@ namespace Kinectrobot {
     partial void OnConstruction();
 
     public StreamSettings(StreamSettings other) : this() {
-      once_ = other.once_;
-      args_ = other.args_;
+      streams_ = other.streams_.Clone();
+      settings_ = other.settings_.Clone();
     }
 
     public StreamSettings Clone() {
       return new StreamSettings(this);
     }
 
-    /// <summary>Field number for the "once" field.</summary>
-    public const int OnceFieldNumber = 1;
-    private bool once_;
-    public bool Once {
-      get { return once_; }
-      set {
-        once_ = value;
-      }
+    /// <summary>Field number for the "streams" field.</summary>
+    public const int StreamsFieldNumber = 1;
+    private static readonly pb::FieldCodec<string> _repeated_streams_codec
+        = pb::FieldCodec.ForString(10);
+    private readonly pbc::RepeatedField<string> streams_ = new pbc::RepeatedField<string>();
+    public pbc::RepeatedField<string> Streams {
+      get { return streams_; }
     }
 
-    /// <summary>Field number for the "args" field.</summary>
-    public const int ArgsFieldNumber = 4;
-    private string args_ = "";
-    public string Args {
-      get { return args_; }
-      set {
-        args_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
-      }
+    /// <summary>Field number for the "settings" field.</summary>
+    public const int SettingsFieldNumber = 2;
+    private static readonly pb::FieldCodec<bool> _repeated_settings_codec
+        = pb::FieldCodec.ForBool(18);
+    private readonly pbc::RepeatedField<bool> settings_ = new pbc::RepeatedField<bool>();
+    public pbc::RepeatedField<bool> Settings {
+      get { return settings_; }
     }
 
     public override bool Equals(object other) {
@@ -1462,15 +1460,15 @@ namespace Kinectrobot {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (Once != other.Once) return false;
-      if (Args != other.Args) return false;
+      if(!streams_.Equals(other.streams_)) return false;
+      if(!settings_.Equals(other.settings_)) return false;
       return true;
     }
 
     public override int GetHashCode() {
       int hash = 1;
-      if (Once != false) hash ^= Once.GetHashCode();
-      if (Args.Length != 0) hash ^= Args.GetHashCode();
+      hash ^= streams_.GetHashCode();
+      hash ^= settings_.GetHashCode();
       return hash;
     }
 
@@ -1479,24 +1477,14 @@ namespace Kinectrobot {
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
-      if (Once != false) {
-        output.WriteRawTag(8);
-        output.WriteBool(Once);
-      }
-      if (Args.Length != 0) {
-        output.WriteRawTag(34);
-        output.WriteString(Args);
-      }
+      streams_.WriteTo(output, _repeated_streams_codec);
+      settings_.WriteTo(output, _repeated_settings_codec);
     }
 
     public int CalculateSize() {
       int size = 0;
-      if (Once != false) {
-        size += 1 + 1;
-      }
-      if (Args.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Args);
-      }
+      size += streams_.CalculateSize(_repeated_streams_codec);
+      size += settings_.CalculateSize(_repeated_settings_codec);
       return size;
     }
 
@@ -1504,12 +1492,8 @@ namespace Kinectrobot {
       if (other == null) {
         return;
       }
-      if (other.Once != false) {
-        Once = other.Once;
-      }
-      if (other.Args.Length != 0) {
-        Args = other.Args;
-      }
+      streams_.Add(other.streams_);
+      settings_.Add(other.settings_);
     }
 
     public void MergeFrom(pb::CodedInputStream input) {
@@ -1519,12 +1503,13 @@ namespace Kinectrobot {
           default:
             input.SkipLastField();
             break;
-          case 8: {
-            Once = input.ReadBool();
+          case 10: {
+            streams_.AddEntriesFrom(input, _repeated_streams_codec);
             break;
           }
-          case 34: {
-            Args = input.ReadString();
+          case 18:
+          case 16: {
+            settings_.AddEntriesFrom(input, _repeated_settings_codec);
             break;
           }
         }

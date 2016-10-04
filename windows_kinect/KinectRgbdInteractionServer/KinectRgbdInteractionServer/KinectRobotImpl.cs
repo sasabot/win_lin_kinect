@@ -41,6 +41,11 @@ namespace Kinectrobot
         private int sendPointWidth = 512;
         private int sendPointHeight = 424;
 
+        // streaming settings
+
+        private ReaderWriterLockSlim streamSettingsLocker = null;
+        private bool streamPerson = false;
+
         // speech
 
         private SpeechSynthesizer speechSynthesizer;
@@ -61,6 +66,7 @@ namespace Kinectrobot
             // create lockers
             this.pointsLocker = new ReaderWriterLockSlim();
             this.pixelsLocker = new ReaderWriterLockSlim();
+            this.streamSettingsLocker = new ReaderWriterLockSlim();
             this.locker = new ReaderWriterLockSlim();
 
             // setup for logs
@@ -344,6 +350,25 @@ namespace Kinectrobot
             {
                 if (image.Z > 99.0f || image.Z < 0) valids[inSpaceIndex] = false;
                 ++inSpaceIndex;
+            }
+
+            // return if no key was applied
+            if (request.Args == "")
+            {
+                Kinectrobot.DataStream res = new Kinectrobot.DataStream { Status = true };
+
+                for (int i = 0; i < request.Data.Count; ++i)
+                {
+                    Kinectrobot.Data data = new Kinectrobot.Data
+                    {
+                        Status = valids[i],
+                        X = objectPositions[i].X,
+                        Y = objectPositions[i].Y,
+                        Z = objectPositions[i].Z
+                    };
+
+                    res.Data.Add(data);
+                }
             }
 
             // get cloud result
@@ -631,6 +656,33 @@ namespace Kinectrobot
             image.Save(path, jpegCodec, encoderParams);
         }
 
+        public override Task<Response> SetStreamSettings(StreamSettings request, ServerCallContext context)
+        {
+            var result = new Kinectrobot.Response { Status = false };
+            if (request.Streams.Count != request.Settings.Count) return Task.FromResult(ReturnFalse());
+
+            streamSettingsLocker.EnterWriteLock();
+            try
+            {
+                for (int i = 0; i < request.Streams.Count; ++i)
+                {
+                    if (request.Streams[i] == "person") this.streamPerson = request.Settings[i];
+                }
+            }
+            finally { streamSettingsLocker.ExitWriteLock(); }
+
+            return Task.FromResult(ReturnTrue());
+        }
+
+        public bool GetStreamPersonSetting()
+        {
+            bool ret;
+            streamSettingsLocker.EnterReadLock();
+            try { ret = this.streamPerson; }
+            finally { streamSettingsLocker.ExitReadLock(); }
+            return ret;
+        }
+
         public bool RecognitionOffTriggerOn()
         {
             bool abortFlag = false;
@@ -677,6 +729,11 @@ namespace Kinectrobot
             // raw: "U--m... yeah?"
             // ssml: "<prosody rate=\"x-slow\">Um</prosody><break time=\"0.5s\"/><break time=\"0.5s\"/> yeah?"
             string raw_string = request.Speech_;
+            // infer language
+            byte[] byte_data = System.Text.Encoding.GetEncoding(932).GetBytes(raw_string);
+            string lang;
+            if (byte_data.Length == raw_string.Length) lang = "en-US";
+            else lang = "ja-JP";
             // convert "--" syntax to x-slow
             while (true)
             {
@@ -697,7 +754,7 @@ namespace Kinectrobot
                 if (wordEnd < 0) wordEnd = raw_string.IndexOf(",", getDashFromHead);
                 if (wordEnd < 0) wordEnd = raw_string.IndexOf("?", getDashFromHead);
                 if (wordEnd < 0) wordEnd = raw_string.IndexOf("!", getDashFromHead);
-                if (wordEnd < 0) wordEnd = raw_string.Length - 1;
+                if (wordEnd < 0) wordEnd = raw_string.Length;
                 raw_string = raw_string.Insert(wordEnd, "</prosody>");
                 // erase dash dash
                 raw_string = raw_string.Remove(getDashFromHead, 2);
@@ -705,7 +762,7 @@ namespace Kinectrobot
             }
             // convert "..." syntax to break
             raw_string.Replace("...", "<break time=\"0.5s\">");
-            Prompt speech = new Prompt("<?xml version=\"1.0\"?><speak version=\"1.0\" xml:lang=\"en-US\">" + raw_string + "</speak>", SynthesisTextFormat.Ssml);
+            Prompt speech = new Prompt("<?xml version=\"1.0\"?><speak version=\"1.0\" xml:lang=\"" + lang + "\">" + raw_string + "</speak>", SynthesisTextFormat.Ssml);
             this.speechSynthesizer.SpeakAsync(speech);
 
             return Task.FromResult(ReturnTrue());
@@ -785,6 +842,11 @@ namespace Kinectrobot
         private Response ReturnTrue()
         {
             return new Response { Status = true };
+        }
+
+        private Response ReturnFalse()
+        {
+            return new Response { Status = false };
         }
     }
 }

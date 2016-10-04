@@ -72,7 +72,7 @@ namespace KinectRgbdInteractionServer
         private bool[] speakingResult = null;
         // Speaking result is true with non-speech sounds
         // Worded result checks whether sound is speech
-        private bool wordedResult = false;
+        private bool wordedResult = false; // TODO
 
         // speech settings
 
@@ -95,10 +95,6 @@ namespace KinectRgbdInteractionServer
 
         private CoordinateMapper coordinateMapper = null;
 
-        // rgbd streaming settings
-
-        private bool onceFlag = false;
-
         // rgbd streaming parameters
 
         public const int divideStream = 2; // if stream is small set to 1, if large set to N > 2
@@ -114,7 +110,7 @@ namespace KinectRgbdInteractionServer
 
         // runtime settings
 
-        private float rate = 1; // this sets rgbd stream refresh rate (seconds)
+        private float rate = 0.1f; // this sets rgbd stream refresh rate (seconds)
         private const int frameUnit = 30;
 
         // runtime temporary state variables
@@ -333,7 +329,7 @@ namespace KinectRgbdInteractionServer
             var frame = e.FrameReference.AcquireFrame();
 
             // person detection is real time
-            SendPersonDetectionResults(frame);
+            if (this.robotImpl.GetStreamPersonSetting()) SendPersonDetectionResults(frame);
 
             // rgbd streaming is not real time
             // code might crash with 30fps, set parameter according to computer specifications
