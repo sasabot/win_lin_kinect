@@ -110,7 +110,7 @@ namespace KinectRgbdInteractionServer
 
         // runtime settings
 
-        private float rate = 0.1f; // this sets rgbd stream refresh rate (seconds)
+        private float rate = 0.2f; // this sets rgbd stream refresh rate (seconds)
         private const int frameUnit = 30;
 
         // runtime temporary state variables
@@ -329,7 +329,7 @@ namespace KinectRgbdInteractionServer
             var frame = e.FrameReference.AcquireFrame();
 
             // person detection is real time
-            if (this.robotImpl.GetStreamPersonSetting()) SendPersonDetectionResults(frame);
+            SendPersonDetectionResults(frame);
 
             // rgbd streaming is not real time
             // code might crash with 30fps, set parameter according to computer specifications
@@ -349,10 +349,11 @@ namespace KinectRgbdInteractionServer
 
             if (frame == null)
             {
-                for (int i = 0; i < this.numClients; ++i)
-                {
-                    Kinectperson.Response badresponse = this.client[i].SendPersonState(result);
-                }
+                if (this.robotImpl.GetStreamPersonSetting())
+                    for (int i = 0; i < this.numClients; ++i)
+                    {
+                        Kinectperson.Response badresponse = this.client[i].SendPersonState(result);
+                    }
                 return;
             }
 
@@ -360,10 +361,12 @@ namespace KinectRgbdInteractionServer
             {
                 if (bodyFrame == null)
                 {
-                    for (int i = 0; i < this.numClients; ++i)
-                    {
-                        Kinectperson.Response badresponse = this.client[i].SendPersonState(result);
-                    }
+                    if (this.robotImpl.GetStreamPersonSetting())
+                        for (int i = 0; i < this.numClients; ++i)
+                        {
+                            Kinectperson.Response badresponse = this.client[i].SendPersonState(result);
+                        }
+
                     return;
                 }
 
@@ -482,24 +485,27 @@ namespace KinectRgbdInteractionServer
                     }
                 }
 
-                // if no face found
-                if (result.Data.Count == 0)
+                if (this.robotImpl.GetStreamPersonSetting())
                 {
-                    // you could check for person existance using Microsoft Cognitive Service
-                    result.Status = 0;
+                    // if no face found
+                    if (result.Data.Count == 0)
+                    {
+                        // you could check for person existance using Microsoft Cognitive Service
+                        result.Status = 0;
+                        for (int i = 0; i < this.numClients; ++i)
+                        {
+                            Kinectperson.Response response = this.client[i].SendPersonState(result);
+                        }
+                        return;
+                    }
+
+                    result.Status = 1;
+
+                    // send results if faces are found
                     for (int i = 0; i < this.numClients; ++i)
                     {
                         Kinectperson.Response response = this.client[i].SendPersonState(result);
                     }
-                    return;
-                }
-
-                result.Status = 1;
-
-                // send results if faces are found
-                for (int i = 0; i < this.numClients; ++i)
-                {
-                    Kinectperson.Response response = this.client[i].SendPersonState(result);
                 }
             }
         }
