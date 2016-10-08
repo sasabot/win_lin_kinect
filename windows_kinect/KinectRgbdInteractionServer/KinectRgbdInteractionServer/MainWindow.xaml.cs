@@ -126,6 +126,12 @@ namespace KinectRgbdInteractionServer
 
         private string subscriptionKey;
 
+        // runtime debug
+
+        public TimeSpan dbgProgramStartTime;
+        private int dbgFrames;
+        private int dbgRgbdDroppedFrames;
+
         public MainWindow()
         {
             // setup Kinect
@@ -255,6 +261,11 @@ namespace KinectRgbdInteractionServer
                 this.client[i] = new Kinectperson.KinectPerson.KinectPersonClient(this.channel[i]);
             }
 
+            // setup debug (programStartTime used in Kinectrobot)
+            this.dbgProgramStartTime = DateTime.Now.TimeOfDay;
+            this.dbgFrames = 0;
+            this.dbgRgbdDroppedFrames = 0;
+
             // setup grpc: start TTS server
             string host = Dns.GetHostName();
             this.robotImpl = new Kinectrobot.KinectRobotImpl(this);
@@ -326,6 +337,13 @@ namespace KinectRgbdInteractionServer
 
         private void Reader_FrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
+            // update debug info
+            ++this.dbgFrames;
+            LogInfo("dbgTimeElapsed",
+                "passed:              " + (DateTime.Now.TimeOfDay - this.dbgProgramStartTime).Minutes
+                + "min" + (DateTime.Now.TimeOfDay - this.dbgProgramStartTime).Seconds + "sec, frames: " + this.dbgFrames);
+            LogInfo("dbgFailedFrames", "failed frames: " + this.dbgRgbdDroppedFrames);
+
             var frame = e.FrameReference.AcquireFrame();
 
             // person detection is real time
@@ -516,6 +534,7 @@ namespace KinectRgbdInteractionServer
             DepthFrame depthFrame = frame.DepthFrameReference.AcquireFrame();
             if (colorFrame == null || depthFrame == null)
             {
+                ++this.dbgRgbdDroppedFrames;
                 return;
             }
 

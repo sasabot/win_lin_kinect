@@ -61,6 +61,10 @@ namespace Kinectrobot
         public delegate void LogInfo(string blockName, string text, bool concatenate = false);
         private LogInfo logInfo = null;
 
+        // runtime debug
+
+        private TimeSpan dbgProgramStartTime;
+
         public KinectRobotImpl(KinectRgbdInteractionServer.MainWindow parent)
         {
             // create lockers
@@ -95,6 +99,9 @@ namespace Kinectrobot
             this.speechSynthesizer.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Teen);
             this.speechSynthesizer.SetOutputToDefaultAudioDevice();
             this.speechSynthesizer.SpeakCompleted += this.SpeechEnd_FrameArrived;
+
+            // setup debug
+            this.dbgProgramStartTime = parent.dbgProgramStartTime;
         }
 
         public void Dispose()
@@ -120,6 +127,9 @@ namespace Kinectrobot
                     for (int j = pointsPerStream * i; j < range; ++j)
                         this.pointBlobs[i].Data.Add(points.Data[j]);
                 }
+
+                this.logInfo("dbgDepthTime", "last captured depth: " + (DateTime.Now.TimeOfDay - this.dbgProgramStartTime).Minutes + "min"
+                    + (DateTime.Now.TimeOfDay - this.dbgProgramStartTime).Seconds + "sec");
             }
             finally { this.pointsLocker.ExitWriteLock(); }
         }
@@ -140,6 +150,9 @@ namespace Kinectrobot
                     for (int j = pointsPerStream * i; j < range; ++j)
                         this.pixelBlobs[i].Color.Add(pixels.Color[j]);
                 }
+
+                this.logInfo("dbgColorTime", "last captured color: " + (DateTime.Now.TimeOfDay - this.dbgProgramStartTime).Minutes + "min"
+                    + (DateTime.Now.TimeOfDay - this.dbgProgramStartTime).Seconds + "sec");
             }
             finally { this.pixelsLocker.ExitWriteLock(); }
         }
