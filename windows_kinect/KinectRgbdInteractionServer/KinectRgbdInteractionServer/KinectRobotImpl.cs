@@ -260,6 +260,12 @@ namespace Kinectrobot
 
         private async Task<DataStream> HandleCognitionRequestAsync(Request request)
         {
+            // check keys, if no key, the following will be disabled:
+            // image region saving to disc, cognition using Microsoft Cognitive Services
+            // the following will still be available: returning 3D positions from image bounds
+            bool useKey = true;
+            if (request.Args == "") useKey = false;
+
             // queue "send to cloud tasks" and create mask image for position detection
             float maskRatio = 0.3f; // parameter
             List<Task<Tuple<string, HttpResponseMessage>>> tasks = new List<Task<Tuple<string, HttpResponseMessage>>>();
@@ -280,39 +286,42 @@ namespace Kinectrobot
                     // initiate valid
                     valids.Add(true);
 
-                    // get partial image
-                    byte[] partial = new byte[Convert.ToInt32(image.Width) * Convert.ToInt32(image.Height) * 4];
-                    int atPixel = 0;
-                    for (int i = Convert.ToInt32(image.Y); i < Convert.ToInt32(image.Y) + Convert.ToInt32(image.Height); ++i)
-                        for (int j = Convert.ToInt32(image.X) + Convert.ToInt32(image.Width) - 1; j >= Convert.ToInt32(image.X); --j) // flip image
+                    if (useKey)
+                    {
+                        // get partial image
+                        byte[] partial = new byte[Convert.ToInt32(image.Width) * Convert.ToInt32(image.Height) * 4];
+                        int atPixel = 0;
+                        for (int i = Convert.ToInt32(image.Y); i < Convert.ToInt32(image.Y) + Convert.ToInt32(image.Height); ++i)
+                            for (int j = Convert.ToInt32(image.X) + Convert.ToInt32(image.Width) - 1; j >= Convert.ToInt32(image.X); --j) // flip image
+                            {
+                                int idx = (i * 1920 + j) * 4;
+                                partial[atPixel++] = this.rawImage[idx++];
+                                partial[atPixel++] = this.rawImage[idx++];
+                                partial[atPixel++] = this.rawImage[idx++];
+                                partial[atPixel++] = this.rawImage[idx++];
+                            }
+
+                        // save to image
+                        string file = System.Environment.GetFolderPath(Environment.SpecialFolder.Personal) + image.Name + ".jpg";
+                        BitmapSource partialBitmapSource = BitmapSource.Create(Convert.ToInt32(image.Width), Convert.ToInt32(image.Height), 96, 96,
+                            PixelFormats.Bgr32, null, partial, Convert.ToInt32(image.Width) * 4);
+                        System.Drawing.Bitmap partialBitmap;
+                        using (var ms = new MemoryStream())
                         {
-                            int idx = (i * 1920 + j) * 4;
-                            partial[atPixel++] = this.rawImage[idx++];
-                            partial[atPixel++] = this.rawImage[idx++];
-                            partial[atPixel++] = this.rawImage[idx++];
-                            partial[atPixel++] = this.rawImage[idx++];
+                            BitmapEncoder enc = new BmpBitmapEncoder();
+                            enc.Frames.Add(BitmapFrame.Create(partialBitmapSource));
+                            enc.Save(ms);
+                            partialBitmap = new System.Drawing.Bitmap(ms);
+                        }
+                        using (Image resized = ResizeImage(partialBitmap, Convert.ToInt32(image.Width * 2), Convert.ToInt32(image.Height * 2)))
+                        {
+                            SaveJpeg(file, resized, 100);
                         }
 
-                    // save to image
-                    string file = System.Environment.GetFolderPath(Environment.SpecialFolder.Personal) + image.Name + ".jpg";
-                    BitmapSource partialBitmapSource = BitmapSource.Create(Convert.ToInt32(image.Width), Convert.ToInt32(image.Height), 96, 96,
-                        PixelFormats.Bgr32, null, partial, Convert.ToInt32(image.Width) * 4);
-                    System.Drawing.Bitmap partialBitmap;
-                    using (var ms = new MemoryStream())
-                    {
-                        BitmapEncoder enc = new BmpBitmapEncoder();
-                        enc.Frames.Add(BitmapFrame.Create(partialBitmapSource));
-                        enc.Save(ms);
-                        partialBitmap = new System.Drawing.Bitmap(ms);
+                        // add call cloud task
+                        tasks.Add(AnalyzeImage(request.Args, file));
+                        tasks.Add(OCR(request.Args, file));
                     }
-                    using (Image resized = ResizeImage(partialBitmap, Convert.ToInt32(image.Width * 2), Convert.ToInt32(image.Height * 2)))
-                    {
-                        SaveJpeg(file, resized, 100);
-                    }
-
-                    // add call cloud task
-                    tasks.Add(AnalyzeImage(request.Args, file));
-                    tasks.Add(OCR(request.Args, file));
 
                     // create mask filter
                     Kinectrobot.Bit bit = new Kinectrobot.Bit
@@ -366,7 +375,7 @@ namespace Kinectrobot
             }
 
             // return if no key was applied
-            if (request.Args == "")
+            if (!useKey)
             {
                 Kinectrobot.DataStream res = new Kinectrobot.DataStream { Status = true };
 
