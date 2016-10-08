@@ -131,6 +131,8 @@ namespace KinectRgbdInteractionServer
         public TimeSpan dbgProgramStartTime;
         private int dbgFrames;
         private int dbgRgbdDroppedFrames;
+        private System.Timers.Timer errTimer = null;
+        private TimeSpan dbgLastDetectedTime;
 
         public MainWindow()
         {
@@ -265,6 +267,7 @@ namespace KinectRgbdInteractionServer
             this.dbgProgramStartTime = DateTime.Now.TimeOfDay;
             this.dbgFrames = 0;
             this.dbgRgbdDroppedFrames = 0;
+            this.dbgLastDetectedTime = this.dbgProgramStartTime;
 
             // setup grpc: start TTS server
             string host = Dns.GetHostName();
@@ -286,6 +289,12 @@ namespace KinectRgbdInteractionServer
             // setup finish
 
             this.kinectSensor.Open();
+
+            // start the errTimer program manager
+            this.errTimer = new System.Timers.Timer(1000);
+            errTimer.Elapsed += ErrTimerEvent;
+            errTimer.AutoReset = true;
+            errTimer.Enabled = true;
 
             InitializeComponent();
         }
@@ -335,6 +344,17 @@ namespace KinectRgbdInteractionServer
             }
         }
 
+        private void ErrTimerEvent(Object source, System.Timers.ElapsedEventArgs e)
+        {
+            // when a three second delay is detected, restart the kinect
+            if ((DateTime.Now.TimeOfDay - this.dbgLastDetectedTime).Seconds > 3 && this.kinectSensor != null && this.kinectSensor.IsOpen)
+            {
+                LogInfo("dbgTimeElapsed", "  detected freeze restarting!", true);
+                this.kinectSensor.Close();
+                this.kinectSensor.Open();
+            }
+        }
+
         private void Reader_FrameArrived(object sender, MultiSourceFrameArrivedEventArgs e)
         {
             // update debug info
@@ -343,6 +363,7 @@ namespace KinectRgbdInteractionServer
                 "passed:              " + (DateTime.Now.TimeOfDay - this.dbgProgramStartTime).Minutes
                 + "min" + (DateTime.Now.TimeOfDay - this.dbgProgramStartTime).Seconds + "sec, frames: " + this.dbgFrames);
             LogInfo("dbgFailedFrames", "failed frames: " + this.dbgRgbdDroppedFrames);
+            this.dbgLastDetectedTime = DateTime.Now.TimeOfDay;
 
             var frame = e.FrameReference.AcquireFrame();
 
