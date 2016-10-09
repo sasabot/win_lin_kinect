@@ -1001,7 +1001,7 @@ namespace KinectRgbdInteractionServer
         {
             // display log
             LogInfo("status", "detected no match");
-            LogInfo("audio", e.Result.Semantics.Value.ToString());
+            LogInfo("audio", "");
         }
 
         private async Task SendSpeechRecognitionResults(string s)
