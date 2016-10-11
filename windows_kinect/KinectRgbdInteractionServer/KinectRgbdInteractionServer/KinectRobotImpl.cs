@@ -391,6 +391,8 @@ namespace Kinectrobot
 
                     res.Data.Add(data);
                 }
+
+                return res;
             }
 
             // get cloud result
