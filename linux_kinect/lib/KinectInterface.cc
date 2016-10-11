@@ -78,6 +78,7 @@ sensor_msgs::PointCloud2 KinectInterface::ReadPoints()
 
   bool points_delayed = true;
   while (points_delayed) {
+    usleep(500 * 1000);
     if (!call_points_.call(srv)) {
       ROS_WARN("service call failed");
       sensor_msgs::PointCloud2 null;
@@ -111,6 +112,7 @@ sensor_msgs::Image KinectInterface::ReadImage()
 
   bool pixels_delayed = true;
   while (pixels_delayed) {
+    usleep(500 * 1000);
     if (!call_image_.call(srv)) {
       ROS_WARN("service call failed");
       sensor_msgs::Image null;
