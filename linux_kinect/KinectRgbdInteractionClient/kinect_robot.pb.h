@@ -415,10 +415,16 @@ class Points : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated .kinectrobot.Point data = 1;
+  // optional bool delay = 1;
+  void clear_delay();
+  static const int kDelayFieldNumber = 1;
+  bool delay() const;
+  void set_delay(bool value);
+
+  // repeated .kinectrobot.Point data = 2;
   int data_size() const;
   void clear_data();
-  static const int kDataFieldNumber = 1;
+  static const int kDataFieldNumber = 2;
   const ::kinectrobot::Point& data(int index) const;
   ::kinectrobot::Point* mutable_data(int index);
   ::kinectrobot::Point* add_data();
@@ -433,6 +439,7 @@ class Points : public ::google::protobuf::Message {
   ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
   bool _is_default_instance_;
   ::google::protobuf::RepeatedPtrField< ::kinectrobot::Point > data_;
+  bool delay_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_kinect_5frobot_2eproto();
   friend void protobuf_AssignDesc_kinect_5frobot_2eproto();
@@ -499,10 +506,16 @@ class Pixels : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // repeated int32 color = 1;
+  // optional bool delay = 1;
+  void clear_delay();
+  static const int kDelayFieldNumber = 1;
+  bool delay() const;
+  void set_delay(bool value);
+
+  // repeated int32 color = 2;
   int color_size() const;
   void clear_color();
-  static const int kColorFieldNumber = 1;
+  static const int kColorFieldNumber = 2;
   ::google::protobuf::int32 color(int index) const;
   void set_color(int index, ::google::protobuf::int32 value);
   void add_color(::google::protobuf::int32 value);
@@ -518,6 +531,7 @@ class Pixels : public ::google::protobuf::Message {
   bool _is_default_instance_;
   ::google::protobuf::RepeatedField< ::google::protobuf::int32 > color_;
   mutable int _color_cached_byte_size_;
+  bool delay_;
   mutable int _cached_size_;
   friend void  protobuf_AddDesc_kinect_5frobot_2eproto();
   friend void protobuf_AssignDesc_kinect_5frobot_2eproto();
@@ -1683,7 +1697,21 @@ inline void Point::set_color(::google::protobuf::int32 value) {
 
 // Points
 
-// repeated .kinectrobot.Point data = 1;
+// optional bool delay = 1;
+inline void Points::clear_delay() {
+  delay_ = false;
+}
+inline bool Points::delay() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Points.delay)
+  return delay_;
+}
+inline void Points::set_delay(bool value) {
+  
+  delay_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.Points.delay)
+}
+
+// repeated .kinectrobot.Point data = 2;
 inline int Points::data_size() const {
   return data_.size();
 }
@@ -1717,7 +1745,21 @@ Points::data() const {
 
 // Pixels
 
-// repeated int32 color = 1;
+// optional bool delay = 1;
+inline void Pixels::clear_delay() {
+  delay_ = false;
+}
+inline bool Pixels::delay() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Pixels.delay)
+  return delay_;
+}
+inline void Pixels::set_delay(bool value) {
+  
+  delay_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.Pixels.delay)
+}
+
+// repeated int32 color = 2;
 inline int Pixels::color_size() const {
   return color_.size();
 }

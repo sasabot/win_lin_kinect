@@ -127,7 +127,8 @@ void protobuf_AssignDesc_kinect_5frobot_2eproto() {
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Point, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Point, _is_default_instance_));
   Points_descriptor_ = file->message_type(3);
-  static const int Points_offsets_[1] = {
+  static const int Points_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Points, delay_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Points, data_),
   };
   Points_reflection_ =
@@ -142,7 +143,8 @@ void protobuf_AssignDesc_kinect_5frobot_2eproto() {
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Points, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Points, _is_default_instance_));
   Pixels_descriptor_ = file->message_type(4);
-  static const int Pixels_offsets_[1] = {
+  static const int Pixels_offsets_[2] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pixels, delay_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Pixels, color_),
   };
   Pixels_reflection_ =
@@ -395,39 +397,42 @@ void protobuf_AddDesc_kinect_5frobot_2eproto() {
     "\006height\030\004 \001(\002\022\014\n\004name\030\005 \001(\t\"7\n\007Request\022\036"
     "\n\004data\030\001 \003(\0132\020.kinectrobot.Bit\022\014\n\004args\030\002"
     " \001(\t\"7\n\005Point\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\t\n\001z"
-    "\030\003 \001(\002\022\r\n\005color\030\004 \001(\005\"*\n\006Points\022 \n\004data\030"
-    "\001 \003(\0132\022.kinectrobot.Point\"\027\n\006Pixels\022\r\n\005c"
-    "olor\030\001 \003(\005\"&\n\003Tag\022\013\n\003tag\030\001 \001(\t\022\022\n\nconfid"
-    "ence\030\002 \001(\002\"\212\001\n\004Data\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001("
-    "\002\022\t\n\001z\030\003 \001(\002\022\"\n\010captions\030\004 \003(\0132\020.kinectr"
-    "obot.Tag\022\036\n\004tags\030\005 \003(\0132\020.kinectrobot.Tag"
-    "\022\r\n\005texts\030\006 \003(\t\022\016\n\006status\030\007 \001(\010\"=\n\nDataS"
-    "tream\022\016\n\006status\030\001 \001(\010\022\037\n\004data\030\002 \003(\0132\021.ki"
-    "nectrobot.Data\";\n\tBitStream\022\016\n\006status\030\001 "
-    "\001(\010\022\036\n\004data\030\002 \003(\0132\020.kinectrobot.Bit\"3\n\016S"
-    "treamSettings\022\017\n\007streams\030\001 \003(\t\022\020\n\010settin"
-    "gs\030\002 \003(\010\")\n\006Speech\022\017\n\007command\030\001 \001(\t\022\016\n\006s"
-    "peech\030\002 \001(\t\"\210\001\n\rVoiceTriggers\022#\n\033AutoTri"
-    "ggerAfterRecognition\030\001 \001(\010\022\037\n\027AutoTrigge"
-    "rDuringSpeech\030\002 \001(\010\022\027\n\017ManualTriggerOn\030\003"
-    " \001(\010\022\030\n\020ManualTriggerOff\030\004 \001(\010\"D\n\007UrlInf"
-    "o\022\013\n\003url\030\001 \001(\t\022\020\n\010linkhead\030\002 \001(\t\022\013\n\003key\030"
-    "\003 \001(\t\022\r\n\005style\030\004 \001(\t\"\032\n\010Response\022\016\n\006stat"
-    "us\030\001 \001(\0102\253\004\n\013KinectRobot\022=\n\014ReturnPoints"
-    "\022\024.kinectrobot.Request\032\023.kinectrobot.Poi"
-    "nts\"\0000\001\022<\n\013ReturnImage\022\024.kinectrobot.Req"
-    "uest\032\023.kinectrobot.Pixels\"\0000\001\022R\n ReturnP"
-    "ixelBoundsFromSpaceBounds\022\024.kinectrobot."
-    "Request\032\026.kinectrobot.BitStream\"\000\022B\n\017Ret"
-    "urnCognition\022\024.kinectrobot.Request\032\027.kin"
-    "ectrobot.DataStream\"\000\022I\n\021SetStreamSettin"
-    "gs\022\033.kinectrobot.StreamSettings\032\025.kinect"
-    "robot.Response\"\000\022:\n\nSendSpeech\022\023.kinectr"
-    "obot.Speech\032\025.kinectrobot.Response\"\000\022E\n\016"
-    "SetSTTBehavior\022\032.kinectrobot.VoiceTrigge"
-    "rs\032\025.kinectrobot.Response\"\000\0229\n\010WebAgent\022"
-    "\024.kinectrobot.UrlInfo\032\025.kinectrobot.Resp"
-    "onse\"\000B\017\n\007ex.grpc\242\002\003RTGb\006proto3", 1511);
+    "\030\003 \001(\002\022\r\n\005color\030\004 \001(\005\"9\n\006Points\022\r\n\005delay"
+    "\030\001 \001(\010\022 \n\004data\030\002 \003(\0132\022.kinectrobot.Point"
+    "\"&\n\006Pixels\022\r\n\005delay\030\001 \001(\010\022\r\n\005color\030\002 \003(\005"
+    "\"&\n\003Tag\022\013\n\003tag\030\001 \001(\t\022\022\n\nconfidence\030\002 \001(\002"
+    "\"\212\001\n\004Data\022\t\n\001x\030\001 \001(\002\022\t\n\001y\030\002 \001(\002\022\t\n\001z\030\003 \001"
+    "(\002\022\"\n\010captions\030\004 \003(\0132\020.kinectrobot.Tag\022\036"
+    "\n\004tags\030\005 \003(\0132\020.kinectrobot.Tag\022\r\n\005texts\030"
+    "\006 \003(\t\022\016\n\006status\030\007 \001(\010\"=\n\nDataStream\022\016\n\006s"
+    "tatus\030\001 \001(\010\022\037\n\004data\030\002 \003(\0132\021.kinectrobot."
+    "Data\";\n\tBitStream\022\016\n\006status\030\001 \001(\010\022\036\n\004dat"
+    "a\030\002 \003(\0132\020.kinectrobot.Bit\"3\n\016StreamSetti"
+    "ngs\022\017\n\007streams\030\001 \003(\t\022\020\n\010settings\030\002 \003(\010\")"
+    "\n\006Speech\022\017\n\007command\030\001 \001(\t\022\016\n\006speech\030\002 \001("
+    "\t\"\210\001\n\rVoiceTriggers\022#\n\033AutoTriggerAfterR"
+    "ecognition\030\001 \001(\010\022\037\n\027AutoTriggerDuringSpe"
+    "ech\030\002 \001(\010\022\027\n\017ManualTriggerOn\030\003 \001(\010\022\030\n\020Ma"
+    "nualTriggerOff\030\004 \001(\010\"D\n\007UrlInfo\022\013\n\003url\030\001"
+    " \001(\t\022\020\n\010linkhead\030\002 \001(\t\022\013\n\003key\030\003 \001(\t\022\r\n\005s"
+    "tyle\030\004 \001(\t\"\032\n\010Response\022\016\n\006status\030\001 \001(\0102\355"
+    "\004\n\013KinectRobot\022@\n\017UpdateTimeStamp\022\024.kine"
+    "ctrobot.Request\032\025.kinectrobot.Response\"\000"
+    "\022=\n\014ReturnPoints\022\024.kinectrobot.Request\032\023"
+    ".kinectrobot.Points\"\0000\001\022<\n\013ReturnImage\022\024"
+    ".kinectrobot.Request\032\023.kinectrobot.Pixel"
+    "s\"\0000\001\022R\n ReturnPixelBoundsFromSpaceBound"
+    "s\022\024.kinectrobot.Request\032\026.kinectrobot.Bi"
+    "tStream\"\000\022B\n\017ReturnCognition\022\024.kinectrob"
+    "ot.Request\032\027.kinectrobot.DataStream\"\000\022I\n"
+    "\021SetStreamSettings\022\033.kinectrobot.StreamS"
+    "ettings\032\025.kinectrobot.Response\"\000\022:\n\nSend"
+    "Speech\022\023.kinectrobot.Speech\032\025.kinectrobo"
+    "t.Response\"\000\022E\n\016SetSTTBehavior\022\032.kinectr"
+    "obot.VoiceTriggers\032\025.kinectrobot.Respons"
+    "e\"\000\0229\n\010WebAgent\022\024.kinectrobot.UrlInfo\032\025."
+    "kinectrobot.Response\"\000B\017\n\007ex.grpc\242\002\003RTGb"
+    "\006proto3", 1607);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "kinect_robot.proto", &protobuf_RegisterTypes);
   Bit::default_instance_ = new Bit();
@@ -1738,6 +1743,7 @@ void Point::clear_color() {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Points::kDelayFieldNumber;
 const int Points::kDataFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
@@ -1762,6 +1768,7 @@ Points::Points(const Points& from)
 void Points::SharedCtor() {
     _is_default_instance_ = false;
   _cached_size_ = 0;
+  delay_ = false;
 }
 
 Points::~Points() {
@@ -1801,6 +1808,7 @@ Points* Points::New(::google::protobuf::Arena* arena) const {
 
 void Points::Clear() {
 // @@protoc_insertion_point(message_clear_start:kinectrobot.Points)
+  delay_ = false;
   data_.Clear();
 }
 
@@ -1814,9 +1822,24 @@ bool Points::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated .kinectrobot.Point data = 1;
+      // optional bool delay = 1;
       case 1: {
-        if (tag == 10) {
+        if (tag == 8) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &delay_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_data;
+        break;
+      }
+
+      // repeated .kinectrobot.Point data = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_data:
           DO_(input->IncrementRecursionDepth());
          parse_loop_data:
           DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtualNoRecursionDepth(
@@ -1824,7 +1847,7 @@ bool Points::MergePartialFromCodedStream(
         } else {
           goto handle_unusual;
         }
-        if (input->ExpectTag(10)) goto parse_loop_data;
+        if (input->ExpectTag(18)) goto parse_loop_data;
         input->UnsafeDecrementRecursionDepth();
         if (input->ExpectAtEnd()) goto success;
         break;
@@ -1854,10 +1877,15 @@ failure:
 void Points::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:kinectrobot.Points)
-  // repeated .kinectrobot.Point data = 1;
+  // optional bool delay = 1;
+  if (this->delay() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->delay(), output);
+  }
+
+  // repeated .kinectrobot.Point data = 2;
   for (unsigned int i = 0, n = this->data_size(); i < n; i++) {
     ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
-      1, this->data(i), output);
+      2, this->data(i), output);
   }
 
   // @@protoc_insertion_point(serialize_end:kinectrobot.Points)
@@ -1866,11 +1894,16 @@ void Points::SerializeWithCachedSizes(
 ::google::protobuf::uint8* Points::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:kinectrobot.Points)
-  // repeated .kinectrobot.Point data = 1;
+  // optional bool delay = 1;
+  if (this->delay() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->delay(), target);
+  }
+
+  // repeated .kinectrobot.Point data = 2;
   for (unsigned int i = 0, n = this->data_size(); i < n; i++) {
     target = ::google::protobuf::internal::WireFormatLite::
       WriteMessageNoVirtualToArray(
-        1, this->data(i), target);
+        2, this->data(i), target);
   }
 
   // @@protoc_insertion_point(serialize_to_array_end:kinectrobot.Points)
@@ -1881,7 +1914,12 @@ int Points::ByteSize() const {
 // @@protoc_insertion_point(message_byte_size_start:kinectrobot.Points)
   int total_size = 0;
 
-  // repeated .kinectrobot.Point data = 1;
+  // optional bool delay = 1;
+  if (this->delay() != 0) {
+    total_size += 1 + 1;
+  }
+
+  // repeated .kinectrobot.Point data = 2;
   total_size += 1 * this->data_size();
   for (int i = 0; i < this->data_size(); i++) {
     total_size +=
@@ -1914,6 +1952,9 @@ void Points::MergeFrom(const Points& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:kinectrobot.Points)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   data_.MergeFrom(from.data_);
+  if (from.delay() != 0) {
+    set_delay(from.delay());
+  }
 }
 
 void Points::CopyFrom(const ::google::protobuf::Message& from) {
@@ -1940,6 +1981,7 @@ void Points::Swap(Points* other) {
   InternalSwap(other);
 }
 void Points::InternalSwap(Points* other) {
+  std::swap(delay_, other->delay_);
   data_.UnsafeArenaSwap(&other->data_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
@@ -1956,7 +1998,21 @@ void Points::InternalSwap(Points* other) {
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
 // Points
 
-// repeated .kinectrobot.Point data = 1;
+// optional bool delay = 1;
+void Points::clear_delay() {
+  delay_ = false;
+}
+ bool Points::delay() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Points.delay)
+  return delay_;
+}
+ void Points::set_delay(bool value) {
+  
+  delay_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.Points.delay)
+}
+
+// repeated .kinectrobot.Point data = 2;
 int Points::data_size() const {
   return data_.size();
 }
@@ -1991,6 +2047,7 @@ Points::data() const {
 // ===================================================================
 
 #if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int Pixels::kDelayFieldNumber;
 const int Pixels::kColorFieldNumber;
 #endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
 
@@ -2015,6 +2072,7 @@ Pixels::Pixels(const Pixels& from)
 void Pixels::SharedCtor() {
     _is_default_instance_ = false;
   _cached_size_ = 0;
+  delay_ = false;
 }
 
 Pixels::~Pixels() {
@@ -2054,6 +2112,7 @@ Pixels* Pixels::New(::google::protobuf::Arena* arena) const {
 
 void Pixels::Clear() {
 // @@protoc_insertion_point(message_clear_start:kinectrobot.Pixels)
+  delay_ = false;
   color_.Clear();
 }
 
@@ -2067,16 +2126,31 @@ bool Pixels::MergePartialFromCodedStream(
     tag = p.first;
     if (!p.second) goto handle_unusual;
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // repeated int32 color = 1;
+      // optional bool delay = 1;
       case 1: {
-        if (tag == 10) {
+        if (tag == 8) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   bool, ::google::protobuf::internal::WireFormatLite::TYPE_BOOL>(
+                 input, &delay_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(18)) goto parse_color;
+        break;
+      }
+
+      // repeated int32 color = 2;
+      case 2: {
+        if (tag == 18) {
+         parse_color:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPackedPrimitive<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
                  input, this->mutable_color())));
-        } else if (tag == 8) {
+        } else if (tag == 16) {
           DO_((::google::protobuf::internal::WireFormatLite::ReadRepeatedPrimitiveNoInline<
                    ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 1, 10, input, this->mutable_color())));
+                 1, 18, input, this->mutable_color())));
         } else {
           goto handle_unusual;
         }
@@ -2108,9 +2182,14 @@ failure:
 void Pixels::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
   // @@protoc_insertion_point(serialize_start:kinectrobot.Pixels)
-  // repeated int32 color = 1;
+  // optional bool delay = 1;
+  if (this->delay() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteBool(1, this->delay(), output);
+  }
+
+  // repeated int32 color = 2;
   if (this->color_size() > 0) {
-    ::google::protobuf::internal::WireFormatLite::WriteTag(1, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
+    ::google::protobuf::internal::WireFormatLite::WriteTag(2, ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED, output);
     output->WriteVarint32(_color_cached_byte_size_);
   }
   for (int i = 0; i < this->color_size(); i++) {
@@ -2124,10 +2203,15 @@ void Pixels::SerializeWithCachedSizes(
 ::google::protobuf::uint8* Pixels::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
   // @@protoc_insertion_point(serialize_to_array_start:kinectrobot.Pixels)
-  // repeated int32 color = 1;
+  // optional bool delay = 1;
+  if (this->delay() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(1, this->delay(), target);
+  }
+
+  // repeated int32 color = 2;
   if (this->color_size() > 0) {
     target = ::google::protobuf::internal::WireFormatLite::WriteTagToArray(
-      1,
+      2,
       ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED,
       target);
     target = ::google::protobuf::io::CodedOutputStream::WriteVarint32ToArray(
@@ -2146,7 +2230,12 @@ int Pixels::ByteSize() const {
 // @@protoc_insertion_point(message_byte_size_start:kinectrobot.Pixels)
   int total_size = 0;
 
-  // repeated int32 color = 1;
+  // optional bool delay = 1;
+  if (this->delay() != 0) {
+    total_size += 1 + 1;
+  }
+
+  // repeated int32 color = 2;
   {
     int data_size = 0;
     for (int i = 0; i < this->color_size(); i++) {
@@ -2188,6 +2277,9 @@ void Pixels::MergeFrom(const Pixels& from) {
 // @@protoc_insertion_point(class_specific_merge_from_start:kinectrobot.Pixels)
   if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
   color_.MergeFrom(from.color_);
+  if (from.delay() != 0) {
+    set_delay(from.delay());
+  }
 }
 
 void Pixels::CopyFrom(const ::google::protobuf::Message& from) {
@@ -2214,6 +2306,7 @@ void Pixels::Swap(Pixels* other) {
   InternalSwap(other);
 }
 void Pixels::InternalSwap(Pixels* other) {
+  std::swap(delay_, other->delay_);
   color_.UnsafeArenaSwap(&other->color_);
   _internal_metadata_.Swap(&other->_internal_metadata_);
   std::swap(_cached_size_, other->_cached_size_);
@@ -2230,7 +2323,21 @@ void Pixels::InternalSwap(Pixels* other) {
 #if PROTOBUF_INLINE_NOT_IN_HEADERS
 // Pixels
 
-// repeated int32 color = 1;
+// optional bool delay = 1;
+void Pixels::clear_delay() {
+  delay_ = false;
+}
+ bool Pixels::delay() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.Pixels.delay)
+  return delay_;
+}
+ void Pixels::set_delay(bool value) {
+  
+  delay_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.Pixels.delay)
+}
+
+// repeated int32 color = 2;
 int Pixels::color_size() const {
   return color_.size();
 }

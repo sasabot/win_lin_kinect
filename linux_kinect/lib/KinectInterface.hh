@@ -77,6 +77,8 @@ namespace kinect
 
     private: ros::NodeHandle nh_;
 
+    private: ros::ServiceClient call_update_timestamp_;
+
     private: ros::ServiceClient call_points_;
 
     private: ros::ServiceClient call_image_;

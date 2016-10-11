@@ -68,6 +68,8 @@ public:
     // pub_points_ = nh_.advertise<sensor_msgs::PointCloud2>("/kinect/points", 1);
     // pub_pixels_ = nh_.advertise<sensor_msgs::Image>("/kinect/image", 1);
 
+    srv_timestamp_ = nh_.advertiseService(
+        "/kinect/request/updatets", &KinectRobotClient::UpdateTimeStamp, this);
     srv_points_ = nh_.advertiseService(
 	"/kinect/request/points", &KinectRobotClient::RequestPoints, this);
     srv_image_ = nh_.advertiseService(
@@ -139,6 +141,23 @@ public:
     request.set_args(req.args);
   }
 
+  bool UpdateTimeStamp(linux_kinect::KinectRequest::Request &req,
+                       linux_kinect::KinectRequest::Response &res)
+  {
+    ROS_WARN("received request from ROS");
+
+    ClientContext context;
+    kinectrobot::Request update;
+    update.set_args(req.args);
+    kinectrobot::Response response;
+
+    Status status = stub_->UpdateTimeStamp(&context, update, &response);
+    res.status = response.status();
+
+    ROS_WARN("finished request");
+    return true;
+  }
+
   bool RequestPoints(linux_kinect::KinectPoints::Request &req,
                      linux_kinect::KinectPoints::Response &res)
   {
@@ -157,11 +176,13 @@ public:
     std::unique_ptr<ClientReader<kinectrobot::Points> > reader(
 	stub_->ReturnPoints(&context, request));
 
+    bool has_delay;
     std::vector<uint8_t> data;
     data.reserve(16 * 512 * 424);
     int point_count = 0;
 
-    while (reader->Read(&points))
+    while (reader->Read(&points)) {
+      has_delay = points.delay();
       for (unsigned int i = 0; i < points.data_size(); ++i) {
 	float d = points.data(i).z();
 	float y = points.data(i).y();
@@ -199,11 +220,13 @@ public:
 
 	++point_count;
       }
+    }
     Status status = reader->Finish();
     data.resize(16 * point_count);
 
     ROS_INFO("read %d points", point_count);
 
+    res.time_delay = has_delay;
     res.points.header.frame_id = frame_name_;
     res.points.header.stamp = ros::Time(0);
     res.points.height = request.data(0).height();
@@ -237,11 +260,13 @@ public:
     std::unique_ptr<ClientReader<kinectrobot::Pixels> > reader(
 	stub_->ReturnImage(&context, request));
 
+    bool has_delay;
     std::vector<uint8_t> data;
     data.reserve(3 * 1920 * 1080);
     int pixel_count = 0;
 
-    while (reader->Read(&pixels))
+    while (reader->Read(&pixels)) {
+      has_delay = pixels.delay();
       for (unsigned int i = 0; i < pixels.color_size(); ++i) {
 	uint8_t r = (pixels.color(i) & 0x00000ff);
 	uint8_t g = ((pixels.color(i) >> 8) & 0x00000ff);
@@ -253,10 +278,12 @@ public:
 
 	++pixel_count;
       }
+    }
     data.resize(3 * pixel_count);
 
     ROS_INFO("read %d pixels", pixel_count);
 
+    res.time_delay = has_delay;
     res.image.header.frame_id = frame_name_;
     res.image.header.stamp = ros::Time(0);
     res.image.height = request.data(0).height();
@@ -438,6 +465,8 @@ private:
   // ros::Publisher pub_points_;
 
   // ros::Publisher pub_pixels_;
+
+  ros::ServiceServer srv_timestamp_;
 
   ros::ServiceServer srv_points_;
 
