@@ -6,6 +6,7 @@ option objc_class_prefix = "RTG";
 package kinectrobot;
 
 service KinectRobot {
+  rpc UpdateTimeStamp(Request) returns (Response) {}
   rpc ReturnPoints(Request) returns (stream Points) {}
   rpc ReturnImage(Request) returns (stream Pixels) {}
   rpc ReturnPixelBoundsFromSpaceBounds(Request) returns (BitStream) {}
@@ -37,11 +38,13 @@ message Point {
 }
 
 message Points {
-  repeated Point data = 1;
+  bool delay = 1;
+  repeated Point data = 2;
 }
 
 message Pixels {
-  repeated int32 color = 1;
+  bool delay = 1;
+  repeated int32 color = 2;
 }
 
 message Tag {

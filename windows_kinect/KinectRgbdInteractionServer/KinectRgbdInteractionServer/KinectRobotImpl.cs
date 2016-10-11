@@ -28,11 +28,15 @@ namespace Kinectrobot
         private ReaderWriterLockSlim pointsLocker = null;
         private Kinectrobot.Points[] pointBlobs = null;
         private ColorSpacePoint[] colorPoints = null; // recorded w/ depth, used for getting pixel bounds
+        private TimeSpan lastDetectedPointsTime;
+        private TimeSpan lastCalledReturnPointsTime;
 
         private ReaderWriterLockSlim pixelsLocker = null;
         private Kinectrobot.Pixels[] pixelBlobs = null;
         private byte[] rawImage = null; // recorded w/ image, used for cognition
         private CameraSpacePoint[] cameraPointsColor = null; // recorded w/ image, used for cognition
+        private TimeSpan lastDetectedPixelsTime;
+        private TimeSpan lastCalledReturnPixelsTime;
 
         // rgbd streaming parameters
 
@@ -82,12 +86,14 @@ namespace Kinectrobot
             {
                 this.pointBlobs[i] = new Kinectrobot.Points { };
             }
+            this.lastCalledReturnPointsTime = DateTime.Now.TimeOfDay;
 
             this.pixelBlobs = new Kinectrobot.Pixels[KinectRgbdInteractionServer.MainWindow.divideStream];
             for (int i = 0; i < this.pixelBlobs.Length; ++i)
             {
                 this.pixelBlobs[i] = new Kinectrobot.Pixels { };
             }
+            this.lastCalledReturnPixelsTime = DateTime.Now.TimeOfDay;
 
             this.colorPoints = Enumerable.Repeat(new ColorSpacePoint { X = -1, Y = -1 }, parent.displayWidth * parent.displayHeight).ToArray();
             this.rawImage = Enumerable.Repeat(new byte { }, parent.displayWidth * parent.displayHeight * 4).ToArray();
@@ -120,6 +126,9 @@ namespace Kinectrobot
                 int pointsPerStream = points.Data.Count / this.pointBlobs.Length + 1;
                 Array.Copy(image, this.colorPoints, image.Length);
 
+                // save timestamp
+                this.lastDetectedPointsTime = DateTime.Now.TimeOfDay;
+
                 for (int i = 0; i < this.pointBlobs.Length; ++i)
                 {
                     this.pointBlobs[i].Data.Clear();
@@ -143,6 +152,9 @@ namespace Kinectrobot
                 Array.Copy(raw, this.rawImage, raw.Length);
                 Array.Copy(positions, this.cameraPointsColor, positions.Length);
 
+                // save timestamp
+                this.lastDetectedPixelsTime = DateTime.Now.TimeOfDay;
+
                 for (int i = 0; i < this.pixelBlobs.Length; ++i)
                 {
                     this.pixelBlobs[i].Color.Clear();
@@ -157,6 +169,15 @@ namespace Kinectrobot
             finally { this.pixelsLocker.ExitWriteLock(); }
         }
 
+        public override Task<Response> UpdateTimeStamp(Request request, ServerCallContext context)
+        {
+            if (request.Args == "points") this.lastCalledReturnPointsTime = DateTime.Now.TimeOfDay;
+            else if (request.Args == "pixels") this.lastCalledReturnPixelsTime = DateTime.Now.TimeOfDay;
+            else Task.FromResult(ReturnFalse());
+
+            return Task.FromResult(ReturnTrue());
+        }
+
         public override async Task ReturnPoints(Request request, IServerStreamWriter<Points> responseStream, ServerCallContext context)
         {
             this.pointsLocker.EnterReadLock();
@@ -164,6 +185,8 @@ namespace Kinectrobot
             {
                 foreach (var blob in this.pointBlobs)
                 {
+                    if (this.lastCalledReturnPointsTime < this.lastDetectedPointsTime) blob.Delay = true;
+                    else blob.Delay = false;
                     await responseStream.WriteAsync(blob);
                 }
             }
@@ -177,6 +200,8 @@ namespace Kinectrobot
             {
                 foreach (var blob in this.pixelBlobs)
                 {
+                    if (this.lastCalledReturnPixelsTime < this.lastDetectedPixelsTime) blob.Delay = true;
+                    else blob.Delay = false;
                     await responseStream.WriteAsync(blob);
                 }
             }
