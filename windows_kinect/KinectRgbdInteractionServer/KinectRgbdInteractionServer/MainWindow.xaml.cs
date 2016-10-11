@@ -1,4 +1,6 @@
-﻿using Grpc.Core;
+﻿#define COMPILE_SPEECH_RECOGNITION
+
+using Grpc.Core;
 
 namespace KinectRgbdInteractionServer
 {
@@ -21,6 +23,9 @@ namespace KinectRgbdInteractionServer
     using System.Threading;
     using System.Windows.Controls;
     using System.Net;
+    using Microsoft.Speech.AudioFormat;
+    using Microsoft.Speech.Recognition;
+    using System.Text;
 
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -59,6 +64,8 @@ namespace KinectRgbdInteractionServer
             | FaceFrameFeatures.LookingAway
             | FaceFrameFeatures.RotationOrientation;
 
+#if COMPILE_SPEECH_RECOGNITION
+
         // audio
 
         private AudioBeamFrameReader audioReader = null;
@@ -90,6 +97,13 @@ namespace KinectRgbdInteractionServer
         // In Japanese speech the average is 5.15 to 8.5 seconds
         private const int speechFinishThreshold = 500; // millisecs
         private const double speakerDistanceThreshold = 2.0; // meters
+
+        // offline speech engine
+
+        private SpeechRecognitionEngine speechEngine = null;
+        private Microsoft.Samples.Kinect.SpeechBasics.KinectAudioStream convertStream = null;
+
+#endif
 
         // rgbd streaming
 
@@ -166,19 +180,35 @@ namespace KinectRgbdInteractionServer
                 this.faceReader[i].FrameArrived += Face_FrameArrived;
             }
 
-            // setup audio
+#if COMPILE_SPEECH_RECOGNITION
 
-            Console.WriteLine("Voice recognition / speaker detection requires subscription key.");
-            Console.WriteLine("If you do not have key, you can turn voice recognition off. Turn off? (y or n)");
-            string audioOn = Console.ReadLine().ToString();
-            if (audioOn == "y" || audioOn == "Y")
-                Properties.Settings.Default.AudioOn = false;
-            else
-                Properties.Settings.Default.AudioOn = true;
-            Properties.Settings.Default.Save();
-
-            if (Properties.Settings.Default.AudioOn)
+            Console.WriteLine("Enter language (options: en-US, ja-JP, ...) (press enter if same)");
+            string language = Console.ReadLine().ToString();
+            if (language != "")
             {
+                Properties.Settings.Default.Language = language;
+                Properties.Settings.Default.Save();
+            }
+            language = Properties.Settings.Default.Language;
+            Console.WriteLine("language: {0}", language);
+
+            Console.WriteLine("Use Kinect as audio source? (y or n)");
+            string useKinectAsAudioSrcStr = Console.ReadLine().ToString();
+            bool useKinectAsAudioSrc = false;
+            if (useKinectAsAudioSrcStr == "y" || useKinectAsAudioSrcStr == "Y") useKinectAsAudioSrc = true;
+            else Console.WriteLine("NOT using Kinect as audio source.");
+
+            Console.WriteLine("Use Microsoft Cognitive Services (online speech recognition)? (y or n)");
+            string useOnlineStr = Console.ReadLine().ToString();
+            bool useOnline = false;
+            if (useOnlineStr == "y" || useOnlineStr == "Y") useOnline = true;
+
+            if (useOnline && useKinectAsAudioSrc)
+            {
+                Console.WriteLine("Using online recognition.");
+
+                // setup audio
+
                 AudioSource audioSource = this.kinectSensor.AudioSource;
                 this.audioReader = audioSource.OpenReader();
                 this.audioReader.FrameArrived += this.Audio_FrameArrived;
@@ -186,7 +216,7 @@ namespace KinectRgbdInteractionServer
                 this.audioBuffer = new byte[audioSource.SubFrameLengthInBytes];
                 this.savedAudioBuffers = new List<byte[]>();
 
-                // setup speech
+                // setup speech recognition
 
                 this.audioFormat = new SpeechAudioFormat
                 {
@@ -198,7 +228,7 @@ namespace KinectRgbdInteractionServer
                     BlockAlign = 2 // BytesPerSample * ChannelCount
                 };
 
-                Console.WriteLine("Enter subscription key for voice recognition (press enter if same)");
+                Console.WriteLine("Enter subscription key for speech recognition (press enter if same)");
                 string key = Console.ReadLine().ToString();
                 if (key != "")
                 {
@@ -210,14 +240,95 @@ namespace KinectRgbdInteractionServer
 
                 this.recogClient = SpeechRecognitionServiceFactory.CreateDataClient(
                     SpeechRecognitionMode.ShortPhrase,
-                    "en-US",
+                    language,
                     this.subscriptionKey,
                     this.subscriptionKey);
-                this.recogClient.OnResponseReceived += this.VoiceRecognition_FrameArrived;
+                this.recogClient.OnResponseReceived += this.SpeechRecognition_FrameArrived;
                 this.recogClient.SendAudioFormat(audioFormat);
+            }
+            else if (!useOnline)
+            {
+                Console.WriteLine("Using offline recognition. This uses template recognition.");
+
+                // setup audio
+
+                if (useKinectAsAudioSrc)
+                {
+                    AudioSource audioSource = this.kinectSensor.AudioSource;
+                    this.audioReader = audioSource.OpenReader();
+                    this.audioReader.FrameArrived += this.AudioOffline_FrameArrived;
+                }
+
+                // setup speech
+
+                RecognizerInfo ri = null;
+                try
+                {
+                    foreach (RecognizerInfo recognizer in SpeechRecognitionEngine.InstalledRecognizers())
+                    {
+                        string value;
+
+                        if (useKinectAsAudioSrc)
+                        {
+                            recognizer.AdditionalInfo.TryGetValue("Kinect", out value);
+                            if ("True".Equals(value, StringComparison.OrdinalIgnoreCase)
+                                && language.Equals(recognizer.Culture.Name, StringComparison.OrdinalIgnoreCase))
+                            {
+                                ri = recognizer;
+                                break;
+                            }
+                        }
+                        else
+                        {
+                            if (language.Equals(recognizer.Culture.Name, StringComparison.OrdinalIgnoreCase))
+                            {
+                                ri = recognizer;
+                                break;
+                            }
+                        }
+                        
+                    }
+                }
+                catch { ri = null; }
+
+                if (null != ri)
+                {
+                    this.speechEngine = new SpeechRecognitionEngine(ri.Id);
+                    Console.WriteLine(@"Enter grammar file. Note, all grammar files must be located in \Grammar. (press enter if same)");
+                    string grammar = Console.ReadLine().ToString();
+                    if (grammar != "")
+                    {
+                        Properties.Settings.Default.Grammar = grammar;
+                        Properties.Settings.Default.Save();
+                    }
+                    grammar = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Grammar\" + Properties.Settings.Default.Grammar;
+                    Console.WriteLine("reading grammar file: {0}", grammar);                  
+                    this.speechEngine.LoadGrammar(new Grammar(grammar));
+
+                    this.speechEngine.SpeechRecognized += this.SpeechRecognitionOffline_FrameArrived;
+                    this.speechEngine.SpeechRecognitionRejected += this.SpeechRecognitionOffline_Rejected;
+
+                    if (useKinectAsAudioSrc)
+                    {
+                        this.convertStream = new Microsoft.Samples.Kinect.SpeechBasics.KinectAudioStream(
+                            this.kinectSensor.AudioSource.AudioBeams[0].OpenInputStream());
+                        this.convertStream.SpeechActive = true;
+                        this.speechEngine.SetInputToAudioStream(this.convertStream,
+                            new SpeechAudioFormatInfo(EncodingFormat.Pcm, 16000, 16, 1, 32000, 2, null));
+                    }
+                    else
+                    {
+                        this.speechEngine.SetInputToDefaultAudioDevice();
+                    }
+
+                    this.speechEngine.RecognizeAsync(RecognizeMode.Multiple);
+                }
+
             }
 
             this.speakingResult = new bool[this.maxBodies];
+
+#endif
 
             // setup rgbd streaming
 
@@ -327,10 +438,24 @@ namespace KinectRgbdInteractionServer
                 this.kinectSensor = null;
             }
 
+#if COMPILE_SPEECH_RECOGNITION
             if (this.recogClient != null)
             {
                 this.recogClient.Dispose();
             }
+
+            if (this.convertStream != null)
+            {
+                this.convertStream.SpeechActive = false;
+            }
+
+            if (this.speechEngine != null)
+            {
+                this.speechEngine.SpeechRecognized -= this.SpeechRecognitionOffline_FrameArrived;
+                this.speechEngine.SpeechRecognitionRejected -= this.SpeechRecognitionOffline_Rejected;
+                this.speechEngine.RecognizeAsyncStop();
+            }
+#endif
 
             if (this.robotImpl != null)
             {
@@ -442,8 +567,10 @@ namespace KinectRgbdInteractionServer
                     }
 
                     else LogInfo("faces", "0 ", true);
+#if COMPILE_SPEECH_RECOGNITION
                     if (this.speakingResult[i]) LogInfo("speakers", "1 ", true);
                     else LogInfo("speakers", "0 ", true);
+#endif
 
                     if (this.faceSource[i].IsTrackingIdValid)
                     {
@@ -476,7 +603,9 @@ namespace KinectRgbdInteractionServer
                                     Pitch = (int)(Math.Floor((pitchD + ((increment / 2.0) * (pitchD > 0 ? 1.0 : -1.0))) / increment) * increment),
                                     Yaw = (int)(Math.Floor((yawD + ((increment / 2.0) * (yawD > 0 ? 1.0 : -1.0))) / increment) * increment)
                                 },
+#if COMPILE_SPEECH_RECOGNITION
                                 Speaking = this.speakingResult[i],
+#endif
                                 Looking = looking,
                                 Position = new Kinectperson.Point
                                 {
@@ -504,7 +633,9 @@ namespace KinectRgbdInteractionServer
                                     Pitch = Single.NaN,
                                     Yaw = Single.NaN
                                 },
+#if COMPILE_SPEECH_RECOGNITION
                                 Speaking = speakingResult[i],
+#endif
                                 Looking = false,
                                 Position = new Kinectperson.Point
                                 {
@@ -678,10 +809,12 @@ namespace KinectRgbdInteractionServer
             }
         }
 
+#if COMPILE_SPEECH_RECOGNITION
+
         private void Audio_FrameArrived(object sender, AudioBeamFrameArrivedEventArgs e)
         {
             if (this.robotImpl.RecognitionOffTriggerOn()) return; // don't get voice while robot is talking
-            // the above is also a mutex safe trigger when voice recognition analysis is going on
+            // the above is also a mutex safe trigger when speech recognition analysis is going on
 
             AudioBeamFrameReference frameReference = e.FrameReference;
             using (var frameList = frameReference.AcquireBeamFrames())
@@ -724,7 +857,7 @@ namespace KinectRgbdInteractionServer
                         {
                             // end voice collect
                             this.recogClient.EndAudio();
-                            return; // wait for result in VoiceRecognition_FrameArrived
+                            return; // wait for result in SpeechRecognition_FrameArrived
                         }
                         LogInfo("audio", "Delaying " + (DateTime.Now.TimeOfDay - this.pauseDetectedTime).Milliseconds);
                     }
@@ -734,12 +867,12 @@ namespace KinectRgbdInteractionServer
                         this.finishingSpeech = false;
                     }
 
-                    // send voice if voice
+                    // send voice if speech
                     subFrame.CopyFrameDataToArray(this.audioBuffer);
                     byte[] convertedBuffer = new byte[Convert.ToInt32(this.audioBuffer.Length * 0.5)];
                     ConvertKinectAudioStream(this.audioBuffer, convertedBuffer);
                     this.recogClient.SendAudio(convertedBuffer, convertedBuffer.Length);
-                    // save voice to buffer (see VoiceRecognition_FrameArrived for details)
+                    // save voice to buffer (see SpeechRecognition_FrameArrived for details)
                     this.savedAudioBuffers.Add(convertedBuffer);
                 }
             }
@@ -767,9 +900,9 @@ namespace KinectRgbdInteractionServer
             }
         }
 
-        private void VoiceRecognition_FrameArrived(object sender, SpeechResponseEventArgs e)
+        private void SpeechRecognition_FrameArrived(object sender, SpeechResponseEventArgs e)
         {
-            // if not a voice, return
+            // if not a speech or voice, return
             if (e.PhraseResponse.Results.Length == 0)
             {
                 // display log
@@ -779,7 +912,7 @@ namespace KinectRgbdInteractionServer
                 // lock recogClient from being overwritten by voice capture
                 this.robotImpl.RecognitionOff();
 
-                // add in case partial voice is mistaken as noise
+                // add in case partial speech is mistaken as noise
                 for (int i = 0; i < this.savedAudioBuffers.Count; ++i)
                 {
                     this.recogClient.SendAudio(this.savedAudioBuffers[i], this.savedAudioBuffers[i].Length);
@@ -792,45 +925,113 @@ namespace KinectRgbdInteractionServer
                 return;
             }
 
-            // valid voice, clear buffer
+            // valid speech, clear buffer
             this.savedAudioBuffers.Clear();
 
             // display log
-            LogInfo("status", "recognized voice");
+            LogInfo("status", "recognized speech");
             LogInfo("recognized", e.PhraseResponse.Results[0].DisplayText);
 
             // close capturing voice until robot has finished talking
             if (this.robotImpl.triggerAfterRecognition) this.robotImpl.RecognitionOff();
 
-            Task.Run(() => SendVoiceRecognitionResults(e));  
+            Task.Run(() => SendSpeechRecognitionResults(e.PhraseResponse.Results[0].DisplayText));  
         }
 
-        private async Task SendVoiceRecognitionResults(SpeechResponseEventArgs e)
+        private void AudioOffline_FrameArrived(object sender, AudioBeamFrameArrivedEventArgs e)
+        {
+            AudioBeamFrameReference frameReference = e.FrameReference;
+            using (var frameList = frameReference.AcquireBeamFrames())
+            {
+                if (frameList == null) return;
+
+                IReadOnlyList<AudioBeamSubFrame> subFrameList = frameList[0].SubFrames;
+
+                // get id of person speaking
+                ulong audioTrackingId = Convert.ToUInt64(this.kinectSensor.BodyFrameSource.BodyCount) + 1;
+                if (subFrameList[0].AudioBodyCorrelations.Count > 0)
+                {
+                    audioTrackingId = subFrameList[0].AudioBodyCorrelations[0].BodyTrackingId;
+                }
+
+                // set speaker result
+                for (int i = 0; i < this.faceSource.Length; ++i)
+                {
+                    if (this.faceSource[i].TrackingId == audioTrackingId)
+                        this.speakingResult[i] = true;
+                    else
+                        this.speakingResult[i] = false;
+                }
+            }
+        }
+
+        private void SpeechRecognitionOffline_FrameArrived(object sender, SpeechRecognizedEventArgs e)
+        {
+            if (this.robotImpl.RecognitionOffTriggerOn())
+            {
+                // display log
+                LogInfo("status", "speech recognition is not sended");
+                LogInfo("audio", e.Result.Semantics.Value.ToString());
+                return; // don't get voice while robot is talking
+            }
+            // the above is also a mutex safe trigger when speech recognition analysis is going on
+
+            const double ConfidenceThreshold = 0.3;
+
+            if (e.Result.Confidence >= ConfidenceThreshold)
+            {
+                // display log
+                LogInfo("status", "recognized speech");
+                LogInfo("audio", e.Result.Semantics.Value.ToString());
+
+                // close capturing voice until robot has finished talking
+                if (this.robotImpl.triggerAfterRecognition) this.robotImpl.RecognitionOff();
+
+                Task.Run(() => SendSpeechRecognitionResults(e.Result.Semantics.Value.ToString()));
+            }
+            else
+            {
+                // display log
+                LogInfo("status", "detected but not confident");
+                LogInfo("audio", e.Result.Semantics.Value.ToString());
+            }
+        }
+
+        private void SpeechRecognitionOffline_Rejected(object sender, SpeechRecognitionRejectedEventArgs e)
+        {
+            // display log
+            LogInfo("status", "detected no match");
+            LogInfo("audio", "");
+        }
+
+        private async Task SendSpeechRecognitionResults(string s)
         {
             List<Task<Kinectperson.Response>> tasks = new List<Task<Kinectperson.Response>>();
 
             // wait until all robots have finished talking
-            Kinectperson.Text data = new Kinectperson.Text {  Text_ = e.PhraseResponse.Results[0].DisplayText };
+            Kinectperson.Text data = new Kinectperson.Text {  Text_ = s };
             for (int i = 0; i < this.numClients; ++i)
             {
-                tasks.Add(SendVoiceRecognitionResultToClienti(i, data));
+                tasks.Add(SendSpeechRecognitionResultToClienti(i, data));
             }
             await Task.WhenAny(Task.WhenAll(tasks), Task.Delay(120000)); // wait at longest 2 minutes
 
             // re-open capturing voice when robot has finished talking
             if (this.robotImpl.triggerAfterRecognition) this.robotImpl.RecognitionOn();
 
-            // show that voice recognition mode is on again
-            LogInfo("status", "starting recognition");
+            // flush online recognition result to show that speech recognition mode is on again
+            // LogInfo("status", "starting recognition");
             LogInfo("recognized", "");
         }
 
-        private async Task<Kinectperson.Response> SendVoiceRecognitionResultToClienti(int i, Kinectperson.Text data)
+        private async Task<Kinectperson.Response> SendSpeechRecognitionResultToClienti(int i, Kinectperson.Text data)
         {
             // response will not come back until robot side says okay
             Kinectperson.Response response = this.client[i].SendVoiceRecognition(data);
             return response;
         }
+
+#endif
 
         public void LogInfo(string blockName, string text, bool concatenate=false)
         {

@@ -391,6 +391,8 @@ namespace Kinectrobot
 
                     res.Data.Add(data);
                 }
+
+                return res;
             }
 
             // get cloud result
@@ -804,13 +806,13 @@ namespace Kinectrobot
         {
             if (request.ManualTriggerOn)
             {
-                this.abortSpeech = true;
+                this.abortSpeech = false;
                 return Task.FromResult(ReturnTrue());
             }
 
             if (request.ManualTriggerOff)
             {
-                this.abortSpeech = false;
+                this.abortSpeech = true;
                 return Task.FromResult(ReturnTrue());
             }
 

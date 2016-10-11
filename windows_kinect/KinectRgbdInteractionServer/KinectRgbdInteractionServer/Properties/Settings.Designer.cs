@@ -60,13 +60,25 @@ namespace KinectRgbdInteractionServer.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool AudioOn {
+        [global::System.Configuration.DefaultSettingValueAttribute("en-US")]
+        public string Language {
             get {
-                return ((bool)(this["AudioOn"]));
+                return ((string)(this["Language"]));
             }
             set {
-                this["AudioOn"] = value;
+                this["Language"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string Grammar {
+            get {
+                return ((string)(this["Grammar"]));
+            }
+            set {
+                this["Grammar"] = value;
             }
         }
     }
