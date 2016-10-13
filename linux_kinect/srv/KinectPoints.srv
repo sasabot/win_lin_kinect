@@ -1,3 +1,4 @@
 linux_kinect/Bit data
 ---
+bool time_delay
 sensor_msgs/PointCloud2 points

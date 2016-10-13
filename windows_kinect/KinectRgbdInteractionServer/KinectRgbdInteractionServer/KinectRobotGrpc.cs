@@ -13,15 +13,22 @@ namespace Kinectrobot {
     static readonly string __ServiceName = "kinectrobot.KinectRobot";
 
     static readonly Marshaller<global::Kinectrobot.Request> __Marshaller_Request = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Request.Parser.ParseFrom);
+    static readonly Marshaller<global::Kinectrobot.Response> __Marshaller_Response = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Response.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.Points> __Marshaller_Points = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Points.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.Pixels> __Marshaller_Pixels = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Pixels.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.BitStream> __Marshaller_BitStream = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.BitStream.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.DataStream> __Marshaller_DataStream = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.DataStream.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.StreamSettings> __Marshaller_StreamSettings = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.StreamSettings.Parser.ParseFrom);
-    static readonly Marshaller<global::Kinectrobot.Response> __Marshaller_Response = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Response.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.Speech> __Marshaller_Speech = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Speech.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.VoiceTriggers> __Marshaller_VoiceTriggers = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.VoiceTriggers.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.UrlInfo> __Marshaller_UrlInfo = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.UrlInfo.Parser.ParseFrom);
+
+    static readonly Method<global::Kinectrobot.Request, global::Kinectrobot.Response> __Method_UpdateTimeStamp = new Method<global::Kinectrobot.Request, global::Kinectrobot.Response>(
+        MethodType.Unary,
+        __ServiceName,
+        "UpdateTimeStamp",
+        __Marshaller_Request,
+        __Marshaller_Response);
 
     static readonly Method<global::Kinectrobot.Request, global::Kinectrobot.Points> __Method_ReturnPoints = new Method<global::Kinectrobot.Request, global::Kinectrobot.Points>(
         MethodType.ServerStreaming,
@@ -88,6 +95,11 @@ namespace Kinectrobot {
     /// <summary>Base class for server-side implementations of KinectRobot</summary>
     public abstract class KinectRobotBase
     {
+      public virtual global::System.Threading.Tasks.Task<global::Kinectrobot.Response> UpdateTimeStamp(global::Kinectrobot.Request request, ServerCallContext context)
+      {
+        throw new RpcException(new Status(StatusCode.Unimplemented, ""));
+      }
+
       public virtual global::System.Threading.Tasks.Task ReturnPoints(global::Kinectrobot.Request request, IServerStreamWriter<global::Kinectrobot.Points> responseStream, ServerCallContext context)
       {
         throw new RpcException(new Status(StatusCode.Unimplemented, ""));
@@ -153,6 +165,22 @@ namespace Kinectrobot {
       {
       }
 
+      public virtual global::Kinectrobot.Response UpdateTimeStamp(global::Kinectrobot.Request request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return UpdateTimeStamp(request, new CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual global::Kinectrobot.Response UpdateTimeStamp(global::Kinectrobot.Request request, CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_UpdateTimeStamp, null, options, request);
+      }
+      public virtual AsyncUnaryCall<global::Kinectrobot.Response> UpdateTimeStampAsync(global::Kinectrobot.Request request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return UpdateTimeStampAsync(request, new CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual AsyncUnaryCall<global::Kinectrobot.Response> UpdateTimeStampAsync(global::Kinectrobot.Request request, CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_UpdateTimeStamp, null, options, request);
+      }
       public virtual AsyncServerStreamingCall<global::Kinectrobot.Points> ReturnPoints(global::Kinectrobot.Request request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
         return ReturnPoints(request, new CallOptions(headers, deadline, cancellationToken));
@@ -275,6 +303,7 @@ namespace Kinectrobot {
     public static ServerServiceDefinition BindService(KinectRobotBase serviceImpl)
     {
       return ServerServiceDefinition.CreateBuilder()
+          .AddMethod(__Method_UpdateTimeStamp, serviceImpl.UpdateTimeStamp)
           .AddMethod(__Method_ReturnPoints, serviceImpl.ReturnPoints)
           .AddMethod(__Method_ReturnImage, serviceImpl.ReturnImage)
           .AddMethod(__Method_ReturnPixelBoundsFromSpaceBounds, serviceImpl.ReturnPixelBoundsFromSpaceBounds)

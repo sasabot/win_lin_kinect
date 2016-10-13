@@ -27,44 +27,46 @@ namespace Kinectrobot {
             "GAEgASgCEgkKAXkYAiABKAISDQoFd2lkdGgYAyABKAISDgoGaGVpZ2h0GAQg",
             "ASgCEgwKBG5hbWUYBSABKAkiNwoHUmVxdWVzdBIeCgRkYXRhGAEgAygLMhAu",
             "a2luZWN0cm9ib3QuQml0EgwKBGFyZ3MYAiABKAkiNwoFUG9pbnQSCQoBeBgB",
-            "IAEoAhIJCgF5GAIgASgCEgkKAXoYAyABKAISDQoFY29sb3IYBCABKAUiKgoG",
-            "UG9pbnRzEiAKBGRhdGEYASADKAsyEi5raW5lY3Ryb2JvdC5Qb2ludCIXCgZQ",
-            "aXhlbHMSDQoFY29sb3IYASADKAUiJgoDVGFnEgsKA3RhZxgBIAEoCRISCgpj",
-            "b25maWRlbmNlGAIgASgCIooBCgREYXRhEgkKAXgYASABKAISCQoBeRgCIAEo",
-            "AhIJCgF6GAMgASgCEiIKCGNhcHRpb25zGAQgAygLMhAua2luZWN0cm9ib3Qu",
-            "VGFnEh4KBHRhZ3MYBSADKAsyEC5raW5lY3Ryb2JvdC5UYWcSDQoFdGV4dHMY",
-            "BiADKAkSDgoGc3RhdHVzGAcgASgIIj0KCkRhdGFTdHJlYW0SDgoGc3RhdHVz",
-            "GAEgASgIEh8KBGRhdGEYAiADKAsyES5raW5lY3Ryb2JvdC5EYXRhIjsKCUJp",
-            "dFN0cmVhbRIOCgZzdGF0dXMYASABKAgSHgoEZGF0YRgCIAMoCzIQLmtpbmVj",
-            "dHJvYm90LkJpdCIzCg5TdHJlYW1TZXR0aW5ncxIPCgdzdHJlYW1zGAEgAygJ",
-            "EhAKCHNldHRpbmdzGAIgAygIIikKBlNwZWVjaBIPCgdjb21tYW5kGAEgASgJ",
-            "Eg4KBnNwZWVjaBgCIAEoCSKIAQoNVm9pY2VUcmlnZ2VycxIjChtBdXRvVHJp",
-            "Z2dlckFmdGVyUmVjb2duaXRpb24YASABKAgSHwoXQXV0b1RyaWdnZXJEdXJp",
-            "bmdTcGVlY2gYAiABKAgSFwoPTWFudWFsVHJpZ2dlck9uGAMgASgIEhgKEE1h",
-            "bnVhbFRyaWdnZXJPZmYYBCABKAgiRAoHVXJsSW5mbxILCgN1cmwYASABKAkS",
-            "EAoIbGlua2hlYWQYAiABKAkSCwoDa2V5GAMgASgJEg0KBXN0eWxlGAQgASgJ",
-            "IhoKCFJlc3BvbnNlEg4KBnN0YXR1cxgBIAEoCDKrBAoLS2luZWN0Um9ib3QS",
-            "PQoMUmV0dXJuUG9pbnRzEhQua2luZWN0cm9ib3QuUmVxdWVzdBoTLmtpbmVj",
-            "dHJvYm90LlBvaW50cyIAMAESPAoLUmV0dXJuSW1hZ2USFC5raW5lY3Ryb2Jv",
-            "dC5SZXF1ZXN0GhMua2luZWN0cm9ib3QuUGl4ZWxzIgAwARJSCiBSZXR1cm5Q",
-            "aXhlbEJvdW5kc0Zyb21TcGFjZUJvdW5kcxIULmtpbmVjdHJvYm90LlJlcXVl",
-            "c3QaFi5raW5lY3Ryb2JvdC5CaXRTdHJlYW0iABJCCg9SZXR1cm5Db2duaXRp",
-            "b24SFC5raW5lY3Ryb2JvdC5SZXF1ZXN0Ghcua2luZWN0cm9ib3QuRGF0YVN0",
-            "cmVhbSIAEkkKEVNldFN0cmVhbVNldHRpbmdzEhsua2luZWN0cm9ib3QuU3Ry",
-            "ZWFtU2V0dGluZ3MaFS5raW5lY3Ryb2JvdC5SZXNwb25zZSIAEjoKClNlbmRT",
-            "cGVlY2gSEy5raW5lY3Ryb2JvdC5TcGVlY2gaFS5raW5lY3Ryb2JvdC5SZXNw",
-            "b25zZSIAEkUKDlNldFNUVEJlaGF2aW9yEhoua2luZWN0cm9ib3QuVm9pY2VU",
-            "cmlnZ2VycxoVLmtpbmVjdHJvYm90LlJlc3BvbnNlIgASOQoIV2ViQWdlbnQS",
-            "FC5raW5lY3Ryb2JvdC5VcmxJbmZvGhUua2luZWN0cm9ib3QuUmVzcG9uc2Ui",
-            "AEIPCgdleC5ncnBjogIDUlRHYgZwcm90bzM="));
+            "IAEoAhIJCgF5GAIgASgCEgkKAXoYAyABKAISDQoFY29sb3IYBCABKAUiOQoG",
+            "UG9pbnRzEg0KBWRlbGF5GAEgASgIEiAKBGRhdGEYAiADKAsyEi5raW5lY3Ry",
+            "b2JvdC5Qb2ludCImCgZQaXhlbHMSDQoFZGVsYXkYASABKAgSDQoFY29sb3IY",
+            "AiADKAUiJgoDVGFnEgsKA3RhZxgBIAEoCRISCgpjb25maWRlbmNlGAIgASgC",
+            "IooBCgREYXRhEgkKAXgYASABKAISCQoBeRgCIAEoAhIJCgF6GAMgASgCEiIK",
+            "CGNhcHRpb25zGAQgAygLMhAua2luZWN0cm9ib3QuVGFnEh4KBHRhZ3MYBSAD",
+            "KAsyEC5raW5lY3Ryb2JvdC5UYWcSDQoFdGV4dHMYBiADKAkSDgoGc3RhdHVz",
+            "GAcgASgIIj0KCkRhdGFTdHJlYW0SDgoGc3RhdHVzGAEgASgIEh8KBGRhdGEY",
+            "AiADKAsyES5raW5lY3Ryb2JvdC5EYXRhIjsKCUJpdFN0cmVhbRIOCgZzdGF0",
+            "dXMYASABKAgSHgoEZGF0YRgCIAMoCzIQLmtpbmVjdHJvYm90LkJpdCIzCg5T",
+            "dHJlYW1TZXR0aW5ncxIPCgdzdHJlYW1zGAEgAygJEhAKCHNldHRpbmdzGAIg",
+            "AygIIikKBlNwZWVjaBIPCgdjb21tYW5kGAEgASgJEg4KBnNwZWVjaBgCIAEo",
+            "CSKIAQoNVm9pY2VUcmlnZ2VycxIjChtBdXRvVHJpZ2dlckFmdGVyUmVjb2du",
+            "aXRpb24YASABKAgSHwoXQXV0b1RyaWdnZXJEdXJpbmdTcGVlY2gYAiABKAgS",
+            "FwoPTWFudWFsVHJpZ2dlck9uGAMgASgIEhgKEE1hbnVhbFRyaWdnZXJPZmYY",
+            "BCABKAgiRAoHVXJsSW5mbxILCgN1cmwYASABKAkSEAoIbGlua2hlYWQYAiAB",
+            "KAkSCwoDa2V5GAMgASgJEg0KBXN0eWxlGAQgASgJIhoKCFJlc3BvbnNlEg4K",
+            "BnN0YXR1cxgBIAEoCDLtBAoLS2luZWN0Um9ib3QSQAoPVXBkYXRlVGltZVN0",
+            "YW1wEhQua2luZWN0cm9ib3QuUmVxdWVzdBoVLmtpbmVjdHJvYm90LlJlc3Bv",
+            "bnNlIgASPQoMUmV0dXJuUG9pbnRzEhQua2luZWN0cm9ib3QuUmVxdWVzdBoT",
+            "LmtpbmVjdHJvYm90LlBvaW50cyIAMAESPAoLUmV0dXJuSW1hZ2USFC5raW5l",
+            "Y3Ryb2JvdC5SZXF1ZXN0GhMua2luZWN0cm9ib3QuUGl4ZWxzIgAwARJSCiBS",
+            "ZXR1cm5QaXhlbEJvdW5kc0Zyb21TcGFjZUJvdW5kcxIULmtpbmVjdHJvYm90",
+            "LlJlcXVlc3QaFi5raW5lY3Ryb2JvdC5CaXRTdHJlYW0iABJCCg9SZXR1cm5D",
+            "b2duaXRpb24SFC5raW5lY3Ryb2JvdC5SZXF1ZXN0Ghcua2luZWN0cm9ib3Qu",
+            "RGF0YVN0cmVhbSIAEkkKEVNldFN0cmVhbVNldHRpbmdzEhsua2luZWN0cm9i",
+            "b3QuU3RyZWFtU2V0dGluZ3MaFS5raW5lY3Ryb2JvdC5SZXNwb25zZSIAEjoK",
+            "ClNlbmRTcGVlY2gSEy5raW5lY3Ryb2JvdC5TcGVlY2gaFS5raW5lY3Ryb2Jv",
+            "dC5SZXNwb25zZSIAEkUKDlNldFNUVEJlaGF2aW9yEhoua2luZWN0cm9ib3Qu",
+            "Vm9pY2VUcmlnZ2VycxoVLmtpbmVjdHJvYm90LlJlc3BvbnNlIgASOQoIV2Vi",
+            "QWdlbnQSFC5raW5lY3Ryb2JvdC5VcmxJbmZvGhUua2luZWN0cm9ib3QuUmVz",
+            "cG9uc2UiAEIPCgdleC5ncnBjogIDUlRHYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Bit), global::Kinectrobot.Bit.Parser, new[]{ "X", "Y", "Width", "Height", "Name" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Request), global::Kinectrobot.Request.Parser, new[]{ "Data", "Args" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Point), global::Kinectrobot.Point.Parser, new[]{ "X", "Y", "Z", "Color" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Points), global::Kinectrobot.Points.Parser, new[]{ "Data" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Pixels), global::Kinectrobot.Pixels.Parser, new[]{ "Color" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Points), global::Kinectrobot.Points.Parser, new[]{ "Delay", "Data" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Pixels), global::Kinectrobot.Pixels.Parser, new[]{ "Delay", "Color" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Tag), global::Kinectrobot.Tag.Parser, new[]{ "Tag_", "Confidence" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Data), global::Kinectrobot.Data.Parser, new[]{ "X", "Y", "Z", "Captions", "Tags", "Texts", "Status" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.DataStream), global::Kinectrobot.DataStream.Parser, new[]{ "Status", "Data" }, null, null, null),
@@ -617,6 +619,7 @@ namespace Kinectrobot {
     partial void OnConstruction();
 
     public Points(Points other) : this() {
+      delay_ = other.delay_;
       data_ = other.data_.Clone();
     }
 
@@ -624,10 +627,20 @@ namespace Kinectrobot {
       return new Points(this);
     }
 
+    /// <summary>Field number for the "delay" field.</summary>
+    public const int DelayFieldNumber = 1;
+    private bool delay_;
+    public bool Delay {
+      get { return delay_; }
+      set {
+        delay_ = value;
+      }
+    }
+
     /// <summary>Field number for the "data" field.</summary>
-    public const int DataFieldNumber = 1;
+    public const int DataFieldNumber = 2;
     private static readonly pb::FieldCodec<global::Kinectrobot.Point> _repeated_data_codec
-        = pb::FieldCodec.ForMessage(10, global::Kinectrobot.Point.Parser);
+        = pb::FieldCodec.ForMessage(18, global::Kinectrobot.Point.Parser);
     private readonly pbc::RepeatedField<global::Kinectrobot.Point> data_ = new pbc::RepeatedField<global::Kinectrobot.Point>();
     public pbc::RepeatedField<global::Kinectrobot.Point> Data {
       get { return data_; }
@@ -644,12 +657,14 @@ namespace Kinectrobot {
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (Delay != other.Delay) return false;
       if(!data_.Equals(other.data_)) return false;
       return true;
     }
 
     public override int GetHashCode() {
       int hash = 1;
+      if (Delay != false) hash ^= Delay.GetHashCode();
       hash ^= data_.GetHashCode();
       return hash;
     }
@@ -659,11 +674,18 @@ namespace Kinectrobot {
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
+      if (Delay != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Delay);
+      }
       data_.WriteTo(output, _repeated_data_codec);
     }
 
     public int CalculateSize() {
       int size = 0;
+      if (Delay != false) {
+        size += 1 + 1;
+      }
       size += data_.CalculateSize(_repeated_data_codec);
       return size;
     }
@@ -671,6 +693,9 @@ namespace Kinectrobot {
     public void MergeFrom(Points other) {
       if (other == null) {
         return;
+      }
+      if (other.Delay != false) {
+        Delay = other.Delay;
       }
       data_.Add(other.data_);
     }
@@ -682,7 +707,11 @@ namespace Kinectrobot {
           default:
             input.SkipLastField();
             break;
-          case 10: {
+          case 8: {
+            Delay = input.ReadBool();
+            break;
+          }
+          case 18: {
             data_.AddEntriesFrom(input, _repeated_data_codec);
             break;
           }
@@ -712,6 +741,7 @@ namespace Kinectrobot {
     partial void OnConstruction();
 
     public Pixels(Pixels other) : this() {
+      delay_ = other.delay_;
       color_ = other.color_.Clone();
     }
 
@@ -719,10 +749,20 @@ namespace Kinectrobot {
       return new Pixels(this);
     }
 
+    /// <summary>Field number for the "delay" field.</summary>
+    public const int DelayFieldNumber = 1;
+    private bool delay_;
+    public bool Delay {
+      get { return delay_; }
+      set {
+        delay_ = value;
+      }
+    }
+
     /// <summary>Field number for the "color" field.</summary>
-    public const int ColorFieldNumber = 1;
+    public const int ColorFieldNumber = 2;
     private static readonly pb::FieldCodec<int> _repeated_color_codec
-        = pb::FieldCodec.ForInt32(10);
+        = pb::FieldCodec.ForInt32(18);
     private readonly pbc::RepeatedField<int> color_ = new pbc::RepeatedField<int>();
     public pbc::RepeatedField<int> Color {
       get { return color_; }
@@ -739,12 +779,14 @@ namespace Kinectrobot {
       if (ReferenceEquals(other, this)) {
         return true;
       }
+      if (Delay != other.Delay) return false;
       if(!color_.Equals(other.color_)) return false;
       return true;
     }
 
     public override int GetHashCode() {
       int hash = 1;
+      if (Delay != false) hash ^= Delay.GetHashCode();
       hash ^= color_.GetHashCode();
       return hash;
     }
@@ -754,11 +796,18 @@ namespace Kinectrobot {
     }
 
     public void WriteTo(pb::CodedOutputStream output) {
+      if (Delay != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Delay);
+      }
       color_.WriteTo(output, _repeated_color_codec);
     }
 
     public int CalculateSize() {
       int size = 0;
+      if (Delay != false) {
+        size += 1 + 1;
+      }
       size += color_.CalculateSize(_repeated_color_codec);
       return size;
     }
@@ -766,6 +815,9 @@ namespace Kinectrobot {
     public void MergeFrom(Pixels other) {
       if (other == null) {
         return;
+      }
+      if (other.Delay != false) {
+        Delay = other.Delay;
       }
       color_.Add(other.color_);
     }
@@ -777,8 +829,12 @@ namespace Kinectrobot {
           default:
             input.SkipLastField();
             break;
-          case 10:
           case 8: {
+            Delay = input.ReadBool();
+            break;
+          }
+          case 18:
+          case 16: {
             color_.AddEntriesFrom(input, _repeated_color_codec);
             break;
           }

@@ -19,6 +19,8 @@ Option::~Option()
 //////////////////////////////////////////////////
 KinectInterface::KinectInterface(ros::NodeHandle _nh) : nh_(_nh)
 {
+  call_update_timestamp_ =
+    nh_.serviceClient<linux_kinect::KinectRequest>("/kinect/request/updatets");
   call_points_ =
     nh_.serviceClient<linux_kinect::KinectPoints>("/kinect/request/points");
   call_image_ =
@@ -57,6 +59,16 @@ KinectInterface::~KinectInterface()
 //////////////////////////////////////////////////
 sensor_msgs::PointCloud2 KinectInterface::ReadPoints()
 {
+  // set timestamp
+  linux_kinect::KinectRequest ts;
+  ts.request.args = "points";
+
+  if (!call_update_timestamp_.call(ts)) {
+    ROS_WARN("timestamp update failed");
+    sensor_msgs::PointCloud2 null;
+    return null;
+  }
+
   // request point clouds
   linux_kinect::KinectPoints srv;
   srv.request.data.x = 0;
@@ -64,11 +76,15 @@ sensor_msgs::PointCloud2 KinectInterface::ReadPoints()
   srv.request.data.width = 512;
   srv.request.data.height = 424;
 
-  if (!call_points_.call(srv))
-  {
-    ROS_WARN("service call failed");
-    sensor_msgs::PointCloud2 null;
-    return null;
+  bool points_delayed = true;
+  while (points_delayed) {
+    usleep(500 * 1000);
+    if (!call_points_.call(srv)) {
+      ROS_WARN("service call failed");
+      sensor_msgs::PointCloud2 null;
+      return null;
+    }
+    points_delayed = srv.response.time_delay;
   }
 
   return srv.response.points;
@@ -77,6 +93,16 @@ sensor_msgs::PointCloud2 KinectInterface::ReadPoints()
 //////////////////////////////////////////////////
 sensor_msgs::Image KinectInterface::ReadImage()
 {
+  // set timestamp
+  linux_kinect::KinectRequest ts;
+  ts.request.args = "pixels";
+
+  if (!call_update_timestamp_.call(ts)) {
+    ROS_WARN("timestamp update failed");
+    sensor_msgs::Image null;
+    return null;
+  }
+
   // request point clouds
   linux_kinect::KinectImage srv;
   srv.request.data.x = 0;
@@ -84,11 +110,15 @@ sensor_msgs::Image KinectInterface::ReadImage()
   srv.request.data.width = 1920;
   srv.request.data.height = 1080;
 
-  if (!call_image_.call(srv))
-  {
-    ROS_WARN("service call failed");
-    sensor_msgs::Image null;
-    return null;
+  bool pixels_delayed = true;
+  while (pixels_delayed) {
+    usleep(500 * 1000);
+    if (!call_image_.call(srv)) {
+      ROS_WARN("service call failed");
+      sensor_msgs::Image null;
+      return null;
+    }
+    pixels_delayed = srv.response.time_delay;
   }
 
   return srv.response.image;

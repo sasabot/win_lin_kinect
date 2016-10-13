@@ -30,6 +30,10 @@ class KinectRobot GRPC_FINAL {
   class StubInterface {
    public:
     virtual ~StubInterface() {}
+    virtual ::grpc::Status UpdateTimeStamp(::grpc::ClientContext* context, const ::kinectrobot::Request& request, ::kinectrobot::Response* response) = 0;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kinectrobot::Response>> AsyncUpdateTimeStamp(::grpc::ClientContext* context, const ::kinectrobot::Request& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kinectrobot::Response>>(AsyncUpdateTimeStampRaw(context, request, cq));
+    }
     std::unique_ptr< ::grpc::ClientReaderInterface< ::kinectrobot::Points>> ReturnPoints(::grpc::ClientContext* context, const ::kinectrobot::Request& request) {
       return std::unique_ptr< ::grpc::ClientReaderInterface< ::kinectrobot::Points>>(ReturnPointsRaw(context, request));
     }
@@ -67,6 +71,7 @@ class KinectRobot GRPC_FINAL {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kinectrobot::Response>>(AsyncWebAgentRaw(context, request, cq));
     }
   private:
+    virtual ::grpc::ClientAsyncResponseReaderInterface< ::kinectrobot::Response>* AsyncUpdateTimeStampRaw(::grpc::ClientContext* context, const ::kinectrobot::Request& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientReaderInterface< ::kinectrobot::Points>* ReturnPointsRaw(::grpc::ClientContext* context, const ::kinectrobot::Request& request) = 0;
     virtual ::grpc::ClientAsyncReaderInterface< ::kinectrobot::Points>* AsyncReturnPointsRaw(::grpc::ClientContext* context, const ::kinectrobot::Request& request, ::grpc::CompletionQueue* cq, void* tag) = 0;
     virtual ::grpc::ClientReaderInterface< ::kinectrobot::Pixels>* ReturnImageRaw(::grpc::ClientContext* context, const ::kinectrobot::Request& request) = 0;
@@ -81,6 +86,10 @@ class KinectRobot GRPC_FINAL {
   class Stub GRPC_FINAL : public StubInterface {
    public:
     Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel);
+    ::grpc::Status UpdateTimeStamp(::grpc::ClientContext* context, const ::kinectrobot::Request& request, ::kinectrobot::Response* response) GRPC_OVERRIDE;
+    std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectrobot::Response>> AsyncUpdateTimeStamp(::grpc::ClientContext* context, const ::kinectrobot::Request& request, ::grpc::CompletionQueue* cq) {
+      return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectrobot::Response>>(AsyncUpdateTimeStampRaw(context, request, cq));
+    }
     std::unique_ptr< ::grpc::ClientReader< ::kinectrobot::Points>> ReturnPoints(::grpc::ClientContext* context, const ::kinectrobot::Request& request) {
       return std::unique_ptr< ::grpc::ClientReader< ::kinectrobot::Points>>(ReturnPointsRaw(context, request));
     }
@@ -120,6 +129,7 @@ class KinectRobot GRPC_FINAL {
 
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
+    ::grpc::ClientAsyncResponseReader< ::kinectrobot::Response>* AsyncUpdateTimeStampRaw(::grpc::ClientContext* context, const ::kinectrobot::Request& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
     ::grpc::ClientReader< ::kinectrobot::Points>* ReturnPointsRaw(::grpc::ClientContext* context, const ::kinectrobot::Request& request) GRPC_OVERRIDE;
     ::grpc::ClientAsyncReader< ::kinectrobot::Points>* AsyncReturnPointsRaw(::grpc::ClientContext* context, const ::kinectrobot::Request& request, ::grpc::CompletionQueue* cq, void* tag) GRPC_OVERRIDE;
     ::grpc::ClientReader< ::kinectrobot::Pixels>* ReturnImageRaw(::grpc::ClientContext* context, const ::kinectrobot::Request& request) GRPC_OVERRIDE;
@@ -130,6 +140,7 @@ class KinectRobot GRPC_FINAL {
     ::grpc::ClientAsyncResponseReader< ::kinectrobot::Response>* AsyncSendSpeechRaw(::grpc::ClientContext* context, const ::kinectrobot::Speech& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
     ::grpc::ClientAsyncResponseReader< ::kinectrobot::Response>* AsyncSetSTTBehaviorRaw(::grpc::ClientContext* context, const ::kinectrobot::VoiceTriggers& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
     ::grpc::ClientAsyncResponseReader< ::kinectrobot::Response>* AsyncWebAgentRaw(::grpc::ClientContext* context, const ::kinectrobot::UrlInfo& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
+    const ::grpc::RpcMethod rpcmethod_UpdateTimeStamp_;
     const ::grpc::RpcMethod rpcmethod_ReturnPoints_;
     const ::grpc::RpcMethod rpcmethod_ReturnImage_;
     const ::grpc::RpcMethod rpcmethod_ReturnPixelBoundsFromSpaceBounds_;
@@ -145,6 +156,7 @@ class KinectRobot GRPC_FINAL {
    public:
     Service();
     virtual ~Service();
+    virtual ::grpc::Status UpdateTimeStamp(::grpc::ServerContext* context, const ::kinectrobot::Request* request, ::kinectrobot::Response* response);
     virtual ::grpc::Status ReturnPoints(::grpc::ServerContext* context, const ::kinectrobot::Request* request, ::grpc::ServerWriter< ::kinectrobot::Points>* writer);
     virtual ::grpc::Status ReturnImage(::grpc::ServerContext* context, const ::kinectrobot::Request* request, ::grpc::ServerWriter< ::kinectrobot::Pixels>* writer);
     virtual ::grpc::Status ReturnPixelBoundsFromSpaceBounds(::grpc::ServerContext* context, const ::kinectrobot::Request* request, ::kinectrobot::BitStream* response);
@@ -155,12 +167,32 @@ class KinectRobot GRPC_FINAL {
     virtual ::grpc::Status WebAgent(::grpc::ServerContext* context, const ::kinectrobot::UrlInfo* request, ::kinectrobot::Response* response);
   };
   template <class BaseClass>
+  class WithAsyncMethod_UpdateTimeStamp : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithAsyncMethod_UpdateTimeStamp() {
+      ::grpc::Service::MarkMethodAsync(0);
+    }
+    ~WithAsyncMethod_UpdateTimeStamp() GRPC_OVERRIDE {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status UpdateTimeStamp(::grpc::ServerContext* context, const ::kinectrobot::Request* request, ::kinectrobot::Response* response) GRPC_FINAL GRPC_OVERRIDE {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestUpdateTimeStamp(::grpc::ServerContext* context, ::kinectrobot::Request* request, ::grpc::ServerAsyncResponseWriter< ::kinectrobot::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncUnary(0, context, request, response, new_call_cq, notification_cq, tag);
+    }
+  };
+  template <class BaseClass>
   class WithAsyncMethod_ReturnPoints : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithAsyncMethod_ReturnPoints() {
-      ::grpc::Service::MarkMethodAsync(0);
+      ::grpc::Service::MarkMethodAsync(1);
     }
     ~WithAsyncMethod_ReturnPoints() GRPC_OVERRIDE {
       BaseClassMustBeDerivedFromService(this);
@@ -171,7 +203,7 @@ class KinectRobot GRPC_FINAL {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestReturnPoints(::grpc::ServerContext* context, ::kinectrobot::Request* request, ::grpc::ServerAsyncWriter< ::kinectrobot::Points>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncServerStreaming(0, context, request, writer, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncServerStreaming(1, context, request, writer, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -180,7 +212,7 @@ class KinectRobot GRPC_FINAL {
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithAsyncMethod_ReturnImage() {
-      ::grpc::Service::MarkMethodAsync(1);
+      ::grpc::Service::MarkMethodAsync(2);
     }
     ~WithAsyncMethod_ReturnImage() GRPC_OVERRIDE {
       BaseClassMustBeDerivedFromService(this);
@@ -191,7 +223,7 @@ class KinectRobot GRPC_FINAL {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestReturnImage(::grpc::ServerContext* context, ::kinectrobot::Request* request, ::grpc::ServerAsyncWriter< ::kinectrobot::Pixels>* writer, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncServerStreaming(1, context, request, writer, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncServerStreaming(2, context, request, writer, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -200,7 +232,7 @@ class KinectRobot GRPC_FINAL {
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithAsyncMethod_ReturnPixelBoundsFromSpaceBounds() {
-      ::grpc::Service::MarkMethodAsync(2);
+      ::grpc::Service::MarkMethodAsync(3);
     }
     ~WithAsyncMethod_ReturnPixelBoundsFromSpaceBounds() GRPC_OVERRIDE {
       BaseClassMustBeDerivedFromService(this);
@@ -211,7 +243,7 @@ class KinectRobot GRPC_FINAL {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestReturnPixelBoundsFromSpaceBounds(::grpc::ServerContext* context, ::kinectrobot::Request* request, ::grpc::ServerAsyncResponseWriter< ::kinectrobot::BitStream>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(2, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -220,7 +252,7 @@ class KinectRobot GRPC_FINAL {
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithAsyncMethod_ReturnCognition() {
-      ::grpc::Service::MarkMethodAsync(3);
+      ::grpc::Service::MarkMethodAsync(4);
     }
     ~WithAsyncMethod_ReturnCognition() GRPC_OVERRIDE {
       BaseClassMustBeDerivedFromService(this);
@@ -231,7 +263,7 @@ class KinectRobot GRPC_FINAL {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestReturnCognition(::grpc::ServerContext* context, ::kinectrobot::Request* request, ::grpc::ServerAsyncResponseWriter< ::kinectrobot::DataStream>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -240,7 +272,7 @@ class KinectRobot GRPC_FINAL {
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithAsyncMethod_SetStreamSettings() {
-      ::grpc::Service::MarkMethodAsync(4);
+      ::grpc::Service::MarkMethodAsync(5);
     }
     ~WithAsyncMethod_SetStreamSettings() GRPC_OVERRIDE {
       BaseClassMustBeDerivedFromService(this);
@@ -251,7 +283,7 @@ class KinectRobot GRPC_FINAL {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSetStreamSettings(::grpc::ServerContext* context, ::kinectrobot::StreamSettings* request, ::grpc::ServerAsyncResponseWriter< ::kinectrobot::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(4, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -260,7 +292,7 @@ class KinectRobot GRPC_FINAL {
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithAsyncMethod_SendSpeech() {
-      ::grpc::Service::MarkMethodAsync(5);
+      ::grpc::Service::MarkMethodAsync(6);
     }
     ~WithAsyncMethod_SendSpeech() GRPC_OVERRIDE {
       BaseClassMustBeDerivedFromService(this);
@@ -271,7 +303,7 @@ class KinectRobot GRPC_FINAL {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSendSpeech(::grpc::ServerContext* context, ::kinectrobot::Speech* request, ::grpc::ServerAsyncResponseWriter< ::kinectrobot::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(5, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -280,7 +312,7 @@ class KinectRobot GRPC_FINAL {
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithAsyncMethod_SetSTTBehavior() {
-      ::grpc::Service::MarkMethodAsync(6);
+      ::grpc::Service::MarkMethodAsync(7);
     }
     ~WithAsyncMethod_SetSTTBehavior() GRPC_OVERRIDE {
       BaseClassMustBeDerivedFromService(this);
@@ -291,7 +323,7 @@ class KinectRobot GRPC_FINAL {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestSetSTTBehavior(::grpc::ServerContext* context, ::kinectrobot::VoiceTriggers* request, ::grpc::ServerAsyncResponseWriter< ::kinectrobot::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(6, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(7, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
   template <class BaseClass>
@@ -300,7 +332,7 @@ class KinectRobot GRPC_FINAL {
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithAsyncMethod_WebAgent() {
-      ::grpc::Service::MarkMethodAsync(7);
+      ::grpc::Service::MarkMethodAsync(8);
     }
     ~WithAsyncMethod_WebAgent() GRPC_OVERRIDE {
       BaseClassMustBeDerivedFromService(this);
@@ -311,17 +343,34 @@ class KinectRobot GRPC_FINAL {
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }
     void RequestWebAgent(::grpc::ServerContext* context, ::kinectrobot::UrlInfo* request, ::grpc::ServerAsyncResponseWriter< ::kinectrobot::Response>* response, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
-      ::grpc::Service::RequestAsyncUnary(7, context, request, response, new_call_cq, notification_cq, tag);
+      ::grpc::Service::RequestAsyncUnary(8, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_ReturnPoints<WithAsyncMethod_ReturnImage<WithAsyncMethod_ReturnPixelBoundsFromSpaceBounds<WithAsyncMethod_ReturnCognition<WithAsyncMethod_SetStreamSettings<WithAsyncMethod_SendSpeech<WithAsyncMethod_SetSTTBehavior<WithAsyncMethod_WebAgent<Service > > > > > > > > AsyncService;
+  typedef WithAsyncMethod_UpdateTimeStamp<WithAsyncMethod_ReturnPoints<WithAsyncMethod_ReturnImage<WithAsyncMethod_ReturnPixelBoundsFromSpaceBounds<WithAsyncMethod_ReturnCognition<WithAsyncMethod_SetStreamSettings<WithAsyncMethod_SendSpeech<WithAsyncMethod_SetSTTBehavior<WithAsyncMethod_WebAgent<Service > > > > > > > > > AsyncService;
+  template <class BaseClass>
+  class WithGenericMethod_UpdateTimeStamp : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithGenericMethod_UpdateTimeStamp() {
+      ::grpc::Service::MarkMethodGeneric(0);
+    }
+    ~WithGenericMethod_UpdateTimeStamp() GRPC_OVERRIDE {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status UpdateTimeStamp(::grpc::ServerContext* context, const ::kinectrobot::Request* request, ::kinectrobot::Response* response) GRPC_FINAL GRPC_OVERRIDE {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
   template <class BaseClass>
   class WithGenericMethod_ReturnPoints : public BaseClass {
    private:
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithGenericMethod_ReturnPoints() {
-      ::grpc::Service::MarkMethodGeneric(0);
+      ::grpc::Service::MarkMethodGeneric(1);
     }
     ~WithGenericMethod_ReturnPoints() GRPC_OVERRIDE {
       BaseClassMustBeDerivedFromService(this);
@@ -338,7 +387,7 @@ class KinectRobot GRPC_FINAL {
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithGenericMethod_ReturnImage() {
-      ::grpc::Service::MarkMethodGeneric(1);
+      ::grpc::Service::MarkMethodGeneric(2);
     }
     ~WithGenericMethod_ReturnImage() GRPC_OVERRIDE {
       BaseClassMustBeDerivedFromService(this);
@@ -355,7 +404,7 @@ class KinectRobot GRPC_FINAL {
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithGenericMethod_ReturnPixelBoundsFromSpaceBounds() {
-      ::grpc::Service::MarkMethodGeneric(2);
+      ::grpc::Service::MarkMethodGeneric(3);
     }
     ~WithGenericMethod_ReturnPixelBoundsFromSpaceBounds() GRPC_OVERRIDE {
       BaseClassMustBeDerivedFromService(this);
@@ -372,7 +421,7 @@ class KinectRobot GRPC_FINAL {
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithGenericMethod_ReturnCognition() {
-      ::grpc::Service::MarkMethodGeneric(3);
+      ::grpc::Service::MarkMethodGeneric(4);
     }
     ~WithGenericMethod_ReturnCognition() GRPC_OVERRIDE {
       BaseClassMustBeDerivedFromService(this);
@@ -389,7 +438,7 @@ class KinectRobot GRPC_FINAL {
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithGenericMethod_SetStreamSettings() {
-      ::grpc::Service::MarkMethodGeneric(4);
+      ::grpc::Service::MarkMethodGeneric(5);
     }
     ~WithGenericMethod_SetStreamSettings() GRPC_OVERRIDE {
       BaseClassMustBeDerivedFromService(this);
@@ -406,7 +455,7 @@ class KinectRobot GRPC_FINAL {
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithGenericMethod_SendSpeech() {
-      ::grpc::Service::MarkMethodGeneric(5);
+      ::grpc::Service::MarkMethodGeneric(6);
     }
     ~WithGenericMethod_SendSpeech() GRPC_OVERRIDE {
       BaseClassMustBeDerivedFromService(this);
@@ -423,7 +472,7 @@ class KinectRobot GRPC_FINAL {
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithGenericMethod_SetSTTBehavior() {
-      ::grpc::Service::MarkMethodGeneric(6);
+      ::grpc::Service::MarkMethodGeneric(7);
     }
     ~WithGenericMethod_SetSTTBehavior() GRPC_OVERRIDE {
       BaseClassMustBeDerivedFromService(this);
@@ -440,7 +489,7 @@ class KinectRobot GRPC_FINAL {
     void BaseClassMustBeDerivedFromService(const Service *service) {}
    public:
     WithGenericMethod_WebAgent() {
-      ::grpc::Service::MarkMethodGeneric(7);
+      ::grpc::Service::MarkMethodGeneric(8);
     }
     ~WithGenericMethod_WebAgent() GRPC_OVERRIDE {
       BaseClassMustBeDerivedFromService(this);
