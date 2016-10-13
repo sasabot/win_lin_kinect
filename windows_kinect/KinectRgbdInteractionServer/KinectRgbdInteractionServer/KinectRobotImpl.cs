@@ -185,8 +185,8 @@ namespace Kinectrobot
             {
                 foreach (var blob in this.pointBlobs)
                 {
-                    if (this.lastCalledReturnPointsTime < this.lastDetectedPointsTime) blob.Delay = true;
-                    else blob.Delay = false;
+                    if (this.lastCalledReturnPointsTime < this.lastDetectedPointsTime) blob.Delay = false;
+                    else blob.Delay = true;
                     await responseStream.WriteAsync(blob);
                 }
             }
@@ -200,8 +200,8 @@ namespace Kinectrobot
             {
                 foreach (var blob in this.pixelBlobs)
                 {
-                    if (this.lastCalledReturnPixelsTime < this.lastDetectedPixelsTime) blob.Delay = true;
-                    else blob.Delay = false;
+                    if (this.lastCalledReturnPixelsTime < this.lastDetectedPixelsTime) blob.Delay = false;
+                    else blob.Delay = true;
                     await responseStream.WriteAsync(blob);
                 }
             }
