@@ -811,7 +811,8 @@ namespace Kinectrobot
             }
             // convert "..." syntax to break
             raw_string.Replace("...", "<break time=\"0.5s\">");
-            Prompt speech = new Prompt("<?xml version=\"1.0\"?><speak version=\"1.0\" xml:lang=\"" + lang + "\">" + raw_string + "</speak>", SynthesisTextFormat.Ssml);
+            Prompt speech = new Prompt("<?xml version=\"1.0\"?><speak version=\"1.0\" xml:lang=\"" + lang + "\"><prosody volume=\"100.0\" pitch=\"+20Hz\">" + raw_string + "</prosody></speak>",
+                SynthesisTextFormat.Ssml);
             this.speechSynthesizer.SpeakAsync(speech);
 
             return Task.FromResult(ReturnTrue());
