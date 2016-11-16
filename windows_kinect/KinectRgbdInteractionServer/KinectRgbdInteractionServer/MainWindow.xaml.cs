@@ -687,6 +687,8 @@ namespace KinectRgbdInteractionServer
                 return;
             }
 
+            this.robotImpl.SetCameraInfo(this.coordinateMapper.GetDepthCameraIntrinsics());
+
             // get depth map from depthFrame
             var depthDesc = depthFrame.FrameDescription;
             ushort[] depthData = new ushort[depthDesc.Width * depthDesc.Height];

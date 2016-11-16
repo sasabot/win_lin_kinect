@@ -14,6 +14,7 @@ namespace Kinectrobot {
 
     static readonly Marshaller<global::Kinectrobot.Request> __Marshaller_Request = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Request.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.Response> __Marshaller_Response = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Response.Parser.ParseFrom);
+    static readonly Marshaller<global::Kinectrobot.CameraInfo> __Marshaller_CameraInfo = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.CameraInfo.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.Points> __Marshaller_Points = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Points.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.Pixels> __Marshaller_Pixels = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.Pixels.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectrobot.BitStream> __Marshaller_BitStream = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectrobot.BitStream.Parser.ParseFrom);
@@ -29,6 +30,13 @@ namespace Kinectrobot {
         "UpdateTimeStamp",
         __Marshaller_Request,
         __Marshaller_Response);
+
+    static readonly Method<global::Kinectrobot.Request, global::Kinectrobot.CameraInfo> __Method_ReturnCameraInfo = new Method<global::Kinectrobot.Request, global::Kinectrobot.CameraInfo>(
+        MethodType.Unary,
+        __ServiceName,
+        "ReturnCameraInfo",
+        __Marshaller_Request,
+        __Marshaller_CameraInfo);
 
     static readonly Method<global::Kinectrobot.Request, global::Kinectrobot.Points> __Method_ReturnPoints = new Method<global::Kinectrobot.Request, global::Kinectrobot.Points>(
         MethodType.ServerStreaming,
@@ -96,6 +104,11 @@ namespace Kinectrobot {
     public abstract class KinectRobotBase
     {
       public virtual global::System.Threading.Tasks.Task<global::Kinectrobot.Response> UpdateTimeStamp(global::Kinectrobot.Request request, ServerCallContext context)
+      {
+        throw new RpcException(new Status(StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task<global::Kinectrobot.CameraInfo> ReturnCameraInfo(global::Kinectrobot.Request request, ServerCallContext context)
       {
         throw new RpcException(new Status(StatusCode.Unimplemented, ""));
       }
@@ -180,6 +193,22 @@ namespace Kinectrobot {
       public virtual AsyncUnaryCall<global::Kinectrobot.Response> UpdateTimeStampAsync(global::Kinectrobot.Request request, CallOptions options)
       {
         return CallInvoker.AsyncUnaryCall(__Method_UpdateTimeStamp, null, options, request);
+      }
+      public virtual global::Kinectrobot.CameraInfo ReturnCameraInfo(global::Kinectrobot.Request request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return ReturnCameraInfo(request, new CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual global::Kinectrobot.CameraInfo ReturnCameraInfo(global::Kinectrobot.Request request, CallOptions options)
+      {
+        return CallInvoker.BlockingUnaryCall(__Method_ReturnCameraInfo, null, options, request);
+      }
+      public virtual AsyncUnaryCall<global::Kinectrobot.CameraInfo> ReturnCameraInfoAsync(global::Kinectrobot.Request request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return ReturnCameraInfoAsync(request, new CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual AsyncUnaryCall<global::Kinectrobot.CameraInfo> ReturnCameraInfoAsync(global::Kinectrobot.Request request, CallOptions options)
+      {
+        return CallInvoker.AsyncUnaryCall(__Method_ReturnCameraInfo, null, options, request);
       }
       public virtual AsyncServerStreamingCall<global::Kinectrobot.Points> ReturnPoints(global::Kinectrobot.Request request, Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
       {
@@ -304,6 +333,7 @@ namespace Kinectrobot {
     {
       return ServerServiceDefinition.CreateBuilder()
           .AddMethod(__Method_UpdateTimeStamp, serviceImpl.UpdateTimeStamp)
+          .AddMethod(__Method_ReturnCameraInfo, serviceImpl.ReturnCameraInfo)
           .AddMethod(__Method_ReturnPoints, serviceImpl.ReturnPoints)
           .AddMethod(__Method_ReturnImage, serviceImpl.ReturnImage)
           .AddMethod(__Method_ReturnPixelBoundsFromSpaceBounds, serviceImpl.ReturnPixelBoundsFromSpaceBounds)

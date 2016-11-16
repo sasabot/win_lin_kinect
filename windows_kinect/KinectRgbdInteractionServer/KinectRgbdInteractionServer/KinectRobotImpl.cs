@@ -38,6 +38,14 @@ namespace Kinectrobot
         private TimeSpan lastDetectedPixelsTime;
         private TimeSpan lastCalledReturnPixelsTime;
 
+        // camera info
+
+        private ReaderWriterLockSlim cameraInfoLocker = null;
+        private float Fx = 0.0f;
+        private float Fy = 0.0f;
+        private float Cx = 0.0f;
+        private float Cy = 0.0f;
+
         // rgbd streaming parameters
 
         private int sendStartPointX = 0;
@@ -73,6 +81,7 @@ namespace Kinectrobot
         public KinectRobotImpl(KinectRgbdInteractionServer.MainWindow parent)
         {
             // create lockers
+            this.cameraInfoLocker = new ReaderWriterLockSlim();
             this.pointsLocker = new ReaderWriterLockSlim();
             this.pixelsLocker = new ReaderWriterLockSlim();
             this.streamSettingsLocker = new ReaderWriterLockSlim();
@@ -117,6 +126,19 @@ namespace Kinectrobot
             {
                 this.speechSynthesizer.Dispose();
             }
+        }
+
+        public void SetCameraInfo(CameraIntrinsics info)
+        {
+            this.cameraInfoLocker.EnterWriteLock();
+            try
+            {
+                this.Fx = info.FocalLengthX;
+                this.Fy = info.FocalLengthY;
+                this.Cx = info.PrincipalPointX;
+                this.Cy = info.PrincipalPointY;
+            }
+            finally { this.cameraInfoLocker.ExitWriteLock(); }
         }
 
         public void SetPoints(Kinectrobot.Points points, ColorSpacePoint[] image)
@@ -177,6 +199,17 @@ namespace Kinectrobot
             else Task.FromResult(ReturnFalse());
 
             return Task.FromResult(ReturnTrue());
+        }
+
+        public override Task<CameraInfo> ReturnCameraInfo(Request request, ServerCallContext context)
+        {
+            this.cameraInfoLocker.EnterReadLock();
+            try
+            {
+                Kinectrobot.CameraInfo result = new Kinectrobot.CameraInfo { Fx = this.Fx, Fy = this.Fy, Cx = this.Cx, Cy = this.Cy };
+                return Task.FromResult(result);
+            }
+            finally { this.cameraInfoLocker.ExitReadLock(); }
         }
 
         public override async Task ReturnPoints(Request request, IServerStreamWriter<Points> responseStream, ServerCallContext context)

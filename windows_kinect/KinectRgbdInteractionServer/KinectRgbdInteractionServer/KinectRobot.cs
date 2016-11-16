@@ -43,22 +43,25 @@ namespace Kinectrobot {
             "aXRpb24YASABKAgSHwoXQXV0b1RyaWdnZXJEdXJpbmdTcGVlY2gYAiABKAgS",
             "FwoPTWFudWFsVHJpZ2dlck9uGAMgASgIEhgKEE1hbnVhbFRyaWdnZXJPZmYY",
             "BCABKAgiRAoHVXJsSW5mbxILCgN1cmwYASABKAkSEAoIbGlua2hlYWQYAiAB",
-            "KAkSCwoDa2V5GAMgASgJEg0KBXN0eWxlGAQgASgJIhoKCFJlc3BvbnNlEg4K",
-            "BnN0YXR1cxgBIAEoCDLtBAoLS2luZWN0Um9ib3QSQAoPVXBkYXRlVGltZVN0",
-            "YW1wEhQua2luZWN0cm9ib3QuUmVxdWVzdBoVLmtpbmVjdHJvYm90LlJlc3Bv",
-            "bnNlIgASPQoMUmV0dXJuUG9pbnRzEhQua2luZWN0cm9ib3QuUmVxdWVzdBoT",
-            "LmtpbmVjdHJvYm90LlBvaW50cyIAMAESPAoLUmV0dXJuSW1hZ2USFC5raW5l",
-            "Y3Ryb2JvdC5SZXF1ZXN0GhMua2luZWN0cm9ib3QuUGl4ZWxzIgAwARJSCiBS",
-            "ZXR1cm5QaXhlbEJvdW5kc0Zyb21TcGFjZUJvdW5kcxIULmtpbmVjdHJvYm90",
-            "LlJlcXVlc3QaFi5raW5lY3Ryb2JvdC5CaXRTdHJlYW0iABJCCg9SZXR1cm5D",
-            "b2duaXRpb24SFC5raW5lY3Ryb2JvdC5SZXF1ZXN0Ghcua2luZWN0cm9ib3Qu",
-            "RGF0YVN0cmVhbSIAEkkKEVNldFN0cmVhbVNldHRpbmdzEhsua2luZWN0cm9i",
-            "b3QuU3RyZWFtU2V0dGluZ3MaFS5raW5lY3Ryb2JvdC5SZXNwb25zZSIAEjoK",
-            "ClNlbmRTcGVlY2gSEy5raW5lY3Ryb2JvdC5TcGVlY2gaFS5raW5lY3Ryb2Jv",
-            "dC5SZXNwb25zZSIAEkUKDlNldFNUVEJlaGF2aW9yEhoua2luZWN0cm9ib3Qu",
-            "Vm9pY2VUcmlnZ2VycxoVLmtpbmVjdHJvYm90LlJlc3BvbnNlIgASOQoIV2Vi",
-            "QWdlbnQSFC5raW5lY3Ryb2JvdC5VcmxJbmZvGhUua2luZWN0cm9ib3QuUmVz",
-            "cG9uc2UiAEIPCgdleC5ncnBjogIDUlRHYgZwcm90bzM="));
+            "KAkSCwoDa2V5GAMgASgJEg0KBXN0eWxlGAQgASgJIjwKCkNhbWVyYUluZm8S",
+            "CgoCZngYASABKAISCgoCZnkYAiABKAISCgoCY3gYAyABKAISCgoCY3kYBCAB",
+            "KAIiGgoIUmVzcG9uc2USDgoGc3RhdHVzGAEgASgIMrIFCgtLaW5lY3RSb2Jv",
+            "dBJACg9VcGRhdGVUaW1lU3RhbXASFC5raW5lY3Ryb2JvdC5SZXF1ZXN0GhUu",
+            "a2luZWN0cm9ib3QuUmVzcG9uc2UiABJDChBSZXR1cm5DYW1lcmFJbmZvEhQu",
+            "a2luZWN0cm9ib3QuUmVxdWVzdBoXLmtpbmVjdHJvYm90LkNhbWVyYUluZm8i",
+            "ABI9CgxSZXR1cm5Qb2ludHMSFC5raW5lY3Ryb2JvdC5SZXF1ZXN0GhMua2lu",
+            "ZWN0cm9ib3QuUG9pbnRzIgAwARI8CgtSZXR1cm5JbWFnZRIULmtpbmVjdHJv",
+            "Ym90LlJlcXVlc3QaEy5raW5lY3Ryb2JvdC5QaXhlbHMiADABElIKIFJldHVy",
+            "blBpeGVsQm91bmRzRnJvbVNwYWNlQm91bmRzEhQua2luZWN0cm9ib3QuUmVx",
+            "dWVzdBoWLmtpbmVjdHJvYm90LkJpdFN0cmVhbSIAEkIKD1JldHVybkNvZ25p",
+            "dGlvbhIULmtpbmVjdHJvYm90LlJlcXVlc3QaFy5raW5lY3Ryb2JvdC5EYXRh",
+            "U3RyZWFtIgASSQoRU2V0U3RyZWFtU2V0dGluZ3MSGy5raW5lY3Ryb2JvdC5T",
+            "dHJlYW1TZXR0aW5ncxoVLmtpbmVjdHJvYm90LlJlc3BvbnNlIgASOgoKU2Vu",
+            "ZFNwZWVjaBITLmtpbmVjdHJvYm90LlNwZWVjaBoVLmtpbmVjdHJvYm90LlJl",
+            "c3BvbnNlIgASRQoOU2V0U1RUQmVoYXZpb3ISGi5raW5lY3Ryb2JvdC5Wb2lj",
+            "ZVRyaWdnZXJzGhUua2luZWN0cm9ib3QuUmVzcG9uc2UiABI5CghXZWJBZ2Vu",
+            "dBIULmtpbmVjdHJvYm90LlVybEluZm8aFS5raW5lY3Ryb2JvdC5SZXNwb25z",
+            "ZSIAQg8KB2V4LmdycGOiAgNSVEdiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
@@ -75,6 +78,7 @@ namespace Kinectrobot {
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Speech), global::Kinectrobot.Speech.Parser, new[]{ "Command", "Speech_" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.VoiceTriggers), global::Kinectrobot.VoiceTriggers.Parser, new[]{ "AutoTriggerAfterRecognition", "AutoTriggerDuringSpeech", "ManualTriggerOn", "ManualTriggerOff" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.UrlInfo), global::Kinectrobot.UrlInfo.Parser, new[]{ "Url", "Linkhead", "Key", "Style" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.CameraInfo), global::Kinectrobot.CameraInfo.Parser, new[]{ "Fx", "Fy", "Cx", "Cy" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Kinectrobot.Response), global::Kinectrobot.Response.Parser, new[]{ "Status" }, null, null, null)
           }));
     }
@@ -2073,12 +2077,196 @@ namespace Kinectrobot {
   }
 
   [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+  public sealed partial class CameraInfo : pb::IMessage<CameraInfo> {
+    private static readonly pb::MessageParser<CameraInfo> _parser = new pb::MessageParser<CameraInfo>(() => new CameraInfo());
+    public static pb::MessageParser<CameraInfo> Parser { get { return _parser; } }
+
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Kinectrobot.KinectRobotReflection.Descriptor.MessageTypes[13]; }
+    }
+
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    public CameraInfo() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    public CameraInfo(CameraInfo other) : this() {
+      fx_ = other.fx_;
+      fy_ = other.fy_;
+      cx_ = other.cx_;
+      cy_ = other.cy_;
+    }
+
+    public CameraInfo Clone() {
+      return new CameraInfo(this);
+    }
+
+    /// <summary>Field number for the "fx" field.</summary>
+    public const int FxFieldNumber = 1;
+    private float fx_;
+    public float Fx {
+      get { return fx_; }
+      set {
+        fx_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "fy" field.</summary>
+    public const int FyFieldNumber = 2;
+    private float fy_;
+    public float Fy {
+      get { return fy_; }
+      set {
+        fy_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "cx" field.</summary>
+    public const int CxFieldNumber = 3;
+    private float cx_;
+    public float Cx {
+      get { return cx_; }
+      set {
+        cx_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "cy" field.</summary>
+    public const int CyFieldNumber = 4;
+    private float cy_;
+    public float Cy {
+      get { return cy_; }
+      set {
+        cy_ = value;
+      }
+    }
+
+    public override bool Equals(object other) {
+      return Equals(other as CameraInfo);
+    }
+
+    public bool Equals(CameraInfo other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Fx != other.Fx) return false;
+      if (Fy != other.Fy) return false;
+      if (Cx != other.Cx) return false;
+      if (Cy != other.Cy) return false;
+      return true;
+    }
+
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Fx != 0F) hash ^= Fx.GetHashCode();
+      if (Fy != 0F) hash ^= Fy.GetHashCode();
+      if (Cx != 0F) hash ^= Cx.GetHashCode();
+      if (Cy != 0F) hash ^= Cy.GetHashCode();
+      return hash;
+    }
+
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Fx != 0F) {
+        output.WriteRawTag(13);
+        output.WriteFloat(Fx);
+      }
+      if (Fy != 0F) {
+        output.WriteRawTag(21);
+        output.WriteFloat(Fy);
+      }
+      if (Cx != 0F) {
+        output.WriteRawTag(29);
+        output.WriteFloat(Cx);
+      }
+      if (Cy != 0F) {
+        output.WriteRawTag(37);
+        output.WriteFloat(Cy);
+      }
+    }
+
+    public int CalculateSize() {
+      int size = 0;
+      if (Fx != 0F) {
+        size += 1 + 4;
+      }
+      if (Fy != 0F) {
+        size += 1 + 4;
+      }
+      if (Cx != 0F) {
+        size += 1 + 4;
+      }
+      if (Cy != 0F) {
+        size += 1 + 4;
+      }
+      return size;
+    }
+
+    public void MergeFrom(CameraInfo other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Fx != 0F) {
+        Fx = other.Fx;
+      }
+      if (other.Fy != 0F) {
+        Fy = other.Fy;
+      }
+      if (other.Cx != 0F) {
+        Cx = other.Cx;
+      }
+      if (other.Cy != 0F) {
+        Cy = other.Cy;
+      }
+    }
+
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 13: {
+            Fx = input.ReadFloat();
+            break;
+          }
+          case 21: {
+            Fy = input.ReadFloat();
+            break;
+          }
+          case 29: {
+            Cx = input.ReadFloat();
+            break;
+          }
+          case 37: {
+            Cy = input.ReadFloat();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
   public sealed partial class Response : pb::IMessage<Response> {
     private static readonly pb::MessageParser<Response> _parser = new pb::MessageParser<Response>(() => new Response());
     public static pb::MessageParser<Response> Parser { get { return _parser; } }
 
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Kinectrobot.KinectRobotReflection.Descriptor.MessageTypes[13]; }
+      get { return global::Kinectrobot.KinectRobotReflection.Descriptor.MessageTypes[14]; }
     }
 
     pbr::MessageDescriptor pb::IMessage.Descriptor {
