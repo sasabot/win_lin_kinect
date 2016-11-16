@@ -1,4 +1,5 @@
 ﻿#define COMPILE_SPEECH_RECOGNITION
+//#define USE_KINECT_BODY_SDK
 
 using Grpc.Core;
 
@@ -38,7 +39,8 @@ namespace KinectRgbdInteractionServer
 
         // bodies
 
-        private int maxBodies;
+        private int maxBodies = 3;
+#if USE_KINECT_BODY_SDK
         private Body[] bodies = null;
 
         // faces
@@ -63,6 +65,7 @@ namespace KinectRgbdInteractionServer
             | FaceFrameFeatures.MouthMoved
             | FaceFrameFeatures.LookingAway
             | FaceFrameFeatures.RotationOrientation;
+#endif
 
 #if COMPILE_SPEECH_RECOGNITION
 
@@ -154,12 +157,17 @@ namespace KinectRgbdInteractionServer
             this.kinectSensor = KinectSensor.GetDefault();
 
             this.multiSourceFrameReader =
+#if USE_KINECT_BODY_SDK
                 this.kinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color | FrameSourceTypes.Depth | FrameSourceTypes.Body);
+#else
+                this.kinectSensor.OpenMultiSourceFrameReader(FrameSourceTypes.Color | FrameSourceTypes.Depth);
+#endif
             this.multiSourceFrameReader.MultiSourceFrameArrived += this.Reader_FrameArrived;
 
             this.displayWidth = this.kinectSensor.ColorFrameSource.FrameDescription.Width;
             this.displayHeight = this.kinectSensor.ColorFrameSource.FrameDescription.Height;
 
+#if USE_KINECT_BODY_SDK
             // setup bodies
 
             this.maxBodies = this.kinectSensor.BodyFrameSource.BodyCount;
@@ -178,6 +186,7 @@ namespace KinectRgbdInteractionServer
                 this.faceReader[i] = this.faceSource[i].OpenReader();
                 this.faceReader[i].FrameArrived += Face_FrameArrived;
             }
+#endif
 
 #if COMPILE_SPEECH_RECOGNITION
 
@@ -404,6 +413,7 @@ namespace KinectRgbdInteractionServer
 
         private void MainWindow_Closing(object sender, CancelEventArgs e)
         {
+#if USE_KINECT_BODY_SDK
             for (int i = 0; i < this.maxBodies; ++i)
             {
                 if (this.faceReader[i] != null)
@@ -418,6 +428,7 @@ namespace KinectRgbdInteractionServer
                     this.faceSource[i] = null;
                 }
             }
+#endif
 
             if (this.kinectSensor != null)
             {
@@ -503,6 +514,7 @@ namespace KinectRgbdInteractionServer
                 return;
             }
 
+#if USE_KINECT_BODY_SDK
             using (var bodyFrame = frame.BodyFrameReference.AcquireFrame())
             {
                 if (bodyFrame == null)
@@ -660,6 +672,7 @@ namespace KinectRgbdInteractionServer
                     }
                 }
             }
+#endif
         }
 
         private async void RgbdOnce(MultiSourceFrame frame)
@@ -754,6 +767,7 @@ namespace KinectRgbdInteractionServer
             // TODO: stream if !this.onceFlag
         }
 
+#if USE_KINECT_BODY_SDK
         private void Face_FrameArrived(object sender, FaceFrameArrivedEventArgs e)
         {
             using (var faceFrame = e.FrameReference.AcquireFrame())
@@ -790,6 +804,7 @@ namespace KinectRgbdInteractionServer
                 this.faceResult[index] = result;
             }
         }
+#endif
 
 #if COMPILE_SPEECH_RECOGNITION
 
@@ -805,6 +820,7 @@ namespace KinectRgbdInteractionServer
 
                 IReadOnlyList<AudioBeamSubFrame> subFrameList = frameList[0].SubFrames;
 
+#if USE_KINECT_BODY_SDK
                 // get id of person speaking
                 ulong audioTrackingId = Convert.ToUInt64(this.kinectSensor.BodyFrameSource.BodyCount) + 1;
                 if (subFrameList[0].AudioBodyCorrelations.Count > 0)
@@ -820,6 +836,7 @@ namespace KinectRgbdInteractionServer
                     else
                         this.speakingResult[i] = false;
                 }
+#endif
 
                 // get voice
                 foreach (AudioBeamSubFrame subFrame in subFrameList)
@@ -929,6 +946,7 @@ namespace KinectRgbdInteractionServer
 
                 IReadOnlyList<AudioBeamSubFrame> subFrameList = frameList[0].SubFrames;
 
+#if USE_KINECT_BODY_SDK
                 // get id of person speaking
                 ulong audioTrackingId = Convert.ToUInt64(this.kinectSensor.BodyFrameSource.BodyCount) + 1;
                 if (subFrameList[0].AudioBodyCorrelations.Count > 0)
@@ -944,6 +962,7 @@ namespace KinectRgbdInteractionServer
                     else
                         this.speakingResult[i] = false;
                 }
+#endif
             }
         }
 
