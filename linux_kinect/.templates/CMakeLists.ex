@@ -66,3 +66,10 @@ add_executable(tts_sample
   )
 target_link_libraries(tts_sample
   ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+add_executable(person_detection_sample
+  examples/person_detection.cc
+  lib/KinectInterface.cc
+  )
+target_link_libraries(person_detection_sample
+  ${catkin_LIBRARIES} ${Boost_LIBRARIES})
