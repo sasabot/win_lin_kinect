@@ -18,8 +18,11 @@ then
 elif [[ $1 == "--all" ]]
 then
     cp ".templates/CMakeLists.all" $cmake_file
+elif [[ $1 == "--ex" ]]
+then
+    cp ".templates/CMakeLists.ex" $cmake_file
 else
-    echo "options: --lib or --all"
+    echo "options: --lib or --all or --ex"
     exit
 fi
 
