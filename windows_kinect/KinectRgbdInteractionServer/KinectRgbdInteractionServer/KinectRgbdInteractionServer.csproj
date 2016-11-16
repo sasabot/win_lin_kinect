@@ -103,7 +103,6 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="KinectAudioStream.cs" />
     <Compile Include="KinectPerson.cs" />
     <Compile Include="KinectPersonGrpc.cs" />
     <Compile Include="KinectRobot.cs" />

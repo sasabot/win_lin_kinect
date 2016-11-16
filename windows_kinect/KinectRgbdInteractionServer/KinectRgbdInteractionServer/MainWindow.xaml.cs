@@ -101,7 +101,6 @@ namespace KinectRgbdInteractionServer
         // offline speech engine
 
         private SpeechRecognitionEngine speechEngine = null;
-        private Microsoft.Samples.Kinect.SpeechBasics.KinectAudioStream convertStream = null;
 
 #endif
 
@@ -308,19 +307,7 @@ namespace KinectRgbdInteractionServer
                     this.speechEngine.SpeechRecognized += this.SpeechRecognitionOffline_FrameArrived;
                     this.speechEngine.SpeechRecognitionRejected += this.SpeechRecognitionOffline_Rejected;
 
-                    if (useKinectAsAudioSrc)
-                    {
-                        this.convertStream = new Microsoft.Samples.Kinect.SpeechBasics.KinectAudioStream(
-                            this.kinectSensor.AudioSource.AudioBeams[0].OpenInputStream());
-                        this.convertStream.SpeechActive = true;
-                        this.speechEngine.SetInputToAudioStream(this.convertStream,
-                            new SpeechAudioFormatInfo(EncodingFormat.Pcm, 16000, 16, 1, 32000, 2, null));
-                    }
-                    else
-                    {
-                        this.speechEngine.SetInputToDefaultAudioDevice();
-                    }
-
+                    this.speechEngine.SetInputToDefaultAudioDevice();
                     this.speechEngine.RecognizeAsync(RecognizeMode.Multiple);
                 }
 
@@ -442,11 +429,6 @@ namespace KinectRgbdInteractionServer
             if (this.recogClient != null)
             {
                 this.recogClient.Dispose();
-            }
-
-            if (this.convertStream != null)
-            {
-                this.convertStream.SpeechActive = false;
             }
 
             if (this.speechEngine != null)
