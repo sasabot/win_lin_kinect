@@ -13,7 +13,7 @@ int main(int argc, char **argv)
   ros::Publisher points_publisher =
     nh.advertise<sensor_msgs::PointCloud2>("/kinect/stream", 1);
 
-  while (1) {
+  while (ros::ok()) {
     auto start = std::chrono::high_resolution_clock::now();
 
     auto points = kinect->ReadPoints();

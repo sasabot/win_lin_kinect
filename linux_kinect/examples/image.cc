@@ -13,7 +13,7 @@ int main(int argc, char **argv)
   ros::Publisher image_publisher =
     nh.advertise<sensor_msgs::Image>("/kinect/pixelstream", 1);
 
-  while (1) {
+  while (ros::ok()) {
     auto start = std::chrono::high_resolution_clock::now();
 
     auto image = kinect->ReadImage();
