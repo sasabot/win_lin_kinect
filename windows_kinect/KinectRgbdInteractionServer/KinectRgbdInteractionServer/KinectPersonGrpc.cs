@@ -15,6 +15,7 @@ namespace Kinectperson {
     static readonly Marshaller<global::Kinectperson.PersonStream> __Marshaller_PersonStream = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectperson.PersonStream.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectperson.Response> __Marshaller_Response = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectperson.Response.Parser.ParseFrom);
     static readonly Marshaller<global::Kinectperson.Text> __Marshaller_Text = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectperson.Text.Parser.ParseFrom);
+    static readonly Marshaller<global::Kinectperson.PointStream> __Marshaller_PointStream = Marshallers.Create((arg) => global::Google.Protobuf.MessageExtensions.ToByteArray(arg), global::Kinectperson.PointStream.Parser.ParseFrom);
 
     static readonly Method<global::Kinectperson.PersonStream, global::Kinectperson.Response> __Method_SendPersonState = new Method<global::Kinectperson.PersonStream, global::Kinectperson.Response>(
         MethodType.Unary,
@@ -44,6 +45,13 @@ namespace Kinectperson {
         __Marshaller_Text,
         __Marshaller_Response);
 
+    static readonly Method<global::Kinectperson.PointStream, global::Kinectperson.Response> __Method_SendPointStream = new Method<global::Kinectperson.PointStream, global::Kinectperson.Response>(
+        MethodType.ClientStreaming,
+        __ServiceName,
+        "SendPointStream",
+        __Marshaller_PointStream,
+        __Marshaller_Response);
+
     /// <summary>Service descriptor</summary>
     public static global::Google.Protobuf.Reflection.ServiceDescriptor Descriptor
     {
@@ -69,6 +77,11 @@ namespace Kinectperson {
       }
 
       public virtual global::System.Threading.Tasks.Task<global::Kinectperson.Response> CreateRobotClient(global::Kinectperson.Text request, ServerCallContext context)
+      {
+        throw new RpcException(new Status(StatusCode.Unimplemented, ""));
+      }
+
+      public virtual global::System.Threading.Tasks.Task<global::Kinectperson.Response> SendPointStream(IAsyncStreamReader<global::Kinectperson.PointStream> requestStream, ServerCallContext context)
       {
         throw new RpcException(new Status(StatusCode.Unimplemented, ""));
       }
@@ -162,6 +175,14 @@ namespace Kinectperson {
       {
         return CallInvoker.AsyncUnaryCall(__Method_CreateRobotClient, null, options, request);
       }
+      public virtual AsyncClientStreamingCall<global::Kinectperson.PointStream, global::Kinectperson.Response> SendPointStream(Metadata headers = null, DateTime? deadline = null, CancellationToken cancellationToken = default(CancellationToken))
+      {
+        return SendPointStream(new CallOptions(headers, deadline, cancellationToken));
+      }
+      public virtual AsyncClientStreamingCall<global::Kinectperson.PointStream, global::Kinectperson.Response> SendPointStream(CallOptions options)
+      {
+        return CallInvoker.AsyncClientStreamingCall(__Method_SendPointStream, null, options);
+      }
       protected override KinectPersonClient NewInstance(ClientBaseConfiguration configuration)
       {
         return new KinectPersonClient(configuration);
@@ -175,7 +196,8 @@ namespace Kinectperson {
           .AddMethod(__Method_SendPersonState, serviceImpl.SendPersonState)
           .AddMethod(__Method_SendVoiceRecognition, serviceImpl.SendVoiceRecognition)
           .AddMethod(__Method_SendConsoleCommand, serviceImpl.SendConsoleCommand)
-          .AddMethod(__Method_CreateRobotClient, serviceImpl.CreateRobotClient).Build();
+          .AddMethod(__Method_CreateRobotClient, serviceImpl.CreateRobotClient)
+          .AddMethod(__Method_SendPointStream, serviceImpl.SendPointStream).Build();
     }
 
   }

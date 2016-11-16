@@ -49,6 +49,7 @@ namespace Kinectrobot
 
         private ReaderWriterLockSlim streamSettingsLocker = null;
         private bool streamPerson = false;
+        private bool streamRgbd = false;
 
         // speech
 
@@ -716,6 +717,7 @@ namespace Kinectrobot
                 for (int i = 0; i < request.Streams.Count; ++i)
                 {
                     if (request.Streams[i] == "person") this.streamPerson = request.Settings[i];
+                    if (request.Streams[i] == "rgbd") this.streamRgbd = request.Settings[i];
                 }
             }
             finally { streamSettingsLocker.ExitWriteLock(); }
@@ -728,6 +730,15 @@ namespace Kinectrobot
             bool ret;
             streamSettingsLocker.EnterReadLock();
             try { ret = this.streamPerson; }
+            finally { streamSettingsLocker.ExitReadLock(); }
+            return ret;
+        }
+
+        public bool GetStreamRgbdSettings()
+        {
+            bool ret;
+            streamSettingsLocker.EnterReadLock();
+            try { ret = this.streamRgbd; }
             finally { streamSettingsLocker.ExitReadLock(); }
             return ret;
         }

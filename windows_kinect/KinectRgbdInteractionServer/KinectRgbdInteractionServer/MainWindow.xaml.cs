@@ -1,5 +1,5 @@
 ﻿#define COMPILE_SPEECH_RECOGNITION
-#define USE_KINECT_BODY_SDK
+//#define USE_KINECT_BODY_SDK
 
 using Grpc.Core;
 
@@ -707,9 +707,53 @@ namespace KinectRgbdInteractionServer
 
             // get corresponding color pixel for each point on depth map
             ColorSpacePoint[] colorPoints = new ColorSpacePoint[depthDesc.Width * depthDesc.Height];
-            this.coordinateMapper.MapDepthFrameToColorSpace(depthData, colorPoints);       
+            this.coordinateMapper.MapDepthFrameToColorSpace(depthData, colorPoints);
 
             int pointIndex = 0;
+            if (this.robotImpl.GetStreamRgbdSettings())
+            {
+                Kinectperson.PointStream pointStream = new Kinectperson.PointStream { };
+                foreach (CameraSpacePoint point in cameraPointsDepth)
+                {
+                    // get color from corresponding color pixel
+                    // set default values
+                    int color = ((255 << 16) & 0xfffffff) + ((255 << 8) & 0xfffffff) + 255;
+                    int img_y = -1;
+                    int img_x = -1;
+                    // below check required if point with infinity or nan value is not rejected beforehand
+                    if (!Double.IsInfinity(colorPoints[pointIndex].X) && !Double.IsInfinity(colorPoints[pointIndex].Y)
+                        && !Double.IsNaN(colorPoints[pointIndex].X) && !Double.IsNaN(colorPoints[pointIndex].Y))
+                    {
+                        img_y = Convert.ToInt32(colorPoints[pointIndex].Y);
+                        img_x = Convert.ToInt32(colorPoints[pointIndex].X);
+                    }
+                    // note, corresponding pixel can be out of range on color map, due to coordinate difference
+                    if (img_x >= 0 && img_y >= 0 && img_x < colorDesc.Width && img_y < colorDesc.Height)
+                    {
+                        int pixel = 4 * (img_y * colorDesc.Width + img_x); // bgra, so skip by 4
+                        color = ((pixels[pixel++] << 16) & 0xfffffff) + ((pixels[pixel++] << 8) & 0xfffffff) + pixels[pixel++];
+                    }
+
+                    // add point to stream
+                    Kinectperson.Rgbd p = new Kinectperson.Rgbd
+                    {
+                        Color = color,
+                        X = point.X,
+                        Y = point.Y,
+                        Z = point.Z
+                    };
+                    ++pointIndex;
+                    pointStream.Data.Add(p);
+                }
+
+                Task.Run(() => SendPointStream(pointStream));
+
+                colorFrame.Dispose();
+                depthFrame.Dispose();
+
+                return;
+            }
+
             Kinectrobot.Points points = new Kinectrobot.Points { };
             foreach (CameraSpacePoint point in cameraPointsDepth)
             {
@@ -765,8 +809,36 @@ namespace KinectRgbdInteractionServer
 
             colorFrame.Dispose();
             depthFrame.Dispose();
+        }
 
-            // TODO: stream if !this.onceFlag
+        private async Task SendPointStream(Kinectperson.PointStream points)
+        {
+            Kinectperson.PointStream pointStream = new Kinectperson.PointStream { };
+            int pointsPerStream = points.Data.Count / KinectRgbdInteractionServer.MainWindow.divideStream + 1;
+
+            for (int k = 0; k < this.numClients; ++k)
+            {
+                try
+                {
+                    using (var send = this.client[k].SendPointStream())
+                    {
+                        for (int i = 0; i < KinectRgbdInteractionServer.MainWindow.divideStream; ++i)
+                        {
+                            Kinectperson.PointStream blob = new Kinectperson.PointStream { };
+                            int range = System.Math.Min((i + 1) * pointsPerStream, points.Data.Count);
+                            for (int j = pointsPerStream * i; j < range; ++j)
+                                blob.Data.Add(points.Data[j]);
+                            await send.RequestStream.WriteAsync(blob);
+                        }
+                        await send.RequestStream.CompleteAsync();
+                        Kinectperson.Response response = await send.ResponseAsync;
+                    }
+                }
+                catch (RpcException e)
+                {
+                    throw;
+                }
+            }
         }
 
 #if USE_KINECT_BODY_SDK
