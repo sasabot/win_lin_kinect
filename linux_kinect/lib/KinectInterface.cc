@@ -237,3 +237,31 @@ bool KinectInterface::StopPersonStream()
 
   return settings.response.status;
 }
+
+//////////////////////////////////////////////////
+bool KinectInterface::StartPointStream()
+{
+  linux_kinect::KinectSettings settings;
+  settings.request.streams.push_back("rgbd");
+  settings.request.settings.push_back(true);
+
+  // try until succeed
+  while (!call_settings_.call(settings)) {
+  }
+
+  return settings.response.status;
+}
+
+//////////////////////////////////////////////////
+bool KinectInterface::StopPointStream()
+{
+  linux_kinect::KinectSettings settings;
+  settings.request.streams.push_back("rgbd");
+  settings.request.settings.push_back(false);
+
+  // try until succeed
+  while (!call_settings_.call(settings)) {
+  }
+
+  return settings.response.status;
+}

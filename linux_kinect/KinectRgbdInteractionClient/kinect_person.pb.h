@@ -40,7 +40,9 @@ class Face;
 class Person;
 class PersonStream;
 class Point;
+class PointStream;
 class Response;
+class Rgbd;
 class Text;
 
 // ===================================================================
@@ -619,6 +621,189 @@ class Text : public ::google::protobuf::Message {
   void InitAsDefaultInstance();
   static Text* default_instance_;
 };
+// -------------------------------------------------------------------
+
+class Rgbd : public ::google::protobuf::Message {
+ public:
+  Rgbd();
+  virtual ~Rgbd();
+
+  Rgbd(const Rgbd& from);
+
+  inline Rgbd& operator=(const Rgbd& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const Rgbd& default_instance();
+
+  void Swap(Rgbd* other);
+
+  // implements Message ----------------------------------------------
+
+  inline Rgbd* New() const { return New(NULL); }
+
+  Rgbd* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const Rgbd& from);
+  void MergeFrom(const Rgbd& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(Rgbd* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional float x = 1;
+  void clear_x();
+  static const int kXFieldNumber = 1;
+  float x() const;
+  void set_x(float value);
+
+  // optional float y = 2;
+  void clear_y();
+  static const int kYFieldNumber = 2;
+  float y() const;
+  void set_y(float value);
+
+  // optional float z = 3;
+  void clear_z();
+  static const int kZFieldNumber = 3;
+  float z() const;
+  void set_z(float value);
+
+  // optional int32 color = 4;
+  void clear_color();
+  static const int kColorFieldNumber = 4;
+  ::google::protobuf::int32 color() const;
+  void set_color(::google::protobuf::int32 value);
+
+  // @@protoc_insertion_point(class_scope:kinectperson.Rgbd)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  float x_;
+  float y_;
+  float z_;
+  ::google::protobuf::int32 color_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_kinect_5fperson_2eproto();
+  friend void protobuf_AssignDesc_kinect_5fperson_2eproto();
+  friend void protobuf_ShutdownFile_kinect_5fperson_2eproto();
+
+  void InitAsDefaultInstance();
+  static Rgbd* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class PointStream : public ::google::protobuf::Message {
+ public:
+  PointStream();
+  virtual ~PointStream();
+
+  PointStream(const PointStream& from);
+
+  inline PointStream& operator=(const PointStream& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const PointStream& default_instance();
+
+  void Swap(PointStream* other);
+
+  // implements Message ----------------------------------------------
+
+  inline PointStream* New() const { return New(NULL); }
+
+  PointStream* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const PointStream& from);
+  void MergeFrom(const PointStream& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(PointStream* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .kinectperson.Rgbd data = 1;
+  int data_size() const;
+  void clear_data();
+  static const int kDataFieldNumber = 1;
+  const ::kinectperson::Rgbd& data(int index) const;
+  ::kinectperson::Rgbd* mutable_data(int index);
+  ::kinectperson::Rgbd* add_data();
+  ::google::protobuf::RepeatedPtrField< ::kinectperson::Rgbd >*
+      mutable_data();
+  const ::google::protobuf::RepeatedPtrField< ::kinectperson::Rgbd >&
+      data() const;
+
+  // @@protoc_insertion_point(class_scope:kinectperson.PointStream)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  ::google::protobuf::RepeatedPtrField< ::kinectperson::Rgbd > data_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_kinect_5fperson_2eproto();
+  friend void protobuf_AssignDesc_kinect_5fperson_2eproto();
+  friend void protobuf_ShutdownFile_kinect_5fperson_2eproto();
+
+  void InitAsDefaultInstance();
+  static PointStream* default_instance_;
+};
 // ===================================================================
 
 
@@ -1007,7 +1192,105 @@ inline void Text::set_allocated_text(::std::string* text) {
   // @@protoc_insertion_point(field_set_allocated:kinectperson.Text.text)
 }
 
+// -------------------------------------------------------------------
+
+// Rgbd
+
+// optional float x = 1;
+inline void Rgbd::clear_x() {
+  x_ = 0;
+}
+inline float Rgbd::x() const {
+  // @@protoc_insertion_point(field_get:kinectperson.Rgbd.x)
+  return x_;
+}
+inline void Rgbd::set_x(float value) {
+  
+  x_ = value;
+  // @@protoc_insertion_point(field_set:kinectperson.Rgbd.x)
+}
+
+// optional float y = 2;
+inline void Rgbd::clear_y() {
+  y_ = 0;
+}
+inline float Rgbd::y() const {
+  // @@protoc_insertion_point(field_get:kinectperson.Rgbd.y)
+  return y_;
+}
+inline void Rgbd::set_y(float value) {
+  
+  y_ = value;
+  // @@protoc_insertion_point(field_set:kinectperson.Rgbd.y)
+}
+
+// optional float z = 3;
+inline void Rgbd::clear_z() {
+  z_ = 0;
+}
+inline float Rgbd::z() const {
+  // @@protoc_insertion_point(field_get:kinectperson.Rgbd.z)
+  return z_;
+}
+inline void Rgbd::set_z(float value) {
+  
+  z_ = value;
+  // @@protoc_insertion_point(field_set:kinectperson.Rgbd.z)
+}
+
+// optional int32 color = 4;
+inline void Rgbd::clear_color() {
+  color_ = 0;
+}
+inline ::google::protobuf::int32 Rgbd::color() const {
+  // @@protoc_insertion_point(field_get:kinectperson.Rgbd.color)
+  return color_;
+}
+inline void Rgbd::set_color(::google::protobuf::int32 value) {
+  
+  color_ = value;
+  // @@protoc_insertion_point(field_set:kinectperson.Rgbd.color)
+}
+
+// -------------------------------------------------------------------
+
+// PointStream
+
+// repeated .kinectperson.Rgbd data = 1;
+inline int PointStream::data_size() const {
+  return data_.size();
+}
+inline void PointStream::clear_data() {
+  data_.Clear();
+}
+inline const ::kinectperson::Rgbd& PointStream::data(int index) const {
+  // @@protoc_insertion_point(field_get:kinectperson.PointStream.data)
+  return data_.Get(index);
+}
+inline ::kinectperson::Rgbd* PointStream::mutable_data(int index) {
+  // @@protoc_insertion_point(field_mutable:kinectperson.PointStream.data)
+  return data_.Mutable(index);
+}
+inline ::kinectperson::Rgbd* PointStream::add_data() {
+  // @@protoc_insertion_point(field_add:kinectperson.PointStream.data)
+  return data_.Add();
+}
+inline ::google::protobuf::RepeatedPtrField< ::kinectperson::Rgbd >*
+PointStream::mutable_data() {
+  // @@protoc_insertion_point(field_mutable_list:kinectperson.PointStream.data)
+  return &data_;
+}
+inline const ::google::protobuf::RepeatedPtrField< ::kinectperson::Rgbd >&
+PointStream::data() const {
+  // @@protoc_insertion_point(field_list:kinectperson.PointStream.data)
+  return data_;
+}
+
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

@@ -46,11 +46,19 @@ class KinectPerson GRPC_FINAL {
     std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kinectperson::Response>> AsyncCreateRobotClient(::grpc::ClientContext* context, const ::kinectperson::Text& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReaderInterface< ::kinectperson::Response>>(AsyncCreateRobotClientRaw(context, request, cq));
     }
+    std::unique_ptr< ::grpc::ClientWriterInterface< ::kinectperson::PointStream>> SendPointStream(::grpc::ClientContext* context, ::kinectperson::Response* response) {
+      return std::unique_ptr< ::grpc::ClientWriterInterface< ::kinectperson::PointStream>>(SendPointStreamRaw(context, response));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::kinectperson::PointStream>> AsyncSendPointStream(::grpc::ClientContext* context, ::kinectperson::Response* response, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncWriterInterface< ::kinectperson::PointStream>>(AsyncSendPointStreamRaw(context, response, cq, tag));
+    }
   private:
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::kinectperson::Response>* AsyncSendPersonStateRaw(::grpc::ClientContext* context, const ::kinectperson::PersonStream& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::kinectperson::Response>* AsyncSendVoiceRecognitionRaw(::grpc::ClientContext* context, const ::kinectperson::Text& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::kinectperson::Response>* AsyncSendConsoleCommandRaw(::grpc::ClientContext* context, const ::kinectperson::Text& request, ::grpc::CompletionQueue* cq) = 0;
     virtual ::grpc::ClientAsyncResponseReaderInterface< ::kinectperson::Response>* AsyncCreateRobotClientRaw(::grpc::ClientContext* context, const ::kinectperson::Text& request, ::grpc::CompletionQueue* cq) = 0;
+    virtual ::grpc::ClientWriterInterface< ::kinectperson::PointStream>* SendPointStreamRaw(::grpc::ClientContext* context, ::kinectperson::Response* response) = 0;
+    virtual ::grpc::ClientAsyncWriterInterface< ::kinectperson::PointStream>* AsyncSendPointStreamRaw(::grpc::ClientContext* context, ::kinectperson::Response* response, ::grpc::CompletionQueue* cq, void* tag) = 0;
   };
   class Stub GRPC_FINAL : public StubInterface {
    public:
@@ -71,6 +79,12 @@ class KinectPerson GRPC_FINAL {
     std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectperson::Response>> AsyncCreateRobotClient(::grpc::ClientContext* context, const ::kinectperson::Text& request, ::grpc::CompletionQueue* cq) {
       return std::unique_ptr< ::grpc::ClientAsyncResponseReader< ::kinectperson::Response>>(AsyncCreateRobotClientRaw(context, request, cq));
     }
+    std::unique_ptr< ::grpc::ClientWriter< ::kinectperson::PointStream>> SendPointStream(::grpc::ClientContext* context, ::kinectperson::Response* response) {
+      return std::unique_ptr< ::grpc::ClientWriter< ::kinectperson::PointStream>>(SendPointStreamRaw(context, response));
+    }
+    std::unique_ptr< ::grpc::ClientAsyncWriter< ::kinectperson::PointStream>> AsyncSendPointStream(::grpc::ClientContext* context, ::kinectperson::Response* response, ::grpc::CompletionQueue* cq, void* tag) {
+      return std::unique_ptr< ::grpc::ClientAsyncWriter< ::kinectperson::PointStream>>(AsyncSendPointStreamRaw(context, response, cq, tag));
+    }
 
    private:
     std::shared_ptr< ::grpc::ChannelInterface> channel_;
@@ -78,10 +92,13 @@ class KinectPerson GRPC_FINAL {
     ::grpc::ClientAsyncResponseReader< ::kinectperson::Response>* AsyncSendVoiceRecognitionRaw(::grpc::ClientContext* context, const ::kinectperson::Text& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
     ::grpc::ClientAsyncResponseReader< ::kinectperson::Response>* AsyncSendConsoleCommandRaw(::grpc::ClientContext* context, const ::kinectperson::Text& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
     ::grpc::ClientAsyncResponseReader< ::kinectperson::Response>* AsyncCreateRobotClientRaw(::grpc::ClientContext* context, const ::kinectperson::Text& request, ::grpc::CompletionQueue* cq) GRPC_OVERRIDE;
+    ::grpc::ClientWriter< ::kinectperson::PointStream>* SendPointStreamRaw(::grpc::ClientContext* context, ::kinectperson::Response* response) GRPC_OVERRIDE;
+    ::grpc::ClientAsyncWriter< ::kinectperson::PointStream>* AsyncSendPointStreamRaw(::grpc::ClientContext* context, ::kinectperson::Response* response, ::grpc::CompletionQueue* cq, void* tag) GRPC_OVERRIDE;
     const ::grpc::RpcMethod rpcmethod_SendPersonState_;
     const ::grpc::RpcMethod rpcmethod_SendVoiceRecognition_;
     const ::grpc::RpcMethod rpcmethod_SendConsoleCommand_;
     const ::grpc::RpcMethod rpcmethod_CreateRobotClient_;
+    const ::grpc::RpcMethod rpcmethod_SendPointStream_;
   };
   static std::unique_ptr<Stub> NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options = ::grpc::StubOptions());
 
@@ -93,6 +110,7 @@ class KinectPerson GRPC_FINAL {
     virtual ::grpc::Status SendVoiceRecognition(::grpc::ServerContext* context, const ::kinectperson::Text* request, ::kinectperson::Response* response);
     virtual ::grpc::Status SendConsoleCommand(::grpc::ServerContext* context, const ::kinectperson::Text* request, ::kinectperson::Response* response);
     virtual ::grpc::Status CreateRobotClient(::grpc::ServerContext* context, const ::kinectperson::Text* request, ::kinectperson::Response* response);
+    virtual ::grpc::Status SendPointStream(::grpc::ServerContext* context, ::grpc::ServerReader< ::kinectperson::PointStream>* reader, ::kinectperson::Response* response);
   };
   template <class BaseClass>
   class WithAsyncMethod_SendPersonState : public BaseClass {
@@ -174,7 +192,27 @@ class KinectPerson GRPC_FINAL {
       ::grpc::Service::RequestAsyncUnary(3, context, request, response, new_call_cq, notification_cq, tag);
     }
   };
-  typedef WithAsyncMethod_SendPersonState<WithAsyncMethod_SendVoiceRecognition<WithAsyncMethod_SendConsoleCommand<WithAsyncMethod_CreateRobotClient<Service > > > > AsyncService;
+  template <class BaseClass>
+  class WithAsyncMethod_SendPointStream : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithAsyncMethod_SendPointStream() {
+      ::grpc::Service::MarkMethodAsync(4);
+    }
+    ~WithAsyncMethod_SendPointStream() GRPC_OVERRIDE {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SendPointStream(::grpc::ServerContext* context, ::grpc::ServerReader< ::kinectperson::PointStream>* reader, ::kinectperson::Response* response) GRPC_FINAL GRPC_OVERRIDE {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+    void RequestSendPointStream(::grpc::ServerContext* context, ::grpc::ServerAsyncReader< ::kinectperson::Response, ::kinectperson::PointStream>* reader, ::grpc::CompletionQueue* new_call_cq, ::grpc::ServerCompletionQueue* notification_cq, void *tag) {
+      ::grpc::Service::RequestAsyncClientStreaming(4, context, reader, new_call_cq, notification_cq, tag);
+    }
+  };
+  typedef WithAsyncMethod_SendPersonState<WithAsyncMethod_SendVoiceRecognition<WithAsyncMethod_SendConsoleCommand<WithAsyncMethod_CreateRobotClient<WithAsyncMethod_SendPointStream<Service > > > > > AsyncService;
   template <class BaseClass>
   class WithGenericMethod_SendPersonState : public BaseClass {
    private:
@@ -239,6 +277,23 @@ class KinectPerson GRPC_FINAL {
     }
     // disable synchronous version of this method
     ::grpc::Status CreateRobotClient(::grpc::ServerContext* context, const ::kinectperson::Text* request, ::kinectperson::Response* response) GRPC_FINAL GRPC_OVERRIDE {
+      abort();
+      return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+    }
+  };
+  template <class BaseClass>
+  class WithGenericMethod_SendPointStream : public BaseClass {
+   private:
+    void BaseClassMustBeDerivedFromService(const Service *service) {}
+   public:
+    WithGenericMethod_SendPointStream() {
+      ::grpc::Service::MarkMethodGeneric(4);
+    }
+    ~WithGenericMethod_SendPointStream() GRPC_OVERRIDE {
+      BaseClassMustBeDerivedFromService(this);
+    }
+    // disable synchronous version of this method
+    ::grpc::Status SendPointStream(::grpc::ServerContext* context, ::grpc::ServerReader< ::kinectperson::PointStream>* reader, ::kinectperson::Response* response) GRPC_FINAL GRPC_OVERRIDE {
       abort();
       return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
     }

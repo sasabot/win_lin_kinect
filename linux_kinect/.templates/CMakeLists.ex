@@ -73,3 +73,10 @@ add_executable(person_detection_sample
   )
 target_link_libraries(person_detection_sample
   ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+add_executable(point_stream_sample
+  examples/point_stream.cc
+  lib/KinectInterface.cc
+  )
+target_link_libraries(point_stream_sample
+  ${catkin_LIBRARIES} ${Boost_LIBRARIES})

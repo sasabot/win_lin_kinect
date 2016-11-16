@@ -504,11 +504,38 @@ public:
     pub_person_targets_ = nh_.advertise<linux_kinect::People>("/kinect/person/targets", 1);
     pub_voice_recognition_ = nh_.advertise<std_msgs::String>("/kinect/voice", 1);
     pub_console_command_ = nh_.advertise<std_msgs::String>("/console/command", 1);
+    pub_points_ = nh_.advertise<sensor_msgs::PointCloud2>("/kinect/stream", 1);
     previous_target_ = -1;
     use_robot_speech_engine_ = false; // must be false
     // set to true using /stt/trigger/auto/robot, after constructing robot speech server
     // default voice will link to windows engine
     //to_speech_engine_ = nh_.serviceClient<>(""); //  todo
+
+    field_.resize(4);
+    sensor_msgs::PointField x;
+    x.name = "x";
+    x.offset = 0;
+    x.datatype = 7;
+    x.count = 1;
+    field_[0] = x;
+    sensor_msgs::PointField y;
+    y.name = "y";
+    y.offset = 4;
+    y.datatype = 7;
+    y.count = 1;
+    field_[1] = y;
+    sensor_msgs::PointField z;
+    z.name = "z";
+    z.offset = 8;
+    z.datatype = 7;
+    z.count = 1;
+    field_[2] = z;
+    sensor_msgs::PointField rgb;
+    rgb.name = "rgb";
+    rgb.offset = 12;
+    rgb.datatype = 7;
+    rgb.count = 1;
+    field_[3] = rgb;
   }
 
   Status SendPersonState(ServerContext* context, const kinectperson::PersonStream* persons,
@@ -608,6 +635,73 @@ public:
     pub_console_command_.publish(data);
     return Status::OK;
   }
+
+  Status SendPointStream(ServerContext* context,
+                         ServerReader<kinectperson::PointStream>* reader,
+                         kinectperson::Response* res) override
+  {
+    std::vector<uint8_t> data;
+    data.reserve(16 * 512 * 424);
+
+    int point_count = 0;
+    kinectperson::PointStream points;
+    while (reader->Read(&points))
+      for (unsigned int i = 0; i < points.data_size(); ++i) {
+          float d = points.data(i).z();
+          float y = points.data(i).y();
+          float x = points.data(i).x();
+          uint8_t r = (points.data(i).color() & 0x00000ff);
+          uint8_t g = ((points.data(i).color() >> 8) & 0x00000ff);
+          uint8_t b = ((points.data(i).color() >> 16) & 0x00000ff);
+
+          uint8_t *x_bytes;
+          x_bytes = reinterpret_cast<uint8_t*>(&x);
+          data.push_back(x_bytes[0]);
+          data.push_back(x_bytes[1]);
+          data.push_back(x_bytes[2]);
+          data.push_back(x_bytes[3]);
+
+          uint8_t *y_bytes;
+          y_bytes = reinterpret_cast<uint8_t*>(&y);
+          data.push_back(y_bytes[0]);
+          data.push_back(y_bytes[1]);
+          data.push_back(y_bytes[2]);
+          data.push_back(y_bytes[3]);
+
+          uint8_t *d_bytes;
+          d_bytes = reinterpret_cast<uint8_t*>(&d);
+          data.push_back(d_bytes[0]);
+          data.push_back(d_bytes[1]);
+          data.push_back(d_bytes[2]);
+          data.push_back(d_bytes[3]);
+
+          uint8_t dummy = 0;
+          data.push_back(b);
+          data.push_back(g);
+          data.push_back(r);
+          data.push_back(dummy);
+
+          ++point_count;
+        }
+    data.resize(16 * point_count);
+
+    ROS_INFO("read %d points", point_count);
+
+    sensor_msgs::PointCloud2 msg;
+    msg.header.frame_id = "dynamic_kinect_frame";
+    msg.header.stamp = ros::Time(0);
+    msg.height = 424;
+    msg.width = 512;
+    msg.fields.assign(field_.begin(), field_.end());
+    msg.point_step = 16;
+    msg.row_step = msg.point_step * msg.width;
+    msg.is_dense = false;
+    msg.is_bigendian = true;
+    msg.data.assign(data.begin(), data.end());
+    pub_points_.publish(msg);
+
+    return Status::OK;
+  }
   
   Status CreateRobotClient(ServerContext* context, const kinectperson::Text* ip,
 			   kinectperson::Response* res) override
@@ -632,6 +726,10 @@ private:
   ros::Publisher pub_voice_recognition_;
 
   ros::Publisher pub_console_command_;
+
+  ros::Publisher pub_points_;
+
+  std::vector<sensor_msgs::PointField> field_;
 
   //ros::ServiceClient to_speech_engine_; // todo
 

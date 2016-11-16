@@ -75,6 +75,10 @@ namespace kinect
 
     public: bool StopPersonStream();
 
+    public: bool StartPointStream();
+
+    public: bool StopPointStream();
+
     private: ros::NodeHandle nh_;
 
     private: ros::ServiceClient call_update_timestamp_;

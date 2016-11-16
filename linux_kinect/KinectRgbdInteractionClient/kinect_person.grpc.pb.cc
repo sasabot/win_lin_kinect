@@ -20,6 +20,7 @@ static const char* KinectPerson_method_names[] = {
   "/kinectperson.KinectPerson/SendVoiceRecognition",
   "/kinectperson.KinectPerson/SendConsoleCommand",
   "/kinectperson.KinectPerson/CreateRobotClient",
+  "/kinectperson.KinectPerson/SendPointStream",
 };
 
 std::unique_ptr< KinectPerson::Stub> KinectPerson::NewStub(const std::shared_ptr< ::grpc::ChannelInterface>& channel, const ::grpc::StubOptions& options) {
@@ -32,6 +33,7 @@ KinectPerson::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& chann
   , rpcmethod_SendVoiceRecognition_(KinectPerson_method_names[1], ::grpc::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_SendConsoleCommand_(KinectPerson_method_names[2], ::grpc::RpcMethod::NORMAL_RPC, channel)
   , rpcmethod_CreateRobotClient_(KinectPerson_method_names[3], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SendPointStream_(KinectPerson_method_names[4], ::grpc::RpcMethod::CLIENT_STREAMING, channel)
   {}
 
 ::grpc::Status KinectPerson::Stub::SendPersonState(::grpc::ClientContext* context, const ::kinectperson::PersonStream& request, ::kinectperson::Response* response) {
@@ -66,6 +68,14 @@ KinectPerson::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& chann
   return new ::grpc::ClientAsyncResponseReader< ::kinectperson::Response>(channel_.get(), cq, rpcmethod_CreateRobotClient_, context, request);
 }
 
+::grpc::ClientWriter< ::kinectperson::PointStream>* KinectPerson::Stub::SendPointStreamRaw(::grpc::ClientContext* context, ::kinectperson::Response* response) {
+  return new ::grpc::ClientWriter< ::kinectperson::PointStream>(channel_.get(), rpcmethod_SendPointStream_, context, response);
+}
+
+::grpc::ClientAsyncWriter< ::kinectperson::PointStream>* KinectPerson::Stub::AsyncSendPointStreamRaw(::grpc::ClientContext* context, ::kinectperson::Response* response, ::grpc::CompletionQueue* cq, void* tag) {
+  return new ::grpc::ClientAsyncWriter< ::kinectperson::PointStream>(channel_.get(), cq, rpcmethod_SendPointStream_, context, response, tag);
+}
+
 KinectPerson::Service::Service() {
   (void)KinectPerson_method_names;
   AddMethod(new ::grpc::RpcServiceMethod(
@@ -88,6 +98,11 @@ KinectPerson::Service::Service() {
       ::grpc::RpcMethod::NORMAL_RPC,
       new ::grpc::RpcMethodHandler< KinectPerson::Service, ::kinectperson::Text, ::kinectperson::Response>(
           std::mem_fn(&KinectPerson::Service::CreateRobotClient), this)));
+  AddMethod(new ::grpc::RpcServiceMethod(
+      KinectPerson_method_names[4],
+      ::grpc::RpcMethod::CLIENT_STREAMING,
+      new ::grpc::ClientStreamingHandler< KinectPerson::Service, ::kinectperson::PointStream, ::kinectperson::Response>(
+          std::mem_fn(&KinectPerson::Service::SendPointStream), this)));
 }
 
 KinectPerson::Service::~Service() {
@@ -117,6 +132,13 @@ KinectPerson::Service::~Service() {
 ::grpc::Status KinectPerson::Service::CreateRobotClient(::grpc::ServerContext* context, const ::kinectperson::Text* request, ::kinectperson::Response* response) {
   (void) context;
   (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status KinectPerson::Service::SendPointStream(::grpc::ServerContext* context, ::grpc::ServerReader< ::kinectperson::PointStream>* reader, ::kinectperson::Response* response) {
+  (void) context;
+  (void) reader;
   (void) response;
   return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
 }
