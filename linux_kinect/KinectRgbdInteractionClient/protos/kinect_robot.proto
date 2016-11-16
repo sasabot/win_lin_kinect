@@ -7,6 +7,7 @@ package kinectrobot;
 
 service KinectRobot {
   rpc UpdateTimeStamp(Request) returns (Response) {}
+  rpc ReturnCameraInfo(Request) returns (CameraInfo) {}
   rpc ReturnPoints(Request) returns (stream Points) {}
   rpc ReturnImage(Request) returns (stream Pixels) {}
   rpc ReturnPixelBoundsFromSpaceBounds(Request) returns (BitStream) {}
@@ -94,6 +95,13 @@ message UrlInfo {
   string linkhead = 2;
   string key = 3;
   string style = 4;
+}
+
+message CameraInfo {
+  float fx = 1;
+  float fy = 2;
+  float cx = 3;
+  float cy = 4;
 }
 
 message Response {

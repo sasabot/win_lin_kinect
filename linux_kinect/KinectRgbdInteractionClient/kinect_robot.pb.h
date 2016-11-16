@@ -38,6 +38,7 @@ void protobuf_ShutdownFile_kinect_5frobot_2eproto();
 
 class Bit;
 class BitStream;
+class CameraInfo;
 class Data;
 class DataStream;
 class Pixels;
@@ -1371,6 +1372,105 @@ class UrlInfo : public ::google::protobuf::Message {
 };
 // -------------------------------------------------------------------
 
+class CameraInfo : public ::google::protobuf::Message {
+ public:
+  CameraInfo();
+  virtual ~CameraInfo();
+
+  CameraInfo(const CameraInfo& from);
+
+  inline CameraInfo& operator=(const CameraInfo& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const CameraInfo& default_instance();
+
+  void Swap(CameraInfo* other);
+
+  // implements Message ----------------------------------------------
+
+  inline CameraInfo* New() const { return New(NULL); }
+
+  CameraInfo* New(::google::protobuf::Arena* arena) const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const CameraInfo& from);
+  void MergeFrom(const CameraInfo& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  void InternalSwap(CameraInfo* other);
+  private:
+  inline ::google::protobuf::Arena* GetArenaNoVirtual() const {
+    return _internal_metadata_.arena();
+  }
+  inline void* MaybeArenaPtr() const {
+    return _internal_metadata_.raw_arena_ptr();
+  }
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // optional float fx = 1;
+  void clear_fx();
+  static const int kFxFieldNumber = 1;
+  float fx() const;
+  void set_fx(float value);
+
+  // optional float fy = 2;
+  void clear_fy();
+  static const int kFyFieldNumber = 2;
+  float fy() const;
+  void set_fy(float value);
+
+  // optional float cx = 3;
+  void clear_cx();
+  static const int kCxFieldNumber = 3;
+  float cx() const;
+  void set_cx(float value);
+
+  // optional float cy = 4;
+  void clear_cy();
+  static const int kCyFieldNumber = 4;
+  float cy() const;
+  void set_cy(float value);
+
+  // @@protoc_insertion_point(class_scope:kinectrobot.CameraInfo)
+ private:
+
+  ::google::protobuf::internal::InternalMetadataWithArena _internal_metadata_;
+  bool _is_default_instance_;
+  float fx_;
+  float fy_;
+  float cx_;
+  float cy_;
+  mutable int _cached_size_;
+  friend void  protobuf_AddDesc_kinect_5frobot_2eproto();
+  friend void protobuf_AssignDesc_kinect_5frobot_2eproto();
+  friend void protobuf_ShutdownFile_kinect_5frobot_2eproto();
+
+  void InitAsDefaultInstance();
+  static CameraInfo* default_instance_;
+};
+// -------------------------------------------------------------------
+
 class Response : public ::google::protobuf::Message {
  public:
   Response();
@@ -2545,6 +2645,66 @@ inline void UrlInfo::set_allocated_style(::std::string* style) {
 
 // -------------------------------------------------------------------
 
+// CameraInfo
+
+// optional float fx = 1;
+inline void CameraInfo::clear_fx() {
+  fx_ = 0;
+}
+inline float CameraInfo::fx() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.CameraInfo.fx)
+  return fx_;
+}
+inline void CameraInfo::set_fx(float value) {
+  
+  fx_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.CameraInfo.fx)
+}
+
+// optional float fy = 2;
+inline void CameraInfo::clear_fy() {
+  fy_ = 0;
+}
+inline float CameraInfo::fy() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.CameraInfo.fy)
+  return fy_;
+}
+inline void CameraInfo::set_fy(float value) {
+  
+  fy_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.CameraInfo.fy)
+}
+
+// optional float cx = 3;
+inline void CameraInfo::clear_cx() {
+  cx_ = 0;
+}
+inline float CameraInfo::cx() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.CameraInfo.cx)
+  return cx_;
+}
+inline void CameraInfo::set_cx(float value) {
+  
+  cx_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.CameraInfo.cx)
+}
+
+// optional float cy = 4;
+inline void CameraInfo::clear_cy() {
+  cy_ = 0;
+}
+inline float CameraInfo::cy() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.CameraInfo.cy)
+  return cy_;
+}
+inline void CameraInfo::set_cy(float value) {
+  
+  cy_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.CameraInfo.cy)
+}
+
+// -------------------------------------------------------------------
+
 // Response
 
 // optional bool status = 1;
@@ -2562,6 +2722,8 @@ inline void Response::set_status(bool value) {
 }
 
 #endif  // !PROTOBUF_INLINE_NOT_IN_HEADERS
+// -------------------------------------------------------------------
+
 // -------------------------------------------------------------------
 
 // -------------------------------------------------------------------

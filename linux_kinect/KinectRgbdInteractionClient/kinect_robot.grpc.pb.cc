@@ -17,6 +17,7 @@ namespace kinectrobot {
 
 static const char* KinectRobot_method_names[] = {
   "/kinectrobot.KinectRobot/UpdateTimeStamp",
+  "/kinectrobot.KinectRobot/ReturnCameraInfo",
   "/kinectrobot.KinectRobot/ReturnPoints",
   "/kinectrobot.KinectRobot/ReturnImage",
   "/kinectrobot.KinectRobot/ReturnPixelBoundsFromSpaceBounds",
@@ -34,14 +35,15 @@ std::unique_ptr< KinectRobot::Stub> KinectRobot::NewStub(const std::shared_ptr< 
 
 KinectRobot::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channel)
   : channel_(channel), rpcmethod_UpdateTimeStamp_(KinectRobot_method_names[0], ::grpc::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_ReturnPoints_(KinectRobot_method_names[1], ::grpc::RpcMethod::SERVER_STREAMING, channel)
-  , rpcmethod_ReturnImage_(KinectRobot_method_names[2], ::grpc::RpcMethod::SERVER_STREAMING, channel)
-  , rpcmethod_ReturnPixelBoundsFromSpaceBounds_(KinectRobot_method_names[3], ::grpc::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_ReturnCognition_(KinectRobot_method_names[4], ::grpc::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_SetStreamSettings_(KinectRobot_method_names[5], ::grpc::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_SendSpeech_(KinectRobot_method_names[6], ::grpc::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_SetSTTBehavior_(KinectRobot_method_names[7], ::grpc::RpcMethod::NORMAL_RPC, channel)
-  , rpcmethod_WebAgent_(KinectRobot_method_names[8], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_ReturnCameraInfo_(KinectRobot_method_names[1], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_ReturnPoints_(KinectRobot_method_names[2], ::grpc::RpcMethod::SERVER_STREAMING, channel)
+  , rpcmethod_ReturnImage_(KinectRobot_method_names[3], ::grpc::RpcMethod::SERVER_STREAMING, channel)
+  , rpcmethod_ReturnPixelBoundsFromSpaceBounds_(KinectRobot_method_names[4], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_ReturnCognition_(KinectRobot_method_names[5], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SetStreamSettings_(KinectRobot_method_names[6], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SendSpeech_(KinectRobot_method_names[7], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_SetSTTBehavior_(KinectRobot_method_names[8], ::grpc::RpcMethod::NORMAL_RPC, channel)
+  , rpcmethod_WebAgent_(KinectRobot_method_names[9], ::grpc::RpcMethod::NORMAL_RPC, channel)
   {}
 
 ::grpc::Status KinectRobot::Stub::UpdateTimeStamp(::grpc::ClientContext* context, const ::kinectrobot::Request& request, ::kinectrobot::Response* response) {
@@ -50,6 +52,14 @@ KinectRobot::Stub::Stub(const std::shared_ptr< ::grpc::ChannelInterface>& channe
 
 ::grpc::ClientAsyncResponseReader< ::kinectrobot::Response>* KinectRobot::Stub::AsyncUpdateTimeStampRaw(::grpc::ClientContext* context, const ::kinectrobot::Request& request, ::grpc::CompletionQueue* cq) {
   return new ::grpc::ClientAsyncResponseReader< ::kinectrobot::Response>(channel_.get(), cq, rpcmethod_UpdateTimeStamp_, context, request);
+}
+
+::grpc::Status KinectRobot::Stub::ReturnCameraInfo(::grpc::ClientContext* context, const ::kinectrobot::Request& request, ::kinectrobot::CameraInfo* response) {
+  return ::grpc::BlockingUnaryCall(channel_.get(), rpcmethod_ReturnCameraInfo_, context, request, response);
+}
+
+::grpc::ClientAsyncResponseReader< ::kinectrobot::CameraInfo>* KinectRobot::Stub::AsyncReturnCameraInfoRaw(::grpc::ClientContext* context, const ::kinectrobot::Request& request, ::grpc::CompletionQueue* cq) {
+  return new ::grpc::ClientAsyncResponseReader< ::kinectrobot::CameraInfo>(channel_.get(), cq, rpcmethod_ReturnCameraInfo_, context, request);
 }
 
 ::grpc::ClientReader< ::kinectrobot::Points>* KinectRobot::Stub::ReturnPointsRaw(::grpc::ClientContext* context, const ::kinectrobot::Request& request) {
@@ -125,41 +135,46 @@ KinectRobot::Service::Service() {
           std::mem_fn(&KinectRobot::Service::UpdateTimeStamp), this)));
   AddMethod(new ::grpc::RpcServiceMethod(
       KinectRobot_method_names[1],
+      ::grpc::RpcMethod::NORMAL_RPC,
+      new ::grpc::RpcMethodHandler< KinectRobot::Service, ::kinectrobot::Request, ::kinectrobot::CameraInfo>(
+          std::mem_fn(&KinectRobot::Service::ReturnCameraInfo), this)));
+  AddMethod(new ::grpc::RpcServiceMethod(
+      KinectRobot_method_names[2],
       ::grpc::RpcMethod::SERVER_STREAMING,
       new ::grpc::ServerStreamingHandler< KinectRobot::Service, ::kinectrobot::Request, ::kinectrobot::Points>(
           std::mem_fn(&KinectRobot::Service::ReturnPoints), this)));
   AddMethod(new ::grpc::RpcServiceMethod(
-      KinectRobot_method_names[2],
+      KinectRobot_method_names[3],
       ::grpc::RpcMethod::SERVER_STREAMING,
       new ::grpc::ServerStreamingHandler< KinectRobot::Service, ::kinectrobot::Request, ::kinectrobot::Pixels>(
           std::mem_fn(&KinectRobot::Service::ReturnImage), this)));
   AddMethod(new ::grpc::RpcServiceMethod(
-      KinectRobot_method_names[3],
+      KinectRobot_method_names[4],
       ::grpc::RpcMethod::NORMAL_RPC,
       new ::grpc::RpcMethodHandler< KinectRobot::Service, ::kinectrobot::Request, ::kinectrobot::BitStream>(
           std::mem_fn(&KinectRobot::Service::ReturnPixelBoundsFromSpaceBounds), this)));
   AddMethod(new ::grpc::RpcServiceMethod(
-      KinectRobot_method_names[4],
+      KinectRobot_method_names[5],
       ::grpc::RpcMethod::NORMAL_RPC,
       new ::grpc::RpcMethodHandler< KinectRobot::Service, ::kinectrobot::Request, ::kinectrobot::DataStream>(
           std::mem_fn(&KinectRobot::Service::ReturnCognition), this)));
   AddMethod(new ::grpc::RpcServiceMethod(
-      KinectRobot_method_names[5],
+      KinectRobot_method_names[6],
       ::grpc::RpcMethod::NORMAL_RPC,
       new ::grpc::RpcMethodHandler< KinectRobot::Service, ::kinectrobot::StreamSettings, ::kinectrobot::Response>(
           std::mem_fn(&KinectRobot::Service::SetStreamSettings), this)));
   AddMethod(new ::grpc::RpcServiceMethod(
-      KinectRobot_method_names[6],
+      KinectRobot_method_names[7],
       ::grpc::RpcMethod::NORMAL_RPC,
       new ::grpc::RpcMethodHandler< KinectRobot::Service, ::kinectrobot::Speech, ::kinectrobot::Response>(
           std::mem_fn(&KinectRobot::Service::SendSpeech), this)));
   AddMethod(new ::grpc::RpcServiceMethod(
-      KinectRobot_method_names[7],
+      KinectRobot_method_names[8],
       ::grpc::RpcMethod::NORMAL_RPC,
       new ::grpc::RpcMethodHandler< KinectRobot::Service, ::kinectrobot::VoiceTriggers, ::kinectrobot::Response>(
           std::mem_fn(&KinectRobot::Service::SetSTTBehavior), this)));
   AddMethod(new ::grpc::RpcServiceMethod(
-      KinectRobot_method_names[8],
+      KinectRobot_method_names[9],
       ::grpc::RpcMethod::NORMAL_RPC,
       new ::grpc::RpcMethodHandler< KinectRobot::Service, ::kinectrobot::UrlInfo, ::kinectrobot::Response>(
           std::mem_fn(&KinectRobot::Service::WebAgent), this)));
@@ -169,6 +184,13 @@ KinectRobot::Service::~Service() {
 }
 
 ::grpc::Status KinectRobot::Service::UpdateTimeStamp(::grpc::ServerContext* context, const ::kinectrobot::Request* request, ::kinectrobot::Response* response) {
+  (void) context;
+  (void) request;
+  (void) response;
+  return ::grpc::Status(::grpc::StatusCode::UNIMPLEMENTED, "");
+}
+
+::grpc::Status KinectRobot::Service::ReturnCameraInfo(::grpc::ServerContext* context, const ::kinectrobot::Request* request, ::kinectrobot::CameraInfo* response) {
   (void) context;
   (void) request;
   (void) response;

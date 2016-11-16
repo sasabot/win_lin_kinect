@@ -16,6 +16,7 @@
 #include "linux_kinect/Bit.h"
 #include "linux_kinect/Person.h"
 #include "linux_kinect/People.h"
+#include "linux_kinect/KinectCameraInfo.h"
 #include "linux_kinect/UrlInfo.h"
 
 #include <chrono>
@@ -78,6 +79,8 @@ public:
 	"/kinect/request/bounds", &KinectRobotClient::RequestBounds, this);
     srv_cognition_ = nh_.advertiseService(
 	"/kinect/request/cognition", &KinectRobotClient::RequestCognition, this);
+    srv_camera_info_ = nh_.advertiseService(
+        "/kinect/request/camera_info", &KinectRobotClient::RequestCameraInfo, this);
 
     field_.resize(4);
     sensor_msgs::PointField x;
@@ -153,6 +156,25 @@ public:
 
     Status status = stub_->UpdateTimeStamp(&context, update, &response);
     res.status = response.status();
+
+    ROS_WARN("finished request");
+    return true;
+  }
+
+  bool RequestCameraInfo(linux_kinect::KinectCameraInfo::Request &req,
+                         linux_kinect::KinectCameraInfo::Response &res)
+  {
+    kinectrobot::Request request;
+    ClientContext context;
+    kinectrobot::CameraInfo info;
+
+    Status status = stub_->ReturnCameraInfo(
+        &context, request, &info);
+
+    res.fx = info.fx();
+    res.fy = info.fy();
+    res.cx = info.cx();
+    res.cy = info.cy();
 
     ROS_WARN("finished request");
     return true;
@@ -477,6 +499,8 @@ private:
   ros::ServiceServer srv_cognition_;
 
   ros::ServiceServer srv_stream_settings_;
+
+  ros::ServiceServer srv_camera_info_;
 
   std::vector<sensor_msgs::PointField> field_;
 

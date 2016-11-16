@@ -80,3 +80,9 @@ add_executable(point_stream_sample
   )
 target_link_libraries(point_stream_sample
   ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+
+add_executable(camera_info_sample
+  examples/camera_info.cc
+  )
+target_link_libraries(camera_info_sample
+  ${catkin_LIBRARIES} ${Boost_LIBRARIES})

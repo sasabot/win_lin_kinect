@@ -60,6 +60,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* UrlInfo_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   UrlInfo_reflection_ = NULL;
+const ::google::protobuf::Descriptor* CameraInfo_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  CameraInfo_reflection_ = NULL;
 const ::google::protobuf::Descriptor* Response_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   Response_reflection_ = NULL;
@@ -295,7 +298,25 @@ void protobuf_AssignDesc_kinect_5frobot_2eproto() {
       sizeof(UrlInfo),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UrlInfo, _internal_metadata_),
       GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(UrlInfo, _is_default_instance_));
-  Response_descriptor_ = file->message_type(13);
+  CameraInfo_descriptor_ = file->message_type(13);
+  static const int CameraInfo_offsets_[4] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CameraInfo, fx_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CameraInfo, fy_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CameraInfo, cx_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CameraInfo, cy_),
+  };
+  CameraInfo_reflection_ =
+    ::google::protobuf::internal::GeneratedMessageReflection::NewGeneratedMessageReflection(
+      CameraInfo_descriptor_,
+      CameraInfo::default_instance_,
+      CameraInfo_offsets_,
+      -1,
+      -1,
+      -1,
+      sizeof(CameraInfo),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CameraInfo, _internal_metadata_),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(CameraInfo, _is_default_instance_));
+  Response_descriptor_ = file->message_type(14);
   static const int Response_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(Response, status_),
   };
@@ -349,6 +370,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       UrlInfo_descriptor_, &UrlInfo::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+      CameraInfo_descriptor_, &CameraInfo::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
       Response_descriptor_, &Response::default_instance());
 }
 
@@ -381,6 +404,8 @@ void protobuf_ShutdownFile_kinect_5frobot_2eproto() {
   delete VoiceTriggers_reflection_;
   delete UrlInfo::default_instance_;
   delete UrlInfo_reflection_;
+  delete CameraInfo::default_instance_;
+  delete CameraInfo_reflection_;
   delete Response::default_instance_;
   delete Response_reflection_;
 }
@@ -415,24 +440,27 @@ void protobuf_AddDesc_kinect_5frobot_2eproto() {
     "ech\030\002 \001(\010\022\027\n\017ManualTriggerOn\030\003 \001(\010\022\030\n\020Ma"
     "nualTriggerOff\030\004 \001(\010\"D\n\007UrlInfo\022\013\n\003url\030\001"
     " \001(\t\022\020\n\010linkhead\030\002 \001(\t\022\013\n\003key\030\003 \001(\t\022\r\n\005s"
-    "tyle\030\004 \001(\t\"\032\n\010Response\022\016\n\006status\030\001 \001(\0102\355"
-    "\004\n\013KinectRobot\022@\n\017UpdateTimeStamp\022\024.kine"
-    "ctrobot.Request\032\025.kinectrobot.Response\"\000"
-    "\022=\n\014ReturnPoints\022\024.kinectrobot.Request\032\023"
-    ".kinectrobot.Points\"\0000\001\022<\n\013ReturnImage\022\024"
-    ".kinectrobot.Request\032\023.kinectrobot.Pixel"
-    "s\"\0000\001\022R\n ReturnPixelBoundsFromSpaceBound"
-    "s\022\024.kinectrobot.Request\032\026.kinectrobot.Bi"
-    "tStream\"\000\022B\n\017ReturnCognition\022\024.kinectrob"
-    "ot.Request\032\027.kinectrobot.DataStream\"\000\022I\n"
-    "\021SetStreamSettings\022\033.kinectrobot.StreamS"
-    "ettings\032\025.kinectrobot.Response\"\000\022:\n\nSend"
-    "Speech\022\023.kinectrobot.Speech\032\025.kinectrobo"
-    "t.Response\"\000\022E\n\016SetSTTBehavior\022\032.kinectr"
-    "obot.VoiceTriggers\032\025.kinectrobot.Respons"
-    "e\"\000\0229\n\010WebAgent\022\024.kinectrobot.UrlInfo\032\025."
-    "kinectrobot.Response\"\000B\017\n\007ex.grpc\242\002\003RTGb"
-    "\006proto3", 1607);
+    "tyle\030\004 \001(\t\"<\n\nCameraInfo\022\n\n\002fx\030\001 \001(\002\022\n\n\002"
+    "fy\030\002 \001(\002\022\n\n\002cx\030\003 \001(\002\022\n\n\002cy\030\004 \001(\002\"\032\n\010Resp"
+    "onse\022\016\n\006status\030\001 \001(\0102\262\005\n\013KinectRobot\022@\n\017"
+    "UpdateTimeStamp\022\024.kinectrobot.Request\032\025."
+    "kinectrobot.Response\"\000\022C\n\020ReturnCameraIn"
+    "fo\022\024.kinectrobot.Request\032\027.kinectrobot.C"
+    "ameraInfo\"\000\022=\n\014ReturnPoints\022\024.kinectrobo"
+    "t.Request\032\023.kinectrobot.Points\"\0000\001\022<\n\013Re"
+    "turnImage\022\024.kinectrobot.Request\032\023.kinect"
+    "robot.Pixels\"\0000\001\022R\n ReturnPixelBoundsFro"
+    "mSpaceBounds\022\024.kinectrobot.Request\032\026.kin"
+    "ectrobot.BitStream\"\000\022B\n\017ReturnCognition\022"
+    "\024.kinectrobot.Request\032\027.kinectrobot.Data"
+    "Stream\"\000\022I\n\021SetStreamSettings\022\033.kinectro"
+    "bot.StreamSettings\032\025.kinectrobot.Respons"
+    "e\"\000\022:\n\nSendSpeech\022\023.kinectrobot.Speech\032\025"
+    ".kinectrobot.Response\"\000\022E\n\016SetSTTBehavio"
+    "r\022\032.kinectrobot.VoiceTriggers\032\025.kinectro"
+    "bot.Response\"\000\0229\n\010WebAgent\022\024.kinectrobot"
+    ".UrlInfo\032\025.kinectrobot.Response\"\000B\017\n\007ex."
+    "grpc\242\002\003RTGb\006proto3", 1738);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "kinect_robot.proto", &protobuf_RegisterTypes);
   Bit::default_instance_ = new Bit();
@@ -448,6 +476,7 @@ void protobuf_AddDesc_kinect_5frobot_2eproto() {
   Speech::default_instance_ = new Speech();
   VoiceTriggers::default_instance_ = new VoiceTriggers();
   UrlInfo::default_instance_ = new UrlInfo();
+  CameraInfo::default_instance_ = new CameraInfo();
   Response::default_instance_ = new Response();
   Bit::default_instance_->InitAsDefaultInstance();
   Request::default_instance_->InitAsDefaultInstance();
@@ -462,6 +491,7 @@ void protobuf_AddDesc_kinect_5frobot_2eproto() {
   Speech::default_instance_->InitAsDefaultInstance();
   VoiceTriggers::default_instance_->InitAsDefaultInstance();
   UrlInfo::default_instance_->InitAsDefaultInstance();
+  CameraInfo::default_instance_->InitAsDefaultInstance();
   Response::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_kinect_5frobot_2eproto);
 }
@@ -5688,6 +5718,408 @@ void UrlInfo::clear_style() {
   }
   style_.SetAllocatedNoArena(&::google::protobuf::internal::GetEmptyStringAlreadyInited(), style);
   // @@protoc_insertion_point(field_set_allocated:kinectrobot.UrlInfo.style)
+}
+
+#endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
+
+// ===================================================================
+
+#if !defined(_MSC_VER) || _MSC_VER >= 1900
+const int CameraInfo::kFxFieldNumber;
+const int CameraInfo::kFyFieldNumber;
+const int CameraInfo::kCxFieldNumber;
+const int CameraInfo::kCyFieldNumber;
+#endif  // !defined(_MSC_VER) || _MSC_VER >= 1900
+
+CameraInfo::CameraInfo()
+  : ::google::protobuf::Message(), _internal_metadata_(NULL) {
+  SharedCtor();
+  // @@protoc_insertion_point(constructor:kinectrobot.CameraInfo)
+}
+
+void CameraInfo::InitAsDefaultInstance() {
+  _is_default_instance_ = true;
+}
+
+CameraInfo::CameraInfo(const CameraInfo& from)
+  : ::google::protobuf::Message(),
+    _internal_metadata_(NULL) {
+  SharedCtor();
+  MergeFrom(from);
+  // @@protoc_insertion_point(copy_constructor:kinectrobot.CameraInfo)
+}
+
+void CameraInfo::SharedCtor() {
+    _is_default_instance_ = false;
+  _cached_size_ = 0;
+  fx_ = 0;
+  fy_ = 0;
+  cx_ = 0;
+  cy_ = 0;
+}
+
+CameraInfo::~CameraInfo() {
+  // @@protoc_insertion_point(destructor:kinectrobot.CameraInfo)
+  SharedDtor();
+}
+
+void CameraInfo::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void CameraInfo::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* CameraInfo::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return CameraInfo_descriptor_;
+}
+
+const CameraInfo& CameraInfo::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_kinect_5frobot_2eproto();
+  return *default_instance_;
+}
+
+CameraInfo* CameraInfo::default_instance_ = NULL;
+
+CameraInfo* CameraInfo::New(::google::protobuf::Arena* arena) const {
+  CameraInfo* n = new CameraInfo;
+  if (arena != NULL) {
+    arena->Own(n);
+  }
+  return n;
+}
+
+void CameraInfo::Clear() {
+// @@protoc_insertion_point(message_clear_start:kinectrobot.CameraInfo)
+#if defined(__clang__)
+#define ZR_HELPER_(f) \
+  _Pragma("clang diagnostic push") \
+  _Pragma("clang diagnostic ignored \"-Winvalid-offsetof\"") \
+  __builtin_offsetof(CameraInfo, f) \
+  _Pragma("clang diagnostic pop")
+#else
+#define ZR_HELPER_(f) reinterpret_cast<char*>(\
+  &reinterpret_cast<CameraInfo*>(16)->f)
+#endif
+
+#define ZR_(first, last) do {\
+  ::memset(&first, 0,\
+           ZR_HELPER_(last) - ZR_HELPER_(first) + sizeof(last));\
+} while (0)
+
+  ZR_(fx_, cy_);
+
+#undef ZR_HELPER_
+#undef ZR_
+
+}
+
+bool CameraInfo::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!GOOGLE_PREDICT_TRUE(EXPRESSION)) goto failure
+  ::google::protobuf::uint32 tag;
+  // @@protoc_insertion_point(parse_start:kinectrobot.CameraInfo)
+  for (;;) {
+    ::std::pair< ::google::protobuf::uint32, bool> p = input->ReadTagWithCutoff(127);
+    tag = p.first;
+    if (!p.second) goto handle_unusual;
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional float fx = 1;
+      case 1: {
+        if (tag == 13) {
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &fx_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(21)) goto parse_fy;
+        break;
+      }
+
+      // optional float fy = 2;
+      case 2: {
+        if (tag == 21) {
+         parse_fy:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &fy_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(29)) goto parse_cx;
+        break;
+      }
+
+      // optional float cx = 3;
+      case 3: {
+        if (tag == 29) {
+         parse_cx:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &cx_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectTag(37)) goto parse_cy;
+        break;
+      }
+
+      // optional float cy = 4;
+      case 4: {
+        if (tag == 37) {
+         parse_cy:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   float, ::google::protobuf::internal::WireFormatLite::TYPE_FLOAT>(
+                 input, &cy_)));
+
+        } else {
+          goto handle_unusual;
+        }
+        if (input->ExpectAtEnd()) goto success;
+        break;
+      }
+
+      default: {
+      handle_unusual:
+        if (tag == 0 ||
+            ::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          goto success;
+        }
+        DO_(::google::protobuf::internal::WireFormatLite::SkipField(input, tag));
+        break;
+      }
+    }
+  }
+success:
+  // @@protoc_insertion_point(parse_success:kinectrobot.CameraInfo)
+  return true;
+failure:
+  // @@protoc_insertion_point(parse_failure:kinectrobot.CameraInfo)
+  return false;
+#undef DO_
+}
+
+void CameraInfo::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // @@protoc_insertion_point(serialize_start:kinectrobot.CameraInfo)
+  // optional float fx = 1;
+  if (this->fx() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(1, this->fx(), output);
+  }
+
+  // optional float fy = 2;
+  if (this->fy() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(2, this->fy(), output);
+  }
+
+  // optional float cx = 3;
+  if (this->cx() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(3, this->cx(), output);
+  }
+
+  // optional float cy = 4;
+  if (this->cy() != 0) {
+    ::google::protobuf::internal::WireFormatLite::WriteFloat(4, this->cy(), output);
+  }
+
+  // @@protoc_insertion_point(serialize_end:kinectrobot.CameraInfo)
+}
+
+::google::protobuf::uint8* CameraInfo::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // @@protoc_insertion_point(serialize_to_array_start:kinectrobot.CameraInfo)
+  // optional float fx = 1;
+  if (this->fx() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(1, this->fx(), target);
+  }
+
+  // optional float fy = 2;
+  if (this->fy() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(2, this->fy(), target);
+  }
+
+  // optional float cx = 3;
+  if (this->cx() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(3, this->cx(), target);
+  }
+
+  // optional float cy = 4;
+  if (this->cy() != 0) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteFloatToArray(4, this->cy(), target);
+  }
+
+  // @@protoc_insertion_point(serialize_to_array_end:kinectrobot.CameraInfo)
+  return target;
+}
+
+int CameraInfo::ByteSize() const {
+// @@protoc_insertion_point(message_byte_size_start:kinectrobot.CameraInfo)
+  int total_size = 0;
+
+  // optional float fx = 1;
+  if (this->fx() != 0) {
+    total_size += 1 + 4;
+  }
+
+  // optional float fy = 2;
+  if (this->fy() != 0) {
+    total_size += 1 + 4;
+  }
+
+  // optional float cx = 3;
+  if (this->cx() != 0) {
+    total_size += 1 + 4;
+  }
+
+  // optional float cy = 4;
+  if (this->cy() != 0) {
+    total_size += 1 + 4;
+  }
+
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void CameraInfo::MergeFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_merge_from_start:kinectrobot.CameraInfo)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  const CameraInfo* source = 
+      ::google::protobuf::internal::DynamicCastToGenerated<const CameraInfo>(
+          &from);
+  if (source == NULL) {
+  // @@protoc_insertion_point(generalized_merge_from_cast_fail:kinectrobot.CameraInfo)
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+  // @@protoc_insertion_point(generalized_merge_from_cast_success:kinectrobot.CameraInfo)
+    MergeFrom(*source);
+  }
+}
+
+void CameraInfo::MergeFrom(const CameraInfo& from) {
+// @@protoc_insertion_point(class_specific_merge_from_start:kinectrobot.CameraInfo)
+  if (GOOGLE_PREDICT_FALSE(&from == this)) MergeFromFail(__LINE__);
+  if (from.fx() != 0) {
+    set_fx(from.fx());
+  }
+  if (from.fy() != 0) {
+    set_fy(from.fy());
+  }
+  if (from.cx() != 0) {
+    set_cx(from.cx());
+  }
+  if (from.cy() != 0) {
+    set_cy(from.cy());
+  }
+}
+
+void CameraInfo::CopyFrom(const ::google::protobuf::Message& from) {
+// @@protoc_insertion_point(generalized_copy_from_start:kinectrobot.CameraInfo)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void CameraInfo::CopyFrom(const CameraInfo& from) {
+// @@protoc_insertion_point(class_specific_copy_from_start:kinectrobot.CameraInfo)
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool CameraInfo::IsInitialized() const {
+
+  return true;
+}
+
+void CameraInfo::Swap(CameraInfo* other) {
+  if (other == this) return;
+  InternalSwap(other);
+}
+void CameraInfo::InternalSwap(CameraInfo* other) {
+  std::swap(fx_, other->fx_);
+  std::swap(fy_, other->fy_);
+  std::swap(cx_, other->cx_);
+  std::swap(cy_, other->cy_);
+  _internal_metadata_.Swap(&other->_internal_metadata_);
+  std::swap(_cached_size_, other->_cached_size_);
+}
+
+::google::protobuf::Metadata CameraInfo::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = CameraInfo_descriptor_;
+  metadata.reflection = CameraInfo_reflection_;
+  return metadata;
+}
+
+#if PROTOBUF_INLINE_NOT_IN_HEADERS
+// CameraInfo
+
+// optional float fx = 1;
+void CameraInfo::clear_fx() {
+  fx_ = 0;
+}
+ float CameraInfo::fx() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.CameraInfo.fx)
+  return fx_;
+}
+ void CameraInfo::set_fx(float value) {
+  
+  fx_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.CameraInfo.fx)
+}
+
+// optional float fy = 2;
+void CameraInfo::clear_fy() {
+  fy_ = 0;
+}
+ float CameraInfo::fy() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.CameraInfo.fy)
+  return fy_;
+}
+ void CameraInfo::set_fy(float value) {
+  
+  fy_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.CameraInfo.fy)
+}
+
+// optional float cx = 3;
+void CameraInfo::clear_cx() {
+  cx_ = 0;
+}
+ float CameraInfo::cx() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.CameraInfo.cx)
+  return cx_;
+}
+ void CameraInfo::set_cx(float value) {
+  
+  cx_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.CameraInfo.cx)
+}
+
+// optional float cy = 4;
+void CameraInfo::clear_cy() {
+  cy_ = 0;
+}
+ float CameraInfo::cy() const {
+  // @@protoc_insertion_point(field_get:kinectrobot.CameraInfo.cy)
+  return cy_;
+}
+ void CameraInfo::set_cy(float value) {
+  
+  cy_ = value;
+  // @@protoc_insertion_point(field_set:kinectrobot.CameraInfo.cy)
 }
 
 #endif  // PROTOBUF_INLINE_NOT_IN_HEADERS
