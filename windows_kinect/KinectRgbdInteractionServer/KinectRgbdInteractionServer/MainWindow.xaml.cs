@@ -1,5 +1,5 @@
 ﻿#define COMPILE_SPEECH_RECOGNITION
-//#define USE_KINECT_BODY_SDK
+#define USE_KINECT_BODY_SDK
 
 using Grpc.Core;
 
@@ -486,7 +486,8 @@ namespace KinectRgbdInteractionServer
             var frame = e.FrameReference.AcquireFrame();
 
             // person detection is real time
-            SendPersonDetectionResults(frame);
+            Thread personThread = new Thread(() => { this.SendPersonDetectionResults(frame); });
+            personThread.Start();
 
             // rgbd streaming is not real time
             // code might crash with 30fps, set parameter according to computer specifications
@@ -497,10 +498,11 @@ namespace KinectRgbdInteractionServer
             }
             skippedFrame = 0;
 
-            this.RgbdOnce(frame);
+            Thread rgbdThread = new Thread(() => { this.RgbdOnce(frame); });
+            rgbdThread.Start();
         }
 
-        private async void SendPersonDetectionResults(MultiSourceFrame frame)
+        private void SendPersonDetectionResults(MultiSourceFrame frame)
         {
             Kinectperson.PersonStream result = new Kinectperson.PersonStream { Status = -1 };
 
@@ -675,7 +677,7 @@ namespace KinectRgbdInteractionServer
 #endif
         }
 
-        private async void RgbdOnce(MultiSourceFrame frame)
+        private void RgbdOnce(MultiSourceFrame frame)
         {
             ColorFrame colorFrame = frame.ColorFrameReference.AcquireFrame();
             DepthFrame depthFrame = frame.DepthFrameReference.AcquireFrame();
