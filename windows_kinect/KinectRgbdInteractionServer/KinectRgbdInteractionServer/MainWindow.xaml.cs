@@ -110,10 +110,13 @@ namespace KinectRgbdInteractionServer
         // rgbd streaming
 
         private CoordinateMapper coordinateMapper = null;
+        private int rgbdThreadCount = 0;
+        private ReaderWriterLockSlim rgbdThreadLock = null;
 
         // rgbd streaming parameters
 
         public const int divideStream = 2; // if stream is small set to 1, if large set to N > 2
+        public const int rgbdThreads = 2; // should limit number of threads to avoid corruption
 
         // grpc
 
@@ -403,6 +406,8 @@ namespace KinectRgbdInteractionServer
             errTimer.AutoReset = true;
             errTimer.Enabled = true;
 
+            this.rgbdThreadLock = new ReaderWriterLockSlim();
+
             InitializeComponent();
         }
 
@@ -679,6 +684,11 @@ namespace KinectRgbdInteractionServer
 
         private void RgbdOnce(MultiSourceFrame frame)
         {
+            // do not proceed if too many threads are already on-going
+            this.rgbdThreadLock.EnterReadLock();
+            try { if (this.rgbdThreadCount > KinectRgbdInteractionServer.MainWindow.rgbdThreads) return; }
+            finally { this.rgbdThreadLock.ExitReadLock(); }
+
             ColorFrame colorFrame = frame.ColorFrameReference.AcquireFrame();
             DepthFrame depthFrame = frame.DepthFrameReference.AcquireFrame();
             if (colorFrame == null || depthFrame == null)
@@ -686,6 +696,13 @@ namespace KinectRgbdInteractionServer
                 ++this.dbgRgbdDroppedFrames;
                 return;
             }
+
+            // update running thread count
+            this.rgbdThreadLock.EnterWriteLock();
+            try { ++this.rgbdThreadCount; }
+            finally { this.rgbdThreadLock.ExitWriteLock(); }
+
+            // from here, rgbd process
 
             this.robotImpl.SetCameraInfo(this.coordinateMapper.GetDepthCameraIntrinsics());
 
@@ -753,6 +770,11 @@ namespace KinectRgbdInteractionServer
                 colorFrame.Dispose();
                 depthFrame.Dispose();
 
+                // release this thread
+                this.rgbdThreadLock.EnterWriteLock();
+                try { --this.rgbdThreadCount; }
+                finally { this.rgbdThreadLock.ExitWriteLock(); }
+
                 return;
             }
 
@@ -811,6 +833,11 @@ namespace KinectRgbdInteractionServer
 
             colorFrame.Dispose();
             depthFrame.Dispose();
+
+            // release this thread
+            this.rgbdThreadLock.EnterWriteLock();
+            try { --this.rgbdThreadCount; }
+            finally { this.rgbdThreadLock.ExitWriteLock(); }
         }
 
         private async Task SendPointStream(Kinectperson.PointStream points)
