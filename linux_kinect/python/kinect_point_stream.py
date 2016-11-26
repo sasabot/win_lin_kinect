@@ -4,7 +4,6 @@ import datetime
 import rospy
 from sensor_msgs.msg import *
 
-host = ''
 port = 1883
 topic = '/kinect/stream/points'
 
@@ -30,6 +29,8 @@ def on_message(client, userdata, mqttmsg):
 if __name__ == '__main__':
     rospy.init_node('kinect_point_stream')
     pub = rospy.Publisher('/kinect/stream', PointCloud2, queue_size=100)
+
+    host = rospy.get_param('~ip')
 
     client = mqtt.Client(protocol=mqtt.MQTTv31)
     client.on_connect = on_connect

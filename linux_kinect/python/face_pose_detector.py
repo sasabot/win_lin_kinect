@@ -13,7 +13,6 @@ import hyperfacemodel
 
 import threading
 
-host = ''
 port = 1883
 topic = '/kinect/detected/face'
 
@@ -92,6 +91,8 @@ def on_message(client, userdata, mqttmsg):
 if __name__ == '__main__':
     rospy.init_node('face_pose_detector')
     pub = rospy.Publisher('/kinect/face', Image, queue_size=100)
+
+    host = rospy.get_param('~ip')
 
     rospack = rospkg.RosPack()
     pkgpath = rospack.get_path('linux_kinect')
