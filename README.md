@@ -1,134 +1,63 @@
 ## about
 
-win_lin_kinect is a ROS implemented Windows/Linux bridge for sending Kinect sensor data from Windows to Linux. (Tested on ROS Indigo, Ubuntu 14.04.)
-- Required(Linux): Grpc 0.15, C++11 or above, ROS indigo or above  
+win_lin_kinect is a ROS implemented Windows/Linux bridge for sending Kinect sensor data from Windows to Linux. (Tested on ROS Indigo, Python 2.7.6, Ubuntu 14.04 and Windows 10.)
+- Required(Linux): mosquitto, python2.7, ROS indigo or above  
 - Required(Windows): Visual Studio 2015  
-- Optional: Azure key for voice recognition etc.  
+- Optional(Linux): chainer, C++11 or above.  
+
+## updates
+
+The current master branch is working on a major update. Please use the 0.2.1 branch for a working version.
+
+The next stable version (0.3.0) will no longer be compatible with previous versions (before 0.2.1). The package will have completely different install dependencies. The changes and reason for the changes are as below:
+
+- Switching Windows code from WPF to UWP
+ - In order to use the latest API features provided by Microsoft, we plan to switch to a UWP application.
+- Switching from Grpc to MQTT
+ - Grpc does not support UWP applications.
+ - Beside the reason above, Grpc had some disadvantages on speed (too slow for streaming point clouds) and installation on Linux (takes time to install and also had a damaging affect on other protobuf reliant applications)
+ - On the other hand, MQTT is light, fast, and easy to install.
+ - As a concequence of using MQTT, serialization of protocols will no longer be managed.
+- Swithing to full offline
+ - Previously, there was an option to use Microsoft Cognitive Services. However, in practical situations, network access may not be possible or may be too slow.
+ - To keep our codes simple and compact, online features will be removed.
+- Switching to 2D face tracking
+ - Previously, the Kinect's skeleton tracking was used for face tracking. However, faces close to the camera could not be captured.
+ - Facial features will now be handled on Linux side using local deep learned models and networks.
+ - To keep our codes simple and compact, skeleton tracking features will be removed.
+- Switching from C++ to Python
+ - The reason C++ was used in previous versions, was due to the lack of performance in Grpc python.
+ - Now that performance issue is not much of a worry, Python will be used to make installation easier and quick.
+ - C++ code to wrap ROS interface will be provided but not essential.
 
 ## features
 
-Service call and receive organized point clouds:
-- [input] rosservice linux_kinect::KinectPoints  /kinect/request/points
-- [return] sensor_msgs::PointCloud2 points
+To be updated.
 
-Service call and receive image:
-- [input] rosservice linux_kinect::KinectImage /kinect/request/image
-- [return] sensor_msgs::Image image
-
-Service call and receive bounding box in image from point cloud index
-- [input] rosservice linux_kinect::KinectRequest /kinect/request/bounds
-- [return] linux_kinect::Bit[] bits
-
-Service call and receive cognition results of image regions
-- [input] rosservice linux_kinect::KinectRequest /kinect/request/cognition
-- [return] linux_kinect::Cognition[] cognitions
-
-Streaming person detection
-- [output] rostopic linux_kinect::People /kinect/person/targets
-
-Streaming speaker detection
-- [output] rostopic linux_kinect::Person /kinect/person/speaker
-
-Streaming speech recognition
-- [output] rostopic std_msgs::String /kinect/voice
-
-Publish voice on Windows
-- [input] rostopic std_msgs::String /windows/voice
-
-## install (host computer)
-
-Following explains how to install the win_lin_kinect package on a host computer. A host computer is the Windows computer connected to the Kinect, or the Linux computer that launches the *kinect_rgbd_interaction_client*. To setup a client computer, please refer to install (client computer) section.
+## install
 
 Windows
-- download Visual Studio 2015.
-- open windows_kinect/KinectRgbdInteractionServer/KinectRgbdInteractionServer.sln
+- download Visual Studio 2015.  
+- open windows_kinect/KinectRgbdInteraction/KinectRgbdInteraction.sln
+- change Debug/ARM to Release/x64
 - Build > Build Solution  
-(In case build fails, try turning off COMPILE_SPEECH_RECOGNITION option defined in row 1 of KinectRgbdInteractionServer/MainWindow.xaml.cs)
 
 Linux
-- Install grpc version 0.15
+- Install mosquitto
 ```
-[sudo] apt-get install build-essential autoconf libtool
-git clone https://github.com/grpc/grpc.git
-cd grpc
-git submodule update --init
-cd third_party/protobuf
-[sudo] apt-get install autoconf automake libtool curl make g++ unzip
-./autogen.sh
-./configure
-make
-make check
-[sudo] make install
-[sudo] ldconfig
-cd ../..
-make
-[sudo] make install
+[sudo] apt-get install mosquitto
+[sudo] pip-install paho-mqtt
 ```
-- Build
+- Install chainer (optional)
 ```
-cd win_lin_kinect/linux_kinect
-./setup.sh --all
+[sudo] pip-install chainer
 ```
-
-## install (client computer)
-
-Following explains how to install the win_lin_kinect package on a client computer. A client computer is a Linux computer that communicates with the host computer via ROS. To setup a host computer, please refer to install (host computer) section.
-
-Linux
-- Build
-```
-cd win_lin_kinect/linux_kinect
-./setup.sh --lib
-```
+- catkin make win_lin_kinect/linux_kinect
 
 ## startup
 
-Linux host (must run first)
-```
-rosparam set /kinect_rgbd_interaction_client/frame "kinect_frame"
-rosrun linux_kinect kinect_rgbd_interaction_client
-```
-
-Windows host
-- Double click windows_kinect/KinectRgbdInteractionServer/KinectRgbdInteractionServer/bin/Debug/KinectRgbdInteractionServer.exe.
-- Once the program starts, the console may ask for language settings. Language determines the langage to detect for speech recognition. Type "en-US" for English.
-- After setting the language, the console may ask whether to use online speech recognition or not. Online speech recognition will require an Azure key. If you do not have one, type 'n' and disable voice recognition. By disabling, speaker recognition will also be disabled. If you do have a key, the console will ask to type in the key.
-- If you are using offline recognition, the console will ask for the grammar file to use. Please type in name of file under "Grammar" directory (not path). If you are using previous settings, you can skip by pressing enter.
-- The console will ask for number of clients (which should be 1) and then ask to enter an IP address. If you are using previous settings, you can skip this process by directly pressing enter twice.
+To be updated.
 
 ## easy examples
 
-Samples can be built on either host or client Linux computer.
-```
-cd win_lin_kinect/linux_kinect
-./setup.sh --ex
-```
-
-Make sure both Windows and Linux host is running. (see **startup** section)
-Below are some examples.
-
-### 1. Getting point clouds on Linux.
-```
-rosrun linux_kinect points_sample
-```
-The example will stream point clouds to /kinect/stream topic.
-Viewing point clouds can be done using rviz ```rosrun rviz rviz```.
-
-### 2. Getting image pixels on Linux.
-```
-rosrun linux_kinect image_sample
-```
-The example will stream images to /kinect/pixelstream topic.
-Viewing images can be done using image_view ```rosrun image_view image_view image:=/kinect/pixelstream```.
-
-### 3. Calling Windows TTS from Linux.
-```
-rosrun linux_kinect tts_sample
-```
-Sample supports English and Japanese.
-
-### 4. Receiving Windows speech recognition (offline template matching) from Linux.
-```
-rosrun linux_kinect speech_matching_sample
-```
-Sample requires preparing *grammars* on Windows host. (Add a directory named "Grammar" under windows_kinect/KinectRgbdInteractionServer/KinectRgbdInteractionServer) 
+To be updated.
