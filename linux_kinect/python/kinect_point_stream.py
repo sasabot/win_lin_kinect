@@ -18,8 +18,8 @@ def on_message(client, userdata, mqttmsg):
     rosmsg.header.frame_id = 'base_link'
     rosmsg.header.stamp = rospy.get_rostime()
     rosmsg.fields = [PointField(name='x',offset=0,datatype=7,count=1), PointField(name='y',offset=4,datatype=7,count=1), PointField(name='z',offset=8,datatype=7,count=1), PointField(name='rgb',offset=12,datatype=7,count=1)]
-    rosmsg.height = 640
-    rosmsg.width = 360
+    rosmsg.height = 360
+    rosmsg.width = 640
     rosmsg.point_step = 16
     rosmsg.row_step = rosmsg.point_step * rosmsg.width
     rosmsg.is_dense = False
