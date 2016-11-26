@@ -21,6 +21,8 @@ int main(int argc, char **argv)
   }
 
   sensor_msgs::CameraInfo info;
+  info.width = 512;
+  info.height = 424;
   info.K[0] = ci.response.fx;
   info.K[1] = 0;
   info.K[2] = ci.response.cx;
