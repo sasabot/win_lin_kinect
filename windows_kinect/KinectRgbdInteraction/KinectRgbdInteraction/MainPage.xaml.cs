@@ -35,7 +35,6 @@ namespace KinectRgbdInteraction
             this.frames = new Dictionary<MediaFrameSourceKind, MediaFrameReference>() {
                 { MediaFrameSourceKind.Color, null },
                 { MediaFrameSourceKind.Depth, null }
-                //{ MediaFrameSourceKind.Infrared, null }
             };
 
             // select device with both color and depth streams
@@ -45,7 +44,6 @@ namespace KinectRgbdInteraction
                 SourceInfos = new MediaFrameSourceInfo[] {
                     c.SourceInfos.FirstOrDefault(info => info.SourceKind == MediaFrameSourceKind.Color),
                     c.SourceInfos.FirstOrDefault(info => info.SourceKind == MediaFrameSourceKind.Depth)
-                    //c.SourceInfos.FirstOrDefault(info => info.SourceKind == MediaFrameSourceKind.Infrared)
                 }
             }).Where(c => c.SourceInfos[0] != null && c.SourceInfos[1] != null).ToList();
             if (eligible.Count == 0) return;
@@ -77,6 +75,7 @@ namespace KinectRgbdInteraction
                 }
             }
 
+
         }
 
         private void FrameReader_FrameArrived(MediaFrameReader sender, MediaFrameArrivedEventArgs args) {
@@ -93,6 +92,14 @@ namespace KinectRgbdInteraction
                     // get points in 3d space
                     DepthCorrelatedCoordinateMapper coordinateMapper = this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.DepthMediaFrame.TryCreateCoordinateMapper(
                         this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics, this.frames[MediaFrameSourceKind.Color].CoordinateSystem);
+
+                    // get camera intrinsics info
+                    var cameraInfo = new float[] {
+                        this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.FocalLength.X,
+                        this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.FocalLength.Y,
+                        this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.PrincipalPoint.X,
+                        this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.PrincipalPoint.Y
+                    };
 
                     // get color information
                     var bitmap = SoftwareBitmap.Convert(this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.SoftwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
@@ -186,12 +193,16 @@ namespace KinectRgbdInteraction
                         this.client.Publish("/kinect/detected/face", bytes);
                     });
 
+                    // stream camera intrinsics
+                    byte[] camIntr = new byte[16];
+                    Buffer.BlockCopy(cameraInfo, 0, camIntr, 0, 16);
+                    this.client.Publish("/kinect/stream/camerainfo", camIntr);
+
                     task1.Wait();
                     task2.Wait();
 
                     this.frames[MediaFrameSourceKind.Color] = null;
                     this.frames[MediaFrameSourceKind.Depth] = null;
-                    //this.frames[MediaFrameSourceKind.Infrared] = null;
                 }
             }
             catch (Exception ex) {
