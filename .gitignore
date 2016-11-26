@@ -4,3 +4,4 @@ windows_kinect/KinectRgbdInteraction/KinectRgbdInteraction/obj
 windows_kinect/KinectRgbdInteraction/packages
 linux_kinect/CMakeLists.txt
 linux_kinect/key.txt
+linux_kinect/python/*.pyc
