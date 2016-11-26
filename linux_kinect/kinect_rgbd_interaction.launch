@@ -1,0 +1,4 @@
+<launch>
+  <node name="kinect_point_stream" pkg="linux_kinect" type="kinect_point_stream.py" output="screen"/>
+  <node name="face_pose_detector" pkg="linux_kinect" type="face_pose_detector.py" output="screen"/>
+</launch>
