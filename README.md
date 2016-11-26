@@ -39,7 +39,6 @@ To be updated.
 Windows
 - download Visual Studio 2015.  
 - open windows_kinect/KinectRgbdInteraction/KinectRgbdInteraction.sln
-- change Debug/ARM to Release/x64
 - Build > Build Solution  
 
 Linux
@@ -56,7 +55,14 @@ Linux
 
 ## startup
 
-To be updated.
+Linux
+```
+roslaunch linux_kinect kinect_rgbd_interaction.launch
+```
+This starts the application with localhost. For specified hosts use
+```
+roslaunch linux_kinect kinect_rgbd_interaction.launch host:="host ip address"
+```
 
 ## easy examples
 
