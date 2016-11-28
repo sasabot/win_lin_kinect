@@ -25,10 +25,21 @@ namespace KinectRgbdInteraction
         private Dictionary<MediaFrameSourceKind, MediaFrameReference> frames;
         private SemaphoreSlim frameProcessingSemaphore = new SemaphoreSlim(1);
 
+        private Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+
         public MainPage() {
             this.InitializeComponent();
+            if (localSettings.Values["mqttHostAddress"] != null)
+                this.IPText.Text = localSettings.Values["mqttHostAddress"].ToString();
+        }
 
-            this.client = new MqttClient("");
+        private void StartApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
+            localSettings.Values["mqttHostAddress"] = this.IPText.Text;
+            this.Setup(this.IPText.Text);
+        }
+
+        private void Setup(string ip) {
+            this.client = new MqttClient(ip);
             this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
             this.client.Connect(Guid.NewGuid().ToString());
 
@@ -74,8 +85,6 @@ namespace KinectRgbdInteraction
                     if (status.Result != MediaFrameReaderStartStatus.Success) return;
                 }
             }
-
-
         }
 
         private void FrameReader_FrameArrived(MediaFrameReader sender, MediaFrameArrivedEventArgs args) {
