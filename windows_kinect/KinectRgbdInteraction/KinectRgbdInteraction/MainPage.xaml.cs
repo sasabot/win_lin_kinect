@@ -1,4 +1,6 @@
-﻿using System;
+﻿#define PRINT_STATUS_MESSAGE
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -14,6 +16,8 @@ using System.Threading;
 using Windows.Graphics.Imaging;
 using System.Numerics;
 using Windows.Media.FaceAnalysis;
+using Windows.System;
+using System.Diagnostics;
 
 namespace KinectRgbdInteraction
 {
@@ -25,18 +29,39 @@ namespace KinectRgbdInteraction
         private Dictionary<MediaFrameSourceKind, MediaFrameReference> frames;
         private SemaphoreSlim frameProcessingSemaphore = new SemaphoreSlim(1);
 
+#if PRINT_STATUS_MESSAGE
+        private Windows.UI.Xaml.DispatcherTimer statusLogTimer = new Windows.UI.Xaml.DispatcherTimer();
+        private Stopwatch appClock = new Stopwatch();
+        private uint kinectFrameCount = 0;
+#endif
+
         private Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
         public MainPage() {
             this.InitializeComponent();
+
             if (localSettings.Values["mqttHostAddress"] != null)
                 this.IPText.Text = localSettings.Values["mqttHostAddress"].ToString();
+
+#if PRINT_STATUS_MESSAGE
+            this.statusLogTimer.Interval = TimeSpan.FromMilliseconds(100);
+            this.statusLogTimer.Tick += StatusLogTick;
+            this.statusLogTimer.Start();
+#endif
         }
 
         private void StartApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
             localSettings.Values["mqttHostAddress"] = this.IPText.Text;
             this.Setup(this.IPText.Text);
         }
+
+#if PRINT_STATUS_MESSAGE
+        private void StatusLogTick(object sender, object e) {
+            this.MemoryMonitor.Text = "MemoryUsage: " + Convert.ToString(MemoryManager.AppMemoryUsage / 1048576);
+            if (this.appClock.IsRunning)
+                this.KinectFPS.Text = "KinectFPS: " + Convert.ToString(Convert.ToInt32(kinectFrameCount / this.appClock.Elapsed.TotalSeconds));
+        }
+#endif
 
         private void Setup(string ip) {
             this.client = new MqttClient(ip);
@@ -85,6 +110,10 @@ namespace KinectRgbdInteraction
                     if (status.Result != MediaFrameReaderStartStatus.Success) return;
                 }
             }
+
+#if PRINT_STATUS_MESSAGE
+            this.appClock.Start();
+#endif
         }
 
         private void FrameReader_FrameArrived(MediaFrameReader sender, MediaFrameArrivedEventArgs args) {
@@ -209,6 +238,10 @@ namespace KinectRgbdInteraction
 
                     task1.Wait();
                     task2.Wait();
+
+#if PRINT_STATUS_MESSAGE
+                    ++this.kinectFrameCount;
+#endif
 
                     this.frames[MediaFrameSourceKind.Color] = null;
                     this.frames[MediaFrameSourceKind.Depth] = null;
