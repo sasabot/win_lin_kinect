@@ -23,10 +23,10 @@ namespace KinectRgbdInteraction
 {
     public sealed partial class MainPage : Page
     {
-        private MqttClient client;
-        private MediaCapture mediaCapture;
-        private FaceTracker faceTracker;
-        private Dictionary<MediaFrameSourceKind, MediaFrameReference> frames;
+        private MqttClient client = null;
+        private MediaCapture mediaCapture = null;
+        private FaceTracker faceTracker = null;
+        private Dictionary<MediaFrameSourceKind, MediaFrameReference> frames = null;
         private SemaphoreSlim frameProcessingSemaphore = new SemaphoreSlim(1);
 
 #if PRINT_STATUS_MESSAGE
@@ -64,50 +64,56 @@ namespace KinectRgbdInteraction
 #endif
 
         private void Setup(string ip) {
-            this.client = new MqttClient(ip);
-            this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
-            this.client.Connect(Guid.NewGuid().ToString());
+            if (this.client == null) {
+                this.client = new MqttClient(ip);
+                this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
+                this.client.Connect(Guid.NewGuid().ToString());
+            }
 
-            this.frames = new Dictionary<MediaFrameSourceKind, MediaFrameReference>() {
-                { MediaFrameSourceKind.Color, null },
-                { MediaFrameSourceKind.Depth, null }
-            };
+            if (this.frames == null)
+                this.frames = new Dictionary<MediaFrameSourceKind, MediaFrameReference>() {
+                    { MediaFrameSourceKind.Color, null },
+                    { MediaFrameSourceKind.Depth, null }
+                };
 
-            // select device with both color and depth streams
-            var cameras = Task.Run(async () => { return await MediaFrameSourceGroup.FindAllAsync(); });
-            var eligible = cameras.Result.Select(c => new {
-                Group = c,
-                SourceInfos = new MediaFrameSourceInfo[] {
+            if (this.faceTracker == null)
+                // setup face tracker
+                this.faceTracker = Task.Run(async () => { return await FaceTracker.CreateAsync(); }).Result;
+
+            if (this.mediaCapture == null) {
+                // select device with both color and depth streams
+                var cameras = Task.Run(async () => { return await MediaFrameSourceGroup.FindAllAsync(); });
+                var eligible = cameras.Result.Select(c => new {
+                    Group = c,
+                    SourceInfos = new MediaFrameSourceInfo[] {
                     c.SourceInfos.FirstOrDefault(info => info.SourceKind == MediaFrameSourceKind.Color),
                     c.SourceInfos.FirstOrDefault(info => info.SourceKind == MediaFrameSourceKind.Depth)
                 }
-            }).Where(c => c.SourceInfos[0] != null && c.SourceInfos[1] != null).ToList();
-            if (eligible.Count == 0) return;
-            var selected = eligible[0];
+                }).Where(c => c.SourceInfos[0] != null && c.SourceInfos[1] != null).ToList();
+                if (eligible.Count == 0) return;
+                var selected = eligible[0];
 
-            // open device
-            this.mediaCapture = new MediaCapture();
-            Task.Run(async () => {
-                await this.mediaCapture.InitializeAsync(new MediaCaptureInitializationSettings {
-                    SourceGroup = selected.Group,
-                    SharingMode = MediaCaptureSharingMode.SharedReadOnly,
-                    StreamingCaptureMode = StreamingCaptureMode.Video,
-                    MemoryPreference = MediaCaptureMemoryPreference.Cpu
-                });
-            }).Wait();
+                // open device
+                this.mediaCapture = new MediaCapture();
+                Task.Run(async () => {
+                    await this.mediaCapture.InitializeAsync(new MediaCaptureInitializationSettings {
+                        SourceGroup = selected.Group,
+                        SharingMode = MediaCaptureSharingMode.SharedReadOnly,
+                        StreamingCaptureMode = StreamingCaptureMode.Video,
+                        MemoryPreference = MediaCaptureMemoryPreference.Cpu
+                    });
+                }).Wait();
 
-            // setup face tracker
-            this.faceTracker = Task.Run(async () => { return await FaceTracker.CreateAsync(); }).Result;
-
-            // set stream callbacks
-            for (int i = 0; i < selected.SourceInfos.Length; ++i) {
-                MediaFrameSourceInfo info = selected.SourceInfos[i];
-                MediaFrameSource frameSource = null;
-                if (this.mediaCapture.FrameSources.TryGetValue(info.Id, out frameSource)) {
-                    var frameReader = Task.Run(async () => { return await this.mediaCapture.CreateFrameReaderAsync(frameSource); });
-                    frameReader.Result.FrameArrived += FrameReader_FrameArrived;
-                    var status = Task.Run(async () => { return await frameReader.Result.StartAsync(); });
-                    if (status.Result != MediaFrameReaderStartStatus.Success) return;
+                // set stream callbacks
+                for (int i = 0; i < selected.SourceInfos.Length; ++i) {
+                    MediaFrameSourceInfo info = selected.SourceInfos[i];
+                    MediaFrameSource frameSource = null;
+                    if (this.mediaCapture.FrameSources.TryGetValue(info.Id, out frameSource)) {
+                        var frameReader = Task.Run(async () => { return await this.mediaCapture.CreateFrameReaderAsync(frameSource); });
+                        frameReader.Result.FrameArrived += FrameReader_FrameArrived;
+                        var status = Task.Run(async () => { return await frameReader.Result.StartAsync(); });
+                        if (status.Result != MediaFrameReaderStartStatus.Success) return;
+                    }
                 }
             }
 
@@ -243,6 +249,10 @@ namespace KinectRgbdInteraction
                     ++this.kinectFrameCount;
 #endif
 
+                    bitmap.Dispose();
+                    coordinateMapper.Dispose();
+                    this.frames[MediaFrameSourceKind.Color].Dispose();
+                    this.frames[MediaFrameSourceKind.Depth].Dispose();
                     this.frames[MediaFrameSourceKind.Color] = null;
                     this.frames[MediaFrameSourceKind.Depth] = null;
                 }
@@ -255,5 +265,29 @@ namespace KinectRgbdInteraction
             }
         }
 
+        private void CloseApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
+            while (!frameProcessingSemaphore.Wait(0)) continue;
+
+            try {
+                if (this.mediaCapture != null) {
+                    this.mediaCapture.Dispose();
+                    this.mediaCapture = null;
+                }
+
+                if (this.faceTracker != null)
+                    this.faceTracker = null;
+
+                if (this.client != null) {
+                    this.client.Disconnect();
+                    this.client = null;
+                }
+            } finally {
+                frameProcessingSemaphore.Release();
+            }
+
+#if PRINT_STATUS_MESSAGE
+            this.appClock.Stop();
+#endif
+        }
     }
 }

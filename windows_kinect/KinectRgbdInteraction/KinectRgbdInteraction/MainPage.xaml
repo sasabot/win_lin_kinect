@@ -19,6 +19,7 @@
             <TextBlock Text="Please enter IP of host:" Grid.Row="0"/>
             <TextBox Name="IPText" Width="200" Height="10" TextAlignment="Left" HorizontalAlignment="Left" Grid.Row="1"/>
             <Button Name="StartApp" Content="send" Click="StartApp_Click" HorizontalAlignment="Left" Margin="210, 0, 0, 0" Grid.Row="1"/>
+            <Button Name="CloseApp" Content="close" Click="CloseApp_Click" HorizontalAlignment="Left" Margin="270, 0, 0, 0" Grid.Row="1"/>
             <TextBlock Name="KinectFPS" HorizontalAlignment="Right" Grid.Row="2"/>
             <TextBlock Name="MemoryMonitor" HorizontalAlignment="Right" Grid.Row="3"/>
         </Grid>
