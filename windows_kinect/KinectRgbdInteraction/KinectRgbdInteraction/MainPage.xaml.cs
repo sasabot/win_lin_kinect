@@ -88,7 +88,7 @@ namespace KinectRgbdInteraction
                     SourceInfos = new MediaFrameSourceInfo[] {
                     c.SourceInfos.FirstOrDefault(info => info.SourceKind == MediaFrameSourceKind.Color),
                     c.SourceInfos.FirstOrDefault(info => info.SourceKind == MediaFrameSourceKind.Depth)
-                }
+                    }
                 }).Where(c => c.SourceInfos[0] != null && c.SourceInfos[1] != null).ToList();
                 if (eligible.Count == 0) return;
                 var selected = eligible[0];
@@ -151,11 +151,27 @@ namespace KinectRgbdInteraction
                     bitmap.CopyToBuffer(colorBytes.AsBuffer());
 
                     // map depth to color
-                    Point[] colorPoints = new Point[colorDesc.Width * colorDesc.Height];
-                    for (int x = 0; x < colorDesc.Width; ++x)
-                        for (int y = 0; y < colorDesc.Height; ++y)
-                            colorPoints[y * colorDesc.Width + x] = new Point(x, y);
-                    Vector3[] points = new Vector3[colorDesc.Width * colorDesc.Height];
+                    // we will only create a reduced size map as original is too large : 1920 * 1080 -> 640 * 360
+                    int strideX = 3;
+                    int strideY = 3;
+                    int resizeWidth = 640;
+                    int resizeHeight = 360;
+
+                    Point[] colorPoints = new Point[resizeWidth * resizeHeight];
+                    int row = 0;
+                    int idx = 0;
+                    for (int i = 0; i < colorDesc.Width * colorDesc.Height; ++i) {
+                        int y = i / colorDesc.Width;
+                        int x = i - y * colorDesc.Width;
+                        colorPoints[idx] = new Point(x, y);
+                        ++idx;
+                        i += strideX;
+                        if (i - row * colorDesc.Width >= colorDesc.Width) {
+                            row += strideY;
+                            i = row * colorDesc.Width;
+                        }
+                    }
+                    Vector3[] points = new Vector3[colorPoints.Length];
                     coordinateMapper.UnprojectPoints(colorPoints, this.frames[MediaFrameSourceKind.Color].CoordinateSystem, points);
 
                     // get time info
@@ -163,25 +179,12 @@ namespace KinectRgbdInteraction
 
                     // task 1 : stream point clouds
                     var task1 = Task.Run(() => {
-                        // resize number of points (original is too large) 1920 * 1080 -> 640 * 360
-                        int strideX = 3;
-                        int strideY = 3;
-                        int resizeWidth = 640;
-                        int resizeHeight = 360;
-
-                        // send points
-                        byte[] bytes = new byte[resizeWidth * resizeHeight * 16];
-                        int row = 0;
+                        byte[] bytes = new byte[points.Length * 16];
                         int j = 0;
                         for (int i = 0; i < points.Length; ++i) {
                             var values = new float[] { points[i].X, points[i].Y, points[i].Z };
                             Buffer.BlockCopy(values, 0, bytes, j, 12); j += 12;
-                            Array.Copy(colorBytes, i * 4, bytes, j, 4); j += 4;
-                            i += strideX;
-                            if (i - row * colorDesc.Width >= colorDesc.Width) {
-                                row += strideY;
-                                i = row * colorDesc.Width;
-                            }
+                            Array.Copy(colorBytes, Convert.ToInt32((colorPoints[i].Y * colorDesc.Width + colorPoints[i].X) * 4) , bytes, j, 4); j += 4;
                         }
                         this.client.Publish("/kinect/stream/points", bytes);
                     });
@@ -210,9 +213,9 @@ namespace KinectRgbdInteraction
                             Array.Copy(BitConverter.GetBytes(face.FaceBox.Height), 0, faceBytes, 2, 2);
 
                             // next 12 bytes is 3d position of face
-                            uint centerPixel =
-                                (face.FaceBox.Y + Convert.ToUInt32(face.FaceBox.Height * 0.5)) * Convert.ToUInt32(colorDesc.Width) + face.FaceBox.X + Convert.ToUInt32(face.FaceBox.Width * 0.5);
-                            var position = new float[] { points[centerPixel].X, points[centerPixel].Y, points[centerPixel].Z };
+                            var centerPoint = new Point(face.FaceBox.X + Convert.ToUInt32(face.FaceBox.Width * 0.5), face.FaceBox.Y + Convert.ToUInt32(face.FaceBox.Height * 0.5));
+                            var positionVector = coordinateMapper.UnprojectPoint(centerPoint, this.frames[MediaFrameSourceKind.Color].CoordinateSystem);
+                            var position = new float[] { positionVector.X, positionVector.Y, positionVector.Z };
                             Buffer.BlockCopy(position, 0, faceBytes, 4, 12);
 
                             // copy rgb image
