@@ -146,48 +146,12 @@ namespace KinectRgbdInteraction
                     };
 
                     // get color information
-                    var bitmap = SoftwareBitmap.Convert(this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.SoftwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Premultiplied);
+                    var bitmap = SoftwareBitmap.Convert(this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.SoftwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore);
                     byte[] colorBytes = new byte[bitmap.PixelWidth * bitmap.PixelHeight * 4];
                     bitmap.CopyToBuffer(colorBytes.AsBuffer());
 
-                    // map depth to color
-                    // we will only create a reduced size map as original is too large : 1920 * 1080 -> 640 * 360
-                    int strideX = 3;
-                    int strideY = 3;
-                    int resizeWidth = 640;
-                    int resizeHeight = 360;
-
-                    Point[] colorPoints = new Point[resizeWidth * resizeHeight];
-                    int row = 0;
-                    int idx = 0;
-                    for (int i = 0; i < colorDesc.Width * colorDesc.Height; ++i) {
-                        int y = i / colorDesc.Width;
-                        int x = i - y * colorDesc.Width;
-                        colorPoints[idx] = new Point(x, y);
-                        ++idx;
-                        i += strideX;
-                        if (i - row * colorDesc.Width >= colorDesc.Width) {
-                            row += strideY;
-                            i = row * colorDesc.Width;
-                        }
-                    }
-                    Vector3[] points = new Vector3[colorPoints.Length];
-                    coordinateMapper.UnprojectPoints(colorPoints, this.frames[MediaFrameSourceKind.Color].CoordinateSystem, points);
-
                     // get time info
                     var time = this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.FrameReference.SystemRelativeTime;
-
-                    // task 1 : stream point clouds
-                    var task1 = Task.Run(() => {
-                        byte[] bytes = new byte[points.Length * 16];
-                        int j = 0;
-                        for (int i = 0; i < points.Length; ++i) {
-                            var values = new float[] { points[i].X, points[i].Y, points[i].Z };
-                            Buffer.BlockCopy(values, 0, bytes, j, 12); j += 12;
-                            Array.Copy(colorBytes, Convert.ToInt32((colorPoints[i].Y * colorDesc.Width + colorPoints[i].X) * 4) , bytes, j, 4); j += 4;
-                        }
-                        this.client.Publish("/kinect/stream/points", bytes);
-                    });
 
                     // task 2 : detect face region and stream face images
                     var task2 = Task.Run(() => {
@@ -240,12 +204,48 @@ namespace KinectRgbdInteraction
                         this.client.Publish("/kinect/detected/face", bytes);
                     });
 
+                    // map depth to color
+                    // we will only create a reduced size map as original is too large : 1920 * 1080 -> 640 * 360
+                    int strideX = 3;
+                    int strideY = 3;
+                    int resizeWidth = 640;
+                    int resizeHeight = 360;
+
+                    Point[] colorPoints = new Point[resizeWidth * resizeHeight];
+                    int row = 0;
+                    int idx = 0;
+                    for (int i = 0; i < colorDesc.Width * colorDesc.Height; ++i) {
+                        int y = i / colorDesc.Width;
+                        int x = i - y * colorDesc.Width;
+                        colorPoints[idx] = new Point(x, y);
+                        ++idx;
+                        i += strideX;
+                        if (i - row * colorDesc.Width >= colorDesc.Width) {
+                            row += strideY;
+                            i = row * colorDesc.Width;
+                        }
+                    }
+                    Vector3[] points = new Vector3[colorPoints.Length];
+                    coordinateMapper.UnprojectPoints(colorPoints, this.frames[MediaFrameSourceKind.Color].CoordinateSystem, points);
+
+                    // task 1 : stream point clouds
+                    // note, rgbd streaming can optimize its copy structure with x,y,z,x,y,z,...,c,c,... instead of x,y,z,c,x,y,z,c,...
+                    // the above optimization will only copy arrays twice which is x1.5 faster
+                    // however, it is not worth the optimization as app speed is dependent on face tracking
+                    byte[] streamBytes = new byte[points.Length * 16];
+                    int j = 0;
+                    for (int i = 0; i < points.Length; ++i) {
+                        var values = new float[] { points[i].X, points[i].Y, points[i].Z };
+                        Buffer.BlockCopy(values, 0, streamBytes, j, 12); j += 12;
+                        Array.Copy(colorBytes, Convert.ToInt32((colorPoints[i].Y * colorDesc.Width + colorPoints[i].X) * 4), streamBytes, j, 4); j += 4;
+                    }
+                    this.client.Publish("/kinect/stream/points", streamBytes);
+
                     // stream camera intrinsics
                     byte[] camIntr = new byte[16];
                     Buffer.BlockCopy(cameraInfo, 0, camIntr, 0, 16);
                     this.client.Publish("/kinect/stream/camerainfo", camIntr);
 
-                    task1.Wait();
                     task2.Wait();
 
 #if PRINT_STATUS_MESSAGE
