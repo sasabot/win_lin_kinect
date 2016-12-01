@@ -19,12 +19,16 @@ using Windows.Media.FaceAnalysis;
 using Windows.System;
 using System.Diagnostics;
 
-namespace KinectRgbdInteraction
+namespace KinectWindowsInteraction
 {
+    /// <summary>
+    /// An empty page that can be used on its own or navigated to within a Frame.
+    /// </summary>
     public sealed partial class MainPage : Page
     {
         private MqttClient client = null;
         private MediaCapture mediaCapture = null;
+        private FaceTracker faceTracker = null;
         private Dictionary<MediaFrameSourceKind, MediaFrameReference> frames = null;
         private SemaphoreSlim frameProcessingSemaphore = new SemaphoreSlim(1);
 
@@ -36,7 +40,8 @@ namespace KinectRgbdInteraction
 
         private Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
-        public MainPage() {
+        public MainPage()
+        {
             this.InitializeComponent();
 
             if (localSettings.Values["mqttHostAddress"] != null)
@@ -74,6 +79,10 @@ namespace KinectRgbdInteraction
                     { MediaFrameSourceKind.Color, null },
                     { MediaFrameSourceKind.Depth, null }
                 };
+
+            if (this.faceTracker == null)
+                // setup face tracker
+                this.faceTracker = Task.Run(async () => { return await FaceTracker.CreateAsync(); }).Result;
 
             if (this.mediaCapture == null) {
                 // select device with both color and depth streams
@@ -132,14 +141,6 @@ namespace KinectRgbdInteraction
                     DepthCorrelatedCoordinateMapper coordinateMapper = this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.DepthMediaFrame.TryCreateCoordinateMapper(
                         this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics, this.frames[MediaFrameSourceKind.Color].CoordinateSystem);
 
-                    // get camera intrinsics info
-                    var cameraInfo = new float[] {
-                        this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.FocalLength.X,
-                        this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.FocalLength.Y,
-                        this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.PrincipalPoint.X,
-                        this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.PrincipalPoint.Y
-                    };
-
                     // get color information
                     var bitmap = SoftwareBitmap.Convert(this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.SoftwareBitmap, BitmapPixelFormat.Bgra8, BitmapAlphaMode.Ignore);
                     byte[] colorBytes = new byte[bitmap.PixelWidth * bitmap.PixelHeight * 4];
@@ -148,47 +149,53 @@ namespace KinectRgbdInteraction
                     // get time info
                     var time = this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.FrameReference.SystemRelativeTime;
 
-                    // map depth to color
-                    // we will only create a reduced size map as original is too large : 1920 * 1080 -> 640 * 360
-                    int strideX = 3;
-                    int strideY = 3;
-                    int resizeWidth = 640;
-                    int resizeHeight = 360;
+                    // detect faces
+                    var videoFrame = new VideoFrame(BitmapPixelFormat.Nv12, colorDesc.Width, colorDesc.Height);
+                    (SoftwareBitmap.Convert(bitmap, BitmapPixelFormat.Nv12, BitmapAlphaMode.Ignore)).CopyTo(videoFrame.SoftwareBitmap);
+                    videoFrame.RelativeTime = time;
+                    var faces = Task.Run(async () => { return await this.faceTracker.ProcessNextFrameAsync(videoFrame); }).Result;
 
-                    Point[] colorPoints = new Point[resizeWidth * resizeHeight];
-                    int row = 0;
-                    int idx = 0;
-                    for (int i = 0; i < colorDesc.Width * colorDesc.Height; ++i) {
-                        int y = i / colorDesc.Width;
-                        int x = i - y * colorDesc.Width;
-                        colorPoints[idx] = new Point(x, y);
-                        ++idx;
-                        i += strideX;
-                        if (i - row * colorDesc.Width >= colorDesc.Width) {
-                            row += strideY;
-                            i = row * colorDesc.Width;
+                    // header information
+                    uint headerSize = 16;
+
+                    // create byte array from each face
+                    uint totalSize = 0;
+                    List<byte[]> faceBytesList = new List<byte[]>();
+                    foreach (DetectedFace face in faces) {
+                        uint size = face.FaceBox.Width * face.FaceBox.Height * 4 + headerSize;
+                        byte[] faceBytes = new byte[size];
+                        totalSize += size;
+
+                        // first 4 bytes is size of face image
+                        Array.Copy(BitConverter.GetBytes(face.FaceBox.Width), 0, faceBytes, 0, 2);
+                        Array.Copy(BitConverter.GetBytes(face.FaceBox.Height), 0, faceBytes, 2, 2);
+
+                        // next 12 bytes is 3d position of face
+                        var centerPoint = new Point(face.FaceBox.X + Convert.ToUInt32(face.FaceBox.Width * 0.5), face.FaceBox.Y + Convert.ToUInt32(face.FaceBox.Height * 0.5));
+                        var positionVector = coordinateMapper.UnprojectPoint(centerPoint, this.frames[MediaFrameSourceKind.Color].CoordinateSystem);
+                        var position = new float[] { positionVector.X, positionVector.Y, positionVector.Z };
+                        Buffer.BlockCopy(position, 0, faceBytes, 4, 12);
+
+                        // copy rgb image
+                        for (int y = 0; y < face.FaceBox.Height; ++y) {
+                            var srcIdx = Convert.ToInt32(((y + face.FaceBox.Y) * colorDesc.Width + face.FaceBox.X) * 4);
+                            var destIdx = Convert.ToInt32((y * face.FaceBox.Width) * 3 + headerSize);
+                            for (int x = 0; x < face.FaceBox.Width; ++x)
+                                Array.Copy(colorBytes, srcIdx + x * 4, faceBytes, destIdx + x * 3, 3);
                         }
+
+                        faceBytesList.Add(faceBytes);
                     }
-                    Vector3[] points = new Vector3[colorPoints.Length];
-                    coordinateMapper.UnprojectPoints(colorPoints, this.frames[MediaFrameSourceKind.Color].CoordinateSystem, points);
 
-                    // stream point clouds
-                    byte[] streamBytes = new byte[points.Length * 16];
-                    Parallel.ForEach(System.Collections.Concurrent.Partitioner.Create(0, points.Length),
-                        (range) => {
-                            int j = range.Item1 * 16;
-                            for (int i = range.Item1; i < range.Item2; ++i) {
-                                var values = new float[] { points[i].X, points[i].Y, points[i].Z };
-                                Buffer.BlockCopy(values, 0, streamBytes, j, 12); j += 12;
-                                Buffer.BlockCopy(colorBytes, Convert.ToInt32((colorPoints[i].Y * colorDesc.Width + colorPoints[i].X) * 4), streamBytes, j, 4); j += 4;
-                            }
-                        });
-                    this.client.Publish("/kinect/stream/points", streamBytes);
-
-                    // stream camera intrinsics
-                    byte[] camIntr = new byte[16];
-                    Buffer.BlockCopy(cameraInfo, 0, camIntr, 0, 16);
-                    this.client.Publish("/kinect/stream/camerainfo", camIntr);
+                    // concatenate byte arrays to send (post-processed as totalSize not known in first foreach)
+                    int head = 1; // first 1 byte is number of faces
+                    byte[] bytes = new byte[totalSize + head];
+                    Array.Copy(BitConverter.GetBytes(faceBytesList.Count), 0, bytes, 0, head);
+                    foreach (byte[] faceByte in faceBytesList) {
+                        Array.Copy(faceByte, 0, bytes, head, faceByte.Length);
+                        head += faceByte.Length;
+                    }
+                    this.client.Publish("/kinect/detected/face", bytes);
 
 #if PRINT_STATUS_MESSAGE
                     ++this.kinectFrameCount;
@@ -201,9 +208,11 @@ namespace KinectRgbdInteraction
                     this.frames[MediaFrameSourceKind.Color] = null;
                     this.frames[MediaFrameSourceKind.Depth] = null;
                 }
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 // TODO
-            } finally {
+            }
+            finally {
                 frameProcessingSemaphore.Release();
             }
         }
@@ -217,11 +226,15 @@ namespace KinectRgbdInteraction
                     this.mediaCapture = null;
                 }
 
+                if (this.faceTracker != null)
+                    this.faceTracker = null;
+
                 if (this.client != null) {
                     this.client.Disconnect();
                     this.client = null;
                 }
-            } finally {
+            }
+            finally {
                 frameProcessingSemaphore.Release();
             }
 
