@@ -2,6 +2,10 @@ windows_kinect/KinectRgbdInteraction/.vs
 windows_kinect/KinectRgbdInteraction/KinectRgbdInteraction/bin
 windows_kinect/KinectRgbdInteraction/KinectRgbdInteraction/obj
 windows_kinect/KinectRgbdInteraction/packages
+windows_kinect/KinectMicrophoneInteraction/.vs
+windows_kinect/KinectMicrophoneInteraction/KinectMicrophoneInteraction/bin
+windows_kinect/KinectMicrophoneInteraction/KinectMicrophoneInteraction/obj
+windows_kinect/KinectMicrophoneInteraction/packages
 linux_kinect/CMakeLists.txt
 linux_kinect/key.txt
 linux_kinect/python/*.pyc
