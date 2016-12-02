@@ -10,4 +10,8 @@
   <node name="kinect_camerainfo_stream" pkg="linux_kinect" type="kinect_camerainfo_stream.py" output="screen">
      <param name="ip" value="$(arg host)"/>
   </node>
+
+  <node name="kinect_get_image" pkg="linux_kinect" type="kinect_get_image.py" output="screen">
+     <param name="ip" value="$(arg host)"/>
+  </node>
 </launch>
