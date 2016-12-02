@@ -10,6 +10,10 @@ windows_kinect/KinectWindowsInteraction/.vs
 windows_kinect/KinectWindowsInteraction/KinectWindowsInteraction/bin
 windows_kinect/KinectWindowsInteraction/KinectWindowsInteraction/obj
 windows_kinect/KinectWindowsInteraction/packages
+windows_kinect/WindowsKinectLaunch/.vs
+windows_kinect/WindowsKinectLaunch/WindowsKinectLaunch/bin
+windows_kinect/WindowsKinectLaunch/WindowsKinectLaunch/obj
+windows_kinect/WindowsKinectLaunch/packages
 linux_kinect/CMakeLists.txt
 linux_kinect/key.txt
 linux_kinect/python/*.pyc
