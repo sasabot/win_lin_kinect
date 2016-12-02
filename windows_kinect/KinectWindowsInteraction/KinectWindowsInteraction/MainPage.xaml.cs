@@ -19,6 +19,7 @@ using Windows.Media.FaceAnalysis;
 using Windows.System;
 using System.Diagnostics;
 using Windows.UI.ViewManagement;
+using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace KinectWindowsInteraction
 {
@@ -32,6 +33,9 @@ namespace KinectWindowsInteraction
         private FaceTracker faceTracker = null;
         private Dictionary<MediaFrameSourceKind, MediaFrameReference> frames = null;
         private SemaphoreSlim frameProcessingSemaphore = new SemaphoreSlim(1);
+
+        private Dictionary<string, Func<byte[], bool>> requestHandlers = null;
+        private bool sendImageFlag = false;
 
 #if PRINT_STATUS_MESSAGE
         private Windows.UI.Xaml.DispatcherTimer statusLogTimer = new Windows.UI.Xaml.DispatcherTimer();
@@ -70,9 +74,19 @@ namespace KinectWindowsInteraction
 #endif
 
         private void Setup(string ip) {
+            if (this.requestHandlers == null) {
+                this.requestHandlers = new Dictionary<string, Func<byte[], bool>>() {
+                    { "/kinect/request/image", HandleRequestImage },
+                    { "/kinect/request/tts", HandleRequestTTS },
+                    { "/kinect/request/ocr", HandleRequestOCR }
+                };
+            }
+
             if (this.client == null) {
                 this.client = new MqttClient(ip);
                 this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
+                this.client.MqttMsgPublishReceived += this.onMqttReceive;
+                this.client.Subscribe(this.requestHandlers.Keys.ToArray(), Enumerable.Repeat(MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, this.requestHandlers.Count).ToArray());
                 this.client.Connect(Guid.NewGuid().ToString());
             }
 
@@ -183,7 +197,7 @@ namespace KinectWindowsInteraction
                             var srcIdx = Convert.ToInt32(((y + face.FaceBox.Y) * colorDesc.Width + face.FaceBox.X) * 4);
                             var destIdx = Convert.ToInt32((y * face.FaceBox.Width) * 3 + headerSize);
                             for (int x = 0; x < face.FaceBox.Width; ++x)
-                                Array.Copy(colorBytes, srcIdx + x * 4, faceBytes, destIdx + x * 3, 3);
+                                Buffer.BlockCopy(colorBytes, srcIdx + x * 4, faceBytes, destIdx + x * 3, 3);
                         }
 
                         faceBytesList.Add(faceBytes);
@@ -199,6 +213,22 @@ namespace KinectWindowsInteraction
                     }
                     this.client.Publish("/kinect/detected/face", bytes);
 
+                    // send full image if requested (full image should usually not be requested)
+                    if (this.sendImageFlag) {
+                        byte[] bgrColorBytes = new byte[colorDesc.Width * colorDesc.Height * 3];
+                        Parallel.ForEach(System.Collections.Concurrent.Partitioner.Create(0, colorDesc.Height),
+                        (range) => {
+                            for (int i = range.Item1; i < range.Item2; ++i) {
+                                int srcIdx = i * colorDesc.Width * 4;
+                                int destIdx = i * colorDesc.Width * 3;
+                                for (int x = 0; x < colorDesc.Width; ++x)
+                                    Buffer.BlockCopy(colorBytes, srcIdx + x * 4, bgrColorBytes, destIdx + x * 3, 3);
+                            }
+                        });
+                        this.client.Publish("/kinect/stream/image", bgrColorBytes);
+                        this.sendImageFlag = false;
+                    }
+
 #if PRINT_STATUS_MESSAGE
                     ++this.kinectFrameCount;
 #endif
@@ -210,13 +240,29 @@ namespace KinectWindowsInteraction
                     this.frames[MediaFrameSourceKind.Color] = null;
                     this.frames[MediaFrameSourceKind.Depth] = null;
                 }
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 // TODO
-            }
-            finally {
+            } finally {
                 frameProcessingSemaphore.Release();
             }
+        }
+
+        private void onMqttReceive(object sender, uPLibrary.Networking.M2Mqtt.Messages.MqttMsgPublishEventArgs e) {
+            if (!this.requestHandlers.ContainsKey(e.Topic)) return;
+            this.requestHandlers[e.Topic](e.Message);
+        }
+
+        private bool HandleRequestImage(byte[] message) {
+            this.sendImageFlag = true;
+            return true;
+        }
+
+        private bool HandleRequestTTS(byte[] message) {
+            return true;
+        }
+
+        private bool HandleRequestOCR(byte[] message) {
+            return true;
         }
 
         private void CloseApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
@@ -235,8 +281,7 @@ namespace KinectWindowsInteraction
                     this.client.Disconnect();
                     this.client = null;
                 }
-            }
-            finally {
+            } finally {
                 frameProcessingSemaphore.Release();
             }
 
