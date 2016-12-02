@@ -15,14 +15,15 @@ cmake_file="CMakeLists.txt"
 if [[ $1 == "--lib" ]]
 then
     cp ".templates/CMakeLists.lib" $cmake_file
-elif [[ $1 == "--all" ]]
+elif [[ $1 == "--py" ]]
 then
-    cp ".templates/CMakeLists.all" $cmake_file
+    cp ".templates/CMakeLists.py" $cmake_file
+    exit
 elif [[ $1 == "--ex" ]]
 then
     cp ".templates/CMakeLists.ex" $cmake_file
 else
-    echo "options: --lib or --all or --ex"
+    echo "options: --lib or --py or --ex"
     exit
 fi
 
@@ -66,4 +67,4 @@ do
     fi
 done
 
-catkin bt
+# catkin bt
