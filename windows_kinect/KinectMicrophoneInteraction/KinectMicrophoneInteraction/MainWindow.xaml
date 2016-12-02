@@ -17,6 +17,9 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
+        <Button Name="RegisterApp" Content="register this app" Height="20" Width="120" Background="LightGray" BorderThickness="0" FontStyle="Italic" Foreground="White"
+                Click="RegisterApp_Click" HorizontalAlignment="Left" Margin="10, 0, 0, 0" Grid.Row="0"/>
+
         <TextBlock Text="IP of host:" Grid.Row="1"/>
         <TextBox Name="IPText" Width="200" Height="20" TextAlignment="Left" Margin="100, 0, 0, 0" HorizontalAlignment="Left" Grid.Row="1"/>
         

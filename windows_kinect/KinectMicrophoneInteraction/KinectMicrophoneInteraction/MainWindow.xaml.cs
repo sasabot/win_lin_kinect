@@ -12,6 +12,8 @@ using System.Text;
 using System.Diagnostics;
 using System.Timers;
 using System.Windows.Threading;
+using Microsoft.Win32;
+using System.Reflection;
 
 namespace KinectMicrophoneInteraction
 {
@@ -91,7 +93,8 @@ namespace KinectMicrophoneInteraction
                         }
 
                     this.templateSpeechEngine = new SpeechRecognitionEngine(ri.Id);
-                    grammar = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName + @"\Grammar\" + grammar;
+                    string exe = Assembly.GetExecutingAssembly().Location;
+                    grammar = exe.Substring(0, exe.LastIndexOf('\\')) + @"\..\..\Grammar\" + grammar;
 
                     if (File.Exists(grammar))
                         try {
@@ -179,6 +182,36 @@ namespace KinectMicrophoneInteraction
             if (this.client != null) {
                 this.client.Disconnect();
                 this.client = null;
+            }
+        }
+
+        private void RegisterApp_Click(object sender, RoutedEventArgs e) {
+            string appKey = "kinectmicrophoneinteraction";
+
+            using (var hkcr = Registry.ClassesRoot) {
+                foreach (var key in hkcr.GetSubKeyNames())
+                    if (key == appKey) {
+                        this.RegisterApp.Content = "failed";
+                        return;
+                    }
+
+                using (var key = hkcr.CreateSubKey(appKey)) {
+                    key.SetValue(string.Empty, "Url: WPF Target Protocol");
+                    key.SetValue("URL Protocol", string.Empty);
+                    key.SetValue("UseOriginalUrlEncoding", 1, RegistryValueKind.DWord);
+                    using (var shellKey = key.CreateSubKey("shell")) {
+                        using (var openKey = shellKey.CreateSubKey("open")) {
+                            using (var commandKey = openKey.CreateSubKey("command")) {
+                                commandKey.SetValue(string.Empty, "\"" + Assembly.GetExecutingAssembly().Location + "\"" + "\"%1\"");
+                                commandKey.Close();
+                            }
+                            openKey.Close();
+                        }
+                        shellKey.Close();
+                    }
+                    key.Close();
+                }
+                this.RegisterApp.Content = "complete";
             }
         }
 
