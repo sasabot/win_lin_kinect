@@ -18,6 +18,7 @@ using System.Numerics;
 using Windows.Media.FaceAnalysis;
 using Windows.System;
 using System.Diagnostics;
+using Windows.UI.ViewManagement;
 
 namespace KinectRgbdInteraction
 {
@@ -38,6 +39,8 @@ namespace KinectRgbdInteraction
 
         public MainPage() {
             this.InitializeComponent();
+            ApplicationView.PreferredLaunchViewSize = new Size(350, 350);
+            ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
             if (localSettings.Values["mqttHostAddress"] != null)
                 this.IPText.Text = localSettings.Values["mqttHostAddress"].ToString();
