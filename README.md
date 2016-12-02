@@ -61,15 +61,16 @@ Linux
 
 ## startup
 
-### Windows
+**Windows**
 
 ```
 start windowskinectlaunch:
 ```
 Type the above in command prompt and all applicaitons will start (to open command prompt, press windows key, and then type "cmd"). Or you can press windows key and type "WindowsKinectLaunch" to find the launching app.  
+
 All apps will pop through the launch. Note that the apps will not start unless you type in configurations (e.g. ip of host) and press the "send" button.
 
-### Linux
+**Linux**
 
 ```
 roslaunch linux_kinect kinect_rgbd_interaction.launch
