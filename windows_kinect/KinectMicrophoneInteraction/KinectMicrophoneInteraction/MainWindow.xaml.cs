@@ -34,6 +34,7 @@ namespace KinectMicrophoneInteraction
 
         public MainWindow() {
             InitializeComponent();
+            Closing += MainWindow_Closing;
 
             this.IPText.Text = Properties.Settings.Default.Ip;
             this.LanguageText.Text = Properties.Settings.Default.Language;
