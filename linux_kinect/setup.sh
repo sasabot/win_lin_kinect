@@ -18,8 +18,11 @@ then
 elif [[ $1 == "--ex" ]]
 then
     cp ".templates/CMakeLists.ex" $cmake_file
+elif [[ $1 == "--cvex" ]]
+then
+    cp ".templates/CMakeLists.cvex" $cmake_file
 else
-    echo "options: --lib or --py or --ex"
+    echo "options: --lib or --ex or --cvex"
     exit
 fi
 
