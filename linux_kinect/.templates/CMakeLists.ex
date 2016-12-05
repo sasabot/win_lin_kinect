@@ -47,11 +47,11 @@ add_executable(image_sample
 target_link_libraries(image_sample
   ${catkin_LIBRARIES})
 
-# add_executable(speech_matching_sample
-#   examples/speech_matching.cc
-#   )
-# target_link_libraries(speech_matching_sample
-#   ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+add_executable(speech_matching_sample
+  examples/speech_matching.cc
+  )
+target_link_libraries(speech_matching_sample
+  ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 # add_executable(tts_sample
 #   examples/tts.cc

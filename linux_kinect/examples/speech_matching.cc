@@ -1,7 +1,6 @@
 #include <ros/ros.h>
 #include <chrono>
 #include "std_msgs/String.h"
-#include "std_msgs/Bool.h"
 
 void Callback(const std_msgs::String::ConstPtr& _msg)
 {
@@ -14,18 +13,18 @@ int main(int argc, char **argv)
   ros::NodeHandle nh;
 
   ros::Publisher speech_detection_settings_publisher =
-    nh.advertise<std_msgs::Bool>("/stt/trigger/manual", 1);
+    nh.advertise<std_msgs::String>("/settings/speech", 1);
 
   ros::Subscriber speech_listener =
-    nh.subscribe("/kinect/voice", 1000, Callback);
+    nh.subscribe("/detected/speech/template", 1000, Callback);
 
   // wait for publisher to be ready
   usleep(1000 * 1000);
 
   // start listening
-  std_msgs::Bool flag;
-  flag.data = true;
-  speech_detection_settings_publisher.publish(flag);
+  std_msgs::String topic;
+  topic.data = "/template/on";
+  speech_detection_settings_publisher.publish(topic);
 
   // listen 10 seconds
   auto start = std::chrono::high_resolution_clock::now();
@@ -38,6 +37,6 @@ int main(int argc, char **argv)
   }
 
   // end listening
-  flag.data = false;
-  speech_detection_settings_publisher.publish(flag);
+  topic.data = "/template/off";
+  speech_detection_settings_publisher.publish(topic);
 }
