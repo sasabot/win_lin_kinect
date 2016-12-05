@@ -36,6 +36,8 @@ namespace KinectWindowsInteraction
 
         private Dictionary<string, Func<byte[], bool>> requestHandlers = null;
         private bool sendImageFlag = false;
+        private bool sendImageCenters = false;
+        private Point[] centersInPixel = null;
 
 #if PRINT_STATUS_MESSAGE
         private Windows.UI.Xaml.DispatcherTimer statusLogTimer = new Windows.UI.Xaml.DispatcherTimer();
@@ -77,6 +79,7 @@ namespace KinectWindowsInteraction
             if (this.requestHandlers == null) {
                 this.requestHandlers = new Dictionary<string, Func<byte[], bool>>() {
                     { "/kinect/request/image", HandleRequestImage },
+                    { "/kinect/request/centers", HandleRequestImageCenters },
                     { "/kinect/request/tts", HandleRequestTTS },
                     { "/kinect/request/ocr", HandleRequestOCR }
                 };
@@ -227,6 +230,23 @@ namespace KinectWindowsInteraction
                         });
                         this.client.Publish("/kinect/stream/image", bgrColorBytes);
                         this.sendImageFlag = false;
+                    } else if (this.sendImageCenters) { // send image centers if requested
+                        // get image centers from center pixels
+                        Vector3[] positionVectors = new Vector3[this.centersInPixel.Length];
+                        coordinateMapper.UnprojectPoints(this.centersInPixel, this.frames[MediaFrameSourceKind.Color].CoordinateSystem, positionVectors);
+
+                        // Vector3 -> float[]
+                        int numResults = positionVectors.Length;
+                        float[] positions = new float[positionVectors.Length * 3];
+                        for (int i = 0; i < positionVectors.Length; ++i)
+                            positionVectors[i].CopyTo(positions, i * 3);
+
+                        // float[] -> byte[]
+                        byte[] positionBytes = new byte[positions.Length * 4 + 2];
+                        Buffer.BlockCopy(BitConverter.GetBytes(numResults), 0, positionBytes, 0, 2);
+                        Buffer.BlockCopy(positions, 0, positionBytes, 2, positions.Length * 4);
+                        this.client.Publish("/kinect/stream/centers", positionBytes);
+                        this.sendImageCenters = false;
                     }
 
 #if PRINT_STATUS_MESSAGE
@@ -254,6 +274,29 @@ namespace KinectWindowsInteraction
 
         private bool HandleRequestImage(byte[] message) {
             this.sendImageFlag = true;
+            return true;
+        }
+
+        private bool HandleRequestImageCenters(byte[] message) {
+            if (message.Length == 0) return false;
+
+            int numRequests = BitConverter.ToInt16(message, 0); // first 2 bytes is number of images
+            if (this.centersInPixel != null)
+                Array.Resize(ref this.centersInPixel, numRequests);
+            else
+                this.centersInPixel = new Point[numRequests];
+
+            // parse request (8 bytes per image)
+            int at = 2;
+            for (int i = 0; i < numRequests; ++i) {
+                int x = BitConverter.ToInt16(message, at);
+                int y = BitConverter.ToInt16(message, at + 2);
+                int width = BitConverter.ToInt16(message, at + 4);
+                int height = BitConverter.ToInt16(message, at + 6);
+                this.centersInPixel[i] = new Point(x + Convert.ToInt32(width * 0.5), y + Convert.ToInt32(height * 0.5));
+                at += 8;
+            }
+            this.sendImageCenters = true;
             return true;
         }
 
