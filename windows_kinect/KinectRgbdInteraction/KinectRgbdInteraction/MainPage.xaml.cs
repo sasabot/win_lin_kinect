@@ -161,15 +161,16 @@ namespace KinectRgbdInteraction
                     Point[] colorPoints = new Point[resizeWidth * resizeHeight];
                     int row = 0;
                     int idx = 0;
-                    for (int i = 0; i < colorDesc.Width * colorDesc.Height; ++i) {
-                        int y = i / colorDesc.Width;
-                        int x = i - y * colorDesc.Width;
+                    int at = 0;
+                    while (at < colorDesc.Width * colorDesc.Height) {
+                        int y = at / colorDesc.Width;
+                        int x = at - y * colorDesc.Width;
                         colorPoints[idx] = new Point(x, y);
                         ++idx;
-                        i += strideX;
-                        if (i - row * colorDesc.Width >= colorDesc.Width) {
+                        at += strideX;
+                        if (at - row * colorDesc.Width >= colorDesc.Width) {
                             row += strideY;
-                            i = row * colorDesc.Width;
+                            at = row * colorDesc.Width;
                         }
                     }
                     Vector3[] points = new Vector3[colorPoints.Length];
