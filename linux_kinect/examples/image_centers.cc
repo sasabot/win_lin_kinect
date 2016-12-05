@@ -14,7 +14,7 @@
 
 int main(int argc, char **argv)
 {
-  ros::init(argc, argv, "kinect_image_sample");
+  ros::init(argc, argv, "image_centers_sample");
   ros::NodeHandle nh;
 
   kinect::interface::KinectInterfacePtr kinect
