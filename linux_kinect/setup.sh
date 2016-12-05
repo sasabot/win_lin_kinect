@@ -15,10 +15,6 @@ cmake_file="CMakeLists.txt"
 if [[ $1 == "--lib" ]]
 then
     cp ".templates/CMakeLists.lib" $cmake_file
-elif [[ $1 == "--py" ]]
-then
-    cp ".templates/CMakeLists.py" $cmake_file
-    exit
 elif [[ $1 == "--ex" ]]
 then
     cp ".templates/CMakeLists.ex" $cmake_file
