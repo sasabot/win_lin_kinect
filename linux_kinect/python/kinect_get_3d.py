@@ -42,7 +42,6 @@ def on_message(client, userdata, mqttmsg):
         cbuffer[i].z = struct.unpack('f', mqttmsg.payload[at+8:at+12])[0]
         at += 12
     centers = cbuffer[0:num_points]
-    print(centers)
 
 def on_rosservice_centers(req):
     global centers
