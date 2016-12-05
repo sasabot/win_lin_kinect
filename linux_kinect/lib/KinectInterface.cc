@@ -57,29 +57,35 @@ std::vector<linux_kinect::Bit> KinectInterface::ImageBounds
   result.reserve(_depth_indicies.size());
 
   for (auto it = _depth_indicies.begin(); it != _depth_indicies.end(); ++it) {
-    int idx0 = it->at(0) / depth_height_ * h_stride_ + it->at(0) * w_stride_;
-    int pixel0_y = idx0 / color_width_;
-    int pixel0_x = idx0 - pixel0_y * color_width_;
+    // min x
+    int depth0_y = it->at(0) / depth_width_;
+    int depth0_x = it->at(0) - depth0_y * depth_width_;
+    int pixel0_y = depth0_y * h_stride_;
+    int pixel0_x = depth0_x * w_stride_;
 
-    int idx1 = it->at(1) / depth_height_ * h_stride_ + it->at(1) * w_stride_;
-    int pixel1_y = idx1 / color_width_;
-    int pixel1_x = idx1 - pixel1_y * color_width_;
+    // min y
+    int depth1_y = it->at(1) / depth_width_;
+    int depth1_x = it->at(1) - depth1_y * depth_width_;
+    int pixel1_y = depth1_y * h_stride_;
+    int pixel1_x = depth1_x * w_stride_;
 
-    int idx2 = it->at(2) / depth_height_ * h_stride_ + it->at(2) * w_stride_;
-    int pixel2_y = idx2 / color_width_;
-    int pixel2_x = idx2 - pixel2_y * color_width_;
+    // max_x
+    int depth2_y = it->at(2) / depth_width_;
+    int depth2_x = it->at(2) - depth2_y * depth_width_;
+    int pixel2_y = depth2_y * h_stride_;
+    int pixel2_x = depth2_x * w_stride_;
 
-    int idx3 = it->at(3) / depth_height_ * h_stride_ + it->at(3) * w_stride_;
-    int pixel3_y = idx3 / color_width_;
-    int pixel3_x = idx3 - pixel3_y * color_width_;
+    // max_y
+    int depth3_y = it->at(3) / depth_width_;
+    int depth3_x = it->at(3) - depth3_y * depth_width_;
+    int pixel3_y = depth3_y * h_stride_;
+    int pixel3_x = depth3_x * w_stride_;
 
     linux_kinect::Bit image_bounds;
-    image_bounds.x = std::min({pixel0_x, pixel1_x, pixel2_x, pixel3_x});
-    image_bounds.y = std::min({pixel0_y, pixel1_y, pixel2_y, pixel3_y});
-    image_bounds.width =
-      std::max({pixel0_x, pixel1_x, pixel2_x, pixel3_x}) - image_bounds.x;
-    image_bounds.height =
-      std::max({pixel0_y, pixel1_y, pixel2_y, pixel3_y}) - image_bounds.y;
+    image_bounds.x = pixel0_x;
+    image_bounds.y = pixel1_y;
+    image_bounds.width = pixel2_x - image_bounds.x;
+    image_bounds.height = pixel3_y - image_bounds.y;
 
     result.push_back(image_bounds);
   }

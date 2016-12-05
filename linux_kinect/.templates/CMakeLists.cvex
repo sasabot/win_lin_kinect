@@ -67,3 +67,10 @@ add_executable(image_centers_sample
   )
 target_link_libraries(image_centers_sample
   ${catkin_LIBRARIES} ${OpenCV_LIBS})
+
+add_executable(image_bounds_sample
+  examples/image_bounds.cc
+  lib/KinectInterface.cc
+  )
+target_link_libraries(image_bounds_sample
+  ${catkin_LIBRARIES} ${OpenCV_LIBS} ${PCL_LIBRARIES})
