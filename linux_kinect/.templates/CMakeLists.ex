@@ -12,14 +12,6 @@ if(NOT catkin_LIBRARIES)
   message(FATAL "catkin required but not supported")
 endif()
 
-# boost
-find_package(Boost REQUIRED COMPONENTS filesystem system signals thread)
-if(NOT Boost_INCLUDE_DIRS)
-  message(FATAL "boost required but not supported")
-else()
-  include_directories(include ${Boost_INCLUDE_DIRS})
-endif()
-
 set(GENERATE_SRV)
 if(GENERATE_SRV)
   # auto-add messages
@@ -46,43 +38,30 @@ add_executable(points_sample
   lib/KinectInterface.cc
   )
 target_link_libraries(points_sample
-  ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+  ${catkin_LIBRARIES})
 
 add_executable(image_sample
   examples/image.cc
   lib/KinectInterface.cc
   )
 target_link_libraries(image_sample
-  ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+  ${catkin_LIBRARIES})
 
-add_executable(speech_matching_sample
-  examples/speech_matching.cc
-  )
-target_link_libraries(speech_matching_sample
-  ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+# add_executable(speech_matching_sample
+#   examples/speech_matching.cc
+#   )
+# target_link_libraries(speech_matching_sample
+#   ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
-add_executable(tts_sample
-  examples/tts.cc
-  )
-target_link_libraries(tts_sample
-  ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+# add_executable(tts_sample
+#   examples/tts.cc
+#   )
+# target_link_libraries(tts_sample
+#   ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
-add_executable(person_detection_sample
-  examples/person_detection.cc
-  lib/KinectInterface.cc
-  )
-target_link_libraries(person_detection_sample
-  ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-
-add_executable(point_stream_sample
-  examples/point_stream.cc
-  lib/KinectInterface.cc
-  )
-target_link_libraries(point_stream_sample
-  ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-
-add_executable(camera_info_sample
-  examples/camera_info.cc
-  )
-target_link_libraries(camera_info_sample
-  ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+# add_executable(person_detection_sample
+#   examples/person_detection.cc
+#   lib/KinectInterface.cc
+#   )
+# target_link_libraries(person_detection_sample
+#   ${catkin_LIBRARIES} ${Boost_LIBRARIES})

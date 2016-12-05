@@ -1,5 +1,4 @@
-string name
-float32 x
-float32 y
-float32 width
-float32 height
+int32 x
+int32 y
+int32 width
+int32 height

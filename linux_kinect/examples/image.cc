@@ -13,6 +13,7 @@ int main(int argc, char **argv)
   ros::Publisher image_publisher =
     nh.advertise<sensor_msgs::Image>("/kinect/pixelstream", 1);
 
+  ros::Rate r(1);
   while (ros::ok()) {
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -22,6 +23,8 @@ int main(int argc, char **argv)
              static_cast<float>
              (std::chrono::duration_cast<std::chrono::milliseconds>
               (std::chrono::high_resolution_clock::now() - start).count()));
+
     image_publisher.publish(image);
+    r.sleep();
   }
 }

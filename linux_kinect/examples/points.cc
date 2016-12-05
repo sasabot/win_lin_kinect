@@ -11,8 +11,9 @@ int main(int argc, char **argv)
     (new kinect::interface::KinectInterface(nh));
 
   ros::Publisher points_publisher =
-    nh.advertise<sensor_msgs::PointCloud2>("/kinect/stream", 1);
+    nh.advertise<sensor_msgs::PointCloud2>("/kinect/pointstream", 1);
 
+  ros::Rate r(1);
   while (ros::ok()) {
     auto start = std::chrono::high_resolution_clock::now();
 
@@ -23,5 +24,7 @@ int main(int argc, char **argv)
              (std::chrono::duration_cast<std::chrono::milliseconds>
               (std::chrono::high_resolution_clock::now() - start).count()));
     points_publisher.publish(points);
+
+    r.sleep();
   }
 }

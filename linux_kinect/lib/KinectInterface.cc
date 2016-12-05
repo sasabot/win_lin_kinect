@@ -4,51 +4,16 @@ using namespace kinect;
 using namespace interface;
 
 //////////////////////////////////////////////////
-Option::Option()
+KinectInterface::KinectInterface(ros::NodeHandle _nh)
+  : nh_(_nh), depth_width_(640), depth_height_(360), w_stride_(3), h_stride_(3),
+    color_width_(1920), color_height_(1080)
 {
-  // default parameter values
-  cognition_min_image_size_ = 5000;
-  cognition_max_image_size_ = 75000;
-}
-
-//////////////////////////////////////////////////
-Option::~Option()
-{
-}
-
-//////////////////////////////////////////////////
-KinectInterface::KinectInterface(ros::NodeHandle _nh) : nh_(_nh)
-{
-  call_update_timestamp_ =
-    nh_.serviceClient<linux_kinect::KinectRequest>("/kinect/request/updatets");
   call_points_ =
     nh_.serviceClient<linux_kinect::KinectPoints>("/kinect/request/points");
   call_image_ =
     nh_.serviceClient<linux_kinect::KinectImage>("/kinect/request/image");
-  call_bounds_ =
-    nh_.serviceClient<linux_kinect::KinectRequest>("/kinect/request/bounds");
-  call_cognition_ =
-    nh_.serviceClient<linux_kinect::KinectRequest>("/kinect/request/cognition");
-  call_settings_ =
-    nh_.serviceClient<linux_kinect::KinectSettings>("/kinect/stream/settings");
-}
-
-//////////////////////////////////////////////////
-void KinectInterface::ReadKey()
-{
- // read setup key for Microsoft Cognitive Service
-  std::string cmd = "grep key= $(rospack find linux_kinect)/key.txt | cut -d= -f2";
-  char buffer[128];
-  key_ = "";
-  std::shared_ptr<FILE> pipe(popen(cmd.c_str(), "r"), pclose);
-  if (!pipe) throw std::runtime_error("popen() failed!");
-  while (!feof(pipe.get()))
-    if (fgets(buffer, 128, pipe.get()) != NULL)
-      key_ += buffer;
-  key_ = key_.substr(0, key_.size() - 1);
-  if (key_ == "")
-    throw std::runtime_error("please add a key in linux_kinect/key.txt!");
-  ROS_INFO("key is %s.", key_.c_str());
+  call_centers_ =
+    nh_.serviceClient<linux_kinect::KinectRequest>("/kinect/request/centers");
 }
 
 //////////////////////////////////////////////////
@@ -59,32 +24,12 @@ KinectInterface::~KinectInterface()
 //////////////////////////////////////////////////
 sensor_msgs::PointCloud2 KinectInterface::ReadPoints()
 {
-  // set timestamp
-  linux_kinect::KinectRequest ts;
-  ts.request.args = "points";
+  linux_kinect::KinectPoints srv;
 
-  if (!call_update_timestamp_.call(ts)) {
-    ROS_WARN("timestamp update failed");
+  if (!call_points_.call(srv)) {
+    ROS_WARN("readpoints: service call failed");
     sensor_msgs::PointCloud2 null;
     return null;
-  }
-
-  // request point clouds
-  linux_kinect::KinectPoints srv;
-  srv.request.data.x = 0;
-  srv.request.data.y = 0;
-  srv.request.data.width = 512;
-  srv.request.data.height = 424;
-
-  bool points_delayed = true;
-  while (points_delayed) {
-    usleep(500 * 1000);
-    if (!call_points_.call(srv)) {
-      ROS_WARN("service call failed");
-      sensor_msgs::PointCloud2 null;
-      return null;
-    }
-    points_delayed = srv.response.time_delay;
   }
 
   return srv.response.points;
@@ -93,32 +38,12 @@ sensor_msgs::PointCloud2 KinectInterface::ReadPoints()
 //////////////////////////////////////////////////
 sensor_msgs::Image KinectInterface::ReadImage()
 {
-  // set timestamp
-  linux_kinect::KinectRequest ts;
-  ts.request.args = "pixels";
+  linux_kinect::KinectImage srv;
 
-  if (!call_update_timestamp_.call(ts)) {
-    ROS_WARN("timestamp update failed");
+  if (!call_image_.call(srv)) {
+    ROS_WARN("readimage: service call failed");
     sensor_msgs::Image null;
     return null;
-  }
-
-  // request point clouds
-  linux_kinect::KinectImage srv;
-  srv.request.data.x = 0;
-  srv.request.data.y = 0;
-  srv.request.data.width = 1920;
-  srv.request.data.height = 1080;
-
-  bool pixels_delayed = true;
-  while (pixels_delayed) {
-    usleep(500 * 1000);
-    if (!call_image_.call(srv)) {
-      ROS_WARN("service call failed");
-      sensor_msgs::Image null;
-      return null;
-    }
-    pixels_delayed = srv.response.time_delay;
   }
 
   return srv.response.image;
@@ -128,140 +53,55 @@ sensor_msgs::Image KinectInterface::ReadImage()
 std::vector<linux_kinect::Bit> KinectInterface::ImageBounds
 (std::vector<std::array<int, 4> > _depth_indicies)
 {
-  // request bounds in 2D image pixels
-  // depth index -> image bounds
-  linux_kinect::KinectRequest srv;
-  srv.request.data.reserve(_depth_indicies.size());
+  std::vector<linux_kinect::Bit> result;
+  result.reserve(_depth_indicies.size());
+
   for (auto it = _depth_indicies.begin(); it != _depth_indicies.end(); ++it) {
-    linux_kinect::Bit depth_indicies;
-    depth_indicies.x = it->at(0);
-    depth_indicies.y = it->at(1);
-    depth_indicies.width = it->at(2);
-    depth_indicies.height = it->at(3);
-    srv.request.data.push_back(depth_indicies);
-  }
-  // try until succeed
-  while (!call_bounds_.call(srv)) {
+    int idx0 = it->at(0) / depth_height_ * h_stride_ + it->at(0) * w_stride_;
+    int pixel0_y = idx0 / color_width_;
+    int pixel0_x = idx0 - pixel0_y * color_width_;
+
+    int idx1 = it->at(1) / depth_height_ * h_stride_ + it->at(1) * w_stride_;
+    int pixel1_y = idx1 / color_width_;
+    int pixel1_x = idx1 - pixel1_y * color_width_;
+
+    int idx2 = it->at(2) / depth_height_ * h_stride_ + it->at(2) * w_stride_;
+    int pixel2_y = idx2 / color_width_;
+    int pixel2_x = idx2 - pixel2_y * color_width_;
+
+    int idx3 = it->at(3) / depth_height_ * h_stride_ + it->at(3) * w_stride_;
+    int pixel3_y = idx3 / color_width_;
+    int pixel3_x = idx3 - pixel3_y * color_width_;
+
+    linux_kinect::Bit image_bounds;
+    image_bounds.x = std::min({pixel0_x, pixel1_x, pixel2_x, pixel3_x});
+    image_bounds.y = std::min({pixel0_y, pixel1_y, pixel2_y, pixel3_y});
+    image_bounds.width =
+      std::max({pixel0_x, pixel1_x, pixel2_x, pixel3_x}) - image_bounds.x;
+    image_bounds.height =
+      std::max({pixel0_y, pixel1_y, pixel2_y, pixel3_y}) - image_bounds.y;
+
+    result.push_back(image_bounds);
   }
 
-  if (!srv.response.status) {
-    ROS_ERROR("invalid cluster region detected");
-    return {};
-  }
-
-  return srv.response.bits;
+  return result;
 }
 
 //////////////////////////////////////////////////
 std::vector<geometry_msgs::Point> KinectInterface::ImageCenters
 (std::vector<linux_kinect::Bit> _image_bounds)
 {
-  linux_kinect::KinectRequest cog;
-  cog.request.data.reserve(_image_bounds.size());
-  for (unsigned int i = 0; i < _image_bounds.size(); ++i)
-    cog.request.data.push_back(_image_bounds[i]);
-  cog.request.args = "";
+  linux_kinect::KinectRequest srv;
+  srv.request.data.reserve(_image_bounds.size());
 
-  // try until succeed
-  while (!call_cognition_.call(cog)) {
-  }
+  for (auto it = _image_bounds.begin(); it != _image_bounds.end(); ++it)
+    srv.request.data.push_back(*it);
 
-  return cog.response.points;
-}
-
-//////////////////////////////////////////////////
-linux_kinect::KinectRequest::Response KinectInterface::Cognition
-(std::vector<linux_kinect::Bit> _image_bounds, std::vector<int>& _valid_cluster_ids,
- kinect::interface::optionptr opt)
-{
-  _valid_cluster_ids.clear();
-  _valid_cluster_ids.reserve(_image_bounds.size());
-
-  linux_kinect::KinectRequest cog;
-  cog.request.data.reserve(_image_bounds.size());
-  for (unsigned int i = 0; i < _image_bounds.size(); ++i) {
-    linux_kinect::Bit cluster = _image_bounds[i];
-
-    // check whether cluster is valid or not
-    int size = cluster.width * cluster.height;
-    if (size < opt->GetCognitionMinImageSize() ||
-        size > opt->GetCognitionMaxImageSize()) continue;
-
-    // save below for calculating grasp position
-    int cluster_id = std::stoi(cluster.name);
-    _valid_cluster_ids.push_back(cluster_id);
-
-    cluster.name = ""; // images will be overwritten unless name is cleaned
-    cog.request.data.push_back(cluster);
-  }
-  cog.request.args = key_;
-
-  if (cog.request.data.size() == 0) {
-    ROS_WARN("no image bounds provided!");
-    linux_kinect::KinectRequest::Response null;
-    null.status = false;
+  if (!call_centers_.call(srv)) {
+    ROS_WARN("imagecenters: service call failed");
+    std::vector<geometry_msgs::Point> null;
     return null;
   }
 
-  // try until succeed
-  while (!call_cognition_.call(cog)) {
-  }
-
-  return cog.response;
-}
-
-//////////////////////////////////////////////////
-bool KinectInterface::StartPersonStream()
-{
-  linux_kinect::KinectSettings settings;
-  settings.request.streams.push_back("person");
-  settings.request.settings.push_back(true);
-
-  // try until succeed
-  while (!call_settings_.call(settings)) {
-  }
-
-  return settings.response.status;
-}
-
-//////////////////////////////////////////////////
-bool KinectInterface::StopPersonStream()
-{
-  linux_kinect::KinectSettings settings;
-  settings.request.streams.push_back("person");
-  settings.request.settings.push_back(false);
-
-  // try until succeed
-  while (!call_settings_.call(settings)) {
-  }
-
-  return settings.response.status;
-}
-
-//////////////////////////////////////////////////
-bool KinectInterface::StartPointStream()
-{
-  linux_kinect::KinectSettings settings;
-  settings.request.streams.push_back("rgbd");
-  settings.request.settings.push_back(true);
-
-  // try until succeed
-  while (!call_settings_.call(settings)) {
-  }
-
-  return settings.response.status;
-}
-
-//////////////////////////////////////////////////
-bool KinectInterface::StopPointStream()
-{
-  linux_kinect::KinectSettings settings;
-  settings.request.streams.push_back("rgbd");
-  settings.request.settings.push_back(false);
-
-  // try until succeed
-  while (!call_settings_.call(settings)) {
-  }
-
-  return settings.response.status;
+  return srv.response.points;
 }

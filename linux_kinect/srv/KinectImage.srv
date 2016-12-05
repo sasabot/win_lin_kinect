@@ -1,4 +1,2 @@
-linux_kinect/Bit data
 ---
-bool time_delay
 sensor_msgs/Image image
