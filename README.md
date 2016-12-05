@@ -7,6 +7,12 @@ win_lin_kinect is a ROS implemented Windows/Linux bridge for sending Kinect sens
 
 For non-ROS users, please directly use mqtt mosquitto and receive data from Windows.
 
+## expected users
+
+Those who use ROS on Linux but also wants to use Windows API. Those who don't want to go through calibration and device managing but want to receive Kinect point clouds on Linux.
+
+Performance depends on your machine. Codes on Windows run at minimum 15 FPS when used on NUC6i7KYK.
+
 ## features
 
 To be updated.
@@ -22,6 +28,7 @@ Linux
 [sudo] apt-get install mosquitto
 [sudo] pip-install paho-mqtt
 ```
+- Install ROS Indigo or above (If ROS is not an option, please use mqtt directly)
 - Install chainer (optional)
 ```
 [sudo] pip-install chainer
@@ -57,7 +64,13 @@ Windows
   - close app window
 
 Linux
-- catkin make win_lin_kinect/linux_kinect
+- easy install (for ROS users)
+  - ```cd win_lin_kinect/linux_kinect```
+  - ```./setup.sh --lib```
+  - catkin make win_lin_kinect/linux_kinect
+- build examples (for ROS users)
+  - ```./setup.sh --ex```
+  - if you have OpenCV3 and PCL1.8 installed, you can build all examples with ```./setup.sh --cvex```
 
 ## startup
 
@@ -66,7 +79,7 @@ Linux
 ```
 start windowskinectlaunch:
 ```
-Type the above in command prompt and all applicaitons will start (to open command prompt, press windows key, and then type "cmd"). Or you can press windows key and type "WindowsKinectLaunch" to find the launching app.  
+Type the above in command prompt and all applications will start (to open command prompt, press windows key, and then type "cmd"). Or you can press windows key and type "WindowsKinectLaunch" to find the launching app.  
 
 All apps will pop through the launch. Note that the apps will not start unless you type in configurations (e.g. ip of host) and press the "send" button.
 
@@ -82,7 +95,8 @@ roslaunch linux_kinect kinect_rgbd_interaction.launch host:="host ip address"
 
 ## closing apps
 
-Please press the "close" button for any windows app you have started with "send". For, Linux, just ctrl-C and wait a while till the app stops.
+Please press the "close" button for any windows app you have started with "send". For, Linux, just ctrl-C and wait a while till the app stops.  
+Make sure to close apps on windows first before stopping apps on Linux.
 
 ## easy examples
 
