@@ -23,6 +23,41 @@ using uPLibrary.Networking.M2Mqtt.Messages;
 
 namespace KinectWindowsInteraction
 {
+    public class FaceLog {
+        public int id;
+        public Vector3 facePosition;
+        public bool isTracked;
+        public BitmapBounds faceBounds;
+        public bool foundInThisFrame;
+
+        public FaceLog(int _id) {
+            id = _id;
+            facePosition = new Vector3(0, 0, 0);
+            isTracked = false;
+            faceBounds = new BitmapBounds();
+            foundInThisFrame = false;
+        }
+
+        public void SetFoundFalse() {
+            foundInThisFrame = false;
+        }
+
+        public void Update(Vector3 _facePosition, BitmapBounds _faceBounds) {
+            facePosition = _facePosition;
+            isTracked = true;
+            faceBounds = _faceBounds;
+            foundInThisFrame = true;
+        }
+
+        public void Free(int renewId) {
+            id = renewId;
+            facePosition.X = 0; facePosition.Y = 0; facePosition.Z = 0;
+            isTracked = false;
+            faceBounds.X = 0; faceBounds.Y = 0; faceBounds.Width = 0; faceBounds.Height = 0;
+            foundInThisFrame = false;
+        }
+    }
+
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
@@ -33,6 +68,12 @@ namespace KinectWindowsInteraction
         private FaceTracker faceTracker = null;
         private Dictionary<MediaFrameSourceKind, MediaFrameReference> frames = null;
         private SemaphoreSlim frameProcessingSemaphore = new SemaphoreSlim(1);
+
+        // captures up to three faces
+        private List<FaceLog> faceLog = new List<FaceLog> { new FaceLog(0), new FaceLog(1), new FaceLog(2) };
+        private int nextReservedFaceId = 3;
+        private Stack<int> freeFaceQueue = new Stack<int>();
+        private Stack<Tuple<int, int, int>> adjustBoundQueue = new Stack<Tuple<int, int, int>>();
 
         private Dictionary<string, Func<byte[], bool>> requestHandlers = null;
         private bool sendImageFlag = false;
@@ -78,6 +119,8 @@ namespace KinectWindowsInteraction
         private void Setup(string ip) {
             if (this.requestHandlers == null) {
                 this.requestHandlers = new Dictionary<string, Func<byte[], bool>>() {
+                    { "/kinect/request/facetrack/freeid", HandleRequestFaceTrackFreeId },
+                    { "/kinect/request/facetrack/manualadjust", HandleRequestFaceTrackManualAdjust },
                     { "/kinect/request/image", HandleRequestImage },
                     { "/kinect/request/centers", HandleRequestImageCenters },
                     { "/kinect/request/tts", HandleRequestTTS },
@@ -99,9 +142,11 @@ namespace KinectWindowsInteraction
                     { MediaFrameSourceKind.Depth, null }
                 };
 
-            if (this.faceTracker == null)
+            if (this.faceTracker == null) {
                 // setup face tracker
                 this.faceTracker = Task.Run(async () => { return await FaceTracker.CreateAsync(); }).Result;
+                //this.faceTracker.MinDetectableFaceSize = new BitmapSize() { Width = 227, Height = 227 }; // unstable not recommended
+            }
 
             if (this.mediaCapture == null) {
                 // select device with both color and depth streams
@@ -174,37 +219,115 @@ namespace KinectWindowsInteraction
                     videoFrame.RelativeTime = time;
                     var faces = Task.Run(async () => { return await this.faceTracker.ProcessNextFrameAsync(videoFrame); }).Result;
 
+                    // reset face found status
+                    foreach (var log in this.faceLog)
+                        log.SetFoundFalse();
+
                     // header information
-                    uint headerSize = 16;
+                    uint headerSize = 20;
 
                     // create byte array from each face
                     uint totalSize = 0;
                     List<byte[]> faceBytesList = new List<byte[]>();
-                    foreach (DetectedFace face in faces) {
-                        uint size = face.FaceBox.Width * face.FaceBox.Height * 4 + headerSize;
-                        byte[] faceBytes = new byte[size];
-                        totalSize += size;
+                    if (faces != null) {
+                        foreach (DetectedFace face in faces) {
+                            uint size = face.FaceBox.Width * face.FaceBox.Height * 4 + headerSize;
+                            byte[] faceBytes = new byte[size];
+                            totalSize += size;
 
-                        // first 4 bytes is size of face image
-                        Array.Copy(BitConverter.GetBytes(face.FaceBox.Width), 0, faceBytes, 0, 2);
-                        Array.Copy(BitConverter.GetBytes(face.FaceBox.Height), 0, faceBytes, 2, 2);
+                            // get face 3d position
+                            var centerPoint = new Point(face.FaceBox.X + Convert.ToUInt32(face.FaceBox.Width * 0.5), face.FaceBox.Y + Convert.ToUInt32(face.FaceBox.Height * 0.5));
+                            var positionVector = coordinateMapper.UnprojectPoint(centerPoint, this.frames[MediaFrameSourceKind.Color].CoordinateSystem);
 
-                        // next 12 bytes is 3d position of face
-                        var centerPoint = new Point(face.FaceBox.X + Convert.ToUInt32(face.FaceBox.Width * 0.5), face.FaceBox.Y + Convert.ToUInt32(face.FaceBox.Height * 0.5));
-                        var positionVector = coordinateMapper.UnprojectPoint(centerPoint, this.frames[MediaFrameSourceKind.Color].CoordinateSystem);
-                        var position = new float[] { positionVector.X, positionVector.Y, positionVector.Z };
-                        Buffer.BlockCopy(position, 0, faceBytes, 4, 12);
+                            // get likely face id from face position
+                            int likelyEnum = -1;
+                            float likeliness = float.MaxValue;
+                            for (int i = 0; i < this.faceLog.Count; ++i)
+                                if (this.faceLog[i].isTracked && !this.faceLog[i].foundInThisFrame) {
+                                    var dist = Vector3.Distance(positionVector, this.faceLog[i].facePosition);
+                                    if (dist < 0.1 && dist < likeliness) { // it is unlikely for a face to jump 10cm between frames
+                                        likelyEnum = i;
+                                        likeliness = dist;
+                                    }
+                                }
+                            if (likelyEnum < 0) // if no likely face was found
+                                for (int i = 0; i < this.faceLog.Count; ++i)
+                                    if (!this.faceLog[i].isTracked) { // a new track is registered (will switch to isTracked when called Update)
+                                        likelyEnum = i;
+                                        break;
+                                    }
+                            if (likelyEnum < 0) // trackable number of faces already occupied, cannot track new face
+                                continue; // id will only be free when a request has been given by client
 
-                        // copy rgb image
-                        for (int y = 0; y < face.FaceBox.Height; ++y) {
-                            var srcIdx = Convert.ToInt32(((y + face.FaceBox.Y) * colorDesc.Width + face.FaceBox.X) * 4);
-                            var destIdx = Convert.ToInt32((y * face.FaceBox.Width) * 3 + headerSize);
-                            for (int x = 0; x < face.FaceBox.Width; ++x)
-                                Buffer.BlockCopy(colorBytes, srcIdx + x * 4, faceBytes, destIdx + x * 3, 3);
+                            this.faceLog[likelyEnum].Update(positionVector, face.FaceBox);
+
+                            // first 4 bytes is size of face image
+                            Array.Copy(BitConverter.GetBytes(face.FaceBox.Width), 0, faceBytes, 0, 2);
+                            Array.Copy(BitConverter.GetBytes(face.FaceBox.Height), 0, faceBytes, 2, 2);
+
+                            // next 12 bytes is 3d position of face
+                            var position = new float[] { positionVector.X, positionVector.Y, positionVector.Z };
+                            Buffer.BlockCopy(position, 0, faceBytes, 4, 12);
+
+                            // next 4 bytes is face id
+                            Buffer.BlockCopy(BitConverter.GetBytes(this.faceLog[likelyEnum].id), 0, faceBytes, 16, 4);
+
+                            // copy rgb image
+                            for (int y = 0; y < face.FaceBox.Height; ++y) {
+                                var srcIdx = Convert.ToInt32(((y + face.FaceBox.Y) * colorDesc.Width + face.FaceBox.X) * 4);
+                                var destIdx = Convert.ToInt32((y * face.FaceBox.Width) * 3 + headerSize);
+                                for (int x = 0; x < face.FaceBox.Width; ++x)
+                                    Buffer.BlockCopy(colorBytes, srcIdx + x * 4, faceBytes, destIdx + x * 3, 3);
+                            }
+
+                            faceBytesList.Add(faceBytes);
                         }
-
-                        faceBytesList.Add(faceBytes);
                     }
+
+                    // for faces that were not found in current frame, send previous bound
+                    // this allows client to check face existence despite face was not found on Windows
+                    foreach (var log in this.faceLog)
+                        if (log.isTracked && !log.foundInThisFrame) {
+                            // by enlarging search area, client side face tracking becomes slightly more robust
+                            // if search area is too large, face cannot be analyzed on client side
+                            var bounds = log.faceBounds;
+                            bounds.X = Convert.ToUInt16(Math.Max(0, Convert.ToInt16(bounds.X) - bounds.Width * 0.5));
+                            bounds.Y = Convert.ToUInt16(Math.Max(0, Convert.ToInt16(bounds.Y) - bounds.Height * 0.5));
+                            bounds.Width = 2 * bounds.Width;
+                            bounds.Height = 2 * bounds.Height;
+                            // make sure bounds are within image range
+                            if (bounds.X + bounds.Width > colorDesc.Width) bounds.Width = Convert.ToUInt16(colorDesc.Width - bounds.X);
+                            if (bounds.Y + bounds.Height > colorDesc.Height) bounds.Width = Convert.ToUInt16(colorDesc.Height - bounds.Y);
+
+                            uint size = bounds.Width * bounds.Height * 4 + headerSize;
+                            byte[] faceBytes = new byte[size];
+                            totalSize += size;
+
+                            // first 4 bytes is size of face image
+                            Array.Copy(BitConverter.GetBytes(bounds.Width), 0, faceBytes, 0, 2);
+                            Array.Copy(BitConverter.GetBytes(bounds.Height), 0, faceBytes, 2, 2);
+
+                            // next 12 bytes is 3d position of face
+                            var centerPoint =
+                                new Point(bounds.X + Convert.ToUInt32(bounds.Width * 0.5), bounds.Y + Convert.ToUInt32(bounds.Height * 0.5));
+                            var positionVector = coordinateMapper.UnprojectPoint(centerPoint, this.frames[MediaFrameSourceKind.Color].CoordinateSystem);
+                            //var position = new float[] { log.facePosition.X, log.facePosition.Y, log.facePosition.Z };
+                            var position = new float[] { positionVector.X, positionVector.Y, positionVector.Z };
+                            Buffer.BlockCopy(position, 0, faceBytes, 4, 12);
+
+                            // next 4 bytes is face id
+                            Buffer.BlockCopy(BitConverter.GetBytes(log.id), 0, faceBytes, 16, 4);
+
+                            // copy rgb image
+                            for (int y = 0; y < bounds.Height; ++y) {
+                                var srcIdx = Convert.ToInt32(((y + bounds.Y) * colorDesc.Width + bounds.X) * 4);
+                                var destIdx = Convert.ToInt32((y * bounds.Width) * 3 + headerSize);
+                                for (int x = 0; x < bounds.Width; ++x)
+                                    Buffer.BlockCopy(colorBytes, srcIdx + x * 4, faceBytes, destIdx + x * 3, 3);
+                            }
+
+                            faceBytesList.Add(faceBytes);
+                        }
 
                     // concatenate byte arrays to send (post-processed as totalSize not known in first foreach)
                     int head = 1; // first 1 byte is number of faces
@@ -216,8 +339,28 @@ namespace KinectWindowsInteraction
                     }
                     this.client.Publish("/kinect/detected/face", bytes);
 
-                    // send full image if requested (full image should usually not be requested)
-                    if (this.sendImageFlag) {
+                    // other requested queues (only one is processed at each frame)
+
+                    if (this.freeFaceQueue.Count > 0) { // free tracked faces if requested
+                        int freeId = this.freeFaceQueue.Pop();
+                        foreach (var log in this.faceLog)
+                            if (log.id == freeId) {
+                                log.Free(this.nextReservedFaceId);
+                                ++this.nextReservedFaceId;
+                                break;
+                            }
+                    } else if (this.adjustBoundQueue.Count > 0) { // adjust face bounds if requested
+                        var data = this.adjustBoundQueue.Pop();
+                        int id = data.Item1;
+                        foreach (var log in this.faceLog)
+                            if (log.id == id) {
+                                var bounds = log.faceBounds;
+                                bounds.X = Convert.ToUInt16(Math.Min(colorDesc.Width, Convert.ToInt16(bounds.X) + data.Item2));
+                                bounds.Y = Convert.ToUInt16(Math.Min(colorDesc.Height, Convert.ToInt16(bounds.Y) + data.Item3));
+                                log.Update(log.facePosition, bounds);
+                                break;
+                            }
+                    } else if (this.sendImageFlag) { // send full image if requested (full image should usually not be requested)
                         byte[] bgrColorBytes = new byte[colorDesc.Width * colorDesc.Height * 3];
                         Parallel.ForEach(System.Collections.Concurrent.Partitioner.Create(0, colorDesc.Height),
                         (range) => {
@@ -270,6 +413,19 @@ namespace KinectWindowsInteraction
         private void onMqttReceive(object sender, uPLibrary.Networking.M2Mqtt.Messages.MqttMsgPublishEventArgs e) {
             if (!this.requestHandlers.ContainsKey(e.Topic)) return;
             this.requestHandlers[e.Topic](e.Message);
+        }
+
+        private bool HandleRequestFaceTrackFreeId(byte[] message) {
+            this.freeFaceQueue.Push(BitConverter.ToInt32(message, 0));
+            return true;
+        }
+
+        private bool HandleRequestFaceTrackManualAdjust(byte[] message) {
+            int id = BitConverter.ToInt32(message, 0);
+            int dx = BitConverter.ToInt16(message, 4);
+            int dy = BitConverter.ToInt16(message, 6);
+            this.adjustBoundQueue.Push(new Tuple<int, int, int>(id, dx, dy));
+            return true;
         }
 
         private bool HandleRequestImage(byte[] message) {
