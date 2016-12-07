@@ -14,6 +14,9 @@
   <node name="speech_recognition" pkg="linux_kinect" type="speech_recognition.py" output="screen">
      <param name="ip" value="$(arg host)"/>
   </node>
+  <node name="windows_tts" pkg="linux_kinect" type="tts.py" output="screen">
+     <param name="ip" value="$(arg host)"/>
+  </node>
 
   <node name="kinect_get_points" pkg="linux_kinect" type="kinect_get_3d.py" output="screen">
      <param name="ip" value="$(arg host)"/>

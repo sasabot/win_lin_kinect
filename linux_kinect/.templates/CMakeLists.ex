@@ -53,11 +53,11 @@ add_executable(speech_matching_sample
 target_link_libraries(speech_matching_sample
   ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
-# add_executable(tts_sample
-#   examples/tts.cc
-#   )
-# target_link_libraries(tts_sample
-#   ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+add_executable(tts_sample
+  examples/tts.cc
+  )
+target_link_libraries(tts_sample
+  ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
 # add_executable(person_detection_sample
 #   examples/person_detection.cc
