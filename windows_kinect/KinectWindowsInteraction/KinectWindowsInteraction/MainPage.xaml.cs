@@ -123,7 +123,6 @@ namespace KinectWindowsInteraction
                     { "/kinect/request/facetrack/manualadjust", HandleRequestFaceTrackManualAdjust },
                     { "/kinect/request/image", HandleRequestImage },
                     { "/kinect/request/centers", HandleRequestImageCenters },
-                    { "/kinect/request/tts", HandleRequestTTS },
                     { "/kinect/request/ocr", HandleRequestOCR }
                 };
             }
@@ -453,10 +452,6 @@ namespace KinectWindowsInteraction
                 at += 8;
             }
             this.sendImageCenters = true;
-            return true;
-        }
-
-        private bool HandleRequestTTS(byte[] message) {
             return true;
         }
 

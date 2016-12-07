@@ -14,6 +14,8 @@ using System.Timers;
 using System.Windows.Threading;
 using Microsoft.Win32;
 using System.Reflection;
+using uPLibrary.Networking.M2Mqtt.Messages;
+using System.Speech.Synthesis;
 
 namespace KinectMicrophoneInteraction
 {
@@ -27,6 +29,8 @@ namespace KinectMicrophoneInteraction
         private AudioBeamFrameReader audioReader = null;
         private SpeechRecognitionEngine dictationSpeechEngine = null;
         private SpeechRecognitionEngine templateSpeechEngine = null;
+        private SpeechSynthesizer speechSynthesizer = null;
+        private string ttsTopic = "/kinect/request/tts";
 
 #if PRINT_STATUS_MESSAGE
         private DispatcherTimer statusLogTimer = null;
@@ -70,6 +74,8 @@ namespace KinectMicrophoneInteraction
             if (this.client == null) {
                 this.client = new MqttClient(ip);
                 this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
+                this.client.MqttMsgPublishReceived += this.onMqttReceive;
+                this.client.Subscribe(new string[] { ttsTopic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE });
                 this.client.Connect(Guid.NewGuid().ToString());
             }
 
@@ -109,6 +115,13 @@ namespace KinectMicrophoneInteraction
                         this.GrammarStatus.Text = "failed load grammar file";
 
                 } catch { this.GrammarStatus.Text = "recognizer is null"; }
+            }
+
+            if (this.speechSynthesizer == null) {
+                this.speechSynthesizer = new SpeechSynthesizer();
+                this.speechSynthesizer.SelectVoiceByHints(VoiceGender.Female, VoiceAge.Teen);
+                this.speechSynthesizer.SetOutputToDefaultAudioDevice();
+                this.speechSynthesizer.SpeakCompleted += this.SpeechEnd_FrameArrived;
             }
 
             if (this.kinectSensor == null) {
@@ -156,6 +169,63 @@ namespace KinectMicrophoneInteraction
             this.DictationStatus.Text = e.Result.Text + "(" + e.Result.Confidence + ")";
         }
 
+        private void onMqttReceive(object sender, uPLibrary.Networking.M2Mqtt.Messages.MqttMsgPublishEventArgs e) {
+            if (e.Topic != ttsTopic) return;
+
+            this.speechSynthesizer.SpeakAsyncCancelAll();
+
+            // example of speech
+            // raw: "U--m... yeah?"
+            // ssml: "<prosody rate=\"x-slow\">Um</prosody><break time=\"0.5s\"/><break time=\"0.5s\"/> yeah?"
+            string rawString = Encoding.UTF8.GetString(e.Message);
+
+            if (e.Message.Length == 0)
+                return; // when command only quits speech
+
+            // infer language
+            string lang;
+            if (e.Message.Length == rawString.Length) lang = "en-US";
+            else lang = "ja-JP";
+
+            // convert "--" syntax to x-slow
+            while (true) {
+                int getDashFromHead = rawString.IndexOf("--");
+                if (getDashFromHead < 0) break;
+
+                // index should not change as erase and addition will happen on index behind
+                int wordStart = rawString.LastIndexOf(" ", getDashFromHead);
+                int ssmlCheck = rawString.LastIndexOf(">", getDashFromHead); // space could be inside ssml format
+                if (wordStart < ssmlCheck || wordStart < 0) wordStart = 0; // no spaces prior should mean head of sentence
+                else wordStart += 1;
+
+                // insert end first
+                int wordEnd = rawString.IndexOf(" ", getDashFromHead);
+                if (wordEnd < 0) wordEnd = rawString.IndexOf(".", getDashFromHead);
+                if (wordEnd < 0) wordEnd = rawString.IndexOf(",", getDashFromHead);
+                if (wordEnd < 0) wordEnd = rawString.IndexOf("?", getDashFromHead);
+                if (wordEnd < 0) wordEnd = rawString.IndexOf("!", getDashFromHead);
+                if (wordEnd < 0) wordEnd = rawString.Length;
+
+                rawString = rawString.Insert(wordEnd, "</prosody>");
+
+                // erase dash dash
+                rawString = rawString.Remove(getDashFromHead, 2);
+                rawString = rawString.Insert(wordStart, "<prosody rate=\"x-slow\">");
+            }
+
+            // convert "..." syntax to break
+            rawString.Replace("...", "<break time=\"0.5s\">");
+
+            Prompt speech =
+                new Prompt("<?xml version=\"1.0\"?><speak version=\"1.0\" xml:lang=\"" + lang + "\"><prosody volume=\"100.0\" pitch=\"+20Hz\">"
+                + rawString + "</prosody></speak>", SynthesisTextFormat.Ssml);
+            this.speechSynthesizer.SpeakAsync(speech);
+        }
+
+        public void SpeechEnd_FrameArrived(object sender, SpeakCompletedEventArgs e) {
+            client.Publish("/kinect/state/ttsfinished", new byte[] { });
+        }
+
         private void MainWindow_Closing(object sender, CancelEventArgs e) {
             if (this.kinectSensor != null) {
                 this.kinectSensor.Close();
@@ -177,6 +247,11 @@ namespace KinectMicrophoneInteraction
                 this.templateSpeechEngine.RecognizeAsyncStop();
                 this.templateSpeechEngine.Dispose();
                 this.templateSpeechEngine = null;
+            }
+
+            if (this.speechSynthesizer != null) {
+                this.speechSynthesizer.Dispose();
+                this.speechSynthesizer = null;
             }
 
             if (this.client != null) {
