@@ -74,7 +74,7 @@ namespace KinectMicrophoneInteraction
             if (this.client == null) {
                 this.client = new MqttClient(ip);
                 this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
-                this.client.MqttMsgPublishReceived += this.onMqttReceive;
+                this.client.MqttMsgPublishReceived += this.TextToSpeech;
                 this.client.Subscribe(new string[] { ttsTopic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE });
                 this.client.Connect(Guid.NewGuid().ToString());
             }
@@ -143,7 +143,18 @@ namespace KinectMicrophoneInteraction
 
             using (var frameList = frameReference.AcquireBeamFrames()) {
                 if (frameList == null) return;
+
                 IReadOnlyList<AudioBeamSubFrame> subFrameList = frameList[0].SubFrames;
+                List<float> beamAngles = new List<float> { };
+                foreach (var frame in subFrameList)
+                    if (frame.BeamAngleConfidence > 0.3) beamAngles.Add(frame.BeamAngle);
+
+                byte[] bytes = new byte[beamAngles.Count * 4 + 1];
+                Buffer.BlockCopy(BitConverter.GetBytes(beamAngles.Count), 0, bytes, 0, 1); // first 1 byte number of beams
+                for (int i = 0; i < beamAngles.Count; ++i)
+                    Buffer.BlockCopy(BitConverter.GetBytes(beamAngles[i]), 0, bytes, i * 4 + 1, 4);
+
+                this.client.Publish("/kinect/detected/audio", bytes);
             }
 
             ++this.kinectFrameCount;
@@ -169,7 +180,7 @@ namespace KinectMicrophoneInteraction
             this.DictationStatus.Text = e.Result.Text + "(" + e.Result.Confidence + ")";
         }
 
-        private void onMqttReceive(object sender, uPLibrary.Networking.M2Mqtt.Messages.MqttMsgPublishEventArgs e) {
+        private void TextToSpeech(object sender, uPLibrary.Networking.M2Mqtt.Messages.MqttMsgPublishEventArgs e) {
             if (e.Topic != ttsTopic) return;
 
             this.speechSynthesizer.SpeakAsyncCancelAll();
