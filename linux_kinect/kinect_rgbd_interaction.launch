@@ -1,27 +1,38 @@
 <launch>
   <arg name="host" default="localhost"/>
 
-  <node name="kinect_point_stream" pkg="linux_kinect" type="kinect_point_stream.py" output="screen">
+  <node name="kinect_point_stream" pkg="linux_kinect"
+        type="kinect_point_stream.py" output="screen">
      <param name="ip" value="$(arg host)"/>
   </node>
-  <node name="face_pose_detector" pkg="linux_kinect" type="face_pose_detector.py" output="screen">
+  <node name="face_pose_detector" pkg="linux_kinect"
+        type="face_pose_detector.py" output="screen">
      <param name="ip" value="$(arg host)"/>
   </node>
-  <node name="kinect_camerainfo_stream" pkg="linux_kinect" type="kinect_camerainfo_stream.py" output="screen">
-     <param name="ip" value="$(arg host)"/>
-  </node>
-
-  <node name="speech_recognition" pkg="linux_kinect" type="speech_recognition.py" output="screen">
-     <param name="ip" value="$(arg host)"/>
-  </node>
-  <node name="windows_tts" pkg="linux_kinect" type="tts.py" output="screen">
+  <node name="kinect_camerainfo_stream" pkg="linux_kinect"
+        type="kinect_camerainfo_stream.py" output="screen">
      <param name="ip" value="$(arg host)"/>
   </node>
 
-  <node name="kinect_get_points" pkg="linux_kinect" type="kinect_get_3d.py" output="screen">
+  <node name="speech_recognition" pkg="linux_kinect"
+        type="speech_recognition.py" output="screen">
      <param name="ip" value="$(arg host)"/>
   </node>
-  <node name="kinect_get_image" pkg="linux_kinect" type="kinect_get_image.py" output="screen">
+  <node name="audio_beam" pkg="linux_kinect"
+        type="audio_beam.py" output="screen">
+     <param name="ip" value="$(arg host)"/>
+  </node>
+  <node name="windows_tts" pkg="linux_kinect"
+        type="tts.py" output="screen">
+     <param name="ip" value="$(arg host)"/>
+  </node>
+
+  <node name="kinect_get_points" pkg="linux_kinect"
+        type="kinect_get_3d.py" output="screen">
+     <param name="ip" value="$(arg host)"/>
+  </node>
+  <node name="kinect_get_image" pkg="linux_kinect"
+        type="kinect_get_image.py" output="screen">
      <param name="ip" value="$(arg host)"/>
   </node>
 </launch>
