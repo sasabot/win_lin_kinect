@@ -8,10 +8,10 @@ topic = '/kinect/state/ttsfinished'
 
 def on_connect(client, userdata, flags, respons_code):
     print('status {0}'.format(respons_code))
+    client.subscribe(topic)
 
 def on_rosmessage(msg):
     client.publish('/kinect/request/tts', (msg.data).decode('utf-8'))
-    client.subscribe(topic)
 
 def on_message(client, userdata, mqttmsg):
     pub.publish('')
