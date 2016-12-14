@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 import paho.mqtt.client as mqtt
-import datetime
 import struct
 import rospy
 import rospkg
 from sensor_msgs.msg import *
+from geometry_msgs.msg import *
 
 import chainer
 import cv2
@@ -15,6 +15,7 @@ import threading
 
 port = 1883
 topic = '/kinect/detected/face'
+dbgtopic = '/kinect/face/debug'
 
 max_faces = 3
 header_size = 20
@@ -31,49 +32,16 @@ def solve(field, img):
     # stop tracking if image was not a face
     if (y['detection'].data)[0][1] < 0.1:
         client.publish('/kinect/request/facetrack/freeid', bytearray(field[12:16]))
+    else:
+        pose = (y['pose'].data)[0]
+        print(pose)
 
-    # track sided faces (yaw > 1.0 [rad]) on client, as server cannot track sided faces
-    if abs((y['pose'].data)[0][2]) > 1.0:
-        nose = (y['landmark'].data)[0][26:28]
-        # should only update bounds when face had large movement
-        if abs(nose[0]) > 0.25 or abs(nose[1]) > 0.25:
-            # * 0.5 to slightly avoid nose being center of image
-            # this makes tracking more stable when noise is added to nose position
-            dx = struct.pack('i', int(nose[0] * size[0] * 0.5))
-            dy = struct.pack('i', int(nose[1] * size[1] * 0.5))
-            client.publish('/kinect/request/facetrack/manualadjust', bytearray(field[12:16]) + dx[0:2] + dy[0:2])
 
-    pose = (y['pose'].data)[0]
-    print(pose)
-
-def backthread(imgs, rest):
+def backthread(data):
     global onrun
-    threads = [None for x in range(len(imgs))]
-    for idx, img in enumerate(imgs):
-        threads[idx] = threading.Thread(target=solve, args=(rest[idx], img))
 
-    for t in threads:
-        t.start()
-
-    for t in threads:
-        t.join()
-
-    print('---')
-    runmutex.acquire()
-    try:
-        onrun = False
-    finally:
-        runmutex.release()
-
-def on_connect(client, userdata, flags, respons_code):
-    print('status {0}'.format(respons_code))
-    client.subscribe(topic)
-
-def on_message(client, userdata, mqttmsg):
-    global onrun
-    data = mqttmsg.payload
+    # parse msg
     num_faces = struct.unpack('i', data[0:1] + '\x00\x00\x00')[0]
-    # print(mqttmsg.topic + ' faces: ' + str(num_faces) + ' ' + str(datetime.datetime.now()))
     if num_faces == 0:
         return
     imgs = [None for x in range(num_faces)]
@@ -87,29 +55,84 @@ def on_message(client, userdata, mqttmsg):
         raw_array = np.fromstring(data[at:at + width * height * 3], np.uint8)
         imgs[i] = np.reshape(raw_array, (height, width, 3))
         at += width * height * 3
+
+    # conduct face analysis
+    threads = [None for x in range(len(imgs))]
+    for idx, img in enumerate(imgs):
+        threads[idx] = threading.Thread(target=solve, args=(rest[idx], img))
+    for t in threads:
+        t.start()
+    for t in threads:
+        t.join()
+
+    print('---')
+    runmutex.acquire()
+    try:
+        onrun = False
+    finally:
+        runmutex.release()
+
+
+def on_connect(client, userdata, flags, respons_code):
+    print('status {0}'.format(respons_code))
+    client.subscribe(topic)
+    client.subscribe(dbgtopic)
+
+
+def on_message(client, userdata, mqttmsg):
+    global onrun
+
+    # if debug msg
+    if mqttmsg.topic == dbgtopic:
+        data = mqttmsg.payload
+        rosmsg = Image()
+        rosmsg.header.frame_id = 'base_link'
+        rosmsg.header.stamp = rospy.get_rostime()
+        rosmsg.width = struct.unpack('i', data[0:2] + '\x00\x00')[0]
+        rosmsg.height = struct.unpack('i', data[2:4] + '\x00\x00')[0]
+        rosmsg.step = rosmsg.width
+        rosmsg.encoding = 'mono8'
+        rosmsg.is_bigendian = True
+        rosmsg.data = data[4:rosmsg.width * rosmsg.height + 4]
+        pub.publish(rosmsg)
+        return
+
+    # data = mqttmsg.payload
+    # if struct.unpack('i', data[0:1] + '\x00\x00\x00')[0] > 0:
+    #     rosmsg = Image()
+    #     rosmsg.header.frame_id = 'base_link'
+    #     rosmsg.header.stamp = rospy.get_rostime()
+    #     rosmsg.width = struct.unpack('i', data[1:3] + '\x00\x00')[0]
+    #     rosmsg.height = struct.unpack('i', data[3:5] + '\x00\x00')[0]
+    #     rosmsg.step = 3 * rosmsg.width
+    #     rosmsg.encoding = 'bgr8'
+    #     rosmsg.is_bigendian = True
+    #     rosmsg.data = data[header_size + 1:rosmsg.width * rosmsg.height * 3 + header_size + 1]
+    #     pub.publish(rosmsg)
+
+    # run on backthread to avoid delays
     runmutex.acquire()
     try:
         if not onrun:
             onrun = True
-            thread = threading.Thread(target=backthread, args=(imgs, rest))
+            thread = threading.Thread(target=backthread, args=(mqttmsg.payload,))
             thread.start()
     finally:
         runmutex.release()
-    # publish image of first detected face
-    rosmsg = Image()
-    rosmsg.header.frame_id = 'base_link'
-    rosmsg.header.stamp = rospy.get_rostime()
-    rosmsg.width = width
-    rosmsg.height = height
-    rosmsg.step = 3 * rosmsg.width
-    rosmsg.encoding = 'bgr8'
-    rosmsg.is_bigendian = True
-    rosmsg.data = data[header_size + 1:rosmsg.width * rosmsg.height * 3 + header_size + 1]
-    pub.publish(rosmsg)
+
+
+def on_rossubscribe(msg):
+    bbuffer = struct.pack('i', len(msg.points))[0:2]
+    for p in msg.points:
+        bbuffer += struct.pack('f', p.x)[0:4] # for p[i] i >= 1 : partition
+        bbuffer += struct.pack('f', p.y)[0:4] # coefficient a
+        bbuffer += struct.pack('f', p.z)[0:4] # coefficient b
+    client.publish('/kinect/request/facetrack/bounds', bytearray(bbuffer))
+
 
 if __name__ == '__main__':
     rospy.init_node('face_pose_detector')
-    pub = rospy.Publisher('/kinect/face', Image, queue_size=100)
+    pub = rospy.Publisher('/kinect/face/debug', Image, queue_size=100)
 
     host = rospy.get_param('~ip')
 
@@ -126,5 +149,8 @@ if __name__ == '__main__':
     client.on_connect = on_connect
     client.on_message = on_message
     client.connect(host, port=port, keepalive=60)
+
+    # client used in sub, therefore should be initiated after client setup
+    sub = rospy.Subscriber('/slam/env/bounds', Polygon, on_rossubscribe)
 
     client.loop_forever()
