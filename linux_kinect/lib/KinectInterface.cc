@@ -5,8 +5,7 @@ using namespace interface;
 
 //////////////////////////////////////////////////
 KinectInterface::KinectInterface(ros::NodeHandle _nh)
-  : nh_(_nh), depth_width_(640), depth_height_(360), w_stride_(3), h_stride_(3),
-    color_width_(1920), color_height_(1080)
+  : nh_(_nh), depth_width_(640), w_stride_(3), h_stride_(3)
 {
   call_points_ =
     nh_.serviceClient<linux_kinect::KinectPoints>("/kinect/request/points");
@@ -60,26 +59,20 @@ std::vector<linux_kinect::Bit> KinectInterface::ImageBounds
     // min x
     int depth0_y = it->at(0) / depth_width_;
     int depth0_x = it->at(0) - depth0_y * depth_width_;
-    int pixel0_y = depth0_y * h_stride_;
     int pixel0_x = depth0_x * w_stride_;
 
     // min y
     int depth1_y = it->at(1) / depth_width_;
-    int depth1_x = it->at(1) - depth1_y * depth_width_;
     int pixel1_y = depth1_y * h_stride_;
-    int pixel1_x = depth1_x * w_stride_;
 
     // max_x
     int depth2_y = it->at(2) / depth_width_;
     int depth2_x = it->at(2) - depth2_y * depth_width_;
-    int pixel2_y = depth2_y * h_stride_;
     int pixel2_x = depth2_x * w_stride_;
 
     // max_y
     int depth3_y = it->at(3) / depth_width_;
-    int depth3_x = it->at(3) - depth3_y * depth_width_;
     int pixel3_y = depth3_y * h_stride_;
-    int pixel3_x = depth3_x * w_stride_;
 
     linux_kinect::Bit image_bounds;
     image_bounds.x = pixel0_x;

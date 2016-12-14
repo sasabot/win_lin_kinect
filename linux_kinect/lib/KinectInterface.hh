@@ -43,15 +43,9 @@ namespace kinect
 
     private: const int depth_width_;
 
-    private: const int depth_height_;
-
     private: const int w_stride_;
 
     private: const int h_stride_;
-
-    private: const int color_width_;
-
-    private: const int color_height_;
     };
 
     typedef std::shared_ptr<KinectInterface> KinectInterfacePtr;
