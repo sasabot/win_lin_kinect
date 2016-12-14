@@ -1,12 +1,9 @@
 <launch>
   <arg name="host" default="localhost"/>
+  <arg name="optionals" default="false"/>
 
   <node name="kinect_point_stream" pkg="linux_kinect"
         type="kinect_point_stream.py" output="screen">
-     <param name="ip" value="$(arg host)"/>
-  </node>
-  <node name="face_pose_detector" pkg="linux_kinect"
-        type="face_pose_detector.py" output="screen">
      <param name="ip" value="$(arg host)"/>
   </node>
   <node name="kinect_camerainfo_stream" pkg="linux_kinect"
@@ -35,4 +32,12 @@
         type="kinect_get_image.py" output="screen">
      <param name="ip" value="$(arg host)"/>
   </node>
+
+  <group if="$(arg optionals)">
+    <node name="face_pose_detector" pkg="linux_kinect"
+          type="face_pose_detector.py" output="screen">
+       <param name="ip" value="$(arg host)"/>
+    </node>
+  </group>
+
 </launch>
