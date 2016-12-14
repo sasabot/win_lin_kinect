@@ -1,0 +1,25 @@
+﻿<Page
+    x:Class="KinectFaceInteraction.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:KinectFaceInteraction"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="50"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Please enter IP of host:" Grid.Row="0"/>
+        <TextBox Name="IPText" Width="200" Height="10" TextAlignment="Left" HorizontalAlignment="Left" Grid.Row="1"/>
+        <Button Name="StartApp" Content="send" Click="StartApp_Click" HorizontalAlignment="Left" Margin="210, 0, 0, 0" Grid.Row="1"/>
+        <Button Name="CloseApp" Content="close" Click="CloseApp_Click" HorizontalAlignment="Left" Margin="270, 0, 0, 0" Grid.Row="1"/>
+        <TextBlock Name="KinectFPS" HorizontalAlignment="Right" Grid.Row="2"/>
+        <TextBlock Name="MemoryMonitor" HorizontalAlignment="Right" Grid.Row="3"/>
+    </Grid>
+</Page>
