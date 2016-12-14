@@ -37,31 +37,27 @@ Linux
 ## build
 
 Windows
-- install KinectRgbdInteraction
-  - open *windows_kinect/KinectRgbdInteraction/KinectRgbdInteraction.sln*
+- Install WindowsKinectLaunch etc.
+  - open *windows_kinect/WindowsKinectLaunch/WindowsKinectLaunch.sln*
   - make sure build option is set to *Debug/x64*
   - Build > Build Solution
-  - Debug > Start Debugging (this will deploy app and add to HKEY_CLASSES_ROOT)
-  - close app window
-- install KinectWindowsInteraction
-  - open *windows_kinect/KinectWindowsInteraction/KinectWindowsInteraction.sln*
-  - make sure build option is set to *Debug/x64*
-  - Build > Build Solution
-  - Debug > Start Debugging (this will deploy app and add to HKEY_CLASSES_ROOT)
-  - close app window
-- install KinectMicrophoneInteraction
+  - right click *KinectRgbdInteraction* > Deploy (this will deploy app and add to HKEY_CLASSES_ROOT)
+  - right click *KinectWindowsInteraction* > Deploy (this will deploy app and add to HKEY_CLASSES_ROOT)
+  - right click *WindowsKinectLaunch* > Deploy (this will deploy app and add to HKEY_CLASSES_ROOT)
+- Install KinectMicrophoneInteraction
   - open *windows_kinect/KinectMicrophoneInteraction/KinectMicrophoneInteraction.sln*
   - make sure build options is set to *Debug/Any CPU*
   - Build > Build Solution
   - right click KinectMicrophoneInteraction.exe under *windows_kinect/KinectMicrophoneInteraction/KinectMicrophoneInteraction/bin/Debug* and select "Run as administrator"
   - click "register this app" button (this will add app to HKEY_CLASSES_ROOT)
   - close app window
-- Install WindowsKinectLaunch
-  - open *windows_kinect/WindowsKinectLaunch/WindowsKinectLaunch.sln*
-  - make sure build option is set to *Debug/x64*
-  - Build > Build Solution
-  - Debug > Start Debugging (this will deploy app and add to HKEY_CLASSES_ROOT)
-  - close app window
+- Install KinectFaceInteraction (optional)
+  - open *windows_kinect/KinectFaceInteraction/KinectFaceInteraction.sln*
+  - right click *HaarRuntimeComponent* > Build
+  - right click *KinectFaceInteraction* > Build
+  - right click *kinectFaceInteraction* > Deploy
+  - in order to run KinectFaceInteraction, *cascades\haarcascade_mcs_upperbody.xml* must be located under *Documents* (please copy file from an installed OpenCV 3.1.0 contrib)
+
 
 Linux
 - easy install (for ROS users)
@@ -91,6 +87,10 @@ roslaunch linux_kinect kinect_rgbd_interaction.launch
 This starts the application with localhost. For specified hosts use
 ```
 roslaunch linux_kinect kinect_rgbd_interaction.launch host:="host ip address"
+```
+To enable face detection, turn the *optionals* option on
+```
+roslaunch linux_kinect kinect_rgbd_interaction.launch optionals:=1
 ```
 
 ## closing apps
