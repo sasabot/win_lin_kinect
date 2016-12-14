@@ -10,6 +10,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.System;
 using Windows.UI.ViewManagement;
 using uPLibrary.Networking.M2Mqtt.Messages;
+using System.Diagnostics;
 
 namespace KinectWindowsInteraction
 {
@@ -22,6 +23,11 @@ namespace KinectWindowsInteraction
         private Dictionary<string, Func<byte[], bool>> requestHandlers = null;
         private Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
+#if PRINT_STATUS_MESSAGE
+        private Windows.UI.Xaml.DispatcherTimer statusLogTimer = new Windows.UI.Xaml.DispatcherTimer();
+        private Stopwatch appClock = new Stopwatch();
+#endif
+
         public MainPage() {
             this.InitializeComponent();
             ApplicationView.PreferredLaunchViewSize = new Size(350, 350);
@@ -29,6 +35,12 @@ namespace KinectWindowsInteraction
 
             if (localSettings.Values["mqttHostAddress"] != null)
                 this.IPText.Text = localSettings.Values["mqttHostAddress"].ToString();
+
+#if PRINT_STATUS_MESSAGE
+            this.statusLogTimer.Interval = TimeSpan.FromMilliseconds(100);
+            this.statusLogTimer.Tick += StatusLogTick;
+            this.statusLogTimer.Start();
+#endif
         }
 
         private void StartApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
