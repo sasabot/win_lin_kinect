@@ -21,22 +21,30 @@ namespace WindowsKinectLaunch
 
             var task1 = Task.Run(async () => {
                 var uri = new Uri("kinectrgbdinteraction:");
-                await Launcher.LaunchUriAsync(uri);
+                var status = await Launcher.QueryUriSupportAsync(uri, LaunchQuerySupportType.Uri);
+                if (status == LaunchQuerySupportStatus.Available)
+                    await Launcher.LaunchUriAsync(uri);
             });
 
             var task2 = Task.Run(async () => {
                 var uri = new Uri("kinectwindowsinteraction:");
-                await Launcher.LaunchUriAsync(uri);
+                var status = await Launcher.QueryUriSupportAsync(uri, LaunchQuerySupportType.Uri);
+                if (status == LaunchQuerySupportStatus.Available)
+                    await Launcher.LaunchUriAsync(uri);
             });
 
             var task3 = Task.Run(async () => {
                 var uri = new Uri("kinectmicrophoneinteraction:");
-                await Launcher.LaunchUriAsync(uri);
+                var status = await Launcher.QueryUriSupportAsync(uri, LaunchQuerySupportType.Uri);
+                if (status == LaunchQuerySupportStatus.Available)
+                    await Launcher.LaunchUriAsync(uri);
             });
 
             var task4 = Task.Run(async () => {
                 var uri = new Uri("kinectfaceinteraction:");
-                await Launcher.LaunchUriAsync(uri);
+                var status = await Launcher.QueryUriSupportAsync(uri, LaunchQuerySupportType.Uri);
+                if (status == LaunchQuerySupportStatus.Available)
+                    await Launcher.LaunchUriAsync(uri);
             });
 
             task1.Wait();
