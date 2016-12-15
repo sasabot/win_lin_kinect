@@ -17,7 +17,7 @@ def on_message(client, userdata, mqttmsg):
     global image
     global filled
     image = Image()
-    image.header.frame_id = 'base_link'
+    image.header.frame_id = frame
     image.header.stamp = rospy.get_rostime()
     image.width = width
     image.height = height
@@ -41,6 +41,7 @@ if __name__ == '__main__':
     s = rospy.Service('/kinect/request/image', KinectImage, on_rosservice)
 
     host = rospy.get_param('~ip')
+    frame = rospy.get_param('~frame')
     image = None
     filled = False
 

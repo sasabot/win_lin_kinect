@@ -15,7 +15,7 @@ def on_connect(client, userdata, flags, respons_code):
 def on_message(client, userdata, mqttmsg):
     print(mqttmsg.topic + ' ' + str(datetime.datetime.now()))
     rosmsg = CameraInfo()
-    rosmsg.header.frame_id = 'base_link'
+    rosmsg.header.frame_id = frame
     rosmsg.header.stamp = rospy.get_rostime()
     rosmsg.height = 360
     rosmsg.width = 640
@@ -27,6 +27,7 @@ if __name__ == '__main__':
     pub = rospy.Publisher('/kinect/camera_info', CameraInfo, queue_size=100)
 
     host = rospy.get_param('~ip')
+    frame = rospy.get_param('~frame')
 
     client = mqtt.Client(protocol=mqtt.MQTTv31)
     client.on_connect = on_connect

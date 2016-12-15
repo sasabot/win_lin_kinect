@@ -14,7 +14,7 @@ def on_connect(client, userdata, flags, respons_code):
 def on_message(client, userdata, mqttmsg):
     print(mqttmsg.topic + ' ' + str(datetime.datetime.now()))
     rosmsg = PointCloud2()
-    rosmsg.header.frame_id = 'base_link'
+    rosmsg.header.frame_id = frame
     rosmsg.header.stamp = rospy.get_rostime()
     rosmsg.fields = [PointField(name='x',offset=0,datatype=7,count=1), PointField(name='y',offset=4,datatype=7,count=1), PointField(name='z',offset=8,datatype=7,count=1), PointField(name='rgb',offset=12,datatype=7,count=1)]
     rosmsg.height = 360
@@ -31,6 +31,7 @@ if __name__ == '__main__':
     pub = rospy.Publisher('/kinect/stream', PointCloud2, queue_size=100)
 
     host = rospy.get_param('~ip')
+    frame = rospy.get_param('~frame')
 
     client = mqtt.Client(protocol=mqtt.MQTTv31)
     client.on_connect = on_connect

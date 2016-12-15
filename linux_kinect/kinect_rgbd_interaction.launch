@@ -1,14 +1,17 @@
 <launch>
   <arg name="host" default="localhost"/>
   <arg name="optionals" default="false"/>
+  <arg name="frame" default="base_link"/>
 
   <node name="kinect_point_stream" pkg="linux_kinect"
         type="kinect_point_stream.py" output="screen">
      <param name="ip" value="$(arg host)"/>
+     <param name="frame" value="$(arg frame)"/>
   </node>
   <node name="kinect_camerainfo_stream" pkg="linux_kinect"
         type="kinect_camerainfo_stream.py" output="screen">
      <param name="ip" value="$(arg host)"/>
+     <param name="frame" value="$(arg frame)"/>
   </node>
 
   <node name="speech_recognition" pkg="linux_kinect"
@@ -31,6 +34,7 @@
   <node name="kinect_get_image" pkg="linux_kinect"
         type="kinect_get_image.py" output="screen">
      <param name="ip" value="$(arg host)"/>
+     <param name="frame" value="$(arg frame)"/>
   </node>
 
   <group if="$(arg optionals)">
