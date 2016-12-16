@@ -5,12 +5,12 @@
 
 #include "sensor_msgs/PointCloud2.h"
 #include "sensor_msgs/Image.h"
+#include "sensor_msgs/RegionOfInterest.h"
 #include "geometry_msgs/Point.h"
 
 #include "linux_kinect/KinectPoints.h"
 #include "linux_kinect/KinectImage.h"
 #include "linux_kinect/KinectRequest.h"
-#include "linux_kinect/Bit.h"
 
 namespace kinect
 {
@@ -27,11 +27,11 @@ namespace kinect
 
     public: sensor_msgs::Image ReadImage();
 
-    public: std::vector<linux_kinect::Bit> ImageBounds
+    public: std::vector<sensor_msgs::RegionOfInterest> ImageBounds
     (std::vector<std::array<int, 4> > _depth_indicies);
 
     public: std::vector<geometry_msgs::Point> ImageCenters
-    (std::vector<linux_kinect::Bit> _image_bounds);
+    (std::vector<sensor_msgs::RegionOfInterest> _image_bounds);
 
     private: ros::NodeHandle nh_;
 

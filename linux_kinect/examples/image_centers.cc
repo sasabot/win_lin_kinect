@@ -1,9 +1,8 @@
 #include <ros/ros.h>
 #include "KinectInterface.hh"
 
-#include "linux_kinect/Bit.h"
-
 #include "sensor_msgs/Image.h"
+#include "sensor_msgs/RegionOfInterest.h"
 #include <opencv2/core/utility.hpp>
 #include <opencv2/saliency.hpp>
 #include <opencv2/highgui.hpp>
@@ -52,7 +51,7 @@ int main(int argc, char **argv)
   cv::Mat centroids;
   int n_labels = cv::connectedComponentsWithStats(binary_map, labeled_image, stats, centroids);
 
-  std::vector<linux_kinect::Bit> bounds;
+  std::vector<sensor_msgs::RegionOfInterest> bounds;
   bounds.reserve(n_labels);
   for (int i = 1; i < n_labels; ++i) {
     int *param = stats.ptr<int>(i);
@@ -62,12 +61,12 @@ int main(int argc, char **argv)
     int height = param[cv::ConnectedComponentsTypes::CC_STAT_HEIGHT];
     int width = param[cv::ConnectedComponentsTypes::CC_STAT_WIDTH];
 
-    linux_kinect::Bit bit;
-    bit.x = x;
-    bit.y = y;
-    bit.width = width;
-    bit.height = height;
-    bounds.push_back(bit);
+    sensor_msgs::RegionOfInterest roi;
+    roi.x_offset = x;
+    roi.y_offset = y;
+    roi.width = width;
+    roi.height = height;
+    bounds.push_back(roi);
 
     cv::rectangle(img, cv::Rect(x, y, width, height), cv::Scalar(0, 255, 0), 2);
   }
@@ -79,7 +78,7 @@ int main(int argc, char **argv)
     auto c = centers.begin() + i;
     auto b = bounds.begin() + i;
     cv::putText(img, std::to_string(c->x) + ", " + std::to_string(c->y) + ", " + std::to_string(c->z),
-                cv::Point(b->x, b->y + b->height),
+                cv::Point(b->x_offset, b->y_offset + b->height),
                 cv::FONT_HERSHEY_SIMPLEX, 1.0, cv::Scalar(255,255,255), 3.0);
   }
 

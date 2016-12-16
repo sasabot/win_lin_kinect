@@ -49,10 +49,10 @@ sensor_msgs::Image KinectInterface::ReadImage()
 }
 
 //////////////////////////////////////////////////
-std::vector<linux_kinect::Bit> KinectInterface::ImageBounds
+std::vector<sensor_msgs::RegionOfInterest> KinectInterface::ImageBounds
 (std::vector<std::array<int, 4> > _depth_indicies)
 {
-  std::vector<linux_kinect::Bit> result;
+  std::vector<sensor_msgs::RegionOfInterest> result;
   result.reserve(_depth_indicies.size());
 
   for (auto it = _depth_indicies.begin(); it != _depth_indicies.end(); ++it) {
@@ -74,11 +74,11 @@ std::vector<linux_kinect::Bit> KinectInterface::ImageBounds
     int depth3_y = it->at(3) / depth_width_;
     int pixel3_y = depth3_y * h_stride_;
 
-    linux_kinect::Bit image_bounds;
-    image_bounds.x = pixel0_x;
-    image_bounds.y = pixel1_y;
-    image_bounds.width = pixel2_x - image_bounds.x;
-    image_bounds.height = pixel3_y - image_bounds.y;
+    sensor_msgs::RegionOfInterest image_bounds;
+    image_bounds.x_offset = pixel0_x;
+    image_bounds.y_offset = pixel1_y;
+    image_bounds.width = pixel2_x - image_bounds.x_offset;
+    image_bounds.height = pixel3_y - image_bounds.y_offset;
 
     result.push_back(image_bounds);
   }
@@ -88,7 +88,7 @@ std::vector<linux_kinect::Bit> KinectInterface::ImageBounds
 
 //////////////////////////////////////////////////
 std::vector<geometry_msgs::Point> KinectInterface::ImageCenters
-(std::vector<linux_kinect::Bit> _image_bounds)
+(std::vector<sensor_msgs::RegionOfInterest> _image_bounds)
 {
   linux_kinect::KinectRequest srv;
   srv.request.data.reserve(_image_bounds.size());

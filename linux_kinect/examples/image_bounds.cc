@@ -186,7 +186,7 @@ int main(int argc, char **argv)
 
   // draw box around found bounds
   for (auto it = bounds.begin(); it != bounds.end(); ++it)
-    cv::rectangle(img, cv::Rect(it->x, it->y, it->width, it->height),
+    cv::rectangle(img, cv::Rect(it->x_offset, it->y_offset, it->width, it->height),
                   cv::Scalar(0, 255, 0), 2);
 
   // show results

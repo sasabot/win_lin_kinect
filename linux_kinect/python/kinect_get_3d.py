@@ -47,8 +47,8 @@ def on_rosservice_centers(req):
     global centers
     bbuffer = struct.pack('i', len(req.data))[0:2]
     for dat in req.data:
-        bbuffer += struct.pack('i', dat.x)[0:2]
-        bbuffer += struct.pack('i', dat.y)[0:2]
+        bbuffer += struct.pack('i', dat.x_offset)[0:2]
+        bbuffer += struct.pack('i', dat.y_offset)[0:2]
         bbuffer += struct.pack('i', dat.width)[0:2]
         bbuffer += struct.pack('i', dat.height)[0:2]
     client.publish('/kinect/request/centers', bytearray(bbuffer))

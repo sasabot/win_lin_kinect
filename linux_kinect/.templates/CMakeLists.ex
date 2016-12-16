@@ -15,9 +15,9 @@ endif()
 set(GENERATE_SRV)
 if(GENERATE_SRV)
   # auto-add messages
-  add_message_files(
-    FILES
-  )
+  # add_message_files(
+  #   FILES
+  # )
   # auto-add services
   add_service_files(
     FILES
