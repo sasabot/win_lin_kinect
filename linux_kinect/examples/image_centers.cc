@@ -1,5 +1,5 @@
 #include <ros/ros.h>
-#include "KinectInterface.hh"
+#include "linux_kinect/KinectInterface.hh"
 
 #include "sensor_msgs/Image.h"
 #include "sensor_msgs/RegionOfInterest.h"
@@ -7,7 +7,6 @@
 #include <opencv2/saliency.hpp>
 #include <opencv2/highgui.hpp>
 
-#include <sensor_msgs/image_encodings.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 

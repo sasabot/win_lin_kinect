@@ -1,5 +1,5 @@
 #include <ros/ros.h>
-#include "WindowsInterface.hh"
+#include "linux_kinect/WindowsInterface.hh"
 
 #include "sensor_msgs/Image.h"
 #include <opencv2/core/utility.hpp>

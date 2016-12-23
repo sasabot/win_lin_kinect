@@ -1,6 +1,6 @@
 #include <ros/ros.h>
 #include <chrono>
-#include "KinectInterface.hh"
+#include "linux_kinect/KinectInterface.hh"
 
 int main(int argc, char **argv)
 {

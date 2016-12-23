@@ -29,6 +29,5 @@ windows_kinect/HaarRuntimeComponent/HaarRuntimeComponent.VC.db
 windows_kinect/HaarRuntimeComponent/HaarRuntimeComponent/Debug
 windows_kinect/HaarRuntimeComponent/HaarRuntimeComponent/x64
 windows_kinect/HaarRuntimeComponent/HaarRuntimeComponent/x86
-linux_kinect/CMakeLists.txt
 linux_kinect/key.txt
 linux_kinect/python/*.pyc

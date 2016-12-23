@@ -1,4 +1,4 @@
-#include "KinectInterface.hh"
+#include "linux_kinect/KinectInterface.hh"
 
 using namespace kinect;
 using namespace interface;

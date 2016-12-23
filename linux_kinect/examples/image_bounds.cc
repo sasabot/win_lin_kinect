@@ -1,10 +1,9 @@
 #include <ros/ros.h>
-#include "KinectInterface.hh"
+#include "linux_kinect/KinectInterface.hh"
 
 #include <opencv2/core/utility.hpp>
 #include <opencv2/highgui.hpp>
 
-#include <sensor_msgs/image_encodings.h>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/highgui/highgui.hpp>
 

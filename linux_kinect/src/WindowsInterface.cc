@@ -1,4 +1,4 @@
-#include "WindowsInterface.hh"
+#include "linux_kinect/WindowsInterface.hh"
 
 using namespace windows;
 using namespace interface;
