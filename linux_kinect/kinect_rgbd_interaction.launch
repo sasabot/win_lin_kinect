@@ -37,6 +37,11 @@
      <param name="frame" value="$(arg frame)"/>
   </node>
 
+  <node name="windows_ocr" pkg="linux_kinect"
+        type="ocr.py" output="screen">
+     <param name="ip" value="$(arg host)"/>
+  </node>
+
   <group if="$(arg optionals)">
     <node name="face_pose_detector" pkg="linux_kinect"
           type="face_pose_detector.py" output="screen">
