@@ -74,3 +74,10 @@ add_executable(image_bounds_sample
   )
 target_link_libraries(image_bounds_sample
   ${catkin_LIBRARIES} ${OpenCV_LIBS} ${PCL_LIBRARIES})
+
+add_executable(ocr_sample
+  examples/ocr.cc
+  lib/WindowsInterface.cc
+  )
+target_link_libraries(ocr_sample
+  ${catkin_LIBRARIES} ${OpenCV_LIBS} ${PCL_LIBRARIES})
