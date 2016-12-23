@@ -11,6 +11,8 @@ using Windows.System;
 using Windows.UI.ViewManagement;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using System.Diagnostics;
+using Windows.Media.Ocr;
+using System.Text;
 
 namespace KinectWindowsInteraction
 {
@@ -20,8 +22,10 @@ namespace KinectWindowsInteraction
     public sealed partial class MainPage : Page
     {
         private MqttClient client = null;
-        private Dictionary<string, Func<byte[], bool>> requestHandlers = null;
+        private Dictionary<string, Action<byte[]>> requestHandlers = null;
         private Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
+
+        List<OcrEngine> ocrEngine = null;
 
 #if PRINT_STATUS_MESSAGE
         private Windows.UI.Xaml.DispatcherTimer statusLogTimer = new Windows.UI.Xaml.DispatcherTimer();
@@ -56,7 +60,7 @@ namespace KinectWindowsInteraction
 
         private void Setup(string ip) {
             if (this.requestHandlers == null) {
-                this.requestHandlers = new Dictionary<string, Func<byte[], bool>>() {
+                this.requestHandlers = new Dictionary<string, Action<byte[]>>() {
                     { "/kinect/request/ocr", HandleRequestOCR }
                 };
             }
@@ -68,6 +72,13 @@ namespace KinectWindowsInteraction
                 this.client.Subscribe(this.requestHandlers.Keys.ToArray(), Enumerable.Repeat(MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, this.requestHandlers.Count).ToArray());
                 this.client.Connect(Guid.NewGuid().ToString());
             }
+
+            if (this.ocrEngine == null) {
+                this.ocrEngine = new List<OcrEngine> { };
+                var langLists = OcrEngine.AvailableRecognizerLanguages;
+                foreach (var lang in langLists)
+                    ocrEngine.Add(OcrEngine.TryCreateFromLanguage(lang));
+            }
         }
 
         private void onMqttReceive(object sender, uPLibrary.Networking.M2Mqtt.Messages.MqttMsgPublishEventArgs e) {
@@ -75,8 +86,54 @@ namespace KinectWindowsInteraction
             this.requestHandlers[e.Topic](e.Message);
         }
 
-        private bool HandleRequestOCR(byte[] message) {
-            return true;
+        private async void HandleRequestOCR(byte[] message) {
+            // first 2 bytes is number of images
+            int numImages = BitConverter.ToInt16(message, 0);
+
+            // get images
+            List<Windows.Graphics.Imaging.SoftwareBitmap> bitmaps = new List<Windows.Graphics.Imaging.SoftwareBitmap> { };
+            int k = 2;
+            for (int img = 0; img < numImages; ++img) {
+                int width = BitConverter.ToInt16(message, k);
+                int height = BitConverter.ToInt16(message, k + 2);
+                k += 4;
+
+                // bgr -> bgra
+                byte[] image = new byte[width * height * 4];
+                for (int j = 0; j < image.Length; ) {
+                    Buffer.BlockCopy(message, k, image, j, 3); j += 3;
+                    image[j++] = 0;
+                    k += 3;
+                }
+
+                // bytes -> software bitmap
+                var bitmap = new Windows.Graphics.Imaging.SoftwareBitmap(Windows.Graphics.Imaging.BitmapPixelFormat.Bgra8, width, height);
+                bitmap.CopyFromBuffer(image.AsBuffer());
+                bitmaps.Add(bitmap);
+            }
+
+            // conduct ocr
+            string results = "";
+            string languageDelimiter = " &&& ";
+            string imageDelimiter = " ;;; ";
+            foreach (var bitmap in bitmaps) {
+                if (bitmap.PixelWidth > OcrEngine.MaxImageDimension || bitmap.PixelHeight > OcrEngine.MaxImageDimension) {
+                    results += imageDelimiter;
+                    continue;
+                }
+
+                foreach (var engine in this.ocrEngine) {
+                    var ocrResult = await engine.RecognizeAsync(bitmap);
+                    results += ocrResult.Text + languageDelimiter ;
+                }
+                results = results.Remove(results.Length - languageDelimiter.Length);
+                results += imageDelimiter;
+            }
+            results = results.Remove(results.Length - imageDelimiter.Length);
+            // e.g results = "detected message &&& message in language 2 ;;; nothing detected in next image ;;;  ;;; detected message"
+
+            // send results
+            this.client.Publish("/kinect/response/ocr", Encoding.UTF8.GetBytes(results));
         }
 
         private void CloseApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
