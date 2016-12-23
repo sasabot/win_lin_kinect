@@ -11,7 +11,8 @@ For non-ROS users, please directly use mqtt mosquitto and receive data from Wind
 
 Those who use ROS on Linux but also wants to use Windows API. Those who don't want to go through calibration and device managing but want to receive Kinect point clouds on Linux.
 
-Performance depends on your machine. Codes on Windows run at minimum 15 FPS when used on NUC6i7KYK.
+Performance depends on your machine. Codes on Windows run at minimum 15 FPS when used on NUC6i7KYK.  
+(Face detection runs slightly slower around 10 FPS. The Windows Face API is not used as the API only captures frontal faces. Instead, a cascade classifier under depth cut is used.)
 
 ## features
 
@@ -60,13 +61,7 @@ Windows
 
 
 Linux
-- easy install (for ROS users)
-  - ```cd win_lin_kinect/linux_kinect```
-  - ```./setup.sh --lib```
-  - catkin make win_lin_kinect/linux_kinect
-- build examples (for ROS users)
-  - ```./setup.sh --ex```
-  - if you have OpenCV3 and PCL1.8 installed, you can build all examples with ```./setup.sh --cvex```
+- catkin make win_lin_kinect/linux_kinect (for ROS users)
 
 ## startup
 
