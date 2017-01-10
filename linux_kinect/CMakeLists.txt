@@ -14,13 +14,12 @@ endif()
 
 # pcl
 find_package(PCL 1.8)
-if(NOT PCL_INCLUDE_DIRS)
+if(NOT PCL_FOUND)
   message(WARNING "PCL not found, disabled")
 else()
   include_directories(${PCL_INCLUDE_DIRS})
   link_directories(${PCL_LIBRARY_DIRS})
   add_definitions(${PCL_DEFINITIONS})
-  set(FOUND_PCL 1)
 endif()
 
 # opencv
@@ -33,7 +32,6 @@ else()
   message(STATUS "    version: ${OpenCV_VERSION}")
   message(STATUS "    libraries: ${OpenCV_LIBS}")
   message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
-  set(FOUND_OpenCV 1)
 endif()
 
 # add_message_files(
@@ -66,7 +64,7 @@ catkin_package(
 
 add_library(kinect_interface src/KinectInterface.cc)
 
-if(FOUND_OpenCV)
+if(OpenCV_FOUND)
   add_library(windows_interface src/WindowsInterface.cc)
 endif()
 
@@ -74,17 +72,21 @@ endif()
 
 add_executable(points_sample
   examples/points.cc
-  src/KinectInterface.cc
   )
 target_link_libraries(points_sample
-  ${catkin_LIBRARIES})
+  ${catkin_LIBRARIES} kinect_interface)
+
+add_executable(points_compressed_sample
+  examples/points_compressed.cc
+  )
+target_link_libraries(points_compressed_sample
+  ${catkin_LIBRARIES} kinect_interface)
 
 add_executable(image_sample
   examples/image.cc
-  src/KinectInterface.cc
   )
 target_link_libraries(image_sample
-  ${catkin_LIBRARIES})
+  ${catkin_LIBRARIES} kinect_interface)
 
 add_executable(speech_matching_sample
   examples/speech_matching.cc
@@ -98,27 +100,25 @@ add_executable(tts_sample
 target_link_libraries(tts_sample
   ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
-if (FOUND_OpenCV)
+if (OpenCV_FOUND)
   add_executable(image_centers_sample
     examples/image_centers.cc
-    src/KinectInterface.cc
     )
   target_link_libraries(image_centers_sample
-    ${catkin_LIBRARIES} ${OpenCV_LIBS})
+    ${catkin_LIBRARIES} ${OpenCV_LIBS} kinect_interface)
 
   add_executable(ocr_sample
     examples/ocr.cc
-    src/WindowsInterface.cc
     )
   target_link_libraries(ocr_sample
-    ${catkin_LIBRARIES} ${OpenCV_LIBS})
+    ${catkin_LIBRARIES} ${OpenCV_LIBS} windows_interface)
 endif()
 
-if (FOUND_OpenCV AND FOUND_PCL)
+if (OpenCV_FOUND AND PCL_FOUND)
   add_executable(image_bounds_sample
     examples/image_bounds.cc
-    src/KinectInterface.cc
     )
   target_link_libraries(image_bounds_sample
-    ${catkin_LIBRARIES} ${OpenCV_LIBS} ${PCL_LIBRARIES})
+    ${catkin_LIBRARIES} ${OpenCV_LIBS} ${PCL_LIBRARIES}
+    kinect_interface)
 endif()
