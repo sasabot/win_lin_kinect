@@ -29,12 +29,14 @@ def solve(field, img):
     x = chainer.Variable(imgs, volatile=True)
     y = models(x)
 
-    # stop tracking if image was not a face
-    if (y['detection'].data)[0][1] < 0.1:
-        client.publish('/kinect/request/facetrack/freeid', bytearray(field[12:16]))
-    else:
-        pose = (y['pose'].data)[0]
-        print(pose)
+    face_id = struct.unpack('i', bytearray(field[12:16]))[0]
+    print(face_id)
+    position = [struct.unpack('f', bytearray(field[0:4]))[0],
+                struct.unpack('f', bytearray(field[4:8]))[0],
+                struct.unpack('f', bytearray(field[8:12]))[0]]
+    print(position)
+    pose = (y['pose'].data)[0]
+    print(pose)
 
 
 def backthread(data):
@@ -43,6 +45,11 @@ def backthread(data):
     # parse msg
     num_faces = struct.unpack('i', data[0:1] + '\x00\x00\x00')[0]
     if num_faces == 0:
+        runmutex.acquire()
+        try:
+            onrun = False
+        finally:
+            runmutex.release()
         return
     imgs = [None for x in range(num_faces)]
     rest = [[] for x in range(num_faces)]
