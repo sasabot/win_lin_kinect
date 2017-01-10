@@ -26,34 +26,34 @@ namespace KinectFaceInteraction
         public int id;
         public Vector3 facePosition;
         public bool isTracked;
-        public BitmapBounds faceBounds;
         public bool foundInThisFrame;
+        public int lostTrackCount;
 
         public FaceLog(int _id) {
             id = _id;
             facePosition = new Vector3(0, 0, 0);
             isTracked = false;
-            faceBounds = new BitmapBounds();
             foundInThisFrame = false;
+            lostTrackCount = 0;
         }
 
         public void SetFoundFalse() {
             foundInThisFrame = false;
         }
 
-        public void Update(Vector3 _facePosition, BitmapBounds _faceBounds) {
+        public void Update(Vector3 _facePosition) {
             facePosition = _facePosition;
             isTracked = true;
-            faceBounds = _faceBounds;
             foundInThisFrame = true;
+            lostTrackCount = 0;
         }
 
         public void Free(int renewId) {
             id = renewId;
             facePosition.X = 0; facePosition.Y = 0; facePosition.Z = 0;
             isTracked = false;
-            faceBounds.X = 0; faceBounds.Y = 0; faceBounds.Width = 0; faceBounds.Height = 0;
             foundInThisFrame = false;
+            lostTrackCount = 0;
         }
     }
 
@@ -96,11 +96,10 @@ namespace KinectFaceInteraction
 
         private Dictionary<string, Func<byte[], bool>> requestHandlers = null;
 
-#if PRINT_STATUS_MESSAGE
+        // for print status (note: fps is used in track, essential)
         private Windows.UI.Xaml.DispatcherTimer statusLogTimer = new Windows.UI.Xaml.DispatcherTimer();
         private Stopwatch appClock = new Stopwatch();
         private uint kinectFrameCount = 0;
-#endif
 
         private Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
@@ -167,7 +166,6 @@ namespace KinectFaceInteraction
 
             if (this.requestHandlers == null) {
                 this.requestHandlers = new Dictionary<string, Func<byte[], bool>>() {
-                    { "/kinect/request/facetrack/freeid", HandleRequestFaceTrackFreeId },
                     { "/kinect/request/facetrack/bounds", HandleRequestFaceTrackBounds }
                 };
             }
@@ -223,9 +221,8 @@ namespace KinectFaceInteraction
                 }
             }
 
-#if PRINT_STATUS_MESSAGE
+            // start clock
             this.appClock.Start();
-#endif
         }
 
         private void FrameReader_FrameArrived(MediaFrameReader sender, MediaFrameArrivedEventArgs args) {
@@ -330,7 +327,7 @@ namespace KinectFaceInteraction
                         for (int i = 0; i < this.faceLog.Count; ++i)
                             if (this.faceLog[i].isTracked && !this.faceLog[i].foundInThisFrame) {
                                 var dist = Vector3.Distance(positionVector, this.faceLog[i].facePosition);
-                                if (dist < 0.1 && dist < likeliness) { // it is unlikely for a face to jump 10cm between frames
+                                if (dist < 0.3 && dist < likeliness) { // it is unlikely for a face to jump 30cm between frames
                                     likelyEnum = i;
                                     likeliness = dist;
                                 }
@@ -342,9 +339,9 @@ namespace KinectFaceInteraction
                                     break;
                                 }
                         if (likelyEnum < 0) // trackable number of faces already occupied, cannot track new face
-                            continue; // id will only be free when a request has been given by client
+                            continue; // id will be free once existing track is lost
 
-                        this.faceLog[likelyEnum].Update(positionVector, new BitmapBounds { X = xj, Y = yj, Width = width, Height = height });
+                        this.faceLog[likelyEnum].Update(positionVector);
 
                         // first 4 bytes is size of face image
                         Array.Copy(BitConverter.GetBytes(width), 0, faceBytes, 0, 2);
@@ -368,40 +365,16 @@ namespace KinectFaceInteraction
                         faceBytesList.Add(faceBytes);
                     }
 
-                    // for faces that were not found in current frame, send previous bound
-                    // this allows client to confirm face existence when face was not found on Windows
+                    // for faces that were not found in current frame, release track state
                     foreach (var log in this.faceLog)
                         if (log.isTracked && !log.foundInThisFrame) {
-                            var bounds = log.faceBounds;
-
-                            uint size = bounds.Width * bounds.Height * 4 + 20;
-                            byte[] faceBytes = new byte[size];
-                            totalSize += size;
-
-                            // first 4 bytes is size of face image
-                            Array.Copy(BitConverter.GetBytes(bounds.Width), 0, faceBytes, 0, 2);
-                            Array.Copy(BitConverter.GetBytes(bounds.Height), 0, faceBytes, 2, 2);
-
-                            // next 12 bytes is 3d position of face
-                            var centerPoint =
-                                new Point(bounds.X + Convert.ToUInt32(bounds.Width * 0.5), bounds.Y + Convert.ToUInt32(bounds.Height * 0.5));
-                            var positionVector = coordinateMapper.UnprojectPoint(centerPoint, this.frames[MediaFrameSourceKind.Color].CoordinateSystem);
-                            //var position = new float[] { log.facePosition.X, log.facePosition.Y, log.facePosition.Z };
-                            var position = new float[] { positionVector.X, positionVector.Y, positionVector.Z };
-                            Buffer.BlockCopy(position, 0, faceBytes, 4, 12);
-
-                            // next 4 bytes is face id
-                            Buffer.BlockCopy(BitConverter.GetBytes(log.id), 0, faceBytes, 16, 4);
-
-                            // copy rgb image
-                            for (int y = 0; y < bounds.Height; ++y) {
-                                var srcIdx = Convert.ToInt32(((y + bounds.Y) * colorDesc.Width + bounds.X) * 4);
-                                var destIdx = Convert.ToInt32((y * bounds.Width) * 3 + 20);
-                                for (int x = 0; x < bounds.Width; ++x)
-                                    Buffer.BlockCopy(colorBytes, srcIdx + x * 4, faceBytes, destIdx + x * 3, 3);
+                            ++log.lostTrackCount;
+                            // get fps, note, clock is always running when frame is being captured
+                            int fps = Convert.ToInt32(kinectFrameCount / this.appClock.Elapsed.TotalSeconds);
+                            if (log.lostTrackCount > 2 * fps) { // lost for two seconds
+                                log.Free(this.nextReservedFaceId);
+                                ++this.nextReservedFaceId;
                             }
-
-                            faceBytesList.Add(faceBytes);
                         }
 
                     // concatenate byte arrays to send (post-processed as totalSize not known in first foreach)
@@ -414,21 +387,7 @@ namespace KinectFaceInteraction
                     }
                     this.client.Publish("/kinect/detected/face", bytes);
 
-                    // other requested queues (only one is processed at each frame)
-
-                    if (this.freeFaceQueue.Count > 0) { // free tracked faces if requested
-                        int freeId = this.freeFaceQueue.Pop();
-                        foreach (var log in this.faceLog)
-                            if (log.id == freeId) {
-                                log.Free(this.nextReservedFaceId);
-                                ++this.nextReservedFaceId;
-                                break;
-                            }
-                    }
-
-#if PRINT_STATUS_MESSAGE
                     ++this.kinectFrameCount;
-#endif
 
                     bitmap.Dispose();
                     coordinateMapper.Dispose();
@@ -447,11 +406,6 @@ namespace KinectFaceInteraction
         private void onMqttReceive(object sender, uPLibrary.Networking.M2Mqtt.Messages.MqttMsgPublishEventArgs e) {
             if (!this.requestHandlers.ContainsKey(e.Topic)) return;
             this.requestHandlers[e.Topic](e.Message);
-        }
-
-        private bool HandleRequestFaceTrackFreeId(byte[] message) {
-            this.freeFaceQueue.Push(BitConverter.ToInt32(message, 0));
-            return true;
         }
 
         private bool HandleRequestFaceTrackBounds(byte[] message) {
@@ -499,9 +453,8 @@ namespace KinectFaceInteraction
                 frameProcessingSemaphore.Release();
             }
 
-#if PRINT_STATUS_MESSAGE
+            // stop clock
             this.appClock.Stop();
-#endif
         }
     }
 }
