@@ -25,6 +25,8 @@ namespace kinect
 
     public: sensor_msgs::PointCloud2 ReadPoints();
 
+    public: sensor_msgs::PointCloud2 ReadPoints(float _scale_x, float _scale_y);
+
     public: sensor_msgs::Image ReadImage();
 
     public: std::vector<sensor_msgs::RegionOfInterest> ImageBounds
