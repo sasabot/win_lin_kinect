@@ -34,9 +34,10 @@ else()
   message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
 endif()
 
-# add_message_files(
-#   FILES
-# )
+add_message_files(
+  FILES
+  Face.msg
+  )
 add_service_files(
   FILES
   Ocr.srv

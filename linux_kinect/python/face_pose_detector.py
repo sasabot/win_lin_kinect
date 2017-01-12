@@ -5,6 +5,7 @@ import rospy
 import rospkg
 from sensor_msgs.msg import *
 from geometry_msgs.msg import *
+from linux_kinect.msg import *
 
 import chainer
 import cv2
@@ -29,14 +30,19 @@ def solve(field, img):
     x = chainer.Variable(imgs, volatile=True)
     y = models(x)
 
-    face_id = struct.unpack('i', bytearray(field[12:16]))[0]
-    print(face_id)
-    position = [struct.unpack('f', bytearray(field[0:4]))[0],
-                struct.unpack('f', bytearray(field[4:8]))[0],
-                struct.unpack('f', bytearray(field[8:12]))[0]]
-    print(position)
+    msg = Face()
+    msg.id = struct.unpack('i', bytearray(field[12:16]))[0]
+    msg.position3d = Point(struct.unpack('f', bytearray(field[0:4]))[0],
+                           struct.unpack('f', bytearray(field[4:8]))[0],
+                           struct.unpack('f', bytearray(field[8:12]))[0])
     pose = (y['pose'].data)[0]
-    print(pose)
+    msg.roll = pose[0]
+    msg.pitch = pose[1]
+    msg.yaw = pose[2]
+
+    pubmutex.acquire()
+    pub_result.publish(msg)
+    pubmutex.release()
 
 
 def backthread(data):
@@ -72,7 +78,6 @@ def backthread(data):
     for t in threads:
         t.join()
 
-    print('---')
     runmutex.acquire()
     try:
         onrun = False
@@ -140,6 +145,9 @@ def on_rossubscribe(msg):
 if __name__ == '__main__':
     rospy.init_node('face_pose_detector')
     pub = rospy.Publisher('/kinect/face/debug', Image, queue_size=100)
+
+    pub_result = rospy.Publisher('/detected/face', Face, queue_size=100)
+    pubmutex = threading.Lock()
 
     host = rospy.get_param('~ip')
 
