@@ -27,12 +27,12 @@ Linux
 - Install mosquitto
 ```
 [sudo] apt-get install mosquitto
-[sudo] pip-install paho-mqtt
+[sudo] pip install paho-mqtt
 ```
 - Install ROS Indigo or above (If ROS is not an option, please use mqtt directly)
 - Install chainer (optional)
 ```
-[sudo] pip-install chainer
+[sudo] pip install chainer
 ```
 
 ## build
@@ -62,6 +62,7 @@ Windows
 
 Linux
 - catkin make win_lin_kinect/linux_kinect (for ROS users)
+  - if build fails first time, retry catkin make
 
 ## startup
 
