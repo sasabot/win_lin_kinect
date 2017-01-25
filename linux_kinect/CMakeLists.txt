@@ -55,19 +55,25 @@ generate_messages(
 add_definitions(-std=c++11)
 include_directories(include ${catkin_INCLUDE_DIRS})
 
-catkin_package(
-  INCLUDE_DIRS include
-  LIBRARIES kinect_interface windows_interface
-  CATKIN_DEPENDS roscpp sensor_msgs geometry_msgs std_msgs
-)
 
 # libraries
 
-add_library(kinect_interface src/KinectInterface.cc)
-
 if(OpenCV_FOUND)
+  catkin_package(
+    INCLUDE_DIRS include
+    LIBRARIES kinect_interface windows_interface
+    CATKIN_DEPENDS roscpp sensor_msgs geometry_msgs std_msgs
+    )
   add_library(windows_interface src/WindowsInterface.cc)
+else()
+  catkin_package(
+    INCLUDE_DIRS include
+    LIBRARIES kinect_interface
+    CATKIN_DEPENDS roscpp sensor_msgs geometry_msgs std_msgs
+    )
 endif()
+
+add_library(kinect_interface src/KinectInterface.cc)
 
 # examples
 
