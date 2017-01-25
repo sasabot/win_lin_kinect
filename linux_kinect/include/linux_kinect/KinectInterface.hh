@@ -23,11 +23,12 @@ namespace kinect
 
     public: ~KinectInterface();
 
-    public: sensor_msgs::PointCloud2 ReadPoints();
+    public: sensor_msgs::PointCloud2 ReadPoints(std::string _filename="");
 
-    public: sensor_msgs::PointCloud2 ReadPoints(float _scale_x, float _scale_y);
+    public: sensor_msgs::PointCloud2 ReadPoints
+    (float _scale_x, float _scale_y, std::string _filename="");
 
-    public: sensor_msgs::Image ReadImage();
+    public: sensor_msgs::Image ReadImage(std::string _filename="");
 
     public: std::vector<sensor_msgs::RegionOfInterest> ImageBounds
     (std::vector<std::array<int, 4> > _depth_indicies);

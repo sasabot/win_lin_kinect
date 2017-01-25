@@ -21,9 +21,10 @@ KinectInterface::~KinectInterface()
 }
 
 //////////////////////////////////////////////////
-sensor_msgs::PointCloud2 KinectInterface::ReadPoints()
+sensor_msgs::PointCloud2 KinectInterface::ReadPoints(std::string _filename)
 {
   linux_kinect::KinectPoints srv;
+  srv.request.filename = _filename; // in case read from file
 
   if (!call_points_.call(srv)) {
     ROS_WARN("readpoints: service call failed");
@@ -35,9 +36,11 @@ sensor_msgs::PointCloud2 KinectInterface::ReadPoints()
 }
 
 //////////////////////////////////////////////////
-sensor_msgs::PointCloud2 KinectInterface::ReadPoints(float _scale_x, float _scale_y)
+sensor_msgs::PointCloud2 KinectInterface::ReadPoints
+(float _scale_x, float _scale_y, std::string _filename)
 {
   linux_kinect::KinectPoints srv;
+  srv.request.filename = _filename;
 
   if (!call_points_.call(srv)) {
     ROS_WARN("readpoints: service call failed");
@@ -57,20 +60,32 @@ sensor_msgs::PointCloud2 KinectInterface::ReadPoints(float _scale_x, float _scal
   res.is_dense = depth.is_dense;
   res.is_bigendian = depth.is_bigendian;
 
-  // 1.01 for scale 0.334, note, points should not be compressed with scale ~0.01
-  int stride_x = static_cast<int>(1.01 / _scale_x) * depth.point_step;
-  int stride_y = static_cast<int>(1.01 / _scale_y);
+  float stride_x;
+  float stride_y;
+
+  if (_scale_x > 0.5 || _scale_y > 0.5) {
+    ROS_WARN("scale larger than 0.5 may cause some errors.");
+    stride_x = 1.0 / _scale_x;
+    stride_y = 1.0 / _scale_y;
+  } else {
+    // 1.01 for scale 0.334, note, points should not be compressed with scale ~0.01
+    stride_x = static_cast<int>(1.01 / _scale_x);
+    stride_y = static_cast<int>(1.01 / _scale_y);
+  }
 
   // compress point cloud
   res.data.resize(res.height * res.width * res.point_step);
-  int row = 0;
-  int at = 0;
+  float row = 0.0f;
+  float at = 0.0f;
+  int head = 0;
   int j = 0;
   while (j < res.data.size()) {
-    int tl = at; // top left
-    int tr = at + stride_x - depth.point_step; // top right
-    int bl = at + depth.row_step * (stride_y - 1); // bottom left
-    int br = at + depth.row_step * (stride_y - 1) + stride_x - depth.point_step; // bottom right
+    int tl = static_cast<int>(head + at) * depth.point_step; // top left
+    int tr = static_cast<int>(head + at + stride_x - 1) * depth.point_step; // top right
+    int bl = static_cast<int>(row + stride_y - 1) * depth.row_step
+      + static_cast<int>(at) * depth.point_step; // bottom left
+    int br = static_cast<int>(row + stride_y - 1) * depth.row_step
+      + static_cast<int>(at + stride_x - 1) * depth.point_step; // bottom right
 
     // get xyz
     float val[3] = {std::numeric_limits<float>::quiet_NaN(),
@@ -139,9 +154,10 @@ sensor_msgs::PointCloud2 KinectInterface::ReadPoints(float _scale_x, float _scal
     res.data[j++] = 0;
 
     at += stride_x;
-    if (at - row * depth.row_step > depth.row_step - stride_x) {
+    if (at > depth.width - stride_x + 0.01) { // +0.01 to avoid float error
       row += stride_y;
-      at = row * depth.row_step;
+      head = static_cast<int>(row) * depth.width;
+      at = 0.0f;
     }
   }
 
@@ -149,9 +165,10 @@ sensor_msgs::PointCloud2 KinectInterface::ReadPoints(float _scale_x, float _scal
 }
 
 //////////////////////////////////////////////////
-sensor_msgs::Image KinectInterface::ReadImage()
+sensor_msgs::Image KinectInterface::ReadImage(std::string _filename)
 {
   linux_kinect::KinectImage srv;
+  srv.request.filename = _filename; // in case read from file
 
   if (!call_image_.call(srv)) {
     ROS_WARN("readimage: service call failed");
