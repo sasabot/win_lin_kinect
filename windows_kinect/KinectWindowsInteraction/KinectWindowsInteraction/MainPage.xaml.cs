@@ -129,7 +129,8 @@ namespace KinectWindowsInteraction
                 results = results.Remove(results.Length - languageDelimiter.Length);
                 results += imageDelimiter;
             }
-            results = results.Remove(results.Length - imageDelimiter.Length);
+            if (results.Length != 0)
+                results = results.Remove(results.Length - imageDelimiter.Length);
             // e.g results = "detected message &&& message in language 2 ;;; nothing detected in next image ;;;  ;;; detected message"
 
             // send results
