@@ -34,6 +34,15 @@ else()
   message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")
 endif()
 
+# opencv contrib
+include(CheckIncludeFileCXX)
+check_include_file_cxx(opencv2/saliency.hpp FOUND_OpenCV_CONTRIB)
+if(NOT FOUND_OpenCV_CONTRIB)
+  message(WARNING "opencv contrib not found, disabled")
+else()
+  message(STATUS "found opencv contrib")
+endif()
+
 add_message_files(
   FILES
   Face.msg
@@ -107,13 +116,15 @@ add_executable(tts_sample
 target_link_libraries(tts_sample
   ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 
-if (OpenCV_FOUND)
+if (OpenCV_FOUND AND FOUND_OpenCV_CONTRIB)
   add_executable(image_centers_sample
     examples/image_centers.cc
     )
   target_link_libraries(image_centers_sample
     ${catkin_LIBRARIES} ${OpenCV_LIBS} kinect_interface)
+endif()
 
+if (OpenCV_FOUND)
   add_executable(ocr_sample
     examples/ocr.cc
     )
