@@ -49,4 +49,9 @@
     </node>
   </group>
 
+  <node name="audio_stream" pkg="linux_kinect"
+        type="audio_stream.py" output="screen">
+     <param name="ip" value="$(arg host)"/>
+  </node>
+
 </launch>
