@@ -1,4 +1,5 @@
 ﻿#define PRINT_STATUS_MESSAGE
+//#define PUBLISH_RAW_AUDIO
 
 using Microsoft.Kinect;
 using System;
@@ -146,8 +147,20 @@ namespace KinectMicrophoneInteraction
 
                 IReadOnlyList<AudioBeamSubFrame> subFrameList = frameList[0].SubFrames;
                 List<float> beamAngles = new List<float> { };
-                foreach (var frame in subFrameList)
+#if PUBLISH_RAW_AUDIO
+                float maxConfidence = 0.0f;
+                int frameWithMaxConfidence = 0;
+#endif
+                for (int i = 0; i < subFrameList.Count; ++i) {
+                    var frame = subFrameList[i];
                     if (frame.BeamAngleConfidence > 0.3) beamAngles.Add(frame.BeamAngle);
+#if PUBLISH_RAW_AUDIO
+                    if (frame.BeamAngleConfidence > maxConfidence) {
+                        maxConfidence = frame.BeamAngleConfidence;
+                        frameWithMaxConfidence = i;
+                    }
+#endif
+                }
 
                 byte[] bytes = new byte[beamAngles.Count * 4 + 1];
                 Buffer.BlockCopy(BitConverter.GetBytes(beamAngles.Count), 0, bytes, 0, 1); // first 1 byte number of beams
@@ -155,6 +168,14 @@ namespace KinectMicrophoneInteraction
                     Buffer.BlockCopy(BitConverter.GetBytes(beamAngles[i]), 0, bytes, i * 4 + 1, 4);
 
                 this.client.Publish("/kinect/detected/audio", bytes);
+
+#if PUBLISH_RAW_AUDIO
+                byte[] audioBuffer = new byte[this.kinectSensor.AudioSource.SubFrameLengthInBytes];
+                subFrameList[frameWithMaxConfidence].CopyFrameDataToArray(audioBuffer);
+                byte[] convertedBuffer = new byte[audioBuffer.Length >> 1];
+                ConvertKinectAudioStream(audioBuffer, convertedBuffer);
+                this.client.Publish("/kinect/stream/rawaudio", convertedBuffer);
+#endif
             }
 
             ++this.kinectFrameCount;
@@ -270,6 +291,19 @@ namespace KinectMicrophoneInteraction
                 this.client = null;
             }
         }
+
+#if PUBLISH_RAW_AUDIO
+        private void ConvertKinectAudioStream(byte[] audioIn, byte[] audioOut) {
+            for (int i = 0; i < audioIn.Length / sizeof(float); ++i) {
+                float sample = BitConverter.ToSingle(audioIn, i * sizeof(float));
+                if (sample > 1.0f) sample = 1.0f;
+                else if (sample < -1.0f) sample = -1.0f;
+                short convertedSample = Convert.ToInt16(sample * short.MaxValue);
+                byte[] local = BitConverter.GetBytes(convertedSample);
+                System.Buffer.BlockCopy(local, 0, audioOut, i * sizeof(short), sizeof(short));
+            }
+        }
+#endif
 
         private void RegisterApp_Click(object sender, RoutedEventArgs e) {
             string appKey = "kinectmicrophoneinteraction";
