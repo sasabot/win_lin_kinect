@@ -20,6 +20,7 @@ using Windows.System;
 using System.Diagnostics;
 using Windows.UI.ViewManagement;
 using uPLibrary.Networking.M2Mqtt.Messages;
+using Windows.System.Display;
 
 namespace KinectRgbdInteraction
 {
@@ -36,6 +37,8 @@ namespace KinectRgbdInteraction
         private bool sendImageFlag = false;
         private bool sendImageCenters = false;
         private Point[] centersInPixel = null;
+
+        private readonly DisplayRequest displayRequest = new DisplayRequest();
 
 #if PRINT_STATUS_MESSAGE
         private Windows.UI.Xaml.DispatcherTimer statusLogTimer = new Windows.UI.Xaml.DispatcherTimer();
@@ -72,6 +75,8 @@ namespace KinectRgbdInteraction
             this.statusLogTimer.Tick += StatusLogTick;
             this.statusLogTimer.Start();
 #endif
+
+            displayRequest.RequestActive();
         }
 
         private void StartApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
