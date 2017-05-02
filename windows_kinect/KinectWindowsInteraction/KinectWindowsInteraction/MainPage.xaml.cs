@@ -61,7 +61,8 @@ namespace KinectWindowsInteraction
         private void Setup(string ip) {
             if (this.requestHandlers == null) {
                 this.requestHandlers = new Dictionary<string, Action<byte[]>>() {
-                    { "/kinect/request/ocr", HandleRequestOCR }
+                    { "/kinect/request/ocr", HandleRequestOCR },
+                    { "/kinect/request/webagent", HandleRequestWebAgent }
                 };
             }
 
@@ -135,6 +136,18 @@ namespace KinectWindowsInteraction
 
             // send results
             this.client.Publish("/kinect/response/ocr", Encoding.UTF8.GetBytes(results));
+        }
+
+        private async void HandleRequestWebAgent(byte[] message) {
+            string searchFor = System.Text.Encoding.UTF8.GetString(message);
+            string[] words = searchFor.Split(' ');
+            if (words.Length < 2)
+                return;
+
+            string searchQuery = @"http://www." + words[0] + @".com/search?q=" + words[1];
+            for (var i = 2; i < words.Length; ++i)
+                searchQuery += "%20" + words[i];
+            var request = await Windows.System.Launcher.LaunchUriAsync(new Uri(searchQuery));
         }
 
         private void CloseApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
