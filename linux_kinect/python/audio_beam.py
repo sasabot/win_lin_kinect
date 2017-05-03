@@ -12,13 +12,8 @@ def on_connect(client, userdata, flags, respons_code):
     client.subscribe(topic)
 
 def on_message(client, userdata, mqttmsg):
-    num_audio = struct.unpack('i', mqttmsg.payload[0:1] + '\x00\x00\x00')[0]
-    rosmsg = Float32MultiArray()
-    rosmsg.data = [0.0] * num_audio
-    at = 1
-    for i in range(0, num_audio):
-        rosmsg.data[i] = struct.unpack('f', mqttmsg.payload[at:at + 4])[0]
-        at += 4
+    rosmsg = Float32MultiArray() # in case multiple audio (does not happen)
+    rosmsg.data = [struct.unpack('f', mqttmsg.payload[0:4])[0]]
     pub.publish(rosmsg)
 
 if __name__ == '__main__':
