@@ -146,39 +146,24 @@ namespace KinectMicrophoneInteraction
                 if (frameList == null) return;
 
                 IReadOnlyList<AudioBeamSubFrame> subFrameList = frameList[0].SubFrames;
-                List<float> beamAngles = new List<float> { };
-#if PUBLISH_RAW_AUDIO
-                float maxConfidence = 0.0f;
-                int frameWithMaxConfidence = 0;
-#endif
-                for (int i = 0; i < subFrameList.Count; ++i) {
-                    var frame = subFrameList[i];
-                    if (frame.BeamAngleConfidence > 0.3) beamAngles.Add(frame.BeamAngle);
-#if PUBLISH_RAW_AUDIO
-                    if (frame.BeamAngleConfidence > maxConfidence) {
-                        maxConfidence = frame.BeamAngleConfidence;
-                        frameWithMaxConfidence = i;
+
+                foreach (var frame in subFrameList) {
+                    if (frame.BeamAngleConfidence > 0.3) {
+                        byte[] bytes = new byte[4];
+                        Buffer.BlockCopy(BitConverter.GetBytes(frame.BeamAngle), 0, bytes, 0, 4);
+                        this.client.Publish("/kinect/detected/audio", bytes);
                     }
-#endif
-                }
-
-                byte[] bytes = new byte[beamAngles.Count * 4 + 1];
-                Buffer.BlockCopy(BitConverter.GetBytes(beamAngles.Count), 0, bytes, 0, 1); // first 1 byte number of beams
-                for (int i = 0; i < beamAngles.Count; ++i)
-                    Buffer.BlockCopy(BitConverter.GetBytes(beamAngles[i]), 0, bytes, i * 4 + 1, 4);
-
-                this.client.Publish("/kinect/detected/audio", bytes);
 
 #if PUBLISH_RAW_AUDIO
-                byte[] audioBuffer = new byte[this.kinectSensor.AudioSource.SubFrameLengthInBytes];
-                subFrameList[frameWithMaxConfidence].CopyFrameDataToArray(audioBuffer);
-                byte[] convertedBuffer = new byte[audioBuffer.Length >> 1];
-                ConvertKinectAudioStream(audioBuffer, convertedBuffer);
-                this.client.Publish("/kinect/stream/rawaudio", convertedBuffer);
+                    byte[] audioBuffer = new byte[this.kinectSensor.AudioSource.SubFrameLengthInBytes];
+                    frame.CopyFrameDataToArray(audioBuffer);
+                    byte[] convertedBuffer = new byte[audioBuffer.Length >> 1];
+                    ConvertKinectAudioStream(audioBuffer, convertedBuffer);
+                    this.client.Publish("/kinect/stream/rawaudio", convertedBuffer);
 #endif
+                    ++this.kinectFrameCount;
+                }
             }
-
-            ++this.kinectFrameCount;
         }
 
         private void TemplateSpeechRecognition_FrameArrived(object sender, SpeechRecognizedEventArgs e) {
