@@ -297,9 +297,9 @@ namespace KinectFaceInteraction
                     foreach (var log in this.faceLog)
                         log.SetFoundFalse();
 
-                    // create byte array from each face
-                    uint totalSize = 0;
-                    List<byte[]> faceBytesList = new List<byte[]>();
+                    // parse data from cascadeClassifier
+                    List<Vector3> facePositionList = new List<Vector3>();
+                    List<Tuple<uint, uint, uint, uint>> faceBoundsList = new List<Tuple<uint, uint, uint, uint>>();
                     at = 1;
                     int numDetectFaces = faces[0];
                     for (int j = 0; j < numDetectFaces; ++j) {
@@ -313,35 +313,79 @@ namespace KinectFaceInteraction
                         xj += Convert.ToUInt32(width * 0.2);
                         width = Convert.ToUInt32(width * 0.6);
 
-                        uint size = width * height * 3 + 20;
-                        byte[] faceBytes = new byte[size];
-                        totalSize += size;
-
                         // get face 3d position
                         var centerPoint = new Point(xj + Convert.ToUInt32(width * 0.5), yj + Convert.ToUInt32(height * 0.5));
                         var positionVector = coordinateMapper.UnprojectPoint(centerPoint, this.frames[MediaFrameSourceKind.Color].CoordinateSystem);
 
-                        // get likely face id from face position
+                        facePositionList.Add(positionVector);
+                        faceBoundsList.Add(new Tuple<uint, uint, uint, uint>(xj, yj, width, height));
+                    }
+
+                    // find face in current frame that matches log (only one face is linked to each log)
+                    int[] faceCorrespondingLog = Enumerable.Repeat(-1, facePositionList.Count).ToArray();
+                    float[] faceCorrespondenceScore = Enumerable.Repeat(float.MaxValue, facePositionList.Count).ToArray();
+                    for (int i = 0; i < this.faceLog.Count; ++i) {
+                        if (!faceLog[i].isTracked) continue; // log is currently not used
+
                         int likelyEnum = -1;
                         float likeliness = float.MaxValue;
-                        for (int i = 0; i < this.faceLog.Count; ++i)
-                            if (this.faceLog[i].isTracked && !this.faceLog[i].foundInThisFrame) {
-                                var dist = Vector3.Distance(positionVector, this.faceLog[i].facePosition);
-                                if (dist < 0.3 && dist < likeliness) { // it is unlikely for a face to jump 30cm between frames
-                                    likelyEnum = i;
-                                    likeliness = dist;
-                                }
+                        for (int j = 0; j < facePositionList.Count; ++j) {
+                            var dist = Vector3.Distance(facePositionList[j], this.faceLog[i].facePosition);
+                            if (dist < 0.3 && dist < likeliness) { // it is unlikely for a face to jump 30cm between frames
+                                likelyEnum = j;
+                                likeliness = dist;
                             }
-                        if (likelyEnum < 0) // if no likely face was found
+                        }
+
+                        if (likelyEnum >= 0 && likeliness < faceCorrespondenceScore[likelyEnum]) {
+                            if (faceCorrespondingLog[likelyEnum] >= 0)
+                                this.faceLog[faceCorrespondingLog[likelyEnum]].foundInThisFrame = false; // last log was not right match, undo match
+                            faceCorrespondingLog[likelyEnum] = i;
+                            this.faceLog[i].foundInThisFrame = true; // this log is now matched with face
+                        }
+                    }
+
+                    // check faceCorrespondingLog and create byte array from each face
+                    uint totalSize = 0;
+                    List<byte[]> faceBytesList = new List<byte[]>();
+                    for (int j = 0; j < faceCorrespondingLog.Length; ++j) {
+                        int likelyEnum = -1;
+                        Vector3 positionVector = facePositionList[j];
+                        if (faceCorrespondingLog[j] < 0) { // corresponding log was not yet found
+                            // find likely face log from logs
+                            float likeliness = float.MaxValue;
                             for (int i = 0; i < this.faceLog.Count; ++i)
-                                if (!this.faceLog[i].isTracked) { // a new track is registered (will switch to isTracked when called Update)
-                                    likelyEnum = i;
-                                    break;
+                                if (this.faceLog[i].isTracked) {
+                                    var dist = Vector3.Distance(positionVector, this.faceLog[i].facePosition);
+                                    if (dist < 0.3 && dist < likeliness) { // it is unlikely for a face to jump 30cm between frames
+                                        likelyEnum = i;
+                                        likeliness = dist;
+                                    }
                                 }
-                        if (likelyEnum < 0) // trackable number of faces already occupied, cannot track new face
-                            continue; // id will be free once existing track is lost
+                            if (likelyEnum >= 0 && this.faceLog[likelyEnum].foundInThisFrame)
+                                continue; // detected face was somehow a duplicate of an existing region, ignore
+                            if (likelyEnum < 0) // if no likely face was found
+                                for (int i = 0; i < this.faceLog.Count; ++i)
+                                    if (!this.faceLog[i].isTracked) { // a new track is registered (will switch to isTracked when called Update)
+                                        likelyEnum = i;
+                                        break;
+                                    }
+                            if (likelyEnum < 0) // trackable number of faces already occupied, cannot track new face
+                                continue; // id will be free once existing track is lost
+                        } else { // corresponding log is already found
+                            likelyEnum = faceCorrespondingLog[j];
+                        }
 
                         this.faceLog[likelyEnum].Update(positionVector);
+
+                        uint xj = faceBoundsList[j].Item1;
+                        uint yj = faceBoundsList[j].Item2;
+                        uint width = faceBoundsList[j].Item3;
+                        uint height = faceBoundsList[j].Item4;
+
+                        uint size = width * height * 3 + 20;
+                        byte[] faceBytes = new byte[size];
+                        totalSize += size;
 
                         // first 4 bytes is size of face image
                         Array.Copy(BitConverter.GetBytes(width), 0, faceBytes, 0, 2);
@@ -371,7 +415,7 @@ namespace KinectFaceInteraction
                             ++log.lostTrackCount;
                             // get fps, note, clock is always running when frame is being captured
                             int fps = Convert.ToInt32(kinectFrameCount / this.appClock.Elapsed.TotalSeconds);
-                            if (log.lostTrackCount > 2 * fps) { // lost for two seconds
+                            if (log.lostTrackCount > 10 * fps) { // lost for ten seconds
                                 log.Free(this.nextReservedFaceId);
                                 ++this.nextReservedFaceId;
                             }
