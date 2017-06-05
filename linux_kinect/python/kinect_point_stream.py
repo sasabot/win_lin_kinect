@@ -28,7 +28,7 @@ def on_message(client, userdata, mqttmsg):
 
 if __name__ == '__main__':
     rospy.init_node('kinect_point_stream')
-    pub = rospy.Publisher('/kinect/stream', PointCloud2, queue_size=100)
+    pub = rospy.Publisher('/kinect/stream', PointCloud2, queue_size=1)
 
     host = rospy.get_param('~ip')
     frame = rospy.get_param('~frame')
