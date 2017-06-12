@@ -26,7 +26,7 @@ def solve(field, img):
     img = img.astype(np.float32) / 255.0
     img = cv2.resize(img, (227, 227))
     img = cv2.normalize(img, None, -0.5, 0.5, cv2.NORM_MINMAX)
-    imgs = np.asarray([np.transpose(img, (2, 0, 1))])
+    imgs = xp.asarray([np.transpose(img, (2, 0, 1))])
     x = chainer.Variable(imgs, volatile=True)
     y = models(x)
 
@@ -156,6 +156,18 @@ if __name__ == '__main__':
 
     models = hyperfacemodel.HyperFaceModel()
     chainer.serializers.load_npz(pkgpath + '/python/model_epoch_190', models)
+
+    use_gpu = rospy.get_param('~gpu')
+
+    if use_gpu:
+        print 'using gpu'
+        chainer.cuda.cudnn_enabled = False
+        chainer.cuda.check_cuda_available()
+        chainer.cuda.get_device(0).use()
+        models.to_gpu()
+        xp = chainer.cuda.cupy
+    else:
+        xp = np
 
     onrun = False
     runmutex = threading.Lock()

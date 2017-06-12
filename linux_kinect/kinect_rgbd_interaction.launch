@@ -2,6 +2,7 @@
   <arg name="host" default="localhost"/>
   <arg name="optionals" default="false"/>
   <arg name="frame" default="base_link"/>
+  <arg name="gpu" default="false"/>
 
   <node name="kinect_point_stream" pkg="linux_kinect"
         type="kinect_point_stream.py" output="screen">
@@ -46,6 +47,7 @@
     <node name="face_pose_detector" pkg="linux_kinect"
           type="face_pose_detector.py" output="screen">
        <param name="ip" value="$(arg host)"/>
+       <param name="gpu" value="$(arg gpu)"/>
     </node>
   </group>
 
