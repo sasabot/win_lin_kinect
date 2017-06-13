@@ -453,7 +453,7 @@ namespace KinectFaceInteraction
         }
 
         private bool HandleRequestFaceTrackBounds(byte[] message) {
-            if (!frameProcessingSemaphore.Wait(0)) return false;
+            while (!frameProcessingSemaphore.Wait(0)) { };
 
             this.depthMap.Clear();
 
