@@ -14,6 +14,10 @@ windows_kinect/WindowsKinectLaunch/.vs
 windows_kinect/WindowsKinectLaunch/WindowsKinectLaunch/bin
 windows_kinect/WindowsKinectLaunch/WindowsKinectLaunch/obj
 windows_kinect/WindowsKinectLaunch/packages
+windows_kinect/KinectImageStreamer/.vs
+windows_kinect/KinectImageStreamer/KinectImageStreamer/bin
+windows_kinect/KinectImageStreamer/KinectImageStreamer/obj
+windows_kinect/KinectImageStreamer/packages
 windows_kinect/KinectFaceInteraction/.vs
 windows_kinect/KinectFaceInteraction/KinectFaceInteraction/bin
 windows_kinect/KinectFaceInteraction/KinectFaceInteraction/obj
