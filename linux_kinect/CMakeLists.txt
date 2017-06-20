@@ -84,6 +84,12 @@ endif()
 
 add_library(kinect_interface src/KinectInterface.cc)
 
+add_executable(extract_rgb_from_depth
+  nodes/extract_rgb_from_depth.cc
+  )
+target_link_libraries(extract_rgb_from_depth
+  ${catkin_LIBRARIES})
+
 # examples
 
 add_executable(points_sample
