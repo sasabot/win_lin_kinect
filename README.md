@@ -42,6 +42,7 @@ Windows
   - open *windows_kinect/WindowsKinectLaunch/WindowsKinectLaunch.sln*
   - make sure build option is set to *Debug/x64*
   - Build > Build Solution
+  - right click *KinectImageStreamer* > Deploy (this will deploy app and add to HKEY_CLASSES_ROOT)
   - right click *KinectRgbdInteraction* > Deploy (this will deploy app and add to HKEY_CLASSES_ROOT)
   - right click *KinectWindowsInteraction* > Deploy (this will deploy app and add to HKEY_CLASSES_ROOT)
   - right click *WindowsKinectLaunch* > Deploy (this will deploy app and add to HKEY_CLASSES_ROOT)
@@ -52,15 +53,16 @@ Windows
   - right click KinectMicrophoneInteraction.exe under *windows_kinect/KinectMicrophoneInteraction/KinectMicrophoneInteraction/bin/Debug* and select "Run as administrator"
   - click "register this app" button (this will add app to HKEY_CLASSES_ROOT)
   - close app window
-- Install KinectFaceInteraction (optional)
+- Install KinectFaceInteraction (optional, not stable)
   - open *windows_kinect/KinectFaceInteraction/KinectFaceInteraction.sln*
   - make sure build option is set to *Debug/x64*
   - right click *HaarRuntimeComponent* > Build
-    - if encounter MS Build Error MSB8020, right click solution > Retarget solution > Upgrade to v141
+    - ~~if encounter MS Build Error MSB8020, right click solution > Retarget solution > Upgrade to v141~~
     - known issue on nuget restore: please copy *packages* directory under *KinectFaceInteraction* to *HaarRuntimeComponent* and retry build
   - right click *KinectFaceInteraction* > Build
   - right click *kinectFaceInteraction* > Deploy
   - in order to run KinectFaceInteraction, *cascades\haarcascade_mcs_upperbody.xml* must be located under *Documents* (please copy file from an installed OpenCV 3.1.0 contrib)
+    - known issue: on some computers *Documents* may not be accessable. some *haarcascade_mcs_upperbody.xml* files may cause code crash.
 
 
 Linux
