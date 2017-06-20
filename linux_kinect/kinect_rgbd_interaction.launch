@@ -56,4 +56,14 @@
      <param name="ip" value="$(arg host)"/>
   </node>
 
+  <node name="extract_rgb_from_depth" pkg="linux_kinect"
+        type="extract_rgb_from_depth" output="screen"/>
+
+
+  <node name="kinect_image_stream" pkg="linux_kinect"
+        type="kinect_image_stream.py" output="screen">
+     <param name="ip" value="$(arg host)"/>
+     <param name="frame" value="$(arg frame)"/>
+  </node>
+
 </launch>
