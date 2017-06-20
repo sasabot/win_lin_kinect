@@ -47,10 +47,18 @@ namespace WindowsKinectLaunch
                     await Launcher.LaunchUriAsync(uri);
             });
 
+            var task5 = Task.Run(async () => {
+                var uri = new Uri("kinectimagestreamer:");
+                var status = await Launcher.QueryUriSupportAsync(uri, LaunchQuerySupportType.Uri);
+                if (status == LaunchQuerySupportStatus.Available)
+                    await Launcher.LaunchUriAsync(uri);
+            });
+
             task1.Wait();
             task2.Wait();
             task3.Wait();
             task4.Wait();
+            task5.Wait();
 
             Application.Current.Exit();
         }
