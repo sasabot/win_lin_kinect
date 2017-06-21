@@ -14,6 +14,7 @@
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <TextBlock Text="Please enter IP of host:" Grid.Row="0"/>
@@ -22,6 +23,7 @@
             <Button Name="CloseApp" Content="close" Click="CloseApp_Click" HorizontalAlignment="Left" Margin="270, 0, 0, 0" Grid.Row="1"/>
             <TextBlock Name="KinectFPS" HorizontalAlignment="Right" Grid.Row="2"/>
             <TextBlock Name="MemoryMonitor" HorizontalAlignment="Right" Grid.Row="3"/>
+            <TextBox Name="NSText" Width="100" TextAlignment="Right" HorizontalAlignment="Right" Grid.Row="4" BorderThickness="0"/>
         </Grid>
     </Grid>
 </Page>

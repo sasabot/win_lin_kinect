@@ -26,6 +26,8 @@ namespace KinectImageStreamer
 {
     public sealed partial class MainPage : Page
     {
+        private string nameSpace = "kinect";
+
         private MqttClient client = null;
         private MediaCapture mediaCapture = null;
         private Dictionary<MediaFrameSourceKind, MediaFrameReference> frames = null;
@@ -51,6 +53,11 @@ namespace KinectImageStreamer
             if (localSettings.Values["mqttHostAddress"] != null)
                 this.IPText.Text = localSettings.Values["mqttHostAddress"].ToString();
 
+            if (localSettings.Values["topicNameSpace"] != null)
+                this.NSText.Text = localSettings.Values["topicNameSpace"].ToString();
+            else
+                this.NSText.Text = this.nameSpace;
+
 #if PRINT_STATUS_MESSAGE
             this.statusLogTimer.Interval = TimeSpan.FromMilliseconds(100);
             this.statusLogTimer.Tick += StatusLogTick;
@@ -62,7 +69,8 @@ namespace KinectImageStreamer
 
         private void StartApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
             localSettings.Values["mqttHostAddress"] = this.IPText.Text;
-            this.Setup(this.IPText.Text);
+            localSettings.Values["topicNameSpace"] = this.NSText.Text;
+            this.Setup(this.IPText.Text, this.NSText.Text);
         }
 
 #if PRINT_STATUS_MESSAGE
@@ -73,7 +81,9 @@ namespace KinectImageStreamer
         }
 #endif
 
-        private void Setup(string ip) {
+        private void Setup(string ip, string ns) {
+            this.nameSpace = ns;
+
             if (this.client == null) {
                 this.client = new MqttClient(ip);
                 this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
@@ -152,7 +162,7 @@ namespace KinectImageStreamer
                                 Buffer.BlockCopy(colorBytes, srcIdx + x * 4, bgrColorBytes, destIdx + x * 3, 3);
                         }
                     });
-                    this.client.Publish("/kinect/stream/image/hd", bgrColorBytes);
+                    this.client.Publish("/" + this.nameSpace + "/stream/image/hd", bgrColorBytes);
 
 #if PRINT_STATUS_MESSAGE
                     ++this.kinectFrameCount;

@@ -26,6 +26,8 @@ namespace KinectRgbdInteraction
 {
     public sealed partial class MainPage : Page
     {
+        private string nameSpace = "kinect";
+
         private MqttClient client = null;
         private MediaCapture mediaCapture = null;
         private Dictionary<MediaFrameSourceKind, MediaFrameReference> frames = null;
@@ -56,6 +58,11 @@ namespace KinectRgbdInteraction
             if (localSettings.Values["mqttHostAddress"] != null)
                 this.IPText.Text = localSettings.Values["mqttHostAddress"].ToString();
 
+            if (localSettings.Values["topicNameSpace"] != null)
+                this.NSText.Text = localSettings.Values["topicNameSpace"].ToString();
+            else
+                this.NSText.Text = this.nameSpace;
+
             this.colorPoints = new Point[640 * 360];
             int row = 0;
             int at = 0;
@@ -81,7 +88,8 @@ namespace KinectRgbdInteraction
 
         private void StartApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
             localSettings.Values["mqttHostAddress"] = this.IPText.Text;
-            this.Setup(this.IPText.Text);
+            localSettings.Values["topicNameSpace"] = this.NSText.Text;
+            this.Setup(this.IPText.Text, this.NSText.Text);
         }
 
 #if PRINT_STATUS_MESSAGE
@@ -92,7 +100,9 @@ namespace KinectRgbdInteraction
         }
 #endif
 
-        private void Setup(string ip) {
+        private void Setup(string ip, string ns) {
+            this.nameSpace = ns;
+
             if (this.requestHandlers == null) {
                 this.requestHandlers = new Dictionary<string, Func<byte[], bool>>() {
                     { "/kinect/request/image", HandleRequestImage },
@@ -207,12 +217,12 @@ namespace KinectRgbdInteraction
                                 Buffer.BlockCopy(colorBytes, Convert.ToInt32((this.colorPoints[i].Y * colorDesc.Width + this.colorPoints[i].X) * 4), streamBytes, j, 4); j += 4;
                             }
                         });
-                    this.client.Publish("/kinect/stream/points", streamBytes);
+                    this.client.Publish("/" + this.nameSpace + "/stream/points", streamBytes);
 
                     // stream camera intrinsics
                     byte[] camIntr = new byte[16];
                     Buffer.BlockCopy(cameraInfo, 0, camIntr, 0, 16);
-                    this.client.Publish("/kinect/stream/camerainfo", camIntr);
+                    this.client.Publish("/" + this.nameSpace + "/stream/camerainfo", camIntr);
 
                     // other requested queues (only one is processed at each frame)
 
