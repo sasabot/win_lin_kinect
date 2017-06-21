@@ -1,18 +1,23 @@
 <launch>
+  <arg name="ns" default="kinect"/>
+
   <arg name="host" default="localhost"/>
   <arg name="optionals" default="false"/>
   <arg name="frame" default="base_link"/>
   <arg name="gpu" default="false"/>
 
+  <group ns="$(arg ns)">
   <node name="kinect_point_stream" pkg="linux_kinect"
         type="kinect_point_stream.py" output="screen">
      <param name="ip" value="$(arg host)"/>
      <param name="frame" value="$(arg frame)"/>
+     <param name="ns" value="$(arg ns)"/>
   </node>
   <node name="kinect_camerainfo_stream" pkg="linux_kinect"
         type="kinect_camerainfo_stream.py" output="screen">
      <param name="ip" value="$(arg host)"/>
      <param name="frame" value="$(arg frame)"/>
+     <param name="ns" value="$(arg ns)"/>
   </node>
 
   <node name="speech_recognition" pkg="linux_kinect"
@@ -22,6 +27,7 @@
   <node name="audio_beam" pkg="linux_kinect"
         type="audio_beam.py" output="screen">
      <param name="ip" value="$(arg host)"/>
+     <param name="ns" value="$(arg ns)"/>
   </node>
   <node name="windows_tts" pkg="linux_kinect"
         type="tts.py" output="screen">
@@ -54,16 +60,21 @@
   <node name="audio_stream" pkg="linux_kinect"
         type="audio_stream.py" output="screen">
      <param name="ip" value="$(arg host)"/>
+     <param name="ns" value="$(arg ns)"/>
   </node>
 
   <node name="extract_rgb_from_depth" pkg="linux_kinect"
-        type="extract_rgb_from_depth" output="screen"/>
+        type="extract_rgb_from_depth" output="screen">
+     <param name="ns" value="$(arg ns)"/>
+  </node>
 
 
   <node name="kinect_image_stream" pkg="linux_kinect"
         type="kinect_image_stream.py" output="screen">
      <param name="ip" value="$(arg host)"/>
      <param name="frame" value="$(arg frame)"/>
+     <param name="ns" value="$(arg ns)"/>
   </node>
+  </group>
 
 </launch>

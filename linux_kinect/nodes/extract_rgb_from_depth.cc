@@ -28,13 +28,16 @@ void ExtractRgbFromDepth(const sensor_msgs::PointCloud2::ConstPtr &_msg) {
 
 int main(int argc, char **argv) {
   ros::init(argc, argv, "extract_rgb_from_depth");
-  ros::NodeHandle nh;
+  ros::NodeHandle nh("~");
+
+  std::string ns("kinect");
+  nh.getParam("ns", ns);
 
   pub_ 
-    = nh.advertise<sensor_msgs::Image>("/kinect/rgb", 1);
+    = nh.advertise<sensor_msgs::Image>("/" + ns + "/rgb", 1);
 
   ros::Subscriber sub =
-    nh.subscribe("/kinect/stream", 100, &ExtractRgbFromDepth);
+    nh.subscribe("/" + ns + "/stream", 100, &ExtractRgbFromDepth);
 
   ros::spin();
 }

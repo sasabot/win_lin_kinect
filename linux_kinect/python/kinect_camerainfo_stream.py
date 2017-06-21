@@ -6,7 +6,6 @@ import rospy
 from sensor_msgs.msg import *
 
 port = 1883
-topic = '/kinect/stream/camerainfo'
 
 def on_connect(client, userdata, flags, respons_code):
     print('status {0}'.format(respons_code))
@@ -24,10 +23,12 @@ def on_message(client, userdata, mqttmsg):
 
 if __name__ == '__main__':
     rospy.init_node('kinect_camerainfo_stream')
-    pub = rospy.Publisher('/kinect/camera_info', CameraInfo, queue_size=100)
+    pub = rospy.Publisher('camera_info', CameraInfo, queue_size=100)
 
     host = rospy.get_param('~ip')
     frame = rospy.get_param('~frame')
+    ns = rospy.get_param('~ns')
+    topic = '/' + ns + '/stream/camerainfo'
 
     client = mqtt.Client(protocol=mqtt.MQTTv31)
     client.on_connect = on_connect

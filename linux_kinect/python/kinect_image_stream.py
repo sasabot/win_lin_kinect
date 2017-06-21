@@ -8,7 +8,6 @@ from linux_kinect.srv import *
 import threading
 
 port = 1883
-topic = '/kinect/stream/image/hd'
 
 def on_connect(client, userdata, flags, respons_code):
     print('status {0}'.format(respons_code))
@@ -28,10 +27,12 @@ def on_message(client, userdata, mqttmsg):
 
 if __name__ == '__main__':
     rospy.init_node('kinect_get_image')
-    pub = rospy.Publisher('/kinect/rgb/hd', Image, queue_size=1)
+    pub = rospy.Publisher('rgb/hd', Image, queue_size=1)
 
     host = rospy.get_param('~ip')
     frame = rospy.get_param('~frame')
+    ns = rospy.get_param('~ns')
+    topic = '/' + ns + '/stream/image/hd'
     image = None
 
     height = 1080
