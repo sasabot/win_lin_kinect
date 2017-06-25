@@ -1,5 +1,5 @@
 ﻿#define PRINT_STATUS_MESSAGE
-//#define PUBLISH_RAW_AUDIO
+#define PUBLISH_RAW_AUDIO
 
 using Microsoft.Kinect;
 using System;
@@ -126,12 +126,14 @@ namespace KinectMicrophoneInteraction
             }
 
             if (this.kinectSensor == null) {
-                this.kinectSensor = KinectSensor.GetDefault();
+                try {
+                    this.kinectSensor = KinectSensor.GetDefault();
 
-                AudioSource audioSource = this.kinectSensor.AudioSource;
-                this.audioReader = audioSource.OpenReader();
-                this.audioReader.FrameArrived += this.Audio_FrameArrived;
-                this.kinectSensor.Open();
+                    AudioSource audioSource = this.kinectSensor.AudioSource;
+                    this.audioReader = audioSource.OpenReader();
+                    this.audioReader.FrameArrived += this.Audio_FrameArrived;
+                    this.kinectSensor.Open();
+                } catch { }
             }
 
 #if PRINT_STATUS_MESSAGE
@@ -198,6 +200,25 @@ namespace KinectMicrophoneInteraction
 
             if (e.Message.Length == 0)
                 return; // when command only quits speech
+
+            // check if rawString is ssml
+            if (rawString.Contains("<speak version")) {
+                // remove voice tag
+                if (rawString.Contains("<voice")) {
+                    int voiceStart = rawString.IndexOf("<voice", 0);
+                    int voiceEnd = rawString.IndexOf(">", voiceStart);
+                    rawString = rawString.Remove(voiceStart, voiceEnd - voiceStart + 1);
+                    voiceStart = rawString.IndexOf("</voice>");
+                    if (voiceStart >= 0)
+                        rawString = rawString.Remove(voiceStart, 8);
+                }
+                Prompt speechssml =
+                    new Prompt("<?xml version=\"1.0\"?>" + rawString, SynthesisTextFormat.Ssml);
+                this.speechSynthesizer.SpeakAsync(speechssml);
+                return;
+            }
+
+            // else, rawString is string message
 
             // infer language
             string lang;
