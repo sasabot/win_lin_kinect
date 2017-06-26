@@ -150,7 +150,7 @@ namespace KinectFaceInteraction
             string xml = "";
             if (this.cascadeClassifier == null) {
                 Task.Run(async () => {
-                    StorageFolder picturesLibrary = await KnownFolders.GetFolderForUserAsync(null /* current user */, KnownFolderId.DocumentsLibrary);
+                    StorageFolder picturesLibrary = await KnownFolders.GetFolderForUserAsync(null /* current user */, KnownFolderId.PicturesLibrary);
                     var sampleFile = (StorageFile)await picturesLibrary.TryGetItemAsync(@"cascades\haarcascade_mcs_upperbody.xml");
                     if (sampleFile != null) {
                         using (var inputStream = await sampleFile.OpenReadAsync()) {
