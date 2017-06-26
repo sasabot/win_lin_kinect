@@ -19,6 +19,7 @@ using System.Diagnostics;
 using Windows.UI.ViewManagement;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using Windows.Storage;
+using Windows.System.Display;
 
 namespace KinectFaceInteraction
 {
@@ -103,6 +104,8 @@ namespace KinectFaceInteraction
 
         private Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
+        private readonly DisplayRequest displayRequest = new DisplayRequest();
+
         public MainPage() {
             this.InitializeComponent();
 
@@ -125,6 +128,8 @@ namespace KinectFaceInteraction
                     at = 0;
                 }
             }
+
+            displayRequest.RequestActive();
 
 #if PRINT_STATUS_MESSAGE
             this.statusLogTimer.Interval = TimeSpan.FromMilliseconds(100);
