@@ -1,4 +1,6 @@
 ﻿#define PRINT_STATUS_MESSAGE
+//#define TRACKING_ON
+#define VALID_FACE_CHECK
 
 using System;
 using System.Collections.Generic;
@@ -23,6 +25,7 @@ using Windows.System.Display;
 
 namespace KinectFaceInteraction
 {
+#if TRACKING_ON
     public class FaceLog {
         public int id;
         public Vector3 facePosition;
@@ -57,6 +60,7 @@ namespace KinectFaceInteraction
             lostTrackCount = 0;
         }
     }
+#endif
 
     public class DepthMapFunction {
         public float a;
@@ -90,11 +94,12 @@ namespace KinectFaceInteraction
         private List<DepthMapFunction> depthMap = new List<DepthMapFunction> { };
         private Point[] mapPoints = null;
 
+#if TRACKING_ON
         // captures up to three faces
         private List<FaceLog> faceLog = new List<FaceLog> { new FaceLog(0), new FaceLog(1), new FaceLog(2) };
         private int nextReservedFaceId = 3;
         private Stack<int> freeFaceQueue = new Stack<int>();
-
+#endif
         private Dictionary<string, Func<byte[], bool>> requestHandlers = null;
 
         // for print status (note: fps is used in track, essential)
@@ -298,6 +303,7 @@ namespace KinectFaceInteraction
                     //Buffer.BlockCopy(resizedGrayColorBytes, 0, dbg, 4, 32400);
                     //this.client.Publish("/kinect/face/debug", dbg);
 
+#if TRACKING_ON
                     // reset face found status
                     foreach (var log in this.faceLog)
                         log.SetFoundFalse();
@@ -425,7 +431,99 @@ namespace KinectFaceInteraction
                                 ++this.nextReservedFaceId;
                             }
                         }
+#else
+                    // parse data from cascadeClassifier
+                    uint totalSize = 0;
+                    List<byte[]> faceBytesList = new List<byte[]>();
+                    at = 1;
+                    int numDetectFaces = faces[0];
+                    for (int j = 0; j < numDetectFaces; ++j) {
+#if VALID_FACE_CHECK
+                        // parse result from C++
+                        uint xjRaw = Convert.ToUInt32(faces[at++]);
+                        uint yjRaw = Convert.ToUInt32(faces[at++]);
+                        uint widthRaw = Convert.ToUInt32(faces[at++]);
+                        // result is head + shoulder -> multiply 0.6 to get head only region
+                        uint heightRaw = Convert.ToUInt32(Convert.ToInt32(faces[at++]) * 0.6);
+                        // center crop image
+                        xjRaw += Convert.ToUInt32(widthRaw * 0.2);
+                        widthRaw = Convert.ToUInt32(widthRaw * 0.6);
 
+                        uint xj = xjRaw * 8;
+                        uint yj = yjRaw * 8;
+                        uint width = widthRaw * 8;
+                        uint height = heightRaw * 8;
+#else
+                        // parse result from C++
+                        uint xj = Convert.ToUInt32(faces[at++]) * 8;
+                        uint yj = Convert.ToUInt32(faces[at++]) * 8;
+                        uint width = Convert.ToUInt32(faces[at++]) * 8;
+                        // result is head + shoulder -> multiply 0.6 to get head only region
+                        uint height = Convert.ToUInt32(Convert.ToInt32(faces[at++]) * 8 * 0.6);
+                        // center crop image
+                        xj += Convert.ToUInt32(width * 0.2);
+                        width = Convert.ToUInt32(width * 0.6);
+#endif
+                        // get face 3d position
+                        var centerPoint = new Point(xj + Convert.ToUInt32(width * 0.5), yj + Convert.ToUInt32(height * 0.5));
+                        var positionVector = coordinateMapper.UnprojectPoint(centerPoint, this.frames[MediaFrameSourceKind.Color].CoordinateSystem);
+#if VALID_FACE_CHECK
+                        // find y height
+                        uint yjMax = yjRaw + heightRaw;
+                        uint xjMax = xjRaw + widthRaw;
+                        float threshold_z = positionVector.Z + 0.25f;
+                        float minimumY = float.MaxValue;
+                        float maximumY = float.MinValue;
+                        for (uint y = yjRaw; y < yjMax; ++y) {
+                            int rowPoints = 0;
+                            float averageY = 0.0f;
+                            uint point = xjRaw + y * 240;
+                            var pxy = depthPoints[point];
+                            for (uint x = xjRaw; x < xjMax; ++x) {
+                                if (!float.IsNaN(pxy.Y) && !float.IsInfinity(pxy.Y) && (pxy.Z < threshold_z)) {
+                                    averageY += pxy.Y;
+                                    ++rowPoints;
+                                }
+                                pxy = depthPoints[++point];
+                            }
+                            averageY /= rowPoints;
+                            if (rowPoints != 0) {
+                                if (averageY < minimumY)
+                                    minimumY = averageY;
+                                else if (averageY > maximumY)
+                                    maximumY = averageY;
+                            }
+                        }
+
+                        if ((maximumY - minimumY) > 0.35) // unlikely a face
+                            continue;
+#endif
+                        uint size = width * height * 3 + 20;
+                        byte[] faceBytes = new byte[size];
+                        totalSize += size;
+
+                        // first 4 bytes is size of face image
+                        Array.Copy(BitConverter.GetBytes(width), 0, faceBytes, 0, 2);
+                        Array.Copy(BitConverter.GetBytes(height), 0, faceBytes, 2, 2);
+
+                        // next 12 bytes is 3d position of face
+                        var position = new float[] { positionVector.X, positionVector.Y, positionVector.Z };
+                        Buffer.BlockCopy(position, 0, faceBytes, 4, 12);
+
+                        // next 4 bytes is face id (dummy)
+                        Buffer.BlockCopy(BitConverter.GetBytes(j), 0, faceBytes, 16, 4);
+
+                        // copy rgb image
+                        for (int y = 0; y < height; ++y) {
+                            var srcIdx = Convert.ToInt32(((y + yj) * colorDesc.Width + xj) * 4);
+                            var destIdx = Convert.ToInt32((y * width) * 3 + 20);
+                            for (int x = 0; x < width; ++x)
+                                Buffer.BlockCopy(colorBytes, srcIdx + x * 4, faceBytes, destIdx + x * 3, 3);
+                        }
+
+                        faceBytesList.Add(faceBytes);
+                    }
+#endif
                     // concatenate byte arrays to send (post-processed as totalSize not known in first foreach)
                     int head = 1; // first 1 byte is number of faces
                     byte[] bytes = new byte[totalSize + 1];
