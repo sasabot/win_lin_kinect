@@ -1,0 +1,53 @@
+<launch>
+  <arg name="sensor_id" default="0"/>
+  <arg name="tf_dynamic" default="false"/>
+  <arg name="host" default="localhost"/>
+
+  <!-- sensor topic settings -->
+  <arg name="tf_msg" default="/tf_msg/kinect"/>
+
+  <!-- camera settings -->
+  <arg name="camera_link" default="kinect_link"/>
+  <arg name="y_up" default="true"/>
+  <arg name="x" default="0.0"/>
+  <arg name="y" default="0.0"/>
+  <arg name="z" default="1.0"/>
+  <arg name="r" default="0.0"/>
+
+  <!-- haardetector settings -->
+  <arg name="depth_threshold" default="2.0"/>
+
+
+  <node name="kinect_face_images" pkg="linux_kinect"
+        type="kinect_face_images.py" output="screen">
+      <param name="ip" value="$(arg host)"/>
+      <param name="sensor_id" value="$(arg sensor_id)"/>
+      <param name="depth_threshold" value="$(arg depth_threshold)"/>
+  </node>
+
+  <arg name="parent_transform" default="$(arg x) $(arg y) $(arg z) $(arg r) 0 1.57"/>
+  <node name="kinect_transform" pkg="tf" type="static_transform_publisher"
+        args="$(arg parent_transform) /map $(arg camera_link) 1000"
+        unless="$(arg tf_dynamic)"/>
+
+  <node name="static_sensor_tf" pkg="roboenvcv"
+        type="static_sensor_tf" output="screen"
+        args="$(arg parent_transform)"
+        unless="$(arg tf_dynamic)">
+      <remap from="/tf_msg/static_sensor" to="$(arg tf_msg)"/>
+  </node>
+
+  <group if="$(arg tf_dynamic)">
+    <node name="dynamic_sensor_tf" pkg="roboenvcv" type="dynamic_sensor_tf">
+          <param name="dynamic_frame" value="$(arg camera_link)"/>
+          <remap from="/tf_msg/dynamic_sensor" to="$(arg tf_msg)"/>
+    </node>
+  </group>
+
+  <node name="to_global" pkg="roboenvcv"
+        type="to_global" output="screen">
+      <param name="sensor_id" value="$(arg sensor_id)"/>
+      <param name="y_up" value="$(arg y_up)"/>
+      <remap from="/tf_msg/sensor" to="$(arg tf_msg)"/>
+  </node>
+</launch>
