@@ -2,7 +2,7 @@
 
 win_lin_kinect is a ROS implemented Windows/Linux bridge for sending Kinect sensor data from Windows to Linux. (Tested on ROS Indigo, Python 2.7.6, Ubuntu 14.04 and Windows 10.)
 - Required(Linux): mosquitto, python2.7, ROS indigo or above  
-- Required(Windows): Visual Studio 2015  
+- Required(Windows): Visual Studio 2015 or 2017  
 - Optional(Linux): chainer, C++11 or above.  
 
 For non-ROS users, please directly use mqtt mosquitto and receive data from Windows.
@@ -57,12 +57,11 @@ Windows
   - open *windows_kinect/KinectFaceInteraction/KinectFaceInteraction.sln*
   - make sure build option is set to *Debug/x64*
   - right click *HaarRuntimeComponent* > Build
-    - ~~if encounter MS Build Error MSB8020, right click solution > Retarget solution > Upgrade to v141~~
     - known issue on nuget restore: please copy *packages* directory under *KinectFaceInteraction* to *HaarRuntimeComponent* and retry build
   - right click *KinectFaceInteraction* > Build
   - right click *kinectFaceInteraction* > Deploy
-  - in order to run KinectFaceInteraction, *cascades\haarcascade_mcs_upperbody.xml* must be located under *Documents* (please copy file from an installed OpenCV 3.1.0 contrib)
-    - known issue: on some computers *Documents* may not be accessable. some *haarcascade_mcs_upperbody.xml* files may cause code crash.
+  - in order to run KinectFaceInteraction, *cascades\haarcascade_mcs_upperbody.xml* must be located under ~~*Documents*~~ *Pictures* (please copy file from an installed OpenCV 3.1.0 contrib)
+    - known issue: some *haarcascade_mcs_upperbody.xml* files may cause code crash.
 
 
 Linux
