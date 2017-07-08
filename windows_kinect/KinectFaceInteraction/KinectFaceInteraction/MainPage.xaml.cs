@@ -495,7 +495,7 @@ namespace KinectFaceInteraction
                             }
                         }
 
-                        if ((maximumY - minimumY) > 0.35) // unlikely a face
+                        if ((maximumY - minimumY) > 0.35 || (maximumY - minimumY) < 0.1) // unlikely a face
                             continue;
 #endif
                         uint size = width * height * 3 + 20;
