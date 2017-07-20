@@ -49,14 +49,6 @@
      <param name="ip" value="$(arg host)"/>
   </node>
 
-  <group if="$(arg optionals)">
-    <node name="face_pose_detector" pkg="linux_kinect"
-          type="face_pose_detector.py" output="screen">
-       <param name="ip" value="$(arg host)"/>
-       <param name="gpu" value="$(arg gpu)"/>
-    </node>
-  </group>
-
   <node name="audio_stream" pkg="linux_kinect"
         type="audio_stream.py" output="screen">
      <param name="ip" value="$(arg host)"/>
@@ -67,7 +59,6 @@
         type="extract_rgb_from_depth" output="screen">
      <param name="ns" value="$(arg ns)"/>
   </node>
-
 
   <node name="kinect_image_stream" pkg="linux_kinect"
         type="kinect_image_stream.py" output="screen">
