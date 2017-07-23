@@ -4,7 +4,14 @@
   <arg name="host" default="localhost"/>
   <arg name="optionals" default="false"/>
   <arg name="frame" default="base_link"/>
-  <arg name="gpu" default="false"/>
+  <arg name="filter" default="true"/>
+
+  <arg name="queue_size" default="30"/>
+  <arg name="timestamp" default="0.2"/>
+
+  <arg name="axis" default="x"/>
+  <arg name="point" default="0.0"/>
+  <arg name="tf_msg" default="/tf_msg/dynamic_kinect_frame"/>
 
   <group ns="$(arg ns)">
   <node name="kinect_point_stream" pkg="linux_kinect"
@@ -56,9 +63,27 @@
   </node>
 
   <node name="extract_rgb_from_depth" pkg="linux_kinect"
-        type="extract_rgb_from_depth" output="screen">
+        type="extract_rgb_from_depth" output="screen"
+        unless="$(arg filter)">
      <param name="ns" value="$(arg ns)"/>
   </node>
+
+  <group if="$(arg filter)">
+  <node name="extract_rgb_from_depth" pkg="linux_kinect"
+        type="extract_rgb_from_depth_filtered" output="screen">
+     <param name="ns" value="$(arg ns)"/>
+     <param name="queue_size" value="$(arg queue_size)"/>
+     <param name="timestamp" value="$(arg timestamp)"/>
+  </node>
+
+  <node name="simple_axis_threshold" pkg="linux_kinect"
+        type="simple_axis_threshold" output="screen">
+     <param name="ns" value="$(arg ns)"/>
+     <param name="axis" value="$(arg axis)"/>
+     <param name="point" value="$(arg point)"/>
+     <remap from="/tf_msg/sensor" to="$(arg tf_msg)"/>
+  </node>
+  </group>
 
   <node name="kinect_image_stream" pkg="linux_kinect"
         type="kinect_image_stream.py" output="screen">

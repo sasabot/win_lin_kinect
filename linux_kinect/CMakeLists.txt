@@ -90,6 +90,18 @@ add_executable(extract_rgb_from_depth
 target_link_libraries(extract_rgb_from_depth
   ${catkin_LIBRARIES})
 
+add_executable(extract_rgb_from_depth_filtered
+  nodes/extract_rgb_from_depth_filtered.cc
+  )
+target_link_libraries(extract_rgb_from_depth_filtered
+  ${catkin_LIBRARIES})
+
+add_executable(simple_axis_threshold
+  nodes/simple_axis_threshold.cc
+  )
+target_link_libraries(simple_axis_threshold
+  ${catkin_LIBRARIES})
+
 # examples
 
 add_executable(points_sample
