@@ -102,6 +102,12 @@ add_executable(simple_axis_threshold
 target_link_libraries(simple_axis_threshold
   ${catkin_LIBRARIES})
 
+add_executable(stream_compressed_depth
+  nodes/stream_compressed_depth.cc
+  )
+target_link_libraries(stream_compressed_depth
+  ${catkin_LIBRARIES})
+
 # examples
 
 add_executable(points_sample
