@@ -41,7 +41,7 @@ void ExtractRgbFromDepth(const sensor_msgs::PointCloud2::ConstPtr &_msg) {
         {_msg->data[src + 8], _msg->data[src + 9], _msg->data[src + 10], _msg->data[src + 11]};
       float z;
       std::memcpy(&z, &bytes, 4);
-      if (z > depth_threshold) {
+      if (z > depth_threshold || std::isnan(z)) {
         msg.data[dst] = 255;
         msg.data[dst + 1] = 255;
         msg.data[dst + 2] = 255;
