@@ -1,8 +1,9 @@
 {
+  "locked": false,
   "version": 2,
   "targets": {
     "UAP,Version=v10.0": {
-      "M2Mqtt/4.3.0": {
+      "M2Mqtt/4.2.0.1": {
         "type": "package",
         "compile": {
           "lib/win81/M2Mqtt.WinRT.dll": {}
@@ -1888,7 +1889,7 @@
       }
     },
     "UAP,Version=v10.0/win10-arm": {
-      "M2Mqtt/4.3.0": {
+      "M2Mqtt/4.2.0.1": {
         "type": "package",
         "compile": {
           "lib/win81/M2Mqtt.WinRT.dll": {}
@@ -3640,7 +3641,7 @@
       }
     },
     "UAP,Version=v10.0/win10-arm-aot": {
-      "M2Mqtt/4.3.0": {
+      "M2Mqtt/4.2.0.1": {
         "type": "package",
         "compile": {
           "lib/win81/M2Mqtt.WinRT.dll": {}
@@ -5349,7 +5350,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x64": {
-      "M2Mqtt/4.3.0": {
+      "M2Mqtt/4.2.0.1": {
         "type": "package",
         "compile": {
           "lib/win81/M2Mqtt.WinRT.dll": {}
@@ -7110,7 +7111,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x64-aot": {
-      "M2Mqtt/4.3.0": {
+      "M2Mqtt/4.2.0.1": {
         "type": "package",
         "compile": {
           "lib/win81/M2Mqtt.WinRT.dll": {}
@@ -8819,7 +8820,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x86": {
-      "M2Mqtt/4.3.0": {
+      "M2Mqtt/4.2.0.1": {
         "type": "package",
         "compile": {
           "lib/win81/M2Mqtt.WinRT.dll": {}
@@ -10580,7 +10581,7 @@
       }
     },
     "UAP,Version=v10.0/win10-x86-aot": {
-      "M2Mqtt/4.3.0": {
+      "M2Mqtt/4.2.0.1": {
         "type": "package",
         "compile": {
           "lib/win81/M2Mqtt.WinRT.dll": {}
@@ -12290,11 +12291,12 @@
     }
   },
   "libraries": {
-    "M2Mqtt/4.3.0": {
-      "sha512": "2A1uM20uxuovQKPA0dkZUqD9gUpIMaX7KxdLiVM7IEXdPRL709hGuudHnvlDxm2/6b2LcOjshrYGVG9vdpipag==",
+    "M2Mqtt/4.2.0.1": {
+      "sha512": "/wsuH+gtheVKAbRu1QT9IJjxNjVTa6+oL24Wi4Wa0Zh7SH70v5MUI9JW2IO1iGxA+fuz6J1uR0StAMMbr0g3Pw==",
       "type": "package",
-      "path": "m2mqtt/4.3.0",
       "files": [
+        "M2Mqtt.4.2.0.1.nupkg.sha512",
+        "M2Mqtt.nuspec",
         "lib/net39-cf/DeployFileList.txt",
         "lib/net39-cf/M2Mqtt.NetCf39.dll",
         "lib/net39-cf/M2Mqtt.NetCf39.pdb",
@@ -12321,9 +12323,7 @@
         "lib/win81/M2Mqtt.WinRT.pri",
         "lib/wpa81/M2Mqtt.WinRT.dll",
         "lib/wpa81/M2Mqtt.WinRT.pdb",
-        "lib/wpa81/M2Mqtt.WinRT.pri",
-        "m2mqtt.4.3.0.nupkg.sha512",
-        "m2mqtt.nuspec"
+        "lib/wpa81/M2Mqtt.WinRT.pri"
       ]
     },
     "Microsoft.CSharp/4.0.0": {
@@ -15704,48 +15704,9 @@
   },
   "projectFileDependencyGroups": {
     "": [
-      "M2Mqtt >= 4.3.0",
+      "M2Mqtt >= 4.2.0.1",
       "Microsoft.NETCore.UniversalWindowsPlatform >= 5.1.0"
     ],
     "UAP,Version=v10.0": []
-  },
-  "packageFolders": {
-    "C:\\Users\\t-kasasa\\.nuget\\packages\\": {}
-  },
-  "project": {
-    "restore": {
-      "projectUniqueName": "C:\\Users\\t-kasasa\\win_lin_kinect\\windows_kinect\\KinectImageStreamer\\KinectImageStreamer\\KinectImageStreamer.csproj",
-      "projectName": "KinectImageStreamer",
-      "projectPath": "C:\\Users\\t-kasasa\\win_lin_kinect\\windows_kinect\\KinectImageStreamer\\KinectImageStreamer\\KinectImageStreamer.csproj",
-      "projectJsonPath": "C:\\Users\\t-kasasa\\win_lin_kinect\\windows_kinect\\KinectImageStreamer\\KinectImageStreamer\\project.json",
-      "projectStyle": "ProjectJson"
-    },
-    "dependencies": {
-      "M2Mqtt": "4.3.0",
-      "Microsoft.NETCore.UniversalWindowsPlatform": "5.1.0"
-    },
-    "frameworks": {
-      "uap10.0": {}
-    },
-    "runtimes": {
-      "win10-arm": {
-        "#import": []
-      },
-      "win10-arm-aot": {
-        "#import": []
-      },
-      "win10-x64": {
-        "#import": []
-      },
-      "win10-x64-aot": {
-        "#import": []
-      },
-      "win10-x86": {
-        "#import": []
-      },
-      "win10-x86-aot": {
-        "#import": []
-      }
-    }
   }
 }
