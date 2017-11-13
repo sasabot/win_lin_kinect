@@ -44,7 +44,7 @@ Windows
   - Build > Build Solution
   - right click *KinectImageStreamer* > Deploy (this will deploy app and add to HKEY_CLASSES_ROOT)
   - right click *KinectRgbdInteraction* > Deploy (this will deploy app and add to HKEY_CLASSES_ROOT)
-  - right click *KinectWindowsInteraction* > Deploy (this will deploy app and add to HKEY_CLASSES_ROOT)
+  - (optional, not stable) right click *KinectWindowsInteraction* > Deploy (this will deploy app and add to HKEY_CLASSES_ROOT)
   - right click *WindowsKinectLaunch* > Deploy (this will deploy app and add to HKEY_CLASSES_ROOT)
 - Install KinectMicrophoneInteraction
   - open *windows_kinect/KinectMicrophoneInteraction/KinectMicrophoneInteraction.sln*
@@ -53,6 +53,10 @@ Windows
   - right click KinectMicrophoneInteraction.exe under *windows_kinect/KinectMicrophoneInteraction/KinectMicrophoneInteraction/bin/Debug* and select "Run as administrator"
   - click "register this app" button (this will add app to HKEY_CLASSES_ROOT)
   - close app window
+  - Updates (disable crash pop up):
+    - press windows key and type "regedit"
+    - in regedit, fix settings [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting] and add "ForceQueue"=dword:00000001
+    - in regedit, fix settings [HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\Windows Error Reporting\Consent] to "DefaultConsent"=dword:00000001
 - Install KinectFaceInteraction (optional, not stable)
   - open *windows_kinect/KinectFaceInteraction/KinectFaceInteraction.sln*
   - make sure build option is set to *Debug/x64*
@@ -77,7 +81,8 @@ start windowskinectlaunch:
 ```
 Type the above in command prompt and all applications will start (to open command prompt, press windows key, and then type "cmd"). Or you can press windows key and type "WindowsKinectLaunch" to find the launching app.  
 
-All apps will pop through the launch. Note that the apps will not start unless you type in configurations (e.g. ip of host) and press the "send" button.
+~~All apps will pop through the launch. Note that the apps will not start unless you type in configurations (e.g. ip of host) and press the "send" button.~~  
+Updates: App alive manager has been added. Please enter ip of host in "WindowsKinectLaunch" and press "send" button. First time (or any time a change in ip occurs), ip of host must be entered to all apps manually. From second time on, all apps will start automatically from "WindowsKinectLaunch".
 
 **Linux**
 
