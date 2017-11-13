@@ -336,7 +336,9 @@ namespace KinectRgbdInteraction
         }
 
         private bool HandleRequestStart(byte[] message) {
-            this.Setup(Encoding.UTF8.GetString(message), "kinect");
+            string settingsString = Encoding.UTF8.GetString(message);
+            string[] settings = settingsString.Split(';');
+            this.Setup(settings[0], settings[1]);
             return true;
         }
 

@@ -12,6 +12,7 @@ using Windows.System.Display;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 
 namespace WindowsKinectLaunch
 {
@@ -28,6 +29,8 @@ namespace WindowsKinectLaunch
         private Stopwatch appClock = new Stopwatch();
         private Stopwatch appClockAudio = new Stopwatch();
         private Windows.UI.Xaml.DispatcherTimer checkTimer = new Windows.UI.Xaml.DispatcherTimer();
+        private SemaphoreSlim appTimerSemaphore = new SemaphoreSlim(1);
+        private SemaphoreSlim appTimerAudioSemaphore = new SemaphoreSlim(1);
 
         private double lastStreamCall;
         private double lastAudioCall;
@@ -111,9 +114,12 @@ namespace WindowsKinectLaunch
             if (which == "all" || which == "audio") {
                 var task3 = Task.Run(async () => {
                     var uri = new Uri("kinectmicrophoneinteraction:");
-                    var status = await Launcher.QueryUriSupportAsync(uri, LaunchQuerySupportType.Uri);
-                    if (status == LaunchQuerySupportStatus.Available)
-                        await Launcher.LaunchUriAsync(uri);
+                    var launched = false;
+                    while (!launched) {
+                        var status = await Launcher.QueryUriSupportAsync(uri, LaunchQuerySupportType.Uri);
+                        if (status == LaunchQuerySupportStatus.Available)
+                            launched = await Launcher.LaunchUriAsync(uri);
+                    }
                 });
 
                 task3.Wait();
@@ -122,16 +128,22 @@ namespace WindowsKinectLaunch
             if (which == "all" || which == "camera") {
                 var task1 = Task.Run(async () => {
                     var uri = new Uri("kinectrgbdinteraction:");
-                    var status = await Launcher.QueryUriSupportAsync(uri, LaunchQuerySupportType.Uri);
-                    if (status == LaunchQuerySupportStatus.Available)
-                        await Launcher.LaunchUriAsync(uri);
+                    var launched = false;
+                    while (!launched) {
+                        var status = await Launcher.QueryUriSupportAsync(uri, LaunchQuerySupportType.Uri);
+                        if (status == LaunchQuerySupportStatus.Available)
+                            launched = await Launcher.LaunchUriAsync(uri);
+                    }
                 });
 
                 var task5 = Task.Run(async () => {
                     var uri = new Uri("kinectimagestreamer:");
-                    var status = await Launcher.QueryUriSupportAsync(uri, LaunchQuerySupportType.Uri);
-                    if (status == LaunchQuerySupportStatus.Available)
-                        await Launcher.LaunchUriAsync(uri);
+                    var launched = false;
+                    while (!launched) {
+                        var status = await Launcher.QueryUriSupportAsync(uri, LaunchQuerySupportType.Uri);
+                        if (status == LaunchQuerySupportStatus.Available)
+                            launched = await Launcher.LaunchUriAsync(uri);
+                    }
                 });
 
                 task1.Wait();
@@ -142,11 +154,16 @@ namespace WindowsKinectLaunch
                 await System.Threading.Tasks.Task.Delay(1000); // wait for apps to be ready
 
                 string msg = this.localSettings.Values["mqttHostAddress"].ToString();
-                this.client.Publish("/" + this.nameSpace + "/start/camera", Encoding.UTF8.GetBytes(msg));
+                msg += ";" + this.localSettings.Values["topicNameSpace"].ToString();
 
-                msg += ";" + this.localSettings.Values["languageSettings"].ToString();
-                msg += ";" + this.localSettings.Values["grammarSettings"].ToString();
-                this.client.Publish("/kinect/start/audio", Encoding.UTF8.GetBytes(msg));
+                if (which == "all" || which == "camera")
+                    this.client.Publish("/" + this.nameSpace + "/start/camera", Encoding.UTF8.GetBytes(msg));
+
+                if (which == "all" || which == "audio") {
+                    msg += ";" + this.localSettings.Values["languageSettings"].ToString();
+                    msg += ";" + this.localSettings.Values["grammarSettings"].ToString();
+                    this.client.Publish("/kinect/start/audio", Encoding.UTF8.GetBytes(msg));
+                }
             }
         }
 
@@ -170,6 +187,8 @@ namespace WindowsKinectLaunch
         }
 
         private async void Check(object sender, object e) {
+            if (!appTimerSemaphore.Wait(0) || !appTimerAudioSemaphore.Wait(0)) return;
+
             // restart apps if under freeze (restart one at a time)
             if (!this.terminateCamera && this.appClock.IsRunning && this.appClock.Elapsed.TotalMilliseconds - this.lastStreamCall > 1000) {
                 this.terminateCamera = true;
@@ -187,6 +206,9 @@ namespace WindowsKinectLaunch
                 this.appClockAudio.Stop();
                 this.terminateAudio = false;
             }
+
+            appTimerSemaphore.Release();
+            appTimerAudioSemaphore.Release();
         }
 
         private void onMqttReceive(object sender, uPLibrary.Networking.M2Mqtt.Messages.MqttMsgPublishEventArgs e) {
@@ -195,16 +217,22 @@ namespace WindowsKinectLaunch
         }
 
         private bool UpdateLastStreamCall(byte[] message) {
+            if (!appTimerSemaphore.Wait(0)) return true;
+
             if (!this.terminateCamera && !this.appClock.IsRunning)
                 this.appClock.Start();
             this.lastStreamCall = this.appClock.Elapsed.TotalMilliseconds;
+            appTimerSemaphore.Release();
             return true;
         }
 
         private bool UpdateLastAudioCall(byte[] message) {
+            if (!appTimerAudioSemaphore.Wait(0)) return true;
+
             if (!this.terminateAudio && !this.appClockAudio.IsRunning)
                 this.appClockAudio.Start();
             this.lastAudioCall = this.appClockAudio.Elapsed.TotalMilliseconds;
+            appTimerAudioSemaphore.Release();
             return true;
         }
     }

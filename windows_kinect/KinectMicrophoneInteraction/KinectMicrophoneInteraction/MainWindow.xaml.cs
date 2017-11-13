@@ -208,8 +208,8 @@ namespace KinectMicrophoneInteraction
                 string[] settings = settingsString.Split(';');
                 ThreadStart ts = delegate () {
                     Dispatcher.BeginInvoke((Action)delegate () {
-                        this.LanguageText.Text = settings[1];
-                        this.GrammarText.Text = settings[2];
+                        this.LanguageText.Text = settings[2];
+                        this.GrammarText.Text = settings[3];
                         Properties.Settings.Default.Language = this.LanguageText.Text;
                         Properties.Settings.Default.Grammar = this.GrammarText.Text;
                         Properties.Settings.Default.Save();
@@ -217,7 +217,7 @@ namespace KinectMicrophoneInteraction
                 };
                 Thread t = new Thread(ts);
                 t.Start();
-                this.Setup(settings[0], settings[1], settings[2]);
+                this.Setup(settings[0], settings[2], settings[3]);
             } else if (e.Topic == "/kinect/kill/audio") {
                 ThreadStart ts = delegate () {
                     Dispatcher.BeginInvoke((Action)delegate () {
