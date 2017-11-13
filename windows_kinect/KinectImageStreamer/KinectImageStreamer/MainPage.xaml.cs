@@ -10,17 +10,15 @@ using Windows.UI.Xaml.Controls;
 using System.Threading.Tasks;
 using Windows.Media.Capture;
 using Windows.Media.Capture.Frames;
-using Windows.Media.Devices.Core;
-using Windows.Media;
 using System.Threading;
 using Windows.Graphics.Imaging;
-using System.Numerics;
-using Windows.Media.FaceAnalysis;
 using Windows.System;
 using System.Diagnostics;
 using Windows.UI.ViewManagement;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using Windows.System.Display;
+using System.Text;
+using Windows.UI.Xaml;
 
 namespace KinectImageStreamer
 {
@@ -33,7 +31,7 @@ namespace KinectImageStreamer
         private Dictionary<MediaFrameSourceKind, MediaFrameReference> frames = null;
         private SemaphoreSlim frameProcessingSemaphore = new SemaphoreSlim(1);
 
-        private Point[] colorPoints = null;
+        private Dictionary<string, Func<byte[], bool>> requestHandlers = null;
 
         private readonly DisplayRequest displayRequest = new DisplayRequest();
 
@@ -50,13 +48,35 @@ namespace KinectImageStreamer
             ApplicationView.PreferredLaunchViewSize = new Size(350, 350);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
-            if (localSettings.Values["mqttHostAddress"] != null)
+            if (this.localSettings.Values["mqttHostAddress"] != null)
                 this.IPText.Text = localSettings.Values["mqttHostAddress"].ToString();
 
-            if (localSettings.Values["topicNameSpace"] != null)
-                this.NSText.Text = localSettings.Values["topicNameSpace"].ToString();
+            if (this.localSettings.Values["topicNameSpace"] != null)
+                this.NSText.Text = this.localSettings.Values["topicNameSpace"].ToString();
             else
                 this.NSText.Text = this.nameSpace;
+
+            try { // auto start client
+                if (this.requestHandlers == null) {
+                    this.requestHandlers = new Dictionary<string, Func<byte[], bool>>() {
+                        { "/" + this.NSText.Text + "/start/camera", HandleRequestStart },
+                        { "/" + this.NSText.Text + "/stop/camera", HandleRequestStop },
+                        { "/" + this.NSText.Text + "/kill/camera", HandleRequestKill },
+                    };
+                }
+
+                if (this.client == null) {
+                    this.client = new MqttClient(this.IPText.Text);
+                    this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
+                    this.client.MqttMsgPublishReceived += this.onMqttReceive;
+                    this.client.Subscribe(this.requestHandlers.Keys.ToArray(), Enumerable.Repeat(MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, this.requestHandlers.Count).ToArray());
+                    this.client.Connect(Guid.NewGuid().ToString());
+                }
+            }
+            catch { // failed auto start client
+                this.requestHandlers = null;
+                this.client = null;
+            }
 
 #if PRINT_STATUS_MESSAGE
             this.statusLogTimer.Interval = TimeSpan.FromMilliseconds(100);
@@ -77,16 +97,26 @@ namespace KinectImageStreamer
         private void StatusLogTick(object sender, object e) {
             this.MemoryMonitor.Text = "MemoryUsage: " + Convert.ToString(MemoryManager.AppMemoryUsage / 1048576);
             if (this.appClock.IsRunning)
-                this.KinectFPS.Text = "KinectFPS: " + Convert.ToString(Convert.ToInt32(kinectFrameCount / this.appClock.Elapsed.TotalSeconds));
+                this.KinectFPS.Text = "KinectFPS: " + Convert.ToString(Convert.ToInt32(this.kinectFrameCount / this.appClock.Elapsed.TotalSeconds));
         }
 #endif
 
         private void Setup(string ip, string ns) {
             this.nameSpace = ns;
 
+            if (this.requestHandlers == null) {
+                this.requestHandlers = new Dictionary<string, Func<byte[], bool>>() {
+                    { "/" + this.NSText.Text + "/start/camera", HandleRequestStart },
+                    { "/" + this.NSText.Text + "/stop/camera", HandleRequestStop },
+                    { "/" + this.NSText.Text + "/kill/camera", HandleRequestKill },
+                };
+            }
+
             if (this.client == null) {
                 this.client = new MqttClient(ip);
                 this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
+                this.client.MqttMsgPublishReceived += this.onMqttReceive;
+                this.client.Subscribe(this.requestHandlers.Keys.ToArray(), Enumerable.Repeat(MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, this.requestHandlers.Count).ToArray());
                 this.client.Connect(Guid.NewGuid().ToString());
             }
 
@@ -172,14 +202,37 @@ namespace KinectImageStreamer
                     this.frames[MediaFrameSourceKind.Color].Dispose();
                     this.frames[MediaFrameSourceKind.Color] = null;
                 }
-            } catch (Exception ex) {
+            }
+            catch (Exception ex) {
                 // TODO
-            } finally {
+            }
+            finally {
                 frameProcessingSemaphore.Release();
             }
         }
 
-        private void CloseApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
+        private void onMqttReceive(object sender, uPLibrary.Networking.M2Mqtt.Messages.MqttMsgPublishEventArgs e) {
+            if (!this.requestHandlers.ContainsKey(e.Topic)) return;
+            this.requestHandlers[e.Topic](e.Message);
+        }
+
+        private bool HandleRequestStart(byte[] message) {
+            this.Setup(Encoding.UTF8.GetString(message), "kinect");
+            return true;
+        }
+
+        private bool HandleRequestStop(byte[] message) {
+            this.Stop();
+            Application.Current.Exit();
+            return true;
+        }
+
+        private bool HandleRequestKill(byte[] message) {
+            Application.Current.Exit();
+            return true;
+        }
+
+        private void Stop() {
             while (!frameProcessingSemaphore.Wait(0)) continue;
 
             try {
@@ -199,6 +252,10 @@ namespace KinectImageStreamer
 #if PRINT_STATUS_MESSAGE
             this.appClock.Stop();
 #endif
+        }
+
+        private void CloseApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
+            Stop();
         }
     }
 }

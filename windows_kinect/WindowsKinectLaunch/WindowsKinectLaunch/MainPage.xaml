@@ -8,6 +8,23 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" Margin="12,20,12,12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
 
+            <TextBlock Text="Please enter IP of host:" Grid.Row="0"/>
+            <TextBox Name="IPText" Width="200" Height="10" TextAlignment="Left" HorizontalAlignment="Left" Grid.Row="1"/>
+            <Button Name="StartApp" Content="send" Click="StartApp_Click" HorizontalAlignment="Left" Margin="210, 0, 0, 0" Grid.Row="1"/>
+            <Button Name="CloseApp" Content="close" Click="CloseApp_Click" HorizontalAlignment="Left" Margin="270, 0, 0, 0" Grid.Row="1"/>
+            <TextBox Name="NSText" Width="100" TextAlignment="Right" HorizontalAlignment="Right" Grid.Row="2" BorderThickness="0"/>
+            <TextBlock Text="Lang:" Grid.Row="3"/>
+            <TextBox Name="LangText" Width="50" Height="10" TextAlignment="Left" HorizontalAlignment="Left" Margin="40, 0, 0, 0" Grid.Row="3"/>
+            <TextBlock Text="File:" Margin="110, 0, 0, 0" Grid.Row="3"/>
+            <TextBox Name="GrammarText" Width="190" Height="10" TextAlignment="Left" HorizontalAlignment="Left" Margin="140, 0, 0, 0" Grid.Row="3"/>
+        </Grid>
     </Grid>
 </Page>

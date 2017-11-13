@@ -11,16 +11,16 @@ using System.Threading.Tasks;
 using Windows.Media.Capture;
 using Windows.Media.Capture.Frames;
 using Windows.Media.Devices.Core;
-using Windows.Media;
 using System.Threading;
 using Windows.Graphics.Imaging;
 using System.Numerics;
-using Windows.Media.FaceAnalysis;
 using Windows.System;
 using System.Diagnostics;
 using Windows.UI.ViewManagement;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using Windows.System.Display;
+using System.Text;
+using Windows.UI.Xaml;
 
 namespace KinectRgbdInteraction
 {
@@ -55,13 +55,36 @@ namespace KinectRgbdInteraction
             ApplicationView.PreferredLaunchViewSize = new Size(350, 350);
             ApplicationView.PreferredLaunchWindowingMode = ApplicationViewWindowingMode.PreferredLaunchViewSize;
 
-            if (localSettings.Values["mqttHostAddress"] != null)
-                this.IPText.Text = localSettings.Values["mqttHostAddress"].ToString();
+            if (this.localSettings.Values["mqttHostAddress"] != null)
+                this.IPText.Text = this.localSettings.Values["mqttHostAddress"].ToString();
 
-            if (localSettings.Values["topicNameSpace"] != null)
-                this.NSText.Text = localSettings.Values["topicNameSpace"].ToString();
+            if (this.localSettings.Values["topicNameSpace"] != null)
+                this.NSText.Text = this.localSettings.Values["topicNameSpace"].ToString();
             else
                 this.NSText.Text = this.nameSpace;
+
+            try { // auto start client
+                if (this.requestHandlers == null) {
+                    this.requestHandlers = new Dictionary<string, Func<byte[], bool>>() {
+                        { "/" + this.NSText.Text + "/request/image", HandleRequestImage },
+                        { "/" + this.NSText.Text + "/request/centers", HandleRequestImageCenters },
+                        { "/" + this.NSText.Text + "/start/camera", HandleRequestStart },
+                        { "/" + this.NSText.Text + "/stop/camera", HandleRequestStop },
+                        { "/" + this.NSText.Text + "/kill/camera", HandleRequestKill },
+                    };
+                }
+
+                if (this.client == null) {
+                    this.client = new MqttClient(this.IPText.Text);
+                    this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
+                    this.client.MqttMsgPublishReceived += this.onMqttReceive;
+                    this.client.Subscribe(this.requestHandlers.Keys.ToArray(), Enumerable.Repeat(MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, this.requestHandlers.Count).ToArray());
+                    this.client.Connect(Guid.NewGuid().ToString());
+                }
+            } catch { // failed auto start client
+                this.requestHandlers = null;
+                this.client = null;
+            }
 
             this.colorPoints = new Point[640 * 360];
             int row = 0;
@@ -87,8 +110,8 @@ namespace KinectRgbdInteraction
         }
 
         private void StartApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
-            localSettings.Values["mqttHostAddress"] = this.IPText.Text;
-            localSettings.Values["topicNameSpace"] = this.NSText.Text;
+            this.localSettings.Values["mqttHostAddress"] = this.IPText.Text;
+            this.localSettings.Values["topicNameSpace"] = this.NSText.Text;
             this.Setup(this.IPText.Text, this.NSText.Text);
         }
 
@@ -96,7 +119,7 @@ namespace KinectRgbdInteraction
         private void StatusLogTick(object sender, object e) {
             this.MemoryMonitor.Text = "MemoryUsage: " + Convert.ToString(MemoryManager.AppMemoryUsage / 1048576);
             if (this.appClock.IsRunning)
-                this.KinectFPS.Text = "KinectFPS: " + Convert.ToString(Convert.ToInt32(kinectFrameCount / this.appClock.Elapsed.TotalSeconds));
+                this.KinectFPS.Text = "KinectFPS: " + Convert.ToString(Convert.ToInt32(this.kinectFrameCount / this.appClock.Elapsed.TotalSeconds));
         }
 #endif
 
@@ -105,8 +128,11 @@ namespace KinectRgbdInteraction
 
             if (this.requestHandlers == null) {
                 this.requestHandlers = new Dictionary<string, Func<byte[], bool>>() {
-                    { "/kinect/request/image", HandleRequestImage },
-                    { "/kinect/request/centers", HandleRequestImageCenters }
+                    { "/" + ns + "/request/image", HandleRequestImage },
+                    { "/" + ns + "/request/centers", HandleRequestImageCenters },
+                    { "/" + ns + "/start/camera", HandleRequestStart },
+                    { "/" + ns + "/stop/camera", HandleRequestStop },
+                    { "/" + ns + "/kill/camera", HandleRequestKill },
                 };
             }
 
@@ -309,7 +335,23 @@ namespace KinectRgbdInteraction
             return true;
         }
 
-        private void CloseApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
+        private bool HandleRequestStart(byte[] message) {
+            this.Setup(Encoding.UTF8.GetString(message), "kinect");
+            return true;
+        }
+
+        private bool HandleRequestStop(byte[] message) {
+            this.Stop();
+            Application.Current.Exit();
+            return true;
+        }
+
+        private bool HandleRequestKill(byte[] message) {
+            Application.Current.Exit();
+            return true;
+        }
+
+        private void Stop() {
             while (!frameProcessingSemaphore.Wait(0)) continue;
 
             try {
@@ -329,6 +371,10 @@ namespace KinectRgbdInteraction
 #if PRINT_STATUS_MESSAGE
             this.appClock.Stop();
 #endif
+        }
+
+        private void CloseApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
+            Stop();
         }
     }
 }

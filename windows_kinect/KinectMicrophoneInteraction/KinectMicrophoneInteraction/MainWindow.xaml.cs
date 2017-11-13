@@ -1,5 +1,5 @@
 ﻿#define PRINT_STATUS_MESSAGE
-#define PUBLISH_RAW_AUDIO
+//#define PUBLISH_RAW_AUDIO
 
 using Microsoft.Kinect;
 using System;
@@ -17,6 +17,7 @@ using Microsoft.Win32;
 using System.Reflection;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using System.Speech.Synthesis;
+using System.Threading;
 
 namespace KinectMicrophoneInteraction
 {
@@ -53,6 +54,18 @@ namespace KinectMicrophoneInteraction
             this.statusLogTimer.Tick += StatusLogTick;
             this.statusLogTimer.Start();
 #endif
+            try { // auto start client
+                if (this.client == null) {
+                    this.client = new MqttClient(this.IPText.Text);
+                    this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
+                    this.client.MqttMsgPublishReceived += this.TextToSpeech;
+                    this.client.Subscribe(new string[] { ttsTopic, "/kinect/start/audio", "/kinect/kill/audio" },
+                        new byte[] { MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE });
+                    this.client.Connect(Guid.NewGuid().ToString());
+                }
+            } catch { // failed auto start client
+                this.client = null;
+            }
         }
 
         private void StartApp_Click(object sender, RoutedEventArgs e) {
@@ -189,6 +202,32 @@ namespace KinectMicrophoneInteraction
         }
 
         private void TextToSpeech(object sender, uPLibrary.Networking.M2Mqtt.Messages.MqttMsgPublishEventArgs e) {
+            if (e.Topic == "/kinect/start/audio") {
+                string settingsString = Encoding.UTF8.GetString(e.Message);
+                string[] settings = settingsString.Split(';');
+                ThreadStart ts = delegate () {
+                    Dispatcher.BeginInvoke((Action)delegate () {
+                        this.LanguageText.Text = settings[1];
+                        this.GrammarText.Text = settings[2];
+                        Properties.Settings.Default.Language = this.LanguageText.Text;
+                        Properties.Settings.Default.Grammar = this.GrammarText.Text;
+                        Properties.Settings.Default.Save();
+                    });
+                };
+                Thread t = new Thread(ts);
+                t.Start();
+                this.Setup(settings[0], settings[1], settings[2]);
+            } else if (e.Topic == "/kinect/kill/audio") {
+                ThreadStart ts = delegate () {
+                    Dispatcher.BeginInvoke((Action)delegate () {
+                        Close();
+                        System.Windows.Application.Current.Shutdown();
+                    });
+                };
+                Thread t = new Thread(ts);
+                t.Start();
+            }
+
             if (e.Topic != ttsTopic) return;
 
             this.speechSynthesizer.SpeakAsyncCancelAll();
@@ -264,7 +303,7 @@ namespace KinectMicrophoneInteraction
             client.Publish("/kinect/state/ttsfinished", new byte[] { });
         }
 
-        private void MainWindow_Closing(object sender, CancelEventArgs e) {
+        private void Close() {
             if (this.kinectSensor != null) {
                 this.kinectSensor.Close();
                 this.audioReader.FrameArrived -= this.Audio_FrameArrived;
@@ -296,6 +335,10 @@ namespace KinectMicrophoneInteraction
                 this.client.Disconnect();
                 this.client = null;
             }
+        }
+
+        private void MainWindow_Closing(object sender, CancelEventArgs e) {
+            Close();
         }
 
 #if PUBLISH_RAW_AUDIO
