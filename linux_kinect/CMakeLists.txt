@@ -74,6 +74,7 @@ if(OpenCV_FOUND)
     CATKIN_DEPENDS roscpp sensor_msgs geometry_msgs std_msgs
     )
   add_library(windows_interface src/WindowsInterface.cc)
+  add_dependencies(windows_interface ${PROJECT_NAME}_gencpp)
 else()
   catkin_package(
     INCLUDE_DIRS include
@@ -83,6 +84,7 @@ else()
 endif()
 
 add_library(kinect_interface src/KinectInterface.cc)
+add_dependencies(kinect_interface ${PROJECT_NAME}_gencpp)
 
 add_executable(extract_rgb_from_depth
   nodes/extract_rgb_from_depth.cc
