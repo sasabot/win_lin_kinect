@@ -31,7 +31,8 @@ namespace WindowsKinectLaunch
 
         private double lastStreamCall;
         private double lastAudioCall;
-        private bool terminate = false;
+        private bool terminateCamera = false;
+        private bool terminateAudio = false;
 
         public MainPage() {
             this.InitializeComponent();
@@ -72,7 +73,8 @@ namespace WindowsKinectLaunch
         }
 
         private void CloseApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
-            this.terminate = true;
+            this.terminateCamera = true;
+            this.terminateAudio = true;
             this.client.Publish("/" + this.nameSpace + "/stop/camera", new byte[1]);
             this.client.Publish("/kinect/kill/audio", new byte[1]);
             this.appClock.Stop();
@@ -85,7 +87,7 @@ namespace WindowsKinectLaunch
             if (this.requestHandlers == null) {
                 this.requestHandlers = new Dictionary<string, Func<byte[], bool>>() {
                     {"/" + this.nameSpace + "/stream/camerainfo", UpdateLastStreamCall },
-                    {"/kinect/detected/audio", UpdateLastAudioCall}
+                    {"/kinect/audio/alive", UpdateLastAudioCall}
                 };
             }
 
@@ -169,17 +171,21 @@ namespace WindowsKinectLaunch
 
         private async void Check(object sender, object e) {
             // restart apps if under freeze (restart one at a time)
-            if (this.appClock.IsRunning && this.appClock.Elapsed.TotalMilliseconds - this.lastStreamCall > 1000) {
+            if (!this.terminateCamera && this.appClock.IsRunning && this.appClock.Elapsed.TotalMilliseconds - this.lastStreamCall > 1000) {
+                this.terminateCamera = true;
                 this.client.Publish("/" + this.nameSpace + "/kill/camera", new byte[1]);
                 await System.Threading.Tasks.Task.Delay(1000); // wait for kill
                 StartKinectApps("camera", true); // re-launch app
                 this.appClock.Stop();
+                this.terminateCamera = false;
             }
-            else if (this.appClockAudio.IsRunning && this.appClockAudio.Elapsed.TotalMilliseconds - this.lastAudioCall > 1000) {
+            else if (!this.terminateAudio && this.appClockAudio.IsRunning && this.appClockAudio.Elapsed.TotalMilliseconds - this.lastAudioCall > 1000) {
+                this.terminateAudio = true;
                 this.client.Publish("/kinect/kill/audio", new byte[1]);
                 await System.Threading.Tasks.Task.Delay(1000); // wait for kill
                 StartKinectApps("audio", true); // re-launch app
                 this.appClockAudio.Stop();
+                this.terminateAudio = false;
             }
         }
 
@@ -189,14 +195,14 @@ namespace WindowsKinectLaunch
         }
 
         private bool UpdateLastStreamCall(byte[] message) {
-            if (!this.terminate && !this.appClock.IsRunning)
+            if (!this.terminateCamera && !this.appClock.IsRunning)
                 this.appClock.Start();
             this.lastStreamCall = this.appClock.Elapsed.TotalMilliseconds;
             return true;
         }
 
         private bool UpdateLastAudioCall(byte[] message) {
-            if (!this.terminate && !this.appClockAudio.IsRunning)
+            if (!this.terminateAudio && !this.appClockAudio.IsRunning)
                 this.appClockAudio.Start();
             this.lastAudioCall = this.appClockAudio.Elapsed.TotalMilliseconds;
             return true;

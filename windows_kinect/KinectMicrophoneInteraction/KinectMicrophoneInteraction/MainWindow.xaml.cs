@@ -176,6 +176,7 @@ namespace KinectMicrophoneInteraction
                     ConvertKinectAudioStream(audioBuffer, convertedBuffer);
                     this.client.Publish("/kinect/stream/rawaudio", convertedBuffer);
 #endif
+                    this.client.Publish("/kinect/audio/alive", new byte[1]);
                     ++this.kinectFrameCount;
                 }
             }
