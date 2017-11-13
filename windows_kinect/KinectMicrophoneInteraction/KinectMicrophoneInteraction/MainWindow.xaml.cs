@@ -176,10 +176,11 @@ namespace KinectMicrophoneInteraction
                     ConvertKinectAudioStream(audioBuffer, convertedBuffer);
                     this.client.Publish("/kinect/stream/rawaudio", convertedBuffer);
 #endif
-                    this.client.Publish("/kinect/audio/alive", new byte[1]);
                     ++this.kinectFrameCount;
                 }
             }
+
+            this.client.Publish("/kinect/audio/alive", new byte[1]);
         }
 
         private void TemplateSpeechRecognition_FrameArrived(object sender, SpeechRecognizedEventArgs e) {
@@ -213,11 +214,11 @@ namespace KinectMicrophoneInteraction
                         Properties.Settings.Default.Language = this.LanguageText.Text;
                         Properties.Settings.Default.Grammar = this.GrammarText.Text;
                         Properties.Settings.Default.Save();
+                        this.Setup(settings[0], settings[2], settings[3]);
                     });
                 };
                 Thread t = new Thread(ts);
                 t.Start();
-                this.Setup(settings[0], settings[2], settings[3]);
             } else if (e.Topic == "/kinect/kill/audio") {
                 ThreadStart ts = delegate () {
                     Dispatcher.BeginInvoke((Action)delegate () {

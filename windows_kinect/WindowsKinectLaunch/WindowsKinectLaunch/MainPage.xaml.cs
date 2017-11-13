@@ -190,7 +190,7 @@ namespace WindowsKinectLaunch
             if (!appTimerSemaphore.Wait(0) || !appTimerAudioSemaphore.Wait(0)) return;
 
             // restart apps if under freeze (restart one at a time)
-            if (!this.terminateCamera && this.appClock.IsRunning && this.appClock.Elapsed.TotalMilliseconds - this.lastStreamCall > 1000) {
+            if (!this.terminateCamera && this.appClock.IsRunning && this.appClock.Elapsed.TotalMilliseconds - this.lastStreamCall > 3000) {
                 this.terminateCamera = true;
                 this.client.Publish("/" + this.nameSpace + "/kill/camera", new byte[1]);
                 await System.Threading.Tasks.Task.Delay(1000); // wait for kill
@@ -198,7 +198,7 @@ namespace WindowsKinectLaunch
                 this.appClock.Stop();
                 this.terminateCamera = false;
             }
-            else if (!this.terminateAudio && this.appClockAudio.IsRunning && this.appClockAudio.Elapsed.TotalMilliseconds - this.lastAudioCall > 1000) {
+            else if (!this.terminateAudio && this.appClockAudio.IsRunning && this.appClockAudio.Elapsed.TotalMilliseconds - this.lastAudioCall > 3000) {
                 this.terminateAudio = true;
                 this.client.Publish("/kinect/kill/audio", new byte[1]);
                 await System.Threading.Tasks.Task.Delay(1000); // wait for kill
