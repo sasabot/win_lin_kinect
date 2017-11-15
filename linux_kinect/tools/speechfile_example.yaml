@@ -1,0 +1,33 @@
+---
+tag: "choice"
+key: "one"
+phrase: "task one"
+time: 1.73
+---
+tag: "choice"
+key: "yes"
+phrase: "Sure, be there in a moment."
+time: 2.80
+---
+tag: "choice"
+key: "no"
+phrase: "Sorry, could you tell me what you wanted?"
+time: 3.49
+---
+tag: "react"
+phrase: "How may I help you?"
+time: 2.07
+template: "en-US;choices.xml"
+tail: ""
+---
+tag: "confirm"
+phrase: "What you wanted was "
+time: 3.86
+template: "en-US;yes_or_no.xml"
+tail: " am I correct?"
+---
+tag:"refuse"
+phrase:"I am busy now"
+time: 1.80
+template: "en-US;choices.xml"
+tail: ""

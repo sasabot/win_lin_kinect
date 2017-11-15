@@ -29,6 +29,13 @@ def on_rossubscribe(msg):
         client.subscribe(topic2)
     elif msg.data == '/dictation/off':
         client.unsubscribe(topic2)
+    elif msg.data == '/settings/auto/on':
+        client.publish('/kinect/settings/speech', 'auto: on'.decode('utf-8'))
+    elif msg.data == '/settings/auto/off':
+        client.publish('/kinect/settings/speech', 'auto: off'.decode('utf-8'))
+    else:
+        client.publish('/kinect/settings/speech/template',
+                       (msg.data).decode('utf-8'))
 
 if __name__ == '__main__':
     rospy.init_node('speech_recognition')
