@@ -13,6 +13,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using Windows.Media.Playback;
 
 namespace WindowsKinectLaunch
 {
@@ -233,6 +234,8 @@ namespace WindowsKinectLaunch
 
             // restart apps if under freeze (restart one at a time)
             if (!this.terminateCamera && this.appClock.IsRunning && this.appClock.Elapsed.TotalMilliseconds - this.lastStreamCall > 3000) {
+                BackgroundMediaPlayer.Current.SetUriSource(new Uri("ms-winsoundevent:Notification.Looping.Alarm10"));
+                BackgroundMediaPlayer.Current.Play();
                 this.terminateCamera = true;
                 this.client.Publish("/" + this.nameSpace + "/kill/camera", new byte[1]);
                 await System.Threading.Tasks.Task.Delay(1000); // wait for kill
@@ -240,7 +243,9 @@ namespace WindowsKinectLaunch
                 this.appClock.Stop();
                 this.terminateCamera = false;
             }
-            else if (!this.terminateAudio && this.appClockAudio.IsRunning && this.appClockAudio.Elapsed.TotalMilliseconds - this.lastAudioCall > 3000) {
+            else if (!this.terminateAudio && this.appClockAudio.IsRunning && this.appClockAudio.Elapsed.TotalMilliseconds - this.lastAudioCall > 5000) {
+                BackgroundMediaPlayer.Current.SetUriSource(new Uri("ms-winsoundevent:Notification.Looping.Alarm9"));
+                BackgroundMediaPlayer.Current.Play();
                 this.terminateAudio = true;
                 this.client.Publish("/kinect/kill/audio", new byte[1]);
                 await System.Threading.Tasks.Task.Delay(1000); // wait for kill
