@@ -13,6 +13,7 @@ using uPLibrary.Networking.M2Mqtt.Messages;
 using System.Diagnostics;
 using Windows.Media.Ocr;
 using System.Text;
+using Windows.UI.Xaml;
 
 namespace KinectWindowsInteraction
 {
@@ -39,6 +40,28 @@ namespace KinectWindowsInteraction
 
             if (localSettings.Values["mqttHostAddress"] != null)
                 this.IPText.Text = localSettings.Values["mqttHostAddress"].ToString();
+
+            try { // auto start client
+                if (this.requestHandlers == null) {
+                    this.requestHandlers = new Dictionary<string, Action<byte[]>>() {
+                        { "/kinect/request/ocr", HandleRequestOCR },
+                        { "/kinect/request/webagent", HandleRequestWebAgent },
+                        { "/kinect/start/ocr", HandleRequestStart },
+                        { "/kinect/kill/ocr", HandleRequestKill }
+                    };
+                }
+
+                if (this.client == null) {
+                    this.client = new MqttClient(this.IPText.Text);
+                    this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
+                    this.client.MqttMsgPublishReceived += this.onMqttReceive;
+                    this.client.Subscribe(this.requestHandlers.Keys.ToArray(), Enumerable.Repeat(MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, this.requestHandlers.Count).ToArray());
+                    this.client.Connect(Guid.NewGuid().ToString());
+                }
+            } catch { // failed auto start client
+                this.requestHandlers = null;
+                this.client = null;
+            }
 
 #if PRINT_STATUS_MESSAGE
             this.statusLogTimer.Interval = TimeSpan.FromMilliseconds(100);
@@ -148,6 +171,19 @@ namespace KinectWindowsInteraction
             for (var i = 2; i < words.Length; ++i)
                 searchQuery += "%20" + words[i];
             var request = await Windows.System.Launcher.LaunchUriAsync(new Uri(searchQuery));
+        }
+
+        private void HandleRequestStart(byte[] message) {
+            string settings = Encoding.UTF8.GetString(message);
+            this.Setup(settings);
+        }
+
+        private void HandleRequestKill(byte[] message) {
+            if (this.client != null) {
+                this.client.Disconnect();
+                this.client = null;
+            }
+            Application.Current.Exit();
         }
 
         private void CloseApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
