@@ -129,10 +129,7 @@ namespace KinectRgbdInteraction
             if (this.requestHandlers == null) {
                 this.requestHandlers = new Dictionary<string, Func<byte[], bool>>() {
                     { "/" + ns + "/request/image", HandleRequestImage },
-                    { "/" + ns + "/request/centers", HandleRequestImageCenters },
-                    { "/" + ns + "/start/camera", HandleRequestStart },
-                    { "/" + ns + "/stop/camera", HandleRequestStop },
-                    { "/" + ns + "/kill/camera", HandleRequestKill },
+                    { "/" + ns + "/request/centers", HandleRequestImageCenters }
                 };
             }
 

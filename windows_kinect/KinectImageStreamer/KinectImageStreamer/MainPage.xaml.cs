@@ -31,7 +31,7 @@ namespace KinectImageStreamer
         private Dictionary<MediaFrameSourceKind, MediaFrameReference> frames = null;
         private SemaphoreSlim frameProcessingSemaphore = new SemaphoreSlim(1);
 
-        private Dictionary<string, Func<byte[], bool>> requestHandlers = null;
+        private Dictionary<string, Action<byte[]>> requestHandlers = null;
 
         private readonly DisplayRequest displayRequest = new DisplayRequest();
 
@@ -58,7 +58,7 @@ namespace KinectImageStreamer
 
             try { // auto start client
                 if (this.requestHandlers == null) {
-                    this.requestHandlers = new Dictionary<string, Func<byte[], bool>>() {
+                    this.requestHandlers = new Dictionary<string, Action<byte[]>>() {
                         { "/" + this.NSText.Text + "/start/camera", HandleRequestStart },
                         { "/" + this.NSText.Text + "/stop/camera", HandleRequestStop },
                         { "/" + this.NSText.Text + "/kill/camera", HandleRequestKill },
@@ -72,8 +72,7 @@ namespace KinectImageStreamer
                     this.client.Subscribe(this.requestHandlers.Keys.ToArray(), Enumerable.Repeat(MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, this.requestHandlers.Count).ToArray());
                     this.client.Connect(Guid.NewGuid().ToString());
                 }
-            }
-            catch { // failed auto start client
+            } catch { // failed auto start client
                 this.requestHandlers = null;
                 this.client = null;
             }
@@ -104,19 +103,9 @@ namespace KinectImageStreamer
         private void Setup(string ip, string ns) {
             this.nameSpace = ns;
 
-            if (this.requestHandlers == null) {
-                this.requestHandlers = new Dictionary<string, Func<byte[], bool>>() {
-                    { "/" + this.NSText.Text + "/start/camera", HandleRequestStart },
-                    { "/" + this.NSText.Text + "/stop/camera", HandleRequestStop },
-                    { "/" + this.NSText.Text + "/kill/camera", HandleRequestKill },
-                };
-            }
-
             if (this.client == null) {
                 this.client = new MqttClient(ip);
                 this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
-                this.client.MqttMsgPublishReceived += this.onMqttReceive;
-                this.client.Subscribe(this.requestHandlers.Keys.ToArray(), Enumerable.Repeat(MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, this.requestHandlers.Count).ToArray());
                 this.client.Connect(Guid.NewGuid().ToString());
             }
 
@@ -216,22 +205,19 @@ namespace KinectImageStreamer
             this.requestHandlers[e.Topic](e.Message);
         }
 
-        private bool HandleRequestStart(byte[] message) {
+        private void HandleRequestStart(byte[] message) {
             string settingsString = Encoding.UTF8.GetString(message);
             string[] settings = settingsString.Split(';');
             this.Setup(settings[0], settings[1]);
-            return true;
         }
 
-        private bool HandleRequestStop(byte[] message) {
+        private void HandleRequestStop(byte[] message) {
             this.Stop();
             Application.Current.Exit();
-            return true;
         }
 
-        private bool HandleRequestKill(byte[] message) {
+        private void HandleRequestKill(byte[] message) {
             Application.Current.Exit();
-            return true;
         }
 
         private void Stop() {
