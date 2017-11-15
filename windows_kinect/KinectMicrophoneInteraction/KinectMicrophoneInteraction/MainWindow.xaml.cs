@@ -18,6 +18,7 @@ using System.Reflection;
 using uPLibrary.Networking.M2Mqtt.Messages;
 using System.Speech.Synthesis;
 using System.Threading;
+using System.Linq;
 
 namespace KinectMicrophoneInteraction
 {
@@ -32,7 +33,12 @@ namespace KinectMicrophoneInteraction
         private SpeechRecognitionEngine dictationSpeechEngine = null;
         private SpeechRecognitionEngine templateSpeechEngine = null;
         private SpeechSynthesizer speechSynthesizer = null;
-        private string ttsTopic = "/kinect/request/tts";
+
+        private Dictionary<string, Action<byte[]>> requestHandlers = null;
+
+        bool autoOffDuringSpeak = true;
+        bool isSpeaking = false;
+        Semaphore speakStatusLock = new Semaphore(1, 1);
 
 #if PRINT_STATUS_MESSAGE
         private DispatcherTimer statusLogTimer = null;
@@ -55,12 +61,21 @@ namespace KinectMicrophoneInteraction
             this.statusLogTimer.Start();
 #endif
             try { // auto start client
+                if (this.requestHandlers == null) {
+                    this.requestHandlers = new Dictionary<string, Action<byte[]>>() {
+                        { "/kinect/request/tts", HandleRequestTextToSpeech },
+                        { "/kinect/settings/speech", HandleRequestSettings },
+                        { "/kinect/settings/speech/template", HandleRequestTemplates },
+                        { "/kinect/start/audio", HandleRequestStart },
+                        { "/kinect/kill/audio", HandleRequestKill }
+                    };
+                }
+
                 if (this.client == null) {
                     this.client = new MqttClient(this.IPText.Text);
                     this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
-                    this.client.MqttMsgPublishReceived += this.TextToSpeech;
-                    this.client.Subscribe(new string[] { ttsTopic, "/kinect/start/audio", "/kinect/kill/audio" },
-                        new byte[] { MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE });
+                    this.client.MqttMsgPublishReceived += this.onMqttReceive;
+                    this.client.Subscribe(this.requestHandlers.Keys.ToArray(), Enumerable.Repeat(MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, this.requestHandlers.Count).ToArray());
                     this.client.Connect(Guid.NewGuid().ToString());
                 }
             } catch { // failed auto start client
@@ -85,11 +100,21 @@ namespace KinectMicrophoneInteraction
 #endif
 
         private void Setup(string ip, string language, string grammar) {
+            if (this.requestHandlers == null) {
+                this.requestHandlers = new Dictionary<string, Action<byte[]>>() {
+                    { "/kinect/request/tts", HandleRequestTextToSpeech },
+                    { "/kinect/settings/speech", HandleRequestSettings },
+                    { "/kinect/settings/speech/template", HandleRequestTemplates },
+                    { "/kinect/start/audio", HandleRequestStart },
+                    { "/kinect/kill/audio", HandleRequestKill }
+                };
+            }
+
             if (this.client == null) {
-                this.client = new MqttClient(ip);
+                this.client = new MqttClient(this.IPText.Text);
                 this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
-                this.client.MqttMsgPublishReceived += this.TextToSpeech;
-                this.client.Subscribe(new string[] { ttsTopic }, new byte[] { MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE });
+                this.client.MqttMsgPublishReceived += this.onMqttReceive;
+                this.client.Subscribe(this.requestHandlers.Keys.ToArray(), Enumerable.Repeat(MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, this.requestHandlers.Count).ToArray());
                 this.client.Connect(Guid.NewGuid().ToString());
             }
 
@@ -184,8 +209,12 @@ namespace KinectMicrophoneInteraction
         }
 
         private void TemplateSpeechRecognition_FrameArrived(object sender, SpeechRecognizedEventArgs e) {
+            this.speakStatusLock.WaitOne();
+            bool speaking = this.isSpeaking;
+            this.speakStatusLock.Release();
+
             const double ConfidenceThreshold = 0.3;
-            if (e.Result.Confidence >= ConfidenceThreshold) {
+            if (e.Result.Confidence >= ConfidenceThreshold && !speaking) {
                 this.client.Publish("/kinect/detected/speech/template", Encoding.UTF8.GetBytes(e.Result.Semantics.Value.ToString()));
             }
             this.TemplateStatus.Text = e.Result.Semantics.Value.ToString() + "(" + e.Result.Confidence + ")";
@@ -196,50 +225,36 @@ namespace KinectMicrophoneInteraction
         }
 
         private void DicatationSpeechRecognition_SpeechRecognized(object sender, SpeechRecognizedEventArgs e) {
+            this.speakStatusLock.WaitOne();
+            bool speaking = this.isSpeaking;
+            this.speakStatusLock.Release();
+
             const double ConfidenceThreshold = 0.3;
-            if (e.Result.Confidence >= ConfidenceThreshold) {
+            if (e.Result.Confidence >= ConfidenceThreshold && !speaking) {
                 this.client.Publish("/kinect/detected/speech/dictation", Encoding.UTF8.GetBytes(e.Result.Text));
             }
             this.DictationStatus.Text = e.Result.Text + "(" + e.Result.Confidence + ")";
         }
 
-        private void TextToSpeech(object sender, uPLibrary.Networking.M2Mqtt.Messages.MqttMsgPublishEventArgs e) {
-            if (e.Topic == "/kinect/start/audio") {
-                string settingsString = Encoding.UTF8.GetString(e.Message);
-                string[] settings = settingsString.Split(';');
-                ThreadStart ts = delegate () {
-                    Dispatcher.BeginInvoke((Action)delegate () {
-                        this.LanguageText.Text = settings[2];
-                        this.GrammarText.Text = settings[3];
-                        Properties.Settings.Default.Language = this.LanguageText.Text;
-                        Properties.Settings.Default.Grammar = this.GrammarText.Text;
-                        Properties.Settings.Default.Save();
-                        this.Setup(settings[0], settings[2], settings[3]);
-                    });
-                };
-                Thread t = new Thread(ts);
-                t.Start();
-            } else if (e.Topic == "/kinect/kill/audio") {
-                ThreadStart ts = delegate () {
-                    Dispatcher.BeginInvoke((Action)delegate () {
-                        Close();
-                        System.Windows.Application.Current.Shutdown();
-                    });
-                };
-                Thread t = new Thread(ts);
-                t.Start();
-            }
+        private void onMqttReceive(object sender, uPLibrary.Networking.M2Mqtt.Messages.MqttMsgPublishEventArgs e) {
+            if (!this.requestHandlers.ContainsKey(e.Topic)) return;
+            this.requestHandlers[e.Topic](e.Message);
+        }
 
-            if (e.Topic != ttsTopic) return;
+        private void HandleRequestTextToSpeech(byte[] message) {
+            this.speakStatusLock.WaitOne();
+            if (this.autoOffDuringSpeak)
+                this.isSpeaking = true;
+            this.speakStatusLock.Release();
 
             this.speechSynthesizer.SpeakAsyncCancelAll();
 
             // example of speech
             // raw: "U--m... yeah?"
             // ssml: "<prosody rate=\"x-slow\">Um</prosody><break time=\"0.5s\"/><break time=\"0.5s\"/> yeah?"
-            string rawString = Encoding.UTF8.GetString(e.Message);
+            string rawString = Encoding.UTF8.GetString(message);
 
-            if (e.Message.Length == 0)
+            if (message.Length == 0)
                 return; // when command only quits speech
 
             // check if rawString is ssml
@@ -256,14 +271,13 @@ namespace KinectMicrophoneInteraction
                 Prompt speechssml =
                     new Prompt("<?xml version=\"1.0\"?>" + rawString, SynthesisTextFormat.Ssml);
                 this.speechSynthesizer.SpeakAsync(speechssml);
-                return;
             }
 
             // else, rawString is string message
 
             // infer language
             string lang;
-            if (e.Message.Length == rawString.Length) lang = "en-US";
+            if (message.Length == rawString.Length) lang = "en-US";
             else lang = "ja-JP";
 
             // convert "--" syntax to x-slow
@@ -303,6 +317,104 @@ namespace KinectMicrophoneInteraction
 
         public void SpeechEnd_FrameArrived(object sender, SpeakCompletedEventArgs e) {
             client.Publish("/kinect/state/ttsfinished", new byte[] { });
+            this.speakStatusLock.WaitOne();
+            if (this.autoOffDuringSpeak)
+                this.isSpeaking = false;
+            this.speakStatusLock.Release();
+        }
+
+        private void HandleRequestSettings(byte[] message) {
+            string settingsString = Encoding.UTF8.GetString(message);
+            if (settingsString.Contains("auto: ")) {
+                this.speakStatusLock.WaitOne();
+                if (settingsString.Contains("on"))
+                    this.autoOffDuringSpeak = true;
+                else if (settingsString.Contains("off"))
+                    this.autoOffDuringSpeak = false;
+                this.speakStatusLock.Release();
+            }
+        }
+
+        private void HandleRequestTemplates(byte[] message) {
+            string settingsString = Encoding.UTF8.GetString(message);
+            string[] settings = settingsString.Split(';');
+            string language = settings[0];
+            string grammar = settings[1];
+            ThreadStart ts = delegate () {
+                Dispatcher.BeginInvoke((Action)delegate () {
+                    // check if engine is already current
+                    if (this.GrammarText.Text == grammar)
+                        return;
+
+                    // kill current engine
+                    if (this.templateSpeechEngine != null) {
+                        this.templateSpeechEngine.SpeechRecognized -= this.TemplateSpeechRecognition_FrameArrived;
+                        this.templateSpeechEngine.SpeechRecognitionRejected -= this.TemplateSpeechRecognition_Rejected;
+                        this.templateSpeechEngine.RecognizeAsyncStop();
+                        this.templateSpeechEngine.Dispose();
+                        this.templateSpeechEngine = null;
+                    }
+
+                    // create new engine
+                    if (this.templateSpeechEngine == null) {
+                        RecognizerInfo ri = null;
+                        try {
+                            foreach (RecognizerInfo recognizer in SpeechRecognitionEngine.InstalledRecognizers())
+                                if (language.Equals(recognizer.Culture.Name, StringComparison.OrdinalIgnoreCase)) {
+                                    ri = recognizer;
+                                    break;
+                                }
+
+                            this.templateSpeechEngine = new SpeechRecognitionEngine(ri.Id);
+                            string exe = Assembly.GetExecutingAssembly().Location;
+                            grammar = exe.Substring(0, exe.LastIndexOf('\\')) + @"\..\..\Grammar\" + grammar;
+
+                            if (File.Exists(grammar))
+                                try {
+                                    this.templateSpeechEngine.LoadGrammar(new Grammar(grammar));
+                                    this.templateSpeechEngine.SpeechRecognized += this.TemplateSpeechRecognition_FrameArrived;
+                                    this.templateSpeechEngine.SpeechRecognitionRejected += this.TemplateSpeechRecognition_Rejected;
+                                    this.templateSpeechEngine.SetInputToDefaultAudioDevice();
+                                    this.templateSpeechEngine.RecognizeAsync(RecognizeMode.Multiple);
+                                } catch { this.GrammarStatus.Text = "failed load template engine"; }
+                            else
+                                this.GrammarStatus.Text = "failed load grammar file";
+
+                        } catch { this.GrammarStatus.Text = "recognizer is null"; }
+                    }
+                    this.GrammarText.Text = grammar;
+                });
+            };
+            Thread t = new Thread(ts);
+            t.Start();
+        }
+
+        private void HandleRequestStart(byte[] message) {
+            string settingsString = Encoding.UTF8.GetString(message);
+            string[] settings = settingsString.Split(';');
+            ThreadStart ts = delegate () {
+                Dispatcher.BeginInvoke((Action)delegate () {
+                    this.LanguageText.Text = settings[2];
+                    this.GrammarText.Text = settings[3];
+                    Properties.Settings.Default.Language = this.LanguageText.Text;
+                    Properties.Settings.Default.Grammar = this.GrammarText.Text;
+                    Properties.Settings.Default.Save();
+                    this.Setup(settings[0], settings[2], settings[3]);
+                });
+            };
+            Thread t = new Thread(ts);
+            t.Start();
+        }
+
+        private void HandleRequestKill(byte[] message) {
+            ThreadStart ts = delegate () {
+                Dispatcher.BeginInvoke((Action)delegate () {
+                    Close();
+                    System.Windows.Application.Current.Shutdown();
+                });
+            };
+            Thread t = new Thread(ts);
+            t.Start();
         }
 
         private void Close() {
