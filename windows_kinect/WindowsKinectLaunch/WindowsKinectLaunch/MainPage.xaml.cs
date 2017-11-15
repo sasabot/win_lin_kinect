@@ -61,6 +61,9 @@ namespace WindowsKinectLaunch
             else
                 this.GrammarText.Text = "SpeechGrammar.xml";
 
+            if (this.localSettings.Values["otherApps"] != null)
+                this.OtherText.Text = this.localSettings.Values["otherApps"].ToString();
+
             this.displayRequest.RequestActive();
         }
 
@@ -72,6 +75,7 @@ namespace WindowsKinectLaunch
             this.localSettings.Values["topicNameSpace"] = this.NSText.Text;
             this.localSettings.Values["languageSettings"] = this.LangText.Text;
             this.localSettings.Values["grammarSettings"] = this.GrammarText.Text;
+            this.localSettings.Values["otherApps"] = this.OtherText.Text;
             this.Setup(this.IPText.Text, this.NSText.Text, autoStart);
         }
 
@@ -80,6 +84,7 @@ namespace WindowsKinectLaunch
             this.terminateAudio = true;
             this.client.Publish("/" + this.nameSpace + "/stop/camera", new byte[1]);
             this.client.Publish("/kinect/kill/audio", new byte[1]);
+            this.client.Publish("/kinect/kill/ocr", new byte[1]);
             this.appClock.Stop();
             this.appClockAudio.Stop();
         }
@@ -106,13 +111,27 @@ namespace WindowsKinectLaunch
             this.checkTimer.Tick += Check;
             this.checkTimer.Start();
 
-            StartKinectApps("all", auto);
-            //StartWindowsApps();
+            string kinectapps = "";
+            if ((bool)this.CameraApp.IsChecked)
+                kinectapps += "camera";
+            if ((bool)this.AudioApp.IsChecked)
+                kinectapps += "audio";
+
+            string windowsapps = "";
+            if ((bool)this.OcrApp.IsChecked)
+                windowsapps += "ocr";
+            if ((bool)this.FaceApp.IsChecked)
+                windowsapps += "face";
+            if ((bool)this.OtherApp.IsChecked)
+                windowsapps += "other";
+
+            StartKinectApps(kinectapps, auto);
+            StartWindowsApps(windowsapps, auto);
         }
 
         private async void StartKinectApps(string which, bool auto) {
-            if (which == "all" || which == "audio") {
-                var task3 = Task.Run(async () => {
+            if (which.Contains("audio")) {
+                var task = Task.Run(async () => {
                     var uri = new Uri("kinectmicrophoneinteraction:");
                     var launched = false;
                     while (!launched) {
@@ -121,11 +140,10 @@ namespace WindowsKinectLaunch
                             launched = await Launcher.LaunchUriAsync(uri);
                     }
                 });
-
-                task3.Wait();
+                task.Wait();
             }
 
-            if (which == "all" || which == "camera") {
+            if (which.Contains("camera")) {
                 var task1 = Task.Run(async () => {
                     var uri = new Uri("kinectrgbdinteraction:");
                     var launched = false;
@@ -135,8 +153,7 @@ namespace WindowsKinectLaunch
                             launched = await Launcher.LaunchUriAsync(uri);
                     }
                 });
-
-                var task5 = Task.Run(async () => {
+                var task2 = Task.Run(async () => {
                     var uri = new Uri("kinectimagestreamer:");
                     var launched = false;
                     while (!launched) {
@@ -147,7 +164,7 @@ namespace WindowsKinectLaunch
                 });
 
                 task1.Wait();
-                task5.Wait();
+                task2.Wait();
             }
 
             if (auto) {
@@ -156,10 +173,10 @@ namespace WindowsKinectLaunch
                 string msg = this.localSettings.Values["mqttHostAddress"].ToString();
                 msg += ";" + this.localSettings.Values["topicNameSpace"].ToString();
 
-                if (which == "all" || which == "camera")
+                if (which.Contains("camera"))
                     this.client.Publish("/" + this.nameSpace + "/start/camera", Encoding.UTF8.GetBytes(msg));
 
-                if (which == "all" || which == "audio") {
+                if (which.Contains("audio")) {
                     msg += ";" + this.localSettings.Values["languageSettings"].ToString();
                     msg += ";" + this.localSettings.Values["grammarSettings"].ToString();
                     this.client.Publish("/kinect/start/audio", Encoding.UTF8.GetBytes(msg));
@@ -167,23 +184,48 @@ namespace WindowsKinectLaunch
             }
         }
 
-        private void StartWindowsApps() {
-            var task2 = Task.Run(async () => {
-                var uri = new Uri("kinectwindowsinteraction:");
-                var status = await Launcher.QueryUriSupportAsync(uri, LaunchQuerySupportType.Uri);
-                if (status == LaunchQuerySupportStatus.Available)
-                    await Launcher.LaunchUriAsync(uri);
-            });
+        private async void StartWindowsApps(string which, bool auto) {
+            if (which.Contains("ocr")) {
+                var task = Task.Run(async () => {
+                    var uri = new Uri("kinectwindowsinteraction:");
+                    var status = await Launcher.QueryUriSupportAsync(uri, LaunchQuerySupportType.Uri);
+                    if (status == LaunchQuerySupportStatus.Available)
+                        await Launcher.LaunchUriAsync(uri);
+                });
+                task.Wait();
+            }
+            
+            if (which.Contains("face")) {
+                var task = Task.Run(async () => {
+                    var uri = new Uri("kinectfaceinteraction:");
+                    var status = await Launcher.QueryUriSupportAsync(uri, LaunchQuerySupportType.Uri);
+                    if (status == LaunchQuerySupportStatus.Available)
+                        await Launcher.LaunchUriAsync(uri);
+                });
+                task.Wait();
+            }
 
-            var task4 = Task.Run(async () => {
-                var uri = new Uri("kinectfaceinteraction:");
-                var status = await Launcher.QueryUriSupportAsync(uri, LaunchQuerySupportType.Uri);
-                if (status == LaunchQuerySupportStatus.Available)
-                    await Launcher.LaunchUriAsync(uri);
-            });
+            if (which.Contains("other")) {
+                string appName = this.OtherText.Text;
+                var task = Task.Run(async () => {
+                    var uri = new Uri(appName + ":");
+                    var status = await Launcher.QueryUriSupportAsync(uri, LaunchQuerySupportType.Uri);
+                    if (status == LaunchQuerySupportStatus.Available)
+                        await Launcher.LaunchUriAsync(uri);
+                });
+                task.Wait();
+            }
 
-            task2.Wait();
-            task4.Wait();
+            if (auto) {
+                await System.Threading.Tasks.Task.Delay(1000); // wait for apps to be ready
+
+                string msg = this.localSettings.Values["mqttHostAddress"].ToString();
+
+                if (which.Contains("ocr"))
+                    this.client.Publish("/kinect/start/ocr", Encoding.UTF8.GetBytes(msg));
+
+                // face is currently not maintainanced
+            }
         }
 
         private async void Check(object sender, object e) {

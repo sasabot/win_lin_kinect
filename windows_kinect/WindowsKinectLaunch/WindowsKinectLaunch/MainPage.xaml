@@ -14,6 +14,8 @@
                 <RowDefinition Height="50"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <TextBlock Text="Please enter IP of host:" Grid.Row="0"/>
@@ -25,6 +27,13 @@
             <TextBox Name="LangText" Width="50" Height="10" TextAlignment="Left" HorizontalAlignment="Left" Margin="40, 0, 0, 0" Grid.Row="3"/>
             <TextBlock Text="File:" Margin="110, 0, 0, 0" Grid.Row="3"/>
             <TextBox Name="GrammarText" Width="190" Height="10" TextAlignment="Left" HorizontalAlignment="Left" Margin="140, 0, 0, 0" Grid.Row="3"/>
+            <CheckBox Name="CameraApp" Content="camera" IsChecked="True" Grid.Row="4"/>
+            <CheckBox Name="AudioApp" Content="audio" IsChecked="True" Margin="90, 0, 0, 0" Grid.Row="4"/>
+            <CheckBox Name="OcrApp" Content="ocr" IsChecked="True" Margin="170, 0, 0, 0" Grid.Row="4"/>
+            <CheckBox Name="FaceApp" Content="face" IsChecked="False" Margin="240, 0, 0, 0" Grid.Row="4"/>
+            <CheckBox Name="OtherApp" Content="other" IsChecked="True" Grid.Row="5"/>
+            <TextBox Name="OtherText" Width="250" Height="10" TextAlignment="Left" HorizontalAlignment="Left" Margin="80, 0, 0, 0" Grid.Row="5"/>
+            
         </Grid>
     </Grid>
 </Page>
