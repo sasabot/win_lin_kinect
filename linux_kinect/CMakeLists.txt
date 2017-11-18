@@ -98,12 +98,6 @@ add_executable(extract_rgb_from_depth_filtered
 target_link_libraries(extract_rgb_from_depth_filtered
   ${catkin_LIBRARIES})
 
-add_executable(simple_axis_threshold
-  nodes/simple_axis_threshold.cc
-  )
-target_link_libraries(simple_axis_threshold
-  ${catkin_LIBRARIES})
-
 add_executable(stream_compressed_depth
   nodes/stream_compressed_depth.cc
   )
