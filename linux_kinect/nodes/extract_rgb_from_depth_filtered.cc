@@ -1,5 +1,9 @@
+// This file has been modified since version 1.1.0.
+// Instead of static depth filtering, current version filters from local radius.
+// simple_axis_threshold is now deprecated. Global map filters are out of development scope.
+// local_piecewise_linear may be added in future.
+
 #include <ros/ros.h>
-#include <geometry_msgs/PointStamped.h>
 #include <sensor_msgs/PointCloud2.h>
 #include <sensor_msgs/Image.h>
 
@@ -7,29 +11,16 @@ ros::Publisher pub_;
 
 int queue_size_;
 double time_thre_;
-std::vector<geometry_msgs::PointStamped> v_dthre_;
+std::function<bool(float, float)> f_;
+
+float localradius_param_r_;
+
+bool LocalRadius(float _x, float _z) {
+  // condition: z < r * cos(theta)
+  return (_z < (localradius_param_r_ * _z / sqrt(_x*_x + _z*_z)));
+}
 
 void ExtractRgbFromDepth(const sensor_msgs::PointCloud2::ConstPtr &_msg) {
-  // find threshold w/ closest time frame
-  double secs = _msg->header.stamp.toSec();
-  int found = -1;
-  double time_diff = std::numeric_limits<double>::max();
-  for (auto p = v_dthre_.begin(); p != v_dthre_.end(); ++p) {
-    double diff = fabs(secs - p->header.stamp.toSec());
-    if (diff < time_diff) {
-      time_diff = diff;
-      found = static_cast<int>(p - v_dthre_.begin());
-    }
-  }
-  float depth_threshold;
-  if (found >= 0 && time_diff < time_thre_) {
-    ROS_INFO("found %f == %f", v_dthre_.at(found).header.stamp.toSec(), secs);
-    depth_threshold = v_dthre_.erase(v_dthre_.begin(), v_dthre_.begin() + found)->point.z;
-  } else {
-    ROS_WARN("threshold and depth frame cannot be aligned! %f > %f", time_diff, time_thre_);
-    return;
-  }
-
   sensor_msgs::Image msg;
   msg.data.resize(_msg->width * _msg->height * 3);
 
@@ -37,11 +28,15 @@ void ExtractRgbFromDepth(const sensor_msgs::PointCloud2::ConstPtr &_msg) {
     for (size_t x = 0; x < _msg->width; ++x) {
       int dst = (y * _msg->width + x) * 3;
       int src = (y * _msg->width + x) * 16;
-      uint8_t bytes[4] =
+      uint8_t bytes_x[4] =
+        {_msg->data[src], _msg->data[src + 1], _msg->data[src + 2], _msg->data[src + 3]};
+      uint8_t bytes_z[4] =
         {_msg->data[src + 8], _msg->data[src + 9], _msg->data[src + 10], _msg->data[src + 11]};
-      float z;
-      std::memcpy(&z, &bytes, 4);
-      if (z > depth_threshold || std::isnan(z)) {
+      float p_x;
+      float p_z;
+      std::memcpy(&p_x, &bytes_x, 4);
+      std::memcpy(&p_z, &bytes_z, 4);
+      if (!f_(p_x, p_z) || std::isnan(p_z)) {
         msg.data[dst] = 255;
         msg.data[dst + 1] = 255;
         msg.data[dst + 2] = 255;
@@ -61,12 +56,6 @@ void ExtractRgbFromDepth(const sensor_msgs::PointCloud2::ConstPtr &_msg) {
   pub_.publish(msg);
 }
 
-void DepthThresholdCallback(const geometry_msgs::PointStamped::ConstPtr &_msg) {
-  if (v_dthre_.size() >= queue_size_)
-    v_dthre_.erase(v_dthre_.begin());
-  v_dthre_.push_back(*_msg);
-}
-
 int main(int argc, char **argv) {
   ros::init(argc, argv, "extract_rgb_from_depth_filtered");
   ros::NodeHandle nh("~");
@@ -80,13 +69,16 @@ int main(int argc, char **argv) {
   time_thre_ = 0.1;
   nh.getParam("timestamp", time_thre_);
 
+  localradius_param_r_ = 3.0; // ~1.2 personal space ~3.7 social space
+  nh.getParam("localradius_r", localradius_param_r_);
+
   pub_ 
     = nh.advertise<sensor_msgs::Image>("/" + ns + "/rgb", 1);
 
   ros::Subscriber sub =
     nh.subscribe("/" + ns + "/stream", 1, &ExtractRgbFromDepth);
-  ros::Subscriber depthre =
-    nh.subscribe("/" + ns + "/rgb/filter", 1, &DepthThresholdCallback);
+
+  f_ = LocalRadius;
 
   ros::spin();
 }
