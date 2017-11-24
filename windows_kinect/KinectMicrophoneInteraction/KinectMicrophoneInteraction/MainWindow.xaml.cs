@@ -45,6 +45,9 @@ namespace KinectMicrophoneInteraction
         private Stopwatch appClock = new Stopwatch();
         private uint kinectFrameCount = 0;
 #endif
+        private DispatcherTimer networkTimer = null;
+        private Stopwatch appClockNetwork = new Stopwatch();
+        private double lastNetworkCall;
 
         public MainWindow() {
             InitializeComponent();
@@ -60,9 +63,15 @@ namespace KinectMicrophoneInteraction
             this.statusLogTimer.Tick += StatusLogTick;
             this.statusLogTimer.Start();
 #endif
+            this.networkTimer = new DispatcherTimer();
+            this.networkTimer.Interval = TimeSpan.FromMilliseconds(100);
+            this.networkTimer.Tick += NetworkTick;
+            this.networkTimer.Start();
+
             try { // auto start client
                 if (this.requestHandlers == null) {
                     this.requestHandlers = new Dictionary<string, Action<byte[]>>() {
+                        { "/network/alive", UpdateLastNetworkCall },
                         { "/kinect/request/tts", HandleRequestTextToSpeech },
                         { "/kinect/settings/speech", HandleRequestSettings },
                         { "/kinect/settings/speech/template", HandleRequestTemplates },
@@ -98,10 +107,23 @@ namespace KinectMicrophoneInteraction
                 this.KinectFPS.Text = "KinectFPS: " + Convert.ToString(Convert.ToInt32(kinectFrameCount / this.appClock.Elapsed.TotalSeconds));
         }
 #endif
+        private void NetworkTick(object sender, object e) {
+            if (this.appClockNetwork.IsRunning && this.appClockNetwork.Elapsed.TotalMilliseconds - this.lastNetworkCall > 5000) {
+                ThreadStart ts = delegate () {
+                    Dispatcher.BeginInvoke((Action)delegate () {
+                        Close();
+                        System.Windows.Application.Current.Shutdown();
+                    });
+                };
+                Thread t = new Thread(ts);
+                t.Start();
+            }
+        }
 
         private void Setup(string ip, string language, string grammar) {
             if (this.requestHandlers == null) {
                 this.requestHandlers = new Dictionary<string, Action<byte[]>>() {
+                    { "/network/alive", UpdateLastNetworkCall },
                     { "/kinect/request/tts", HandleRequestTextToSpeech },
                     { "/kinect/settings/speech", HandleRequestSettings },
                     { "/kinect/settings/speech/template", HandleRequestTemplates },
@@ -415,6 +437,12 @@ namespace KinectMicrophoneInteraction
             };
             Thread t = new Thread(ts);
             t.Start();
+        }
+
+        private void UpdateLastNetworkCall(byte[] message) {
+            if (!this.appClockNetwork.IsRunning)
+                this.appClockNetwork.Start();
+            this.lastNetworkCall = this.appClockNetwork.Elapsed.TotalMilliseconds;
         }
 
         private void Close() {

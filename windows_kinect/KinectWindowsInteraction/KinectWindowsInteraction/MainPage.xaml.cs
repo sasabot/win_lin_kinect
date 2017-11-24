@@ -14,6 +14,7 @@ using System.Diagnostics;
 using Windows.Media.Ocr;
 using System.Text;
 using Windows.UI.Xaml;
+using System.Threading;
 
 namespace KinectWindowsInteraction
 {
@@ -33,6 +34,10 @@ namespace KinectWindowsInteraction
         private Stopwatch appClock = new Stopwatch();
 #endif
 
+        private Windows.UI.Xaml.DispatcherTimer networkTimer = new Windows.UI.Xaml.DispatcherTimer();
+        private Stopwatch appClockNetwork = new Stopwatch();
+        private double lastNetworkCall;
+
         public MainPage() {
             this.InitializeComponent();
             ApplicationView.PreferredLaunchViewSize = new Size(350, 350);
@@ -44,6 +49,7 @@ namespace KinectWindowsInteraction
             try { // auto start client
                 if (this.requestHandlers == null) {
                     this.requestHandlers = new Dictionary<string, Action<byte[]>>() {
+                        { "/network/alive", UpdateLastNetworkCall },
                         { "/kinect/request/ocr", HandleRequestOCR },
                         { "/kinect/request/webagent", HandleRequestWebAgent },
                         { "/kinect/start/ocr", HandleRequestStart },
@@ -68,6 +74,9 @@ namespace KinectWindowsInteraction
             this.statusLogTimer.Tick += StatusLogTick;
             this.statusLogTimer.Start();
 #endif
+            this.networkTimer.Interval = TimeSpan.FromMilliseconds(100);
+            this.networkTimer.Tick += NetworkTick;
+            this.networkTimer.Start();
         }
 
         private void StartApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
@@ -80,6 +89,10 @@ namespace KinectWindowsInteraction
             this.MemoryMonitor.Text = "MemoryUsage: " + Convert.ToString(MemoryManager.AppMemoryUsage / 1048576);
         }
 #endif
+        private void NetworkTick(object sender, object e) {
+            if (this.appClockNetwork.IsRunning && this.appClockNetwork.Elapsed.TotalMilliseconds - this.lastNetworkCall > 5000)
+                Application.Current.Exit();
+        }
 
         private void Setup(string ip) {
             if (this.requestHandlers == null) {
@@ -184,6 +197,12 @@ namespace KinectWindowsInteraction
                 this.client = null;
             }
             Application.Current.Exit();
+        }
+
+        private void UpdateLastNetworkCall(byte[] message) {
+            if (!this.appClockNetwork.IsRunning)
+                this.appClockNetwork.Start();
+            this.lastNetworkCall = this.appClockNetwork.Elapsed.TotalMilliseconds;
         }
 
         private void CloseApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {

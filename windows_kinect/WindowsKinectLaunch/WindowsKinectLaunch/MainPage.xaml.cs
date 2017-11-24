@@ -27,12 +27,15 @@ namespace WindowsKinectLaunch
         private Dictionary<string, Func<byte[], bool>> requestHandlers = null;
         private Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
         private readonly DisplayRequest displayRequest = new DisplayRequest();
-        private Stopwatch appClock = new Stopwatch();
+        private Stopwatch appClockNetwork = new Stopwatch();
+        private Stopwatch appClockCamera = new Stopwatch();
         private Stopwatch appClockAudio = new Stopwatch();
         private Windows.UI.Xaml.DispatcherTimer checkTimer = new Windows.UI.Xaml.DispatcherTimer();
-        private SemaphoreSlim appTimerSemaphore = new SemaphoreSlim(1);
+        private SemaphoreSlim appTimerNetworkSemaphore = new SemaphoreSlim(1);
+        private SemaphoreSlim appTimerCameraSemaphore = new SemaphoreSlim(1);
         private SemaphoreSlim appTimerAudioSemaphore = new SemaphoreSlim(1);
 
+        private double lastNetworkCall;
         private double lastStreamCall;
         private double lastAudioCall;
         private bool terminateCamera = false;
@@ -83,10 +86,11 @@ namespace WindowsKinectLaunch
         private void CloseApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
             this.terminateCamera = true;
             this.terminateAudio = true;
-            this.client.Publish("/" + this.nameSpace + "/stop/camera", new byte[1]);
+            this.client.Publish("/" + this.nameSpace + "/stop/camera/depth", new byte[1]);
+            this.client.Publish("/" + this.nameSpace + "/stop/camera/rgb", new byte[1]);
             this.client.Publish("/kinect/kill/audio", new byte[1]);
             this.client.Publish("/kinect/kill/ocr", new byte[1]);
-            this.appClock.Stop();
+            this.appClockCamera.Stop();
             this.appClockAudio.Stop();
         }
 
@@ -95,7 +99,8 @@ namespace WindowsKinectLaunch
 
             if (this.requestHandlers == null) {
                 this.requestHandlers = new Dictionary<string, Func<byte[], bool>>() {
-                    {"/" + this.nameSpace + "/stream/camerainfo", UpdateLastStreamCall },
+                    {"/network/alive", UpdateLastNetworkCall},
+                    {"/" + this.nameSpace + "/stream/camerainfo", UpdateLastStreamCall},
                     {"/kinect/audio/alive", UpdateLastAudioCall}
                 };
             }
@@ -174,8 +179,10 @@ namespace WindowsKinectLaunch
                 string msg = this.localSettings.Values["mqttHostAddress"].ToString();
                 msg += ";" + this.localSettings.Values["topicNameSpace"].ToString();
 
-                if (which.Contains("camera"))
-                    this.client.Publish("/" + this.nameSpace + "/start/camera", Encoding.UTF8.GetBytes(msg));
+                if (which.Contains("camera")) {
+                    this.client.Publish("/" + this.nameSpace + "/start/camera/depth", Encoding.UTF8.GetBytes(msg));
+                    this.client.Publish("/" + this.nameSpace + "/start/camera/rgb", Encoding.UTF8.GetBytes(msg));
+                }
 
                 if (which.Contains("audio")) {
                     msg += ";" + this.localSettings.Values["languageSettings"].ToString();
@@ -230,40 +237,58 @@ namespace WindowsKinectLaunch
         }
 
         private async void Check(object sender, object e) {
-            if (!appTimerSemaphore.Wait(0) || !appTimerAudioSemaphore.Wait(0)) return;
+            if (!appTimerCameraSemaphore.Wait(0) || !appTimerAudioSemaphore.Wait(0) || !appTimerNetworkSemaphore.Wait(0)) return;
+
+            // app freeze due to network condition
+            if (this.appClockNetwork.IsRunning && this.appClockNetwork.Elapsed.TotalMilliseconds - this.lastNetworkCall > 3000) {
+                this.appClockNetwork.Stop();
+                this.terminateCamera = true;
+                this.terminateAudio = true;
+                this.client = null;
+                this.client = new MqttClient((string)this.localSettings.Values["mqttHostAddress"]);
+                this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
+                this.client.MqttMsgPublishReceived += this.onMqttReceive;
+                this.client.Subscribe(this.requestHandlers.Keys.ToArray(), Enumerable.Repeat(MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, this.requestHandlers.Count).ToArray());
+                // try connection
+                bool restarted = false;
+                while (!restarted) {
+                    try {
+                        this.client.Connect(Guid.NewGuid().ToString());
+                        restarted = true;
+                    }
+                    catch {
+                        // fatal restart!
+                        BackgroundMediaPlayer.Current.SetUriSource(new Uri("ms-winsoundevent:Notification.Looping.Alarm8"));
+                        BackgroundMediaPlayer.Current.Play();
+                        await System.Threading.Tasks.Task.Delay(5000); // wait for music play to finish
+                        restarted = false;
+                    }
+                }
+                await System.Threading.Tasks.Task.Delay(1000); // wait for connection recover
+                                                               // apps are killed within each app, help restart
+                StartKinectApps("camera", true); // re-launch app
+                this.appClockCamera.Stop();
+                this.terminateCamera = false;
+                StartKinectApps("audio", true); // re-launch app
+                this.appClockAudio.Stop();
+                this.terminateAudio = false;
+            }
 
             // restart apps if under freeze (restart one at a time)
-            if (!this.terminateCamera && this.appClock.IsRunning && this.appClock.Elapsed.TotalMilliseconds - this.lastStreamCall > 3000) {
-                // notify error first
+            if (!this.terminateCamera && this.appClockCamera.IsRunning && this.appClockCamera.Elapsed.TotalMilliseconds - this.lastStreamCall > 3000
+                && this.appClockNetwork.Elapsed.TotalMilliseconds - this.lastNetworkCall < 1000) {
                 BackgroundMediaPlayer.Current.SetUriSource(new Uri("ms-winsoundevent:Notification.Looping.Alarm10"));
                 BackgroundMediaPlayer.Current.Play();
                 this.terminateCamera = true;
-                // when an app freezes, always freezes from camera, restart client in case is full client freeze
-                try {
-                    this.client.Disconnect();
-                    this.client = null;
-                    this.client = new MqttClient((string)this.localSettings.Values["mqttHostAddress"]);
-                    this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
-                    this.client.MqttMsgPublishReceived += this.onMqttReceive;
-                    this.client.Subscribe(this.requestHandlers.Keys.ToArray(), Enumerable.Repeat(MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, this.requestHandlers.Count).ToArray());
-                    this.client.Connect(Guid.NewGuid().ToString());
-                    await System.Threading.Tasks.Task.Delay(1000); // wait for connection recover
-                    // kill and restart camera
-                    this.client.Publish("/" + this.nameSpace + "/kill/camera", new byte[1]);
-                    await System.Threading.Tasks.Task.Delay(1000); // wait for kill
-                    StartKinectApps("camera", true); // re-launch app
-                    this.appClock.Stop();
-                    this.terminateCamera = false;
-                } catch {
-                    // fatal restart!
-                    BackgroundMediaPlayer.Current.SetUriSource(new Uri("ms-winsoundevent:Notification.Looping.Alarm8"));
-                    BackgroundMediaPlayer.Current.Play();
-                    await System.Threading.Tasks.Task.Delay(5000); // wait for music play to finish
-                    Application.Current.Exit();
-                }
+                this.client.Publish("/" + this.nameSpace + "/kill/camera/depth", new byte[1]);
+                this.client.Publish("/" + this.nameSpace + "/kill/camera/rgb", new byte[1]);
+                await System.Threading.Tasks.Task.Delay(1000); // wait for kill
+                StartKinectApps("camera", true); // re-launch app
+                this.appClockCamera.Stop();
+                this.terminateCamera = false;
             }
-            else if (!this.terminateAudio && this.appClockAudio.IsRunning && this.appClockAudio.Elapsed.TotalMilliseconds - this.lastAudioCall > 5000) {
-                // an audio-only freeze is unlikely a full client freeze as camera app should freeze first, no need for client restart
+            else if (!this.terminateAudio && this.appClockAudio.IsRunning && this.appClockAudio.Elapsed.TotalMilliseconds - this.lastAudioCall > 5000
+                && this.appClockNetwork.Elapsed.TotalMilliseconds - this.lastNetworkCall < 1000) {
                 BackgroundMediaPlayer.Current.SetUriSource(new Uri("ms-winsoundevent:Notification.Looping.Alarm9"));
                 BackgroundMediaPlayer.Current.Play();
                 this.terminateAudio = true;
@@ -274,7 +299,8 @@ namespace WindowsKinectLaunch
                 this.terminateAudio = false;
             }
 
-            appTimerSemaphore.Release();
+            appTimerNetworkSemaphore.Release();
+            appTimerCameraSemaphore.Release();
             appTimerAudioSemaphore.Release();
         }
 
@@ -283,13 +309,23 @@ namespace WindowsKinectLaunch
             this.requestHandlers[e.Topic](e.Message);
         }
 
-        private bool UpdateLastStreamCall(byte[] message) {
-            if (!appTimerSemaphore.Wait(0)) return true;
+        private bool UpdateLastNetworkCall(byte[] message) {
+            if (!appTimerNetworkSemaphore.Wait(0)) return true;
 
-            if (!this.terminateCamera && !this.appClock.IsRunning)
-                this.appClock.Start();
-            this.lastStreamCall = this.appClock.Elapsed.TotalMilliseconds;
-            appTimerSemaphore.Release();
+            if (!this.appClockNetwork.IsRunning)
+                this.appClockNetwork.Start();
+            this.lastNetworkCall = this.appClockNetwork.Elapsed.TotalMilliseconds;
+            appTimerNetworkSemaphore.Release();
+            return true;
+        }
+
+        private bool UpdateLastStreamCall(byte[] message) {
+            if (!appTimerCameraSemaphore.Wait(0)) return true;
+
+            if (!this.terminateCamera && !this.appClockCamera.IsRunning)
+                this.appClockCamera.Start();
+            this.lastStreamCall = this.appClockCamera.Elapsed.TotalMilliseconds;
+            appTimerCameraSemaphore.Release();
             return true;
         }
 

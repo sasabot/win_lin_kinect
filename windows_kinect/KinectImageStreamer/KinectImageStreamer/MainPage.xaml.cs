@@ -42,6 +42,11 @@ namespace KinectImageStreamer
         private uint kinectFrameCount = 0;
 #endif
 
+        private Windows.UI.Xaml.DispatcherTimer networkTimer = new Windows.UI.Xaml.DispatcherTimer();
+        private Stopwatch appClockNetwork = new Stopwatch();
+        private double lastNetworkCall;
+        bool restartingCamera = false;
+
         private Windows.Storage.ApplicationDataContainer localSettings = Windows.Storage.ApplicationData.Current.LocalSettings;
 
         public MainPage() {
@@ -60,9 +65,10 @@ namespace KinectImageStreamer
             try { // auto start client
                 if (this.requestHandlers == null) {
                     this.requestHandlers = new Dictionary<string, Action<byte[]>>() {
-                        { "/" + this.NSText.Text + "/start/camera", HandleRequestStart },
-                        { "/" + this.NSText.Text + "/stop/camera", HandleRequestStop },
-                        { "/" + this.NSText.Text + "/kill/camera", HandleRequestKill },
+                        { "/network/alive", UpdateLastNetworkCall },
+                        { "/" + this.NSText.Text + "/start/camera/rgb", HandleRequestStart },
+                        { "/" + this.NSText.Text + "/stop/camera/rgb", HandleRequestStop },
+                        { "/" + this.NSText.Text + "/kill/camera/rgb", HandleRequestKill },
                     };
                 }
 
@@ -83,6 +89,9 @@ namespace KinectImageStreamer
             this.statusLogTimer.Tick += StatusLogTick;
             this.statusLogTimer.Start();
 #endif
+            this.networkTimer.Interval = TimeSpan.FromMilliseconds(100);
+            this.networkTimer.Tick += NetworkTick;
+            this.networkTimer.Start();
 
             displayRequest.RequestActive();
         }
@@ -100,6 +109,10 @@ namespace KinectImageStreamer
                 this.KinectFPS.Text = "KinectFPS: " + Convert.ToString(Convert.ToInt32(this.kinectFrameCount / this.appClock.Elapsed.TotalSeconds));
         }
 #endif
+        private void NetworkTick(object sender, object e) {
+            if (!this.restartingCamera && this.appClockNetwork.IsRunning && this.appClockNetwork.Elapsed.TotalMilliseconds - this.lastNetworkCall > 5000)
+                Application.Current.Exit();
+        }
 
         private void Setup(string ip, string ns) {
             this.nameSpace = ns;
@@ -126,11 +139,14 @@ namespace KinectImageStreamer
                     }
                 }).Where(c => c.SourceInfos[0] != null && c.SourceInfos[1] != null).ToList();
                 if (eligible.Count == 0) { // retry 1 second later
+                    this.restartingCamera = true;
                     BackgroundMediaPlayer.Current.SetUriSource(new Uri("ms-winsoundevent:Notification.IM"));
                     BackgroundMediaPlayer.Current.Play();
                     Task.Run(async () => { await System.Threading.Tasks.Task.Delay(1000); }).Wait();
                     continue;
                 }
+                this.restartingCamera = false;
+                this.lastNetworkCall = this.appClockNetwork.Elapsed.TotalMilliseconds;
                 var selected = eligible[0];
 
                 // open device
@@ -224,6 +240,12 @@ namespace KinectImageStreamer
 
         private void HandleRequestKill(byte[] message) {
             Application.Current.Exit();
+        }
+
+        private void UpdateLastNetworkCall(byte[] message) {
+            if (!this.appClockNetwork.IsRunning)
+                this.appClockNetwork.Start();
+            this.lastNetworkCall = this.appClockNetwork.Elapsed.TotalMilliseconds;
         }
 
         private void Stop() {
