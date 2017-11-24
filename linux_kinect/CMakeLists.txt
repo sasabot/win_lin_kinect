@@ -98,6 +98,12 @@ add_executable(extract_rgb_from_depth_filtered
 target_link_libraries(extract_rgb_from_depth_filtered
   ${catkin_LIBRARIES})
 
+add_executable(extract_rgb_from_depth_filtered_with_log
+  nodes/extract_rgb_from_depth_filtered_with_log.cc
+  )
+target_link_libraries(extract_rgb_from_depth_filtered_with_log
+  ${catkin_LIBRARIES})
+
 add_executable(stream_compressed_depth
   nodes/stream_compressed_depth.cc
   )

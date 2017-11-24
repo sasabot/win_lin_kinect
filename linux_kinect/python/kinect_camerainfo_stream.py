@@ -18,7 +18,14 @@ def on_message(client, userdata, mqttmsg):
     rosmsg.header.stamp = rospy.get_rostime()
     rosmsg.height = 360
     rosmsg.width = 640
-    rosmsg.K = [struct.unpack('f', mqttmsg.payload[0:4])[0], 0, struct.unpack('f', mqttmsg.payload[8:12])[0], 0, struct.unpack('f', mqttmsg.payload[4:8])[0], struct.unpack('f', mqttmsg.payload[12:16])[0], 0, 0, 1]
+    rosmsg.D = [struct.unpack('f', mqttmsg.payload[16:20])[0], struct.unpack('f', mqttmsg.payload[20:24])[0], 0, 0, 0]
+    rosmsg.R = [1, 0, 0, 0, 1, 0, 0, 0, 1]
+    rosmsg.K = [struct.unpack('f', mqttmsg.payload[0:4])[0] * 3.0, 0, struct.unpack('f', mqttmsg.payload[8:12])[0] * 3.0,
+                0, struct.unpack('f', mqttmsg.payload[4:8])[0] / 3.0, struct.unpack('f', mqttmsg.payload[12:16])[0] / 3.0,
+                0, 0, 1]
+    rosmsg.P = [struct.unpack('f', mqttmsg.payload[24:28])[0] / 3.0, 0, struct.unpack('f', mqttmsg.payload[32:36])[0] / 3.0, 0,
+                0, struct.unpack('f', mqttmsg.payload[28:32])[0] / 3.0, struct.unpack('f', mqttmsg.payload[36:40])[0] / 3.0, 0,
+                0, 0, 1, 0]
     pub.publish(rosmsg)
 
 if __name__ == '__main__':
