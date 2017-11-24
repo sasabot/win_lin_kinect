@@ -19,6 +19,7 @@ using uPLibrary.Networking.M2Mqtt.Messages;
 using Windows.System.Display;
 using System.Text;
 using Windows.UI.Xaml;
+using Windows.Media.Playback;
 
 namespace KinectImageStreamer
 {
@@ -114,7 +115,7 @@ namespace KinectImageStreamer
                     { MediaFrameSourceKind.Color, null }
                 };
 
-            if (this.mediaCapture == null) {
+            while (this.mediaCapture == null) {
                 // select device with both color and depth streams
                 var cameras = Task.Run(async () => { return await MediaFrameSourceGroup.FindAllAsync(); });
                 var eligible = cameras.Result.Select(c => new {
@@ -124,7 +125,12 @@ namespace KinectImageStreamer
                     c.SourceInfos.FirstOrDefault(info => info.SourceKind == MediaFrameSourceKind.Depth)
                     }
                 }).Where(c => c.SourceInfos[0] != null && c.SourceInfos[1] != null).ToList();
-                if (eligible.Count == 0) return;
+                if (eligible.Count == 0) { // retry 1 second later
+                    BackgroundMediaPlayer.Current.SetUriSource(new Uri("ms-winsoundevent:Notification.IM"));
+                    BackgroundMediaPlayer.Current.Play();
+                    Task.Run(async () => { await System.Threading.Tasks.Task.Delay(1000); }).Wait();
+                    continue;
+                }
                 var selected = eligible[0];
 
                 // open device

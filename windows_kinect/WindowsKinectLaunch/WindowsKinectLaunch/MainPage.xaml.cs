@@ -234,16 +234,36 @@ namespace WindowsKinectLaunch
 
             // restart apps if under freeze (restart one at a time)
             if (!this.terminateCamera && this.appClock.IsRunning && this.appClock.Elapsed.TotalMilliseconds - this.lastStreamCall > 3000) {
+                // notify error first
                 BackgroundMediaPlayer.Current.SetUriSource(new Uri("ms-winsoundevent:Notification.Looping.Alarm10"));
                 BackgroundMediaPlayer.Current.Play();
                 this.terminateCamera = true;
-                this.client.Publish("/" + this.nameSpace + "/kill/camera", new byte[1]);
-                await System.Threading.Tasks.Task.Delay(1000); // wait for kill
-                StartKinectApps("camera", true); // re-launch app
-                this.appClock.Stop();
-                this.terminateCamera = false;
+                // when an app freezes, always freezes from camera, restart client in case is full client freeze
+                try {
+                    this.client.Disconnect();
+                    this.client = null;
+                    this.client = new MqttClient((string)this.localSettings.Values["mqttHostAddress"]);
+                    this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
+                    this.client.MqttMsgPublishReceived += this.onMqttReceive;
+                    this.client.Subscribe(this.requestHandlers.Keys.ToArray(), Enumerable.Repeat(MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, this.requestHandlers.Count).ToArray());
+                    this.client.Connect(Guid.NewGuid().ToString());
+                    await System.Threading.Tasks.Task.Delay(1000); // wait for connection recover
+                    // kill and restart camera
+                    this.client.Publish("/" + this.nameSpace + "/kill/camera", new byte[1]);
+                    await System.Threading.Tasks.Task.Delay(1000); // wait for kill
+                    StartKinectApps("camera", true); // re-launch app
+                    this.appClock.Stop();
+                    this.terminateCamera = false;
+                } catch {
+                    // fatal restart!
+                    BackgroundMediaPlayer.Current.SetUriSource(new Uri("ms-winsoundevent:Notification.Looping.Alarm8"));
+                    BackgroundMediaPlayer.Current.Play();
+                    await System.Threading.Tasks.Task.Delay(5000); // wait for music play to finish
+                    Application.Current.Exit();
+                }
             }
             else if (!this.terminateAudio && this.appClockAudio.IsRunning && this.appClockAudio.Elapsed.TotalMilliseconds - this.lastAudioCall > 5000) {
+                // an audio-only freeze is unlikely a full client freeze as camera app should freeze first, no need for client restart
                 BackgroundMediaPlayer.Current.SetUriSource(new Uri("ms-winsoundevent:Notification.Looping.Alarm9"));
                 BackgroundMediaPlayer.Current.Play();
                 this.terminateAudio = true;
