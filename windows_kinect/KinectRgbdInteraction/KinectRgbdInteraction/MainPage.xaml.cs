@@ -228,14 +228,23 @@ namespace KinectRgbdInteraction
 
                     // get camera intrinsics info
                     var cameraInfo = new float[] {
-                        // this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.FocalLength.X,
-                        // this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.FocalLength.Y,
-                        // this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.PrincipalPoint.X,
-                        // this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.PrincipalPoint.Y
-                        this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.FocalLength.X * 3.0f,
-                        this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.FocalLength.Y * 3.0f,
-                        this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.PrincipalPoint.X / 3.0f,
-                        this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.PrincipalPoint.Y / 3.0f
+                         this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.FocalLength.X,
+                         this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.FocalLength.Y,
+                         this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.PrincipalPoint.X,
+                         this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.PrincipalPoint.Y,
+                        //this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.FocalLength.X * 3.0f,
+                        //this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.FocalLength.Y * 3.0f,
+                        //this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.PrincipalPoint.X / 3.0f,
+                        //this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.PrincipalPoint.Y / 3.0f,
+                        this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.RadialDistortion.X,
+                        this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.RadialDistortion.Y,
+                        //this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.RadialDistortion.Z / 3.0f, // = 0
+                        //this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.TangentialDistortion.X / 3.0f, // = 0
+                        //this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.TangentialDistortion.Y / 3.0f, // = 0
+                        this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.UndistortedProjectionTransform.M11,
+                        this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.UndistortedProjectionTransform.M22,
+                        this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.UndistortedProjectionTransform.M41,
+                        this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.UndistortedProjectionTransform.M42,
                     };
 
                     // get color information
@@ -265,8 +274,8 @@ namespace KinectRgbdInteraction
                     this.client.Publish("/" + this.nameSpace + "/stream/points", streamBytes);
 
                     // stream camera intrinsics
-                    byte[] camIntr = new byte[16];
-                    Buffer.BlockCopy(cameraInfo, 0, camIntr, 0, 16);
+                    byte[] camIntr = new byte[40];
+                    Buffer.BlockCopy(cameraInfo, 0, camIntr, 0, 40);
                     this.client.Publish("/" + this.nameSpace + "/stream/camerainfo", camIntr);
 
                     // other requested queues (only one is processed at each frame)
