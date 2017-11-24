@@ -60,13 +60,13 @@ void ExtractRgbFromDepth(const sensor_msgs::PointCloud2::ConstPtr &_msg) {
       msglog_rgb.data[dst + 2] = _msg->data[src + 14];      
     }
 
-  // msg.header = _msg->header;
-  // msg.width = _msg->width;
-  // msg.height = _msg->height;
-  // msg.step = 3 * msg.width;
-  // msg.encoding = "bgr8";
-  // msg.is_bigendian = true;
-  // pub_.publish(msg);
+  msg.header = _msg->header;
+  msg.width = _msg->width;
+  msg.height = _msg->height;
+  msg.step = 3 * msg.width;
+  msg.encoding = "bgr8";
+  msg.is_bigendian = true;
+  pub_.publish(msg);
 
   msglog_rgb.header = _msg->header;
   msglog_rgb.width = _msg->width;
