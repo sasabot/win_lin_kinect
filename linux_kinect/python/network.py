@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 import paho.mqtt.client as mqtt
 import rospy
-from std_msgs.msg import *
 
 port = 1883
 
@@ -18,7 +17,7 @@ if __name__ == '__main__':
     client.connect(host, port=port, keepalive=60)
     client.loop_start()
 
-    r = rospy.Rate(10) # 10hz
+    r = rospy.Rate(30) # 30hz
     while not rospy.is_shutdown():
         client.publish('/network/alive', '')
         r.sleep()

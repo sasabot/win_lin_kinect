@@ -52,5 +52,6 @@ if __name__ == '__main__':
     client.on_connect = on_connect
     client.on_message = on_message
     client.connect(host, port=port, keepalive=60)
-
-    client.loop_forever()
+    r = rospy.Rate(60)
+    while not rospy.is_shutdown():
+        r.sleep()

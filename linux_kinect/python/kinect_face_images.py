@@ -85,5 +85,8 @@ if __name__ == '__main__':
     depthbuffer += struct.pack('f', 0.0)[0:4] # coefficient a
     depthbuffer += struct.pack('f', depth_threshold)[0:4] # coefficient b
     client.publish('/kinect/request/facetrack/bounds', bytearray(depthbuffer))
+    client.loop_start()
 
-    client.loop_forever()
+    r = rospy.Rate(30)
+    while not rospy.is_shutdown():
+        r.sleep()
