@@ -15,6 +15,7 @@ using Windows.Media.Ocr;
 using System.Text;
 using Windows.UI.Xaml;
 using System.Threading;
+using Windows.Media.Playback;
 
 namespace KinectWindowsInteraction
 {
@@ -52,6 +53,7 @@ namespace KinectWindowsInteraction
                         { "/network/alive", UpdateLastNetworkCall },
                         { "/kinect/request/ocr", HandleRequestOCR },
                         { "/kinect/request/webagent", HandleRequestWebAgent },
+                        { "/windows/alarm", HandleRequestAlarm },
                         { "/kinect/start/ocr", HandleRequestStart },
                         { "/kinect/kill/ocr", HandleRequestKill }
                     };
@@ -98,7 +100,8 @@ namespace KinectWindowsInteraction
             if (this.requestHandlers == null) {
                 this.requestHandlers = new Dictionary<string, Action<byte[]>>() {
                     { "/kinect/request/ocr", HandleRequestOCR },
-                    { "/kinect/request/webagent", HandleRequestWebAgent }
+                    { "/kinect/request/webagent", HandleRequestWebAgent },
+                    { "/windows/alarm", HandleRequestAlarm }
                 };
             }
 
@@ -184,6 +187,12 @@ namespace KinectWindowsInteraction
             for (var i = 2; i < words.Length; ++i)
                 searchQuery += "%20" + words[i];
             var request = await Windows.System.Launcher.LaunchUriAsync(new Uri(searchQuery));
+        }
+
+        private async void HandleRequestAlarm(byte[] message) {
+            string alarm = System.Text.Encoding.UTF8.GetString(message);
+            BackgroundMediaPlayer.Current.SetUriSource(new Uri(alarm));
+            BackgroundMediaPlayer.Current.Play();
         }
 
         private void HandleRequestStart(byte[] message) {

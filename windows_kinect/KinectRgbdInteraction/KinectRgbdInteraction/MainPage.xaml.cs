@@ -228,14 +228,10 @@ namespace KinectRgbdInteraction
 
                     // get camera intrinsics info
                     var cameraInfo = new float[] {
-                         this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.FocalLength.X,
-                         this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.FocalLength.Y,
-                         this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.PrincipalPoint.X,
-                         this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.PrincipalPoint.Y,
-                        //this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.FocalLength.X * 3.0f,
-                        //this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.FocalLength.Y * 3.0f,
-                        //this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.PrincipalPoint.X / 3.0f,
-                        //this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.PrincipalPoint.Y / 3.0f,
+                        this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.FocalLength.X,
+                        this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.FocalLength.Y,
+                        this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.PrincipalPoint.X,
+                        this.frames[MediaFrameSourceKind.Depth].VideoMediaFrame.CameraIntrinsics.PrincipalPoint.Y,
                         this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.RadialDistortion.X,
                         this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.RadialDistortion.Y,
                         //this.frames[MediaFrameSourceKind.Color].VideoMediaFrame.CameraIntrinsics.RadialDistortion.Z / 3.0f, // = 0
