@@ -12,10 +12,11 @@
 
   <arg name="localradius_r" default="3.0"/>
 
-  <node name="winlin_network_connections" pkg="linux_kinect"
+  <!-- winlin_network is unstable removing from launch -->
+  <!--node name="winlin_network_connections" pkg="linux_kinect"
         type="network.py" output="screen">
      <param name="ip" value="$(arg host)"/>
-  </node>
+  </node-->
 
   <group ns="$(arg ns)">
   <node name="kinect_point_stream" pkg="linux_kinect"

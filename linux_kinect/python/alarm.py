@@ -17,7 +17,7 @@ def on_rosmessage(msg):
 
 if __name__ == '__main__':
     rospy.init_node('windows_alarm_node')
-    sub = rospy.Subscriber('/topic', Empty, on_rosmessage)
+    sub = rospy.Subscriber('/topic', String, on_rosmessage)
 
     host = rospy.get_param('~ip')
     # ~alarm:
