@@ -5,6 +5,7 @@
   <arg name="optionals" default="false"/>
   <arg name="frame" default="base_link"/>
   <arg name="filter" default="true"/>
+  <arg name="log" default="false"/>
 
   <arg name="queue_size" default="30"/>
   <arg name="timestamp" default="0.2"/>
@@ -72,8 +73,18 @@
   </node>
 
   <group if="$(arg filter)">
+    <group if="$(arg log)">
+      <node name="extract_rgb_from_depth" pkg="linux_kinect"
+            type="extract_rgb_from_depth_filtered_with_log" output="screen">
+         <param name="ns" value="$(arg ns)"/>
+         <param name="queue_size" value="$(arg queue_size)"/>
+         <param name="timestamp" value="$(arg timestamp)"/>
+         <param name="localradius_r" value="$(arg localradius_r)"/>
+      </node>
+    </group>
     <node name="extract_rgb_from_depth" pkg="linux_kinect"
-          type="extract_rgb_from_depth_filtered" output="screen">
+          type="extract_rgb_from_depth_filtered" output="screen"
+          unless="$(arg log)">
        <param name="ns" value="$(arg ns)"/>
        <param name="queue_size" value="$(arg queue_size)"/>
        <param name="timestamp" value="$(arg timestamp)"/>
