@@ -240,7 +240,7 @@ namespace WindowsKinectLaunch
             if (!appTimerCameraSemaphore.Wait(0) || !appTimerAudioSemaphore.Wait(0) || !appTimerNetworkSemaphore.Wait(0)) return;
 
             // app freeze due to network condition
-            if (this.appClockNetwork.IsRunning && this.appClockNetwork.Elapsed.TotalMilliseconds - this.lastNetworkCall > 3000) {
+            if (this.appClockNetwork.IsRunning && this.appClockNetwork.Elapsed.TotalMilliseconds - this.lastNetworkCall > 5000) {
                 this.appClockNetwork.Stop();
                 this.terminateCamera = true;
                 this.terminateAudio = true;
@@ -249,6 +249,9 @@ namespace WindowsKinectLaunch
                 this.client.ProtocolVersion = MqttProtocolVersion.Version_3_1;
                 this.client.MqttMsgPublishReceived += this.onMqttReceive;
                 this.client.Subscribe(this.requestHandlers.Keys.ToArray(), Enumerable.Repeat(MqttMsgBase.QOS_LEVEL_AT_LEAST_ONCE, this.requestHandlers.Count).ToArray());
+                BackgroundMediaPlayer.Current.SetUriSource(new Uri("ms-winsoundevent:Notification.Looping.Alarm8"));
+                BackgroundMediaPlayer.Current.Play();
+                await System.Threading.Tasks.Task.Delay(5000); // wait for music play to finish (also wait for other apps to shutdown)
                 // try connection
                 bool restarted = false;
                 while (!restarted) {
@@ -276,7 +279,7 @@ namespace WindowsKinectLaunch
 
             // restart apps if under freeze (restart one at a time)
             if (!this.terminateCamera && this.appClockCamera.IsRunning && this.appClockCamera.Elapsed.TotalMilliseconds - this.lastStreamCall > 3000
-                && this.appClockNetwork.Elapsed.TotalMilliseconds - this.lastNetworkCall < 1000) {
+                && (!this.appClockNetwork.IsRunning || this.appClockNetwork.Elapsed.TotalMilliseconds - this.lastNetworkCall < 1000)) {
                 BackgroundMediaPlayer.Current.SetUriSource(new Uri("ms-winsoundevent:Notification.Looping.Alarm10"));
                 BackgroundMediaPlayer.Current.Play();
                 this.terminateCamera = true;
@@ -288,7 +291,7 @@ namespace WindowsKinectLaunch
                 this.terminateCamera = false;
             }
             else if (!this.terminateAudio && this.appClockAudio.IsRunning && this.appClockAudio.Elapsed.TotalMilliseconds - this.lastAudioCall > 5000
-                && this.appClockNetwork.Elapsed.TotalMilliseconds - this.lastNetworkCall < 1000) {
+                && (!this.appClockNetwork.IsRunning || this.appClockNetwork.Elapsed.TotalMilliseconds - this.lastNetworkCall < 1000)) {
                 BackgroundMediaPlayer.Current.SetUriSource(new Uri("ms-winsoundevent:Notification.Looping.Alarm9"));
                 BackgroundMediaPlayer.Current.Play();
                 this.terminateAudio = true;
