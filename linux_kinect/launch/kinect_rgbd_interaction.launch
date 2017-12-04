@@ -10,7 +10,7 @@
   <arg name="queue_size" default="30"/>
   <arg name="timestamp" default="0.2"/>
 
-  <arg name="localradius_r" default="3.0"/>
+  <arg name="localradius_r" default="1.5"/>
 
   <!-- winlin_network is unstable removing from launch -->
   <!--node name="winlin_network_connections" pkg="linux_kinect"
