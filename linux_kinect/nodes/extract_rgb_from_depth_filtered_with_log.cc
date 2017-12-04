@@ -41,23 +41,29 @@ void ExtractRgbFromDepth(const sensor_msgs::PointCloud2::ConstPtr &_msg) {
       float p_z;
       std::memcpy(&p_x, &bytes_x, 4);
       std::memcpy(&p_z, &bytes_z, 4);
-      if (!f_(p_x, p_z) || std::isnan(p_z)) {
+      if (std::isnan(p_z)) {
         msg.data[dst] = 255;
         msg.data[dst + 1] = 255;
         msg.data[dst + 2] = 255;
         msglog_d.data[dst_d] = 0;
         msglog_d.data[dst_d + 1] = 0;
       } else {
-        msg.data[dst] = _msg->data[src + 12];
-        msg.data[dst + 1] = _msg->data[src + 13];
-        msg.data[dst + 2] = _msg->data[src + 14];
+        if (!f_(p_x, p_z)) {
+          msg.data[dst] = 255;
+          msg.data[dst + 1] = 255;
+          msg.data[dst + 2] = 255;
+        } else {
+          msg.data[dst] = _msg->data[src + 12];
+          msg.data[dst + 1] = _msg->data[src + 13];
+          msg.data[dst + 2] = _msg->data[src + 14];
+        }
         int d = static_cast<int>(p_z * 1000);
         msglog_d.data[dst_d] = d & 0xFF;
         msglog_d.data[dst_d + 1] = (d >> 8) & 0xFF;
       }
       msglog_rgb.data[dst] = _msg->data[src + 12];
       msglog_rgb.data[dst + 1] = _msg->data[src + 13];
-      msglog_rgb.data[dst + 2] = _msg->data[src + 14];      
+      msglog_rgb.data[dst + 2] = _msg->data[src + 14];
     }
 
   msg.header = _msg->header;
@@ -98,10 +104,10 @@ int main(int argc, char **argv) {
   time_thre_ = 0.1;
   nh.getParam("timestamp", time_thre_);
 
-  localradius_param_r_ = 3.0; // ~1.2 personal space ~3.7 social space
+  localradius_param_r_ = 1.5; // ~1.2 personal space ~3.7 social space
   nh.getParam("localradius_r", localradius_param_r_);
 
-  pub_ 
+  pub_
     = nh.advertise<sensor_msgs::Image>("/" + ns + "/rgb", 1);
 
   publog_rgb_
