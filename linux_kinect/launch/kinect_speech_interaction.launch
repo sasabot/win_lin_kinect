@@ -1,0 +1,31 @@
+<launch>
+  <arg name="ns" default="kinect"/>
+  <arg name="host" default="localhost"/>
+
+  <group ns="$(arg ns)">
+  <node name="speech_recognition" pkg="linux_kinect"
+        type="speech_recognition.py" output="screen">
+     <param name="ip" value="$(arg host)"/>
+  </node>
+  <node name="audio_beam" pkg="linux_kinect"
+        type="audio_beam.py" output="screen">
+     <param name="ip" value="$(arg host)"/>
+     <param name="ns" value="$(arg ns)"/>
+  </node>
+  <node name="windows_tts" pkg="linux_kinect"
+        type="tts.py" output="screen">
+     <param name="ip" value="$(arg host)"/>
+  </node>
+
+  <node name="windows_ocr" pkg="linux_kinect"
+        type="ocr.py" output="screen">
+     <param name="ip" value="$(arg host)"/>
+  </node>
+
+  <node name="audio_stream" pkg="linux_kinect"
+        type="audio_stream.py" output="screen">
+     <param name="ip" value="$(arg host)"/>
+     <param name="ns" value="$(arg ns)"/>
+  </node>
+  </group>
+</launch>
