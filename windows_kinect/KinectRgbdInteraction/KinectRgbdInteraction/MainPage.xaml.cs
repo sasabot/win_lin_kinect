@@ -28,6 +28,7 @@ namespace KinectRgbdInteraction
     public sealed partial class MainPage : Page
     {
         private string nameSpace = "kinect";
+        private int expectedFPS = 30;
 
         private MqttClient client = null;
         private MediaCapture mediaCapture = null;
@@ -68,6 +69,9 @@ namespace KinectRgbdInteraction
                 this.NSText.Text = this.localSettings.Values["topicNameSpace"].ToString();
             else
                 this.NSText.Text = this.nameSpace;
+
+            if (this.localSettings.Values["expectedFPS"] != null)
+                this.FPSText.Text = this.localSettings.Values["expectedFPS"].ToString();
 
             try { // auto start client
                 if (this.requestHandlers == null) {
@@ -122,6 +126,8 @@ namespace KinectRgbdInteraction
         private void StartApp_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) {
             this.localSettings.Values["mqttHostAddress"] = this.IPText.Text;
             this.localSettings.Values["topicNameSpace"] = this.NSText.Text;
+            this.localSettings.Values["expectedFPS"] = this.FPSText.Text;
+            Int32.TryParse(this.FPSText.Text, out this.expectedFPS);
             this.Setup(this.IPText.Text, this.NSText.Text);
         }
 
@@ -170,7 +176,8 @@ namespace KinectRgbdInteraction
                     c.SourceInfos.FirstOrDefault(info => info.SourceKind == MediaFrameSourceKind.Color),
                     c.SourceInfos.FirstOrDefault(info => info.SourceKind == MediaFrameSourceKind.Depth)
                     }
-                }).Where(c => c.SourceInfos[0] != null && c.SourceInfos[1] != null).ToList();
+                    //}).Where(c => c.SourceInfos[0] != null && c.SourceInfos[1] != null).ToList();
+                }).Where(c => c.SourceInfos.Any(info => info != null)).ToList();
                 if (eligible.Count == 0) { // retry 1 second later
                     this.restartingCamera = true;
                     BackgroundMediaPlayer.Current.SetUriSource(new Uri("ms-winsoundevent:Notification.Default"));
@@ -215,6 +222,9 @@ namespace KinectRgbdInteraction
             if (!frameProcessingSemaphore.Wait(0)) return;
 
             try {
+                int nowFPS = Convert.ToInt32(this.kinectFrameCount / this.appClock.Elapsed.TotalSeconds);
+                if (nowFPS > this.expectedFPS) return;
+
                 var frame = sender.TryAcquireLatestFrame();
                 if (frame != null) this.frames[frame.SourceKind] = frame;
 
